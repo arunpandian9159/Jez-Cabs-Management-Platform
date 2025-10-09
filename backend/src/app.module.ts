@@ -12,6 +12,7 @@ import { IamModule } from './modules/iam/iam.module';
 import { CabModule } from './modules/cab/cab.module';
 import { DriverModule } from './modules/driver/driver.module';
 import { BookingModule } from './modules/booking/booking.module';
+import { ChecklistModule } from './modules/checklist/checklist.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { BookingModule } from './modules/booking/booking.module';
     CabModule,
     DriverModule,
     BookingModule,
+    ChecklistModule,
   ],
   controllers: [AppController],
   providers: [AppService],
