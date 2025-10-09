@@ -14,6 +14,9 @@ import { DriverModule } from './modules/driver/driver.module';
 import { BookingModule } from './modules/booking/booking.module';
 import { ChecklistModule } from './modules/checklist/checklist.module';
 import { InvoiceModule } from './modules/invoice/invoice.module';
+import { TelematicsModule } from './modules/telematics/telematics.module';
+import { AnalyticsModule } from './modules/analytics/analytics.module';
+import { NotificationModule } from './modules/notification/notification.module';
 
 @Module({
   imports: [
@@ -56,6 +59,9 @@ import { InvoiceModule } from './modules/invoice/invoice.module';
     BookingModule,
     ChecklistModule,
     InvoiceModule,
+    TelematicsModule,
+    AnalyticsModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
