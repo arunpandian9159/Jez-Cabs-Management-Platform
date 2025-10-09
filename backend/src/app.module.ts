@@ -1,0 +1,55 @@
+import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { MongooseModule } from '@nestjs/mongoose';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import databaseConfig from './config/database.config';
+import mongodbConfig from './config/mongodb.config';
+import jwtConfig from './config/jwt.config';
+import { IamModule } from './modules/iam/iam.module';
+import { CabModule } from './modules/cab/cab.module';
+
+@Module({
+  imports: [
+    // Configuration
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [databaseConfig, mongodbConfig, jwtConfig],
+      envFilePath: '.env',
+    }),
+
+    // PostgreSQL Database
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => configService.get('database')!,
+    }),
+
+    // MongoDB Database
+    MongooseModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        uri: configService.get('mongodb.uri'),
+      }),
+    }),
+
+    // Event Emitter for event-driven architecture
+    EventEmitterModule.forRoot({
+      wildcard: false,
+      delimiter: '.',
+      newListener: false,
+      removeListener: false,
+      maxListeners: 10,
+      verboseMemoryLeak: false,
+      ignoreErrors: false,
+    }),
+
+    // Feature Modules
+    IamModule,
+    CabModule,
+  ],
+  controllers: [AppController],
+  providers: [AppService],
+})
+export class AppModule {}
