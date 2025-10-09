@@ -13,6 +13,7 @@ import { CabModule } from './modules/cab/cab.module';
 import { DriverModule } from './modules/driver/driver.module';
 import { BookingModule } from './modules/booking/booking.module';
 import { ChecklistModule } from './modules/checklist/checklist.module';
+import { InvoiceModule } from './modules/invoice/invoice.module';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { ChecklistModule } from './modules/checklist/checklist.module';
     DriverModule,
     BookingModule,
     ChecklistModule,
+    InvoiceModule,
   ],
   controllers: [AppController],
   providers: [AppService],
