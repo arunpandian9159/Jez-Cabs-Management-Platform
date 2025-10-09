@@ -1,0 +1,6 @@
+export enum CabStatus {
+  AVAILABLE = 'AVAILABLE',
+  RENTED = 'RENTED',
+  IN_MAINTENANCE = 'IN_MAINTENANCE',
+}
+
