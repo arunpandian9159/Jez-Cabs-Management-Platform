@@ -27,25 +27,25 @@ export class Booking {
   cabId: string;
 
   @Column({ type: 'uuid', nullable: true })
-  driverId: string;
+  driverId: string | null;
 
   @Column({ type: 'varchar', length: 255 })
   clientName: string;
 
-  @Column({ type: 'varchar', length: 50 })
-  clientContact: string;
+  @Column({ type: 'varchar', length: 255 })
+  clientContactPerson: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'varchar', length: 255 })
   clientEmail: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  clientCompany: string;
+  @Column({ type: 'varchar', length: 20 })
+  clientPhone: string;
 
-  @Column({ type: 'date' })
+  @Column({ type: 'timestamp' })
   @Index()
   startDate: Date;
 
-  @Column({ type: 'date' })
+  @Column({ type: 'timestamp' })
   @Index()
   endDate: Date;
 
@@ -58,8 +58,8 @@ export class Booking {
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   totalAmount: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
-  advancePayment: number;
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0, nullable: true })
+  advanceAmount: number;
 
   @Column({
     type: 'enum',
@@ -72,8 +72,7 @@ export class Booking {
   @Column({ type: 'text', nullable: true })
   notes: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
-  bookingReference: string;
+
 
   @CreateDateColumn()
   createdAt: Date;

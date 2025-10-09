@@ -10,6 +10,8 @@ import mongodbConfig from './config/mongodb.config';
 import jwtConfig from './config/jwt.config';
 import { IamModule } from './modules/iam/iam.module';
 import { CabModule } from './modules/cab/cab.module';
+import { DriverModule } from './modules/driver/driver.module';
+import { BookingModule } from './modules/booking/booking.module';
 
 @Module({
   imports: [
@@ -48,6 +50,8 @@ import { CabModule } from './modules/cab/cab.module';
     // Feature Modules
     IamModule,
     CabModule,
+    DriverModule,
+    BookingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
