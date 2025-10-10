@@ -30,7 +30,7 @@ export class NotificationService {
   async create(createDto: CreateNotificationDto, currentUser: User): Promise<Notification> {
     const notification = new this.notificationModel({
       ...createDto,
-      companyId: currentUser.companyId,
+      companyId: currentUser.company_id,
       priority: createDto.priority || NotificationPriority.MEDIUM,
     });
 
@@ -43,21 +43,21 @@ export class NotificationService {
   }
 
   async findAll(currentUser: User, userId?: string) {
-    const filter: any = { companyId: currentUser.companyId };
+    const filter: any = { companyId: currentUser.company_id };
     if (userId) {
       filter.userId = userId;
     }
 
     return this.notificationModel
       .find(filter)
-      .sort({ createdAt: -1 })
+      .sort({ created_at: -1 })
       .limit(100)
       .exec();
   }
 
   async findOne(id: string, currentUser: User): Promise<Notification> {
     const notification = await this.notificationModel
-      .findOne({ _id: id, companyId: currentUser.companyId })
+      .findOne({ _id: id, companyId: currentUser.company_id })
       .exec();
 
     if (!notification) {
@@ -78,7 +78,7 @@ export class NotificationService {
 
   async getUnreadCount(currentUser: User, userId?: string): Promise<number> {
     const filter: any = { 
-      companyId: currentUser.companyId,
+      companyId: currentUser.company_id,
       status: { $in: [NotificationStatus.PENDING, NotificationStatus.SENT] },
     };
     
@@ -92,13 +92,13 @@ export class NotificationService {
   // Notification Preferences
   async getPreferences(currentUser: User): Promise<NotificationPreference> {
     let preferences = await this.preferenceModel
-      .findOne({ companyId: currentUser.companyId, userId: currentUser.id })
+      .findOne({ companyId: currentUser.company_id, userId: currentUser.id })
       .exec();
 
     if (!preferences) {
       // Create default preferences
       preferences = new this.preferenceModel({
-        companyId: currentUser.companyId,
+        companyId: currentUser.company_id,
         userId: currentUser.id,
       });
       await preferences.save();
@@ -112,12 +112,12 @@ export class NotificationService {
     currentUser: User,
   ): Promise<NotificationPreference> {
     let preferences = await this.preferenceModel
-      .findOne({ companyId: currentUser.companyId, userId: currentUser.id })
+      .findOne({ companyId: currentUser.company_id, userId: currentUser.id })
       .exec();
 
     if (!preferences) {
       preferences = new this.preferenceModel({
-        companyId: currentUser.companyId,
+        companyId: currentUser.company_id,
         userId: currentUser.id,
         ...updateDto,
       });

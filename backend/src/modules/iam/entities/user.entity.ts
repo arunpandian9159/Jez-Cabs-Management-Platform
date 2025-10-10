@@ -17,14 +17,14 @@ export class User {
   id: string;
 
   @Column({ type: 'uuid' })
-  companyId: string;
+  company_id: string;
 
-  @Column({ type: 'varchar', length: 255, unique: true })
-  email: string;
+  @Column({ type: 'varchar', length: 255, unique: true, nullable: true })
+  email: string | null;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 255, nullable: true })
   @Exclude()
-  passwordHash: string;
+  password_hash: string | null;
 
   @Column({
     type: 'enum',
@@ -33,32 +33,31 @@ export class User {
   })
   role: UserRole;
 
-  @Column({ type: 'varchar', length: 100 })
-  firstName: string;
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  first_name: string | null;
 
-  @Column({ type: 'varchar', length: 100 })
-  lastName: string;
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  last_name: string | null;
 
   @Column({ type: 'varchar', length: 50, nullable: true })
-  phoneNumber: string;
+  phone_number: string;
 
   @Column({ type: 'boolean', default: true })
-  isActive: boolean;
+  is_active: boolean;
 
   @CreateDateColumn()
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updated_at: Date;
 
   // Relations
   @ManyToOne(() => Company, (company) => company.users, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'companyId' })
+  @JoinColumn({ name: 'company_id' })
   company: Company;
 
   // Virtual property
   get fullName(): string {
-    return `${this.firstName} ${this.lastName}`;
+    return `${this.first_name} ${this.last_name}`;
   }
 }
-

@@ -23,8 +23,8 @@ export class DriverService {
     // Check if license number already exists for this company
     const existingDriver = await this.driverRepository.findOne({
       where: {
-        companyId: currentUser.companyId,
-        licenseNumber: createDriverDto.licenseNumber,
+        company_id: currentUser.company_id,
+        license_number: createDriverDto.licenseNumber,
       },
     });
 
@@ -37,7 +37,7 @@ export class DriverService {
     // Check if email already exists for this company
     const existingEmail = await this.driverRepository.findOne({
       where: {
-        companyId: currentUser.companyId,
+        company_id: currentUser.company_id,
         email: createDriverDto.email,
       },
     });
@@ -51,7 +51,7 @@ export class DriverService {
     // Create new driver
     const driver = this.driverRepository.create({
       ...createDriverDto,
-      companyId: currentUser.companyId,
+      company_id: currentUser.company_id,
     });
 
     const savedDriver = await this.driverRepository.save(driver);
@@ -59,8 +59,8 @@ export class DriverService {
     // Emit event for driver creation
     this.eventEmitter.emit('driver.created', {
       driverId: savedDriver.id,
-      companyId: savedDriver.companyId,
-      name: `${savedDriver.firstName} ${savedDriver.lastName}`,
+      companyId: savedDriver.company_id,
+      name: `${savedDriver.first_name} ${savedDriver.last_name}`,
     });
 
     return savedDriver;
@@ -73,22 +73,22 @@ export class DriverService {
       expiringLicenses,
       page = 1,
       limit = 50,
-      sortBy = 'createdAt',
+      sortBy = 'created_at',
       sortOrder = 'DESC',
     } = filterDto;
 
     const queryBuilder = this.driverRepository
       .createQueryBuilder('driver')
-      .where('driver.companyId = :companyId', { companyId: currentUser.companyId });
+      .where('driver.company_id = :companyId', { companyId: currentUser.company_id });
 
     // Apply filters
     if (isActive !== undefined) {
-      queryBuilder.andWhere('driver.isActive = :isActive', { isActive });
+      queryBuilder.andWhere('driver.is_active = :isActive', { isActive });
     }
 
     if (search) {
       queryBuilder.andWhere(
-        '(driver.firstName ILIKE :search OR driver.lastName ILIKE :search OR driver.email ILIKE :search OR driver.licenseNumber ILIKE :search OR driver.contactNumber ILIKE :search)',
+        '(driver.first_name ILIKE :search OR driver.last_name ILIKE :search OR driver.email ILIKE :search OR driver.license_number ILIKE :search OR driver.contact_number ILIKE :search)',
         { search: `%${search}%` },
       );
     }
@@ -98,21 +98,21 @@ export class DriverService {
       const thirtyDaysFromNow = new Date();
       thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
 
-      queryBuilder.andWhere('driver.licenseExpiry <= :expiryDate', {
+      queryBuilder.andWhere('driver.license_expiry <= :expiryDate', {
         expiryDate: thirtyDaysFromNow,
       });
     }
 
     // Sorting
     const allowedSortFields = [
-      'createdAt',
-      'updatedAt',
-      'firstName',
-      'lastName',
+      'created_at',
+      'updated_at',
+      'first_name',
+      'last_name',
       'email',
-      'licenseExpiry',
+      'license_expiry',
     ];
-    const sortField = allowedSortFields.includes(sortBy) ? sortBy : 'createdAt';
+    const sortField = allowedSortFields.includes(sortBy) ? sortBy : 'created_at';
     queryBuilder.orderBy(`driver.${sortField}`, sortOrder);
 
     // Pagination
@@ -137,7 +137,7 @@ export class DriverService {
 
   async findOne(id: string, currentUser: User): Promise<Driver> {
     const driver = await this.driverRepository.findOne({
-      where: { id, companyId: currentUser.companyId },
+      where: { id, company_id: currentUser.company_id },
     });
 
     if (!driver) {
@@ -153,12 +153,12 @@ export class DriverService {
     // If license number is being updated, check for conflicts
     if (
       updateDriverDto.licenseNumber &&
-      updateDriverDto.licenseNumber !== driver.licenseNumber
+      updateDriverDto.licenseNumber !== driver.license_number
     ) {
       const existingDriver = await this.driverRepository.findOne({
         where: {
-          companyId: currentUser.companyId,
-          licenseNumber: updateDriverDto.licenseNumber,
+          company_id: currentUser.company_id,
+          license_number: updateDriverDto.licenseNumber,
         },
       });
 
@@ -173,7 +173,7 @@ export class DriverService {
     if (updateDriverDto.email && updateDriverDto.email !== driver.email) {
       const existingEmail = await this.driverRepository.findOne({
         where: {
-          companyId: currentUser.companyId,
+          company_id: currentUser.company_id,
           email: updateDriverDto.email,
         },
       });
@@ -192,7 +192,7 @@ export class DriverService {
     // Emit event for driver update
     this.eventEmitter.emit('driver.updated', {
       driverId: updatedDriver.id,
-      companyId: updatedDriver.companyId,
+      companyId: updatedDriver.company_id,
       changes: updateDriverDto,
     });
 
@@ -202,14 +202,14 @@ export class DriverService {
   async deactivate(id: string, currentUser: User): Promise<Driver> {
     const driver = await this.findOne(id, currentUser);
 
-    driver.isActive = false;
+    driver.is_active = false;
     const updatedDriver = await this.driverRepository.save(driver);
 
     // Emit event for driver deactivation
     this.eventEmitter.emit('driver.deactivated', {
       driverId: updatedDriver.id,
-      companyId: updatedDriver.companyId,
-      name: `${updatedDriver.firstName} ${updatedDriver.lastName}`,
+      companyId: updatedDriver.company_id,
+      name: `${updatedDriver.first_name} ${updatedDriver.last_name}`,
     });
 
     return updatedDriver;
@@ -218,14 +218,14 @@ export class DriverService {
   async activate(id: string, currentUser: User): Promise<Driver> {
     const driver = await this.findOne(id, currentUser);
 
-    driver.isActive = true;
+    driver.is_active = true;
     const updatedDriver = await this.driverRepository.save(driver);
 
     // Emit event for driver activation
     this.eventEmitter.emit('driver.activated', {
       driverId: updatedDriver.id,
-      companyId: updatedDriver.companyId,
-      name: `${updatedDriver.firstName} ${updatedDriver.lastName}`,
+      companyId: updatedDriver.company_id,
+      name: `${updatedDriver.first_name} ${updatedDriver.last_name}`,
     });
 
     return updatedDriver;
@@ -239,8 +239,8 @@ export class DriverService {
     // Emit event for driver deletion
     this.eventEmitter.emit('driver.deleted', {
       driverId: id,
-      companyId: currentUser.companyId,
-      name: `${driver.firstName} ${driver.lastName}`,
+      companyId: currentUser.company_id,
+      name: `${driver.first_name} ${driver.last_name}`,
     });
 
     return { message: 'Driver deleted successfully' };
@@ -252,9 +252,9 @@ export class DriverService {
 
     const drivers = await this.driverRepository
       .createQueryBuilder('driver')
-      .where('driver.companyId = :companyId', { companyId: currentUser.companyId })
-      .andWhere('driver.licenseExpiry <= :expiryDate', { expiryDate })
-      .orderBy('driver.licenseExpiry', 'ASC')
+      .where('driver.company_id = :companyId', { companyId: currentUser.company_id })
+      .andWhere('driver.license_expiry <= :expiryDate', { expiryDate })
+      .orderBy('driver.license_expiry', 'ASC')
       .getMany();
 
     return drivers.map((driver) => this.addLicenseExpiryAlerts(driver));
@@ -262,15 +262,15 @@ export class DriverService {
 
   async getStatistics(currentUser: User) {
     const totalDrivers = await this.driverRepository.count({
-      where: { companyId: currentUser.companyId },
+      where: { company_id: currentUser.company_id },
     });
 
     const activeDrivers = await this.driverRepository.count({
-      where: { companyId: currentUser.companyId, isActive: true },
+      where: { company_id: currentUser.company_id, is_active: true },
     });
 
     const inactiveDrivers = await this.driverRepository.count({
-      where: { companyId: currentUser.companyId, isActive: false },
+      where: { company_id: currentUser.company_id, is_active: false },
     });
 
     const thirtyDaysFromNow = new Date();
@@ -278,8 +278,8 @@ export class DriverService {
 
     const expiringLicenses = await this.driverRepository
       .createQueryBuilder('driver')
-      .where('driver.companyId = :companyId', { companyId: currentUser.companyId })
-      .andWhere('driver.licenseExpiry <= :expiryDate', { expiryDate: thirtyDaysFromNow })
+      .where('driver.company_id = :companyId', { companyId: currentUser.company_id })
+      .andWhere('driver.license_expiry <= :expiryDate', { expiryDate: thirtyDaysFromNow })
       .getCount();
 
     return {
@@ -296,8 +296,8 @@ export class DriverService {
     const thirtyDaysFromNow = new Date();
     thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
 
-    if (driver.licenseExpiry) {
-      const licenseExpiry = new Date(driver.licenseExpiry);
+    if (driver.license_expiry) {
+      const licenseExpiry = new Date(driver.license_expiry);
       if (licenseExpiry <= thirtyDaysFromNow) {
         const daysUntilExpiry = Math.ceil(
           (licenseExpiry.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
@@ -309,7 +309,7 @@ export class DriverService {
               ? `License expires in ${daysUntilExpiry} days`
               : `License expired ${Math.abs(daysUntilExpiry)} days ago`,
           severity: daysUntilExpiry <= 0 ? 'critical' : daysUntilExpiry <= 7 ? 'high' : 'medium',
-          expiryDate: driver.licenseExpiry,
+          expiryDate: driver.license_expiry,
         });
       }
     }

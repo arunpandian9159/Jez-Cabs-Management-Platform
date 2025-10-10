@@ -13,32 +13,31 @@ export class Company {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 255 })
-  name: string;
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  name: string | null;
 
   @Column({ type: 'text', nullable: true })
   address: string;
 
-  @Column({ type: 'varchar', length: 255, unique: true })
-  contactEmail: string;
+  @Column({ type: 'varchar', length: 255, unique: true, nullable: true })
+  contact_email: string | null;
 
   @Column({ type: 'varchar', length: 50, nullable: true })
-  contactPhone: string;
+  contact_phone: string;
 
   @Column({ type: 'varchar', length: 50, default: 'BASIC' })
-  subscriptionTier: string;
+  subscription_tier: string;
 
   @Column({ type: 'boolean', default: true })
-  isActive: boolean;
+  is_active: boolean;
 
   @CreateDateColumn()
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updated_at: Date;
 
   // Relations
   @OneToMany(() => User, (user) => user.company)
   users: User[];
 }
-

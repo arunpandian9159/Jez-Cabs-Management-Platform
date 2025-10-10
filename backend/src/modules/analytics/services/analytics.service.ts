@@ -44,53 +44,53 @@ export class AnalyticsService {
       overdueInvoices,
     ] = await Promise.all([
       // Cab metrics
-      this.cabRepository.count({ where: { companyId: currentUser.companyId } }),
-      this.cabRepository.count({ 
-        where: { companyId: currentUser.companyId, status: CabStatus.AVAILABLE } 
+      this.cabRepository.count({ where: { company_id: currentUser.company_id } }),
+      this.cabRepository.count({
+        where: { company_id: currentUser.company_id, status: CabStatus.AVAILABLE },
       }),
-      this.cabRepository.count({ 
-        where: { companyId: currentUser.companyId, status: CabStatus.RENTED } 
+      this.cabRepository.count({
+        where: { company_id: currentUser.company_id, status: CabStatus.RENTED },
       }),
-      this.cabRepository.count({ 
-        where: { companyId: currentUser.companyId, status: CabStatus.IN_MAINTENANCE } 
+      this.cabRepository.count({
+        where: { company_id: currentUser.company_id, status: CabStatus.IN_MAINTENANCE },
       }),
 
       // Driver metrics
-      this.driverRepository.count({ where: { companyId: currentUser.companyId } }),
-      this.driverRepository.count({ 
-        where: { companyId: currentUser.companyId, isActive: true } 
+      this.driverRepository.count({ where: { company_id: currentUser.company_id } }),
+      this.driverRepository.count({
+        where: { company_id: currentUser.company_id, is_active: true },
       }),
 
       // Booking metrics
-      this.bookingRepository.count({ 
-        where: { 
-          companyId: currentUser.companyId,
-          createdAt: Between(startDate, endDate),
-        } 
+      this.bookingRepository.count({
+        where: {
+          company_id: currentUser.company_id,
+          created_at: Between(startDate, endDate),
+        },
       }),
-      this.bookingRepository.count({ 
-        where: { 
-          companyId: currentUser.companyId,
+      this.bookingRepository.count({
+        where: {
+          company_id: currentUser.company_id,
           status: BookingStatus.ACTIVE,
-        } 
+        },
       }),
-      this.bookingRepository.count({ 
-        where: { 
-          companyId: currentUser.companyId,
+      this.bookingRepository.count({
+        where: {
+          company_id: currentUser.company_id,
           status: BookingStatus.COMPLETED,
-          createdAt: Between(startDate, endDate),
-        } 
+          created_at: Between(startDate, endDate),
+        },
       }),
 
       // Revenue metrics
-      this.calculateTotalRevenue(currentUser.companyId, startDate, endDate),
-      this.calculatePaidRevenue(currentUser.companyId, startDate, endDate),
-      this.calculatePendingRevenue(currentUser.companyId, startDate, endDate),
-      this.invoiceRepository.count({ 
-        where: { 
-          companyId: currentUser.companyId,
+      this.calculateTotalRevenue(currentUser.company_id, startDate, endDate),
+      this.calculatePaidRevenue(currentUser.company_id, startDate, endDate),
+      this.calculatePendingRevenue(currentUser.company_id, startDate, endDate),
+      this.invoiceRepository.count({
+        where: {
+          company_id: currentUser.company_id,
           status: InvoiceStatus.OVERDUE,
-        } 
+        },
       }),
     ]);
 
@@ -126,7 +126,8 @@ export class AnalyticsService {
         paidRevenue: Math.round(paidRevenue * 100) / 100,
         pendingRevenue: Math.round(pendingRevenue * 100) / 100,
         overdueInvoices,
-        collectionRate: totalRevenue > 0 ? Math.round((paidRevenue / totalRevenue) * 10000) / 100 : 0,
+        collectionRate:
+          totalRevenue > 0 ? Math.round((paidRevenue / totalRevenue) * 10000) / 100 : 0,
       },
     };
   }
@@ -136,7 +137,7 @@ export class AnalyticsService {
 
     // Get all cabs
     const cabs = await this.cabRepository.find({
-      where: { companyId: currentUser.companyId },
+      where: { company_id: currentUser.company_id },
     });
 
     // Calculate utilization for each cab
@@ -144,18 +145,18 @@ export class AnalyticsService {
       cabs.map(async (cab) => {
         const bookings = await this.bookingRepository.find({
           where: {
-            companyId: currentUser.companyId,
-            cabId: cab.id,
+            company_id: currentUser.company_id,
+            cab_id: cab.id,
             status: In([BookingStatus.ACTIVE, BookingStatus.COMPLETED]),
-            startDate: Between(startDate, endDate),
+            start_date: Between(startDate, endDate),
           },
         });
 
         // Calculate total days rented
         let totalDaysRented = 0;
         bookings.forEach((booking) => {
-          const start = new Date(booking.startDate);
-          const end = new Date(booking.endDate);
+          const start = new Date(booking.start_date);
+          const end = new Date(booking.end_date);
           const days = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
           totalDaysRented += days;
         });
@@ -165,11 +166,14 @@ export class AnalyticsService {
         const utilizationRate = periodDays > 0 ? (totalDaysRented / periodDays) * 100 : 0;
 
         // Calculate revenue
-        const revenue = bookings.reduce((sum, booking) => sum + Number(booking.totalAmount || 0), 0);
+        const revenue = bookings.reduce(
+          (sum, booking) => sum + Number(booking.total_amount || 0),
+          0,
+        );
 
         return {
           cabId: cab.id,
-          registrationNumber: cab.registrationNumber,
+          registrationNumber: cab.registration_number,
           make: cab.make,
           model: cab.model,
           totalBookings: bookings.length,
@@ -190,9 +194,14 @@ export class AnalyticsService {
         endDate,
       },
       totalCabs: cabs.length,
-      averageUtilization: utilizationData.length > 0
-        ? Math.round((utilizationData.reduce((sum, cab) => sum + cab.utilizationRate, 0) / utilizationData.length) * 100) / 100
-        : 0,
+      averageUtilization:
+        utilizationData.length > 0
+          ? Math.round(
+              (utilizationData.reduce((sum, cab) => sum + cab.utilizationRate, 0) /
+                utilizationData.length) *
+                100,
+            ) / 100
+          : 0,
       cabs: utilizationData,
     };
   }
@@ -203,10 +212,10 @@ export class AnalyticsService {
     // Get all invoices in the period
     const invoices = await this.invoiceRepository.find({
       where: {
-        companyId: currentUser.companyId,
-        createdAt: Between(startDate, endDate),
+        company_id: currentUser.company_id,
+        created_at: Between(startDate, endDate),
       },
-      order: { createdAt: 'ASC' },
+      order: { created_at: 'ASC' },
     });
 
     // Group by status
@@ -219,19 +228,19 @@ export class AnalyticsService {
     };
 
     invoices.forEach((invoice) => {
-      byStatus[invoice.status] += Number(invoice.totalAmount || 0);
+      byStatus[invoice.status] += Number(invoice.total_amount || 0);
     });
 
     // Calculate totals
-    const totalInvoiced = invoices.reduce((sum, inv) => sum + Number(inv.totalAmount || 0), 0);
+    const totalInvoiced = invoices.reduce((sum, inv) => sum + Number(inv.total_amount || 0), 0);
     const totalPaid = byStatus[InvoiceStatus.PAID];
     const totalPending = byStatus[InvoiceStatus.SENT] + byStatus[InvoiceStatus.OVERDUE];
 
     // Group by month for trend analysis
     const monthlyRevenue: Record<string, number> = {};
     invoices.forEach((invoice) => {
-      const month = new Date(invoice.createdAt).toISOString().substring(0, 7); // YYYY-MM
-      monthlyRevenue[month] = (monthlyRevenue[month] || 0) + Number(invoice.totalAmount || 0);
+      const month = new Date(invoice.created_at).toISOString().substring(0, 7); // YYYY-MM
+      monthlyRevenue[month] = (monthlyRevenue[month] || 0) + Number(invoice.total_amount || 0);
     });
 
     return {
@@ -245,7 +254,8 @@ export class AnalyticsService {
         totalInvoiced: Math.round(totalInvoiced * 100) / 100,
         totalPaid: Math.round(totalPaid * 100) / 100,
         totalPending: Math.round(totalPending * 100) / 100,
-        collectionRate: totalInvoiced > 0 ? Math.round((totalPaid / totalInvoiced) * 10000) / 100 : 0,
+        collectionRate:
+          totalInvoiced > 0 ? Math.round((totalPaid / totalInvoiced) * 10000) / 100 : 0,
       },
       byStatus: {
         draft: Math.round(byStatus[InvoiceStatus.DRAFT] * 100) / 100,
@@ -266,7 +276,7 @@ export class AnalyticsService {
 
     // Get all drivers
     const drivers = await this.driverRepository.find({
-      where: { companyId: currentUser.companyId },
+      where: { company_id: currentUser.company_id },
     });
 
     // Calculate performance for each driver
@@ -274,25 +284,30 @@ export class AnalyticsService {
       drivers.map(async (driver) => {
         const bookings = await this.bookingRepository.find({
           where: {
-            companyId: currentUser.companyId,
-            driverId: driver.id,
-            startDate: Between(startDate, endDate),
+            company_id: currentUser.company_id,
+            driver_id: driver.id,
+            start_date: Between(startDate, endDate),
           },
         });
 
-        const completedBookings = bookings.filter(b => b.status === BookingStatus.COMPLETED).length;
-        const totalRevenue = bookings.reduce((sum, booking) => sum + Number(booking.totalAmount || 0), 0);
+        const completedBookings = bookings.filter(
+          (b) => b.status === BookingStatus.COMPLETED,
+        ).length;
+        const totalRevenue = bookings.reduce(
+          (sum, booking) => sum + Number(booking.total_amount || 0),
+          0,
+        );
 
         return {
           driverId: driver.id,
-          firstName: driver.firstName,
-          lastName: driver.lastName,
+          firstName: driver.first_name,
+          lastName: driver.last_name,
           email: driver.email,
           totalBookings: bookings.length,
           completedBookings,
-          activeBookings: bookings.filter(b => b.status === BookingStatus.ACTIVE).length,
+          activeBookings: bookings.filter((b) => b.status === BookingStatus.ACTIVE).length,
           totalRevenue: Math.round(totalRevenue * 100) / 100,
-          isActive: driver.isActive,
+          isActive: driver.is_active,
         };
       }),
     );
@@ -346,38 +361,50 @@ export class AnalyticsService {
     return { startDate, endDate };
   }
 
-  private async calculateTotalRevenue(companyId: string, startDate: Date, endDate: Date): Promise<number> {
+  private async calculateTotalRevenue(
+    company_id: string,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<number> {
     const result = await this.invoiceRepository
       .createQueryBuilder('invoice')
-      .select('SUM(invoice.totalAmount)', 'total')
-      .where('invoice.companyId = :companyId', { companyId })
-      .andWhere('invoice.createdAt BETWEEN :startDate AND :endDate', { startDate, endDate })
+      .select('SUM(invoice.total_amount)', 'total')
+      .where('invoice.company_id = :company_id', { company_id })
+      .andWhere('invoice.created_at BETWEEN :startDate AND :endDate', { startDate, endDate })
       .getRawOne();
 
     return Number(result?.total || 0);
   }
 
-  private async calculatePaidRevenue(companyId: string, startDate: Date, endDate: Date): Promise<number> {
+  private async calculatePaidRevenue(
+    company_id: string,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<number> {
     const result = await this.invoiceRepository
       .createQueryBuilder('invoice')
-      .select('SUM(invoice.totalAmount)', 'total')
-      .where('invoice.companyId = :companyId', { companyId })
+      .select('SUM(invoice.total_amount)', 'total')
+      .where('invoice.company_id = :company_id', { company_id })
       .andWhere('invoice.status = :status', { status: InvoiceStatus.PAID })
-      .andWhere('invoice.createdAt BETWEEN :startDate AND :endDate', { startDate, endDate })
+      .andWhere('invoice.created_at BETWEEN :startDate AND :endDate', { startDate, endDate })
       .getRawOne();
 
     return Number(result?.total || 0);
   }
 
-  private async calculatePendingRevenue(companyId: string, startDate: Date, endDate: Date): Promise<number> {
+  private async calculatePendingRevenue(
+    company_id: string,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<number> {
     const result = await this.invoiceRepository
       .createQueryBuilder('invoice')
-      .select('SUM(invoice.totalAmount)', 'total')
-      .where('invoice.companyId = :companyId', { companyId })
-      .andWhere('invoice.status IN (:...statuses)', { 
-        statuses: [InvoiceStatus.SENT, InvoiceStatus.OVERDUE] 
+      .select('SUM(invoice.total_amount)', 'total')
+      .where('invoice.company_id = :company_id', { company_id })
+      .andWhere('invoice.status IN (:...statuses)', {
+        statuses: [InvoiceStatus.SENT, InvoiceStatus.OVERDUE],
       })
-      .andWhere('invoice.createdAt BETWEEN :startDate AND :endDate', { startDate, endDate })
+      .andWhere('invoice.created_at BETWEEN :startDate AND :endDate', { startDate, endDate })
       .getRawOne();
 
     return Number(result?.total || 0);

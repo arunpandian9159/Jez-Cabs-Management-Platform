@@ -20,46 +20,46 @@ export class Booking {
 
   @Column({ type: 'uuid' })
   @Index()
-  companyId: string;
+  company_id: string;
 
   @Column({ type: 'uuid' })
   @Index()
-  cabId: string;
+  cab_id: string;
 
   @Column({ type: 'uuid', nullable: true })
-  driverId: string | null;
+  driver_id: string | null;
 
-  @Column({ type: 'varchar', length: 255 })
-  clientName: string;
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  client_name: string | null;
 
-  @Column({ type: 'varchar', length: 255 })
-  clientContactPerson: string;
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  client_contact_person: string | null;
 
-  @Column({ type: 'varchar', length: 255 })
-  clientEmail: string;
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  client_email: string | null;
 
-  @Column({ type: 'varchar', length: 20 })
-  clientPhone: string;
+  @Column({ type: 'varchar', length: 20, nullable: true })
+  client_phone: string | null;
 
   @Column({ type: 'timestamp' })
   @Index()
-  startDate: Date;
+  start_date: Date;
 
   @Column({ type: 'timestamp' })
   @Index()
-  endDate: Date;
+  end_date: Date;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  pickupLocation: string;
+  pickup_location: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  dropoffLocation: string;
+  dropoff_location: string;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
-  totalAmount: number;
+  total_amount: number;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0, nullable: true })
-  advanceAmount: number;
+  advance_amount: number;
 
   @Column({
     type: 'enum',
@@ -75,22 +75,21 @@ export class Booking {
 
 
   @CreateDateColumn()
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updated_at: Date;
 
   // Relations
   @ManyToOne(() => Company, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'companyId' })
+  @JoinColumn({ name: 'company_id' })
   company: Company;
 
   @ManyToOne(() => Cab, { eager: true })
-  @JoinColumn({ name: 'cabId' })
+  @JoinColumn({ name: 'cab_id' })
   cab: Cab;
 
   @ManyToOne(() => Driver, { eager: true, nullable: true })
-  @JoinColumn({ name: 'driverId' })
+  @JoinColumn({ name: 'driver_id' })
   driver: Driver;
 }
-

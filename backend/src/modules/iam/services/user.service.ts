@@ -41,53 +41,53 @@ export class UserService {
 
     // Create user
     const user = this.userRepository.create({
-      companyId: currentUser.companyId,
+      company_id: currentUser.company_id,
       email: createUserDto.email,
-      passwordHash: hashedPassword,
+      password_hash: hashedPassword,
       role: createUserDto.role,
-      firstName: createUserDto.firstName,
-      lastName: createUserDto.lastName,
-      phoneNumber: createUserDto.phoneNumber,
-      isActive: true,
+      first_name: createUserDto.firstName,
+      last_name: createUserDto.lastName,
+      phone_number: createUserDto.phoneNumber,
+      is_active: true,
     });
 
     const savedUser = await this.userRepository.save(user);
 
     // Remove password hash from response
-    const { passwordHash, ...userWithoutPassword } = savedUser;
+    const { password_hash, ...userWithoutPassword } = savedUser;
 
     return userWithoutPassword as User;
   }
 
   async findAll(currentUser: User) {
     const users = await this.userRepository.find({
-      where: { companyId: currentUser.companyId },
-      order: { createdAt: 'DESC' },
+      where: { company_id: currentUser.company_id },
+      order: { created_at: 'DESC' },
     });
 
     // Remove password hashes from response
     return users.map((user) => {
-      const { passwordHash, ...userWithoutPassword } = user;
+      const { password_hash, ...userWithoutPassword } = user;
       return userWithoutPassword;
     });
   }
 
   async findOne(id: string, currentUser: User) {
     const user = await this.userRepository.findOne({
-      where: { id, companyId: currentUser.companyId },
+      where: { id, company_id: currentUser.company_id },
     });
 
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
-    const { passwordHash, ...userWithoutPassword } = user;
+    const { password_hash, ...userWithoutPassword } = user;
     return userWithoutPassword;
   }
 
   async updateUser(id: string, updateData: Partial<User>, currentUser: User) {
     const user = await this.userRepository.findOne({
-      where: { id, companyId: currentUser.companyId },
+      where: { id, company_id: currentUser.company_id },
     });
 
     if (!user) {
@@ -103,13 +103,13 @@ export class UserService {
     Object.assign(user, updateData);
     const updatedUser = await this.userRepository.save(user);
 
-    const { passwordHash, ...userWithoutPassword } = updatedUser;
+    const { password_hash, ...userWithoutPassword } = updatedUser;
     return userWithoutPassword;
   }
 
   async deactivateUser(id: string, currentUser: User) {
     const user = await this.userRepository.findOne({
-      where: { id, companyId: currentUser.companyId },
+      where: { id, company_id: currentUser.company_id },
     });
 
     if (!user) {
@@ -126,7 +126,7 @@ export class UserService {
       throw new ForbiddenException('You do not have permission to deactivate users');
     }
 
-    user.isActive = false;
+    user.is_active = false;
     await this.userRepository.save(user);
 
     return { message: 'User deactivated successfully' };

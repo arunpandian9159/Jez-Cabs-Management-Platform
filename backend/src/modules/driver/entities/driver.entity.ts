@@ -17,61 +17,60 @@ export class Driver {
 
   @Column({ type: 'uuid' })
   @Index()
-  companyId: string;
+  company_id: string;
 
-  @Column({ type: 'varchar', length: 100 })
-  firstName: string;
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  first_name: string | null;
 
-  @Column({ type: 'varchar', length: 100 })
-  lastName: string;
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  last_name: string | null;
 
-  @Column({ type: 'varchar', length: 50 })
-  contactNumber: string;
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  contact_number: string | null;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   email: string;
 
-  @Column({ type: 'varchar', length: 50 })
-  licenseNumber: string;
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  license_number: string | null;
 
   @Column({ type: 'date' })
-  licenseExpiry: Date;
+  license_expiry: Date;
 
   @Column({ type: 'varchar', length: 50, nullable: true })
-  licenseType: string;
+  license_type: string;
 
   @Column({ type: 'date', nullable: true })
-  dateOfBirth: Date;
+  date_of_birth: Date;
 
   @Column({ type: 'text', nullable: true })
   address: string;
 
   @Column({ type: 'varchar', length: 100, nullable: true })
-  emergencyContactName: string;
+  emergency_contact_name: string;
 
   @Column({ type: 'varchar', length: 50, nullable: true })
-  emergencyContactNumber: string;
+  emergency_contact_number: string;
 
   @Column({ type: 'boolean', default: true })
-  isActive: boolean;
+  is_active: boolean;
 
   @Column({ type: 'text', nullable: true })
   notes: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updated_at: Date;
 
   // Relations
   @ManyToOne(() => Company, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'companyId' })
+  @JoinColumn({ name: 'company_id' })
   company: Company;
 
   // Virtual property
   get fullName(): string {
-    return `${this.firstName} ${this.lastName}`;
+    return `${this.first_name} ${this.last_name}`;
   }
 }
-

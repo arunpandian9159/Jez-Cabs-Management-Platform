@@ -22,7 +22,7 @@ export class AuthService {
   async registerCompany(registerDto: RegisterCompanyDto) {
     // Check if company email already exists
     const existingCompany = await this.companyRepository.findOne({
-      where: { contactEmail: registerDto.companyEmail },
+      where: { contact_email: registerDto.companyEmail },
     });
 
     if (existingCompany) {
@@ -42,28 +42,28 @@ export class AuthService {
     const company = this.companyRepository.create({
       name: registerDto.companyName,
       address: registerDto.companyAddress,
-      contactEmail: registerDto.companyEmail,
-      contactPhone: registerDto.companyPhone,
-      subscriptionTier: 'BASIC',
-      isActive: true,
+      contact_email: registerDto.companyEmail,
+      contact_phone: registerDto.companyPhone,
+      subscription_tier: 'BASIC',
+      is_active: true,
     });
 
     const savedCompany = await this.companyRepository.save(company);
 
     // Hash password
     const bcryptRounds = parseInt(this.configService.get('BCRYPT_ROUNDS', '12'), 10);
-    const passwordHash = await bcrypt.hash(registerDto.password, bcryptRounds);
+    const password_hash = await bcrypt.hash(registerDto.password, bcryptRounds);
 
     // Create owner user
     const user = this.userRepository.create({
-      companyId: savedCompany.id,
+      company_id: savedCompany.id,
       email: registerDto.email,
-      passwordHash,
+      password_hash,
       role: UserRole.OWNER,
-      firstName: registerDto.firstName,
-      lastName: registerDto.lastName,
-      phoneNumber: registerDto.phoneNumber,
-      isActive: true,
+      first_name: registerDto.firstName,
+      last_name: registerDto.lastName,
+      phone_number: registerDto.phoneNumber,
+      is_active: true,
     });
 
     const savedUser = await this.userRepository.save(user);
@@ -76,13 +76,13 @@ export class AuthService {
       company: {
         id: savedCompany.id,
         name: savedCompany.name,
-        email: savedCompany.contactEmail,
+        email: savedCompany.contact_email,
       },
       user: {
         id: savedUser.id,
         email: savedUser.email,
-        firstName: savedUser.firstName,
-        lastName: savedUser.lastName,
+        firstName: savedUser.first_name,
+        lastName: savedUser.last_name,
         role: savedUser.role,
       },
       access_token: token,
@@ -101,17 +101,21 @@ export class AuthService {
     }
 
     // Check if user is active
-    if (!user.isActive) {
+    if (!user.is_active) {
       throw new UnauthorizedException('User account is inactive');
     }
 
     // Check if company is active
-    if (!user.company.isActive) {
+    if (!user.company.is_active) {
       throw new UnauthorizedException('Company account is inactive');
     }
 
     // Verify password
-    const isPasswordValid = await bcrypt.compare(loginDto.password, user.passwordHash);
+    if (!user.password_hash) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    const isPasswordValid = await bcrypt.compare(loginDto.password, user.password_hash);
 
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
@@ -125,10 +129,10 @@ export class AuthService {
       user: {
         id: user.id,
         email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
+        firstName: user.first_name,
+        lastName: user.last_name,
         role: user.role,
-        companyId: user.companyId,
+        companyId: user.company_id,
         companyName: user.company.name,
       },
       access_token: token,
@@ -137,11 +141,11 @@ export class AuthService {
 
   async validateUser(userId: string): Promise<User> {
     const user = await this.userRepository.findOne({
-      where: { id: userId, isActive: true },
+      where: { id: userId, is_active: true },
       relations: ['company'],
     });
 
-    if (!user || !user.company.isActive) {
+    if (!user || !user.company.is_active) {
       throw new UnauthorizedException('User not found or inactive');
     }
 
@@ -152,7 +156,7 @@ export class AuthService {
     const payload = {
       sub: user.id,
       email: user.email,
-      companyId: user.companyId,
+      companyId: user.company_id,
       role: user.role,
     };
 

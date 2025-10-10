@@ -24,8 +24,8 @@ export class CabService {
     // Check if registration number already exists for this company
     const existingCab = await this.cabRepository.findOne({
       where: {
-        companyId: currentUser.companyId,
-        registrationNumber: createCabDto.registrationNumber,
+        company_id: currentUser.company_id,
+        registration_number: createCabDto.registrationNumber,
       },
     });
 
@@ -38,7 +38,7 @@ export class CabService {
     // Create new cab
     const cab = this.cabRepository.create({
       ...createCabDto,
-      companyId: currentUser.companyId,
+      company_id: currentUser.company_id,
       status: createCabDto.status || CabStatus.AVAILABLE,
     });
 
@@ -47,8 +47,8 @@ export class CabService {
     // Emit event for cab creation
     this.eventEmitter.emit('cab.created', {
       cabId: savedCab.id,
-      companyId: savedCab.companyId,
-      registrationNumber: savedCab.registrationNumber,
+      companyId: savedCab.company_id,
+      registrationNumber: savedCab.registration_number,
     });
 
     return savedCab;
@@ -70,7 +70,7 @@ export class CabService {
 
     const queryBuilder = this.cabRepository
       .createQueryBuilder('cab')
-      .where('cab.companyId = :companyId', { companyId: currentUser.companyId });
+      .where('cab.company_id = :companyId', { companyId: currentUser.company_id });
 
     // Apply filters
     if (status) {
@@ -142,7 +142,7 @@ export class CabService {
 
   async findOne(id: string, currentUser: User): Promise<Cab> {
     const cab = await this.cabRepository.findOne({
-      where: { id, companyId: currentUser.companyId },
+      where: { id, company_id: currentUser.company_id },
     });
 
     if (!cab) {
@@ -158,12 +158,12 @@ export class CabService {
     // If registration number is being updated, check for conflicts
     if (
       updateCabDto.registrationNumber &&
-      updateCabDto.registrationNumber !== cab.registrationNumber
+      updateCabDto.registrationNumber !== cab.registration_number
     ) {
       const existingCab = await this.cabRepository.findOne({
         where: {
-          companyId: currentUser.companyId,
-          registrationNumber: updateCabDto.registrationNumber,
+          company_id: currentUser.company_id,
+          registration_number: updateCabDto.registrationNumber,
         },
       });
 
@@ -181,7 +181,7 @@ export class CabService {
     // Emit event for cab update
     this.eventEmitter.emit('cab.updated', {
       cabId: updatedCab.id,
-      companyId: updatedCab.companyId,
+      companyId: updatedCab.company_id,
       changes: updateCabDto,
     });
 
@@ -198,7 +198,7 @@ export class CabService {
     // Emit event for status change
     this.eventEmitter.emit('cab.status.changed', {
       cabId: updatedCab.id,
-      companyId: updatedCab.companyId,
+      companyId: updatedCab.company_id,
       oldStatus,
       newStatus: status,
     });
@@ -219,8 +219,8 @@ export class CabService {
     // Emit event for cab deletion
     this.eventEmitter.emit('cab.deleted', {
       cabId: id,
-      companyId: currentUser.companyId,
-      registrationNumber: cab.registrationNumber,
+      companyId: currentUser.company_id,
+      registrationNumber: cab.registration_number,
     });
 
     return { message: 'Vehicle deleted successfully' };
@@ -232,12 +232,12 @@ export class CabService {
 
     const cabs = await this.cabRepository
       .createQueryBuilder('cab')
-      .where('cab.companyId = :companyId', { companyId: currentUser.companyId })
+      .where('cab.company_id = :companyId', { companyId: currentUser.company_id })
       .andWhere(
-        '(cab.insuranceExpiry <= :expiryDate OR cab.registrationExpiry <= :expiryDate)',
+        '(cab.insurance_expiry <= :expiryDate OR cab.registration_expiry <= :expiryDate)',
         { expiryDate },
       )
-      .orderBy('cab.insuranceExpiry', 'ASC')
+      .orderBy('cab.insurance_expiry', 'ASC')
       .getMany();
 
     return cabs.map((cab) => this.addExpiryAlerts(cab));
@@ -245,19 +245,19 @@ export class CabService {
 
   async getStatistics(currentUser: User) {
     const totalCabs = await this.cabRepository.count({
-      where: { companyId: currentUser.companyId },
+      where: { company_id: currentUser.company_id },
     });
 
     const availableCabs = await this.cabRepository.count({
-      where: { companyId: currentUser.companyId, status: CabStatus.AVAILABLE },
+      where: { company_id: currentUser.company_id, status: CabStatus.AVAILABLE },
     });
 
     const rentedCabs = await this.cabRepository.count({
-      where: { companyId: currentUser.companyId, status: CabStatus.RENTED },
+      where: { company_id: currentUser.company_id, status: CabStatus.RENTED },
     });
 
     const inMaintenanceCabs = await this.cabRepository.count({
-      where: { companyId: currentUser.companyId, status: CabStatus.IN_MAINTENANCE },
+      where: { company_id: currentUser.company_id, status: CabStatus.IN_MAINTENANCE },
     });
 
     const thirtyDaysFromNow = new Date();
@@ -265,9 +265,9 @@ export class CabService {
 
     const expiringDocuments = await this.cabRepository
       .createQueryBuilder('cab')
-      .where('cab.companyId = :companyId', { companyId: currentUser.companyId })
+      .where('cab.company_id = :companyId', { companyId: currentUser.company_id })
       .andWhere(
-        '(cab.insuranceExpiry <= :expiryDate OR cab.registrationExpiry <= :expiryDate)',
+        '(cab.insurance_expiry <= :expiryDate OR cab.registration_expiry <= :expiryDate)',
         { expiryDate: thirtyDaysFromNow },
       )
       .getCount();
@@ -288,8 +288,8 @@ export class CabService {
     const thirtyDaysFromNow = new Date();
     thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
 
-    if (cab.insuranceExpiry) {
-      const insuranceExpiry = new Date(cab.insuranceExpiry);
+    if (cab.insurance_expiry) {
+      const insuranceExpiry = new Date(cab.insurance_expiry);
       if (insuranceExpiry <= thirtyDaysFromNow) {
         const daysUntilExpiry = Math.ceil(
           (insuranceExpiry.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
@@ -301,13 +301,13 @@ export class CabService {
               ? `Insurance expires in ${daysUntilExpiry} days`
               : `Insurance expired ${Math.abs(daysUntilExpiry)} days ago`,
           severity: daysUntilExpiry <= 0 ? 'critical' : daysUntilExpiry <= 7 ? 'high' : 'medium',
-          expiryDate: cab.insuranceExpiry,
+          expiryDate: cab.insurance_expiry,
         });
       }
     }
 
-    if (cab.registrationExpiry) {
-      const registrationExpiry = new Date(cab.registrationExpiry);
+    if (cab.registration_expiry) {
+      const registrationExpiry = new Date(cab.registration_expiry);
       if (registrationExpiry <= thirtyDaysFromNow) {
         const daysUntilExpiry = Math.ceil(
           (registrationExpiry.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
@@ -319,7 +319,7 @@ export class CabService {
               ? `Registration expires in ${daysUntilExpiry} days`
               : `Registration expired ${Math.abs(daysUntilExpiry)} days ago`,
           severity: daysUntilExpiry <= 0 ? 'critical' : daysUntilExpiry <= 7 ? 'high' : 'medium',
-          expiryDate: cab.registrationExpiry,
+          expiryDate: cab.registration_expiry,
         });
       }
     }

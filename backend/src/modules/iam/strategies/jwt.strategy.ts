@@ -9,7 +9,7 @@ import { User } from '../entities';
 export interface JwtPayload {
   sub: string;
   email: string;
-  companyId: string;
+  company_id: string;
   role: string;
 }
 
@@ -29,7 +29,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: JwtPayload): Promise<User> {
     const user = await this.userRepository.findOne({
-      where: { id: payload.sub, isActive: true },
+      where: { id: payload.sub, is_active: true },
       relations: ['company'],
     });
 
@@ -37,7 +37,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException('User not found or inactive');
     }
 
-    if (!user.company.isActive) {
+    if (!user.company.is_active) {
       throw new UnauthorizedException('Company is inactive');
     }
 

@@ -12,26 +12,25 @@ import { CabStatus } from '../../../common/enums';
 import { Company } from '../../iam/entities';
 
 @Entity('cabs')
-@Index(['companyId', 'registrationNumber'], { unique: true })
+@Index(['company_id', 'registration_number'], { unique: true })
 export class Cab {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ type: 'uuid' })
-  @Index()
-  companyId: string;
+  company_id: string;
 
-  @Column({ type: 'varchar', length: 100 })
-  make: string;
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  make: string | null;
 
-  @Column({ type: 'varchar', length: 100 })
-  model: string;
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  model: string | null;
 
-  @Column({ type: 'int' })
-  year: number;
+  @Column({ type: 'int', nullable: true })
+  year: number | null;
 
-  @Column({ type: 'varchar', length: 50 })
-  registrationNumber: string;
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  registration_number: string | null;
 
   @Column({ type: 'varchar', length: 100, nullable: true })
   vin: string;
@@ -48,44 +47,43 @@ export class Cab {
   color: string;
 
   @Column({ type: 'int', nullable: true })
-  seatingCapacity: number;
+  seating_capacity: number;
 
   @Column({ type: 'varchar', length: 50, nullable: true })
-  fuelType: string;
+  fuel_type: string;
 
   @Column({ type: 'date', nullable: true })
-  insuranceExpiry: Date;
+  insurance_expiry: Date;
 
   @Column({ type: 'varchar', length: 100, nullable: true })
-  insuranceProvider: string;
+  insurance_provider: string;
 
   @Column({ type: 'varchar', length: 100, nullable: true })
-  insurancePolicyNumber: string;
+  insurance_policy_number: string;
 
   @Column({ type: 'date', nullable: true })
-  registrationExpiry: Date;
+  registration_expiry: Date;
 
   @Column({ type: 'varchar', length: 100, nullable: true })
-  gpsDeviceId: string;
+  gps_device_id: string;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
-  dailyRentalRate: number;
+  daily_rental_rate: number;
 
   @Column({ type: 'int', default: 0 })
-  currentMileage: number;
+  current_mileage: number;
 
   @Column({ type: 'text', nullable: true })
   notes: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updated_at: Date;
 
   // Relations
   @ManyToOne(() => Company, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'companyId' })
+  @JoinColumn({ name: 'company_id' })
   company: Company;
 }
-

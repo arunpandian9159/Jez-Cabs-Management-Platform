@@ -22,7 +22,7 @@ export class TelematicsService {
   async create(createDto: CreateTelematicsLogDto, currentUser: User): Promise<TelematicsLog> {
     // Verify cab exists and belongs to company
     const cab = await this.cabRepository.findOne({
-      where: { id: createDto.cabId, companyId: currentUser.companyId },
+      where: { id: createDto.cabId, company_id: currentUser.company_id },
     });
 
     if (!cab) {
@@ -32,7 +32,7 @@ export class TelematicsService {
     // Create telematics log
     const log = new this.telematicsModel({
       ...createDto,
-      companyId: currentUser.companyId,
+      companyId: currentUser.company_id,
     });
 
     const savedLog = await log.save();
@@ -66,7 +66,7 @@ export class TelematicsService {
       sortOrder = 'DESC',
     } = filterDto;
 
-    const filter: any = { companyId: currentUser.companyId };
+    const filter: any = { companyId: currentUser.company_id };
 
     if (cabId) filter.cabId = cabId;
     if (gpsDeviceId) filter.gpsDeviceId = gpsDeviceId;
@@ -102,7 +102,7 @@ export class TelematicsService {
 
   async findOne(id: string, currentUser: User): Promise<TelematicsLog> {
     const log = await this.telematicsModel
-      .findOne({ _id: id, companyId: currentUser.companyId })
+      .findOne({ _id: id, companyId: currentUser.company_id })
       .exec();
 
     if (!log) {
@@ -115,7 +115,7 @@ export class TelematicsService {
   async getLatestLocation(cabId: string, currentUser: User): Promise<TelematicsLog | null> {
     // Verify cab exists and belongs to company
     const cab = await this.cabRepository.findOne({
-      where: { id: cabId, companyId: currentUser.companyId },
+      where: { id: cabId, company_id: currentUser.company_id },
     });
 
     if (!cab) {
@@ -123,7 +123,7 @@ export class TelematicsService {
     }
 
     const latestLog = await this.telematicsModel
-      .findOne({ cabId, companyId: currentUser.companyId })
+      .findOne({ cabId, companyId: currentUser.company_id })
       .sort({ timestamp: -1 })
       .exec();
 
@@ -133,7 +133,7 @@ export class TelematicsService {
   async getRoute(cabId: string, startDate: Date, endDate: Date, currentUser: User) {
     // Verify cab exists and belongs to company
     const cab = await this.cabRepository.findOne({
-      where: { id: cabId, companyId: currentUser.companyId },
+      where: { id: cabId, company_id: currentUser.company_id },
     });
 
     if (!cab) {
@@ -143,7 +143,7 @@ export class TelematicsService {
     const logs = await this.telematicsModel
       .find({
         cabId,
-        companyId: currentUser.companyId,
+        companyId: currentUser.company_id,
         timestamp: { $gte: startDate, $lte: endDate },
       })
       .sort({ timestamp: 1 })
@@ -162,7 +162,7 @@ export class TelematicsService {
   async getStatistics(cabId: string, startDate: Date, endDate: Date, currentUser: User) {
     // Verify cab exists and belongs to company
     const cab = await this.cabRepository.findOne({
-      where: { id: cabId, companyId: currentUser.companyId },
+      where: { id: cabId, company_id: currentUser.company_id },
     });
 
     if (!cab) {
@@ -172,7 +172,7 @@ export class TelematicsService {
     const logs = await this.telematicsModel
       .find({
         cabId,
-        companyId: currentUser.companyId,
+        companyId: currentUser.company_id,
         timestamp: { $gte: startDate, $lte: endDate },
       })
       .exec();
@@ -231,7 +231,7 @@ export class TelematicsService {
   async generateMockData(cabId: string, count: number, currentUser: User): Promise<TelematicsLog[]> {
     // Verify cab exists and belongs to company
     const cab = await this.cabRepository.findOne({
-      where: { id: cabId, companyId: currentUser.companyId },
+      where: { id: cabId, company_id: currentUser.company_id },
     });
 
     if (!cab) {
@@ -259,9 +259,9 @@ export class TelematicsService {
       }
 
       const log = new this.telematicsModel({
-        companyId: currentUser.companyId,
+        companyId: currentUser.company_id,
         cabId,
-        gpsDeviceId: cab.gpsDeviceId || `GPS-${cabId.substring(0, 8)}`,
+        gpsDeviceId: cab.gps_device_id || `GPS-${cabId.substring(0, 8)}`,
         timestamp,
         location: { latitude, longitude },
         speed,

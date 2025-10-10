@@ -19,29 +19,29 @@ export class Invoice {
 
   @Column({ type: 'uuid' })
   @Index()
-  companyId: string;
+  company_id: string;
 
   @Column({ type: 'uuid' })
   @Index()
-  bookingId: string;
+  booking_id: string;
 
-  @Column({ type: 'varchar', length: 50, unique: true })
-  invoiceNumber: string;
+  @Column({ type: 'varchar', length: 50, unique: true, nullable: true })
+  invoice_number: string;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   amount: number;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
-  taxAmount: number;
+  tax_amount: number;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
-  totalAmount: number;
+  total_amount: number;
 
   @Column({ type: 'date' })
-  issueDate: Date;
+  issue_date: Date;
 
   @Column({ type: 'date' })
-  dueDate: Date;
+  due_date: Date;
 
   @Column({
     type: 'enum',
@@ -52,36 +52,35 @@ export class Invoice {
   status: InvoiceStatus;
 
   @Column({ type: 'varchar', length: 500, nullable: true })
-  paymentLink: string;
+  payment_link: string;
 
   @Column({ type: 'varchar', length: 500, nullable: true })
-  pdfUrl: string;
+  pdf_url: string;
 
   @Column({ type: 'date', nullable: true })
-  paidDate: Date;
+  paid_date: Date;
 
   @Column({ type: 'varchar', length: 100, nullable: true })
-  paymentMethod: string;
+  payment_method: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  paymentReference: string;
+  payment_reference: string;
 
   @Column({ type: 'text', nullable: true })
   notes: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updated_at: Date;
 
   // Relations
   @ManyToOne(() => Company, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'companyId' })
+  @JoinColumn({ name: 'company_id' })
   company: Company;
 
   @ManyToOne(() => Booking, { eager: true })
-  @JoinColumn({ name: 'bookingId' })
+  @JoinColumn({ name: 'booking_id' })
   booking: Booking;
 }
-

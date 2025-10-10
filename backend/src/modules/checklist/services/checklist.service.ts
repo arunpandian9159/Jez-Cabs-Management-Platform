@@ -35,7 +35,7 @@ export class ChecklistService {
 
     // Validate booking exists and belongs to company
     const booking = await this.bookingRepository.findOne({
-      where: { id: bookingId, companyId: currentUser.companyId },
+      where: { id: bookingId, company_id: currentUser.company_id },
     });
 
     if (!booking) {
@@ -44,7 +44,7 @@ export class ChecklistService {
 
     // Validate cab exists and belongs to company
     const cab = await this.cabRepository.findOne({
-      where: { id: cabId, companyId: currentUser.companyId },
+      where: { id: cabId, company_id: currentUser.company_id },
     });
 
     if (!cab) {
@@ -56,7 +56,7 @@ export class ChecklistService {
       ...checklistData,
       bookingId,
       cabId,
-      companyId: currentUser.companyId,
+      companyId: currentUser.company_id,
       completedBy: currentUser.id,
       completedAt: new Date(),
       isComplete: true,
@@ -89,7 +89,7 @@ export class ChecklistService {
       sortOrder = 'DESC',
     } = filterDto;
 
-    const filter: any = { companyId: currentUser.companyId };
+    const filter: any = { companyId: currentUser.company_id };
 
     if (bookingId) filter.bookingId = bookingId;
     if (cabId) filter.cabId = cabId;
@@ -119,7 +119,7 @@ export class ChecklistService {
 
   async findOne(id: string, currentUser: User): Promise<ChecklistDocument> {
     const checklist = await this.checklistModel
-      .findOne({ _id: id, companyId: currentUser.companyId })
+      .findOne({ _id: id, companyId: currentUser.company_id })
       .exec();
 
     if (!checklist) {
@@ -227,17 +227,17 @@ export class ChecklistService {
     // Emit event
     this.eventEmitter.emit('checklist.deleted', {
       checklistId: id,
-      companyId: currentUser.companyId,
+      companyId: currentUser.company_id,
     });
 
     return { message: 'Checklist deleted successfully' };
   }
 
   async getStatistics(currentUser: User) {
-    const total = await this.checklistModel.countDocuments({ companyId: currentUser.companyId }).exec();
-    const completed = await this.checklistModel.countDocuments({ companyId: currentUser.companyId, isComplete: true }).exec();
-    const approved = await this.checklistModel.countDocuments({ companyId: currentUser.companyId, isApproved: true }).exec();
-    const pending = await this.checklistModel.countDocuments({ companyId: currentUser.companyId, isComplete: true, isApproved: false }).exec();
+    const total = await this.checklistModel.countDocuments({ companyId: currentUser.company_id }).exec();
+    const completed = await this.checklistModel.countDocuments({ companyId: currentUser.company_id, isComplete: true }).exec();
+    const approved = await this.checklistModel.countDocuments({ companyId: currentUser.company_id, isApproved: true }).exec();
+    const pending = await this.checklistModel.countDocuments({ companyId: currentUser.company_id, isComplete: true, isApproved: false }).exec();
 
     return {
       total,
@@ -251,19 +251,19 @@ export class ChecklistService {
   async createTemplate(createTemplateDto: CreateTemplateDto, currentUser: User): Promise<ChecklistTemplate> {
     const template = new this.templateModel({
       ...createTemplateDto,
-      companyId: currentUser.companyId,
+      companyId: currentUser.company_id,
     });
 
     return template.save();
   }
 
   async findAllTemplates(currentUser: User): Promise<ChecklistTemplate[]> {
-    return this.templateModel.find({ companyId: currentUser.companyId }).exec();
+    return this.templateModel.find({ companyId: currentUser.company_id }).exec();
   }
 
   async findOneTemplate(id: string, currentUser: User): Promise<ChecklistTemplate> {
     const template = await this.templateModel
-      .findOne({ _id: id, companyId: currentUser.companyId })
+      .findOne({ _id: id, companyId: currentUser.company_id })
       .exec();
 
     if (!template) {

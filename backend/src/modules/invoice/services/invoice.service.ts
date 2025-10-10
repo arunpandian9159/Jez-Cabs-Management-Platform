@@ -22,20 +22,20 @@ export class InvoiceService {
     const { bookingId, ...invoiceData } = createInvoiceDto;
 
     const booking = await this.bookingRepository.findOne({
-      where: { id: bookingId, companyId: currentUser.companyId },
+      where: { id: bookingId, company_id: currentUser.company_id },
     });
 
     if (!booking) {
       throw new NotFoundException('Booking not found');
     }
 
-    const invoiceNumber = await this.generateInvoiceNumber(currentUser.companyId);
+    const invoiceNumber = await this.generateInvoiceNumber(currentUser.company_id);
 
     const invoice = this.invoiceRepository.create({
       ...invoiceData,
-      bookingId,
-      companyId: currentUser.companyId,
-      invoiceNumber,
+      booking_id: bookingId,
+      company_id: currentUser.company_id,
+      invoice_number: invoiceNumber,
       status: createInvoiceDto.status || InvoiceStatus.DRAFT,
     });
 
@@ -43,8 +43,8 @@ export class InvoiceService {
 
     this.eventEmitter.emit('invoice.created', {
       invoiceId: savedInvoice.id,
-      companyId: savedInvoice.companyId,
-      bookingId: savedInvoice.bookingId,
+      companyId: savedInvoice.company_id,
+      bookingId: savedInvoice.booking_id,
     });
 
     return savedInvoice;
@@ -56,13 +56,13 @@ export class InvoiceService {
     const queryBuilder = this.invoiceRepository
       .createQueryBuilder('invoice')
       .leftJoinAndSelect('invoice.booking', 'booking')
-      .where('invoice.companyId = :companyId', { companyId: currentUser.companyId });
+      .where('invoice.company_id = :companyId', { companyId: currentUser.company_id });
 
     if (status) queryBuilder.andWhere('invoice.status = :status', { status });
-    if (bookingId) queryBuilder.andWhere('invoice.bookingId = :bookingId', { bookingId });
+    if (bookingId) queryBuilder.andWhere('invoice.booking_id = :bookingId', { bookingId });
 
     const skip = (page - 1) * limit;
-    queryBuilder.skip(skip).take(limit).orderBy('invoice.createdAt', 'DESC');
+    queryBuilder.skip(skip).take(limit).orderBy('invoice.created_at', 'DESC');
 
     const [invoices, total] = await queryBuilder.getManyAndCount();
 
@@ -74,7 +74,7 @@ export class InvoiceService {
 
   async findOne(id: string, currentUser: User): Promise<Invoice> {
     const invoice = await this.invoiceRepository.findOne({
-      where: { id, companyId: currentUser.companyId },
+      where: { id, company_id: currentUser.company_id },
       relations: ['booking'],
     });
 
@@ -96,14 +96,14 @@ export class InvoiceService {
     invoice.status = status;
 
     if (status === InvoiceStatus.PAID) {
-      invoice.paidDate = new Date();
+      invoice.paid_date = new Date();
     }
 
     const updatedInvoice = await this.invoiceRepository.save(invoice);
 
     this.eventEmitter.emit('invoice.status.changed', {
       invoiceId: updatedInvoice.id,
-      companyId: updatedInvoice.companyId,
+      companyId: updatedInvoice.company_id,
       status,
     });
 
@@ -117,16 +117,16 @@ export class InvoiceService {
   }
 
   async getStatistics(currentUser: User) {
-    const total = await this.invoiceRepository.count({ where: { companyId: currentUser.companyId } });
-    const draft = await this.invoiceRepository.count({ where: { companyId: currentUser.companyId, status: InvoiceStatus.DRAFT } });
-    const sent = await this.invoiceRepository.count({ where: { companyId: currentUser.companyId, status: InvoiceStatus.SENT } });
-    const paid = await this.invoiceRepository.count({ where: { companyId: currentUser.companyId, status: InvoiceStatus.PAID } });
-    const overdue = await this.invoiceRepository.count({ where: { companyId: currentUser.companyId, status: InvoiceStatus.OVERDUE } });
+    const total = await this.invoiceRepository.count({ where: { company_id: currentUser.company_id } });
+    const draft = await this.invoiceRepository.count({ where: { company_id: currentUser.company_id, status: InvoiceStatus.DRAFT } });
+    const sent = await this.invoiceRepository.count({ where: { company_id: currentUser.company_id, status: InvoiceStatus.SENT } });
+    const paid = await this.invoiceRepository.count({ where: { company_id: currentUser.company_id, status: InvoiceStatus.PAID } });
+    const overdue = await this.invoiceRepository.count({ where: { company_id: currentUser.company_id, status: InvoiceStatus.OVERDUE } });
 
     const revenueResult = await this.invoiceRepository
       .createQueryBuilder('invoice')
       .select('SUM(invoice.amount)', 'total')
-      .where('invoice.companyId = :companyId', { companyId: currentUser.companyId })
+      .where('invoice.company_id = :companyId', { companyId: currentUser.company_id })
       .andWhere('invoice.status = :status', { status: InvoiceStatus.PAID })
       .getRawOne();
 
@@ -141,7 +141,7 @@ export class InvoiceService {
   }
 
   private async generateInvoiceNumber(companyId: string): Promise<string> {
-    const count = await this.invoiceRepository.count({ where: { companyId } });
+    const count = await this.invoiceRepository.count({ where: { company_id: companyId } });
     const year = new Date().getFullYear();
     return `INV-${year}-${String(count + 1).padStart(5, '0')}`;
   }

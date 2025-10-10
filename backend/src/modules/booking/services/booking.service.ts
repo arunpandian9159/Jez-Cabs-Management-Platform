@@ -5,7 +5,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, LessThanOrEqual, MoreThanOrEqual, Between } from 'typeorm';
+import { Repository, Between } from 'typeorm';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Booking } from '../entities/booking.entity';
 import { Cab } from '../../cab/entities/cab.entity';
@@ -43,7 +43,7 @@ export class BookingService {
 
     // Check if cab exists and belongs to the company
     const cab = await this.cabRepository.findOne({
-      where: { id: cabId, companyId: currentUser.companyId },
+      where: { id: cabId, company_id: currentUser.company_id },
     });
 
     if (!cab) {
@@ -56,13 +56,13 @@ export class BookingService {
     }
 
     // Check for booking conflicts
-    await this.checkBookingConflicts(cabId, startDate, endDate, currentUser.companyId);
+    await this.checkBookingConflicts(cabId, startDate, endDate, currentUser.company_id);
 
     // If driver is specified, validate driver
     let driver: Driver | null = null;
     if (driverId) {
       driver = await this.driverRepository.findOne({
-        where: { id: driverId, companyId: currentUser.companyId, isActive: true },
+        where: { id: driverId, company_id: currentUser.company_id, is_active: true },
       });
 
       if (!driver) {
@@ -70,20 +70,29 @@ export class BookingService {
       }
 
       // Check if driver is available for this period
-      await this.checkDriverConflicts(driverId, startDate, endDate, currentUser.companyId);
+      await this.checkDriverConflicts(driverId, startDate, endDate, currentUser.company_id);
     }
 
     // Create booking
-    const booking = this.bookingRepository.create({
+    const bookingEntityData = {
       ...bookingData,
-      cabId,
-      driverId: driverId || null,
-      startDate,
-      endDate,
-      companyId: currentUser.companyId,
+      cab_id: cabId,
+      driver_id: driverId || null,
+      start_date: new Date(startDate),
+      end_date: new Date(endDate),
+      company_id: currentUser.company_id,
       status: createBookingDto.status || BookingStatus.PENDING,
-    });
+      client_name: createBookingDto.clientName,
+      client_email: createBookingDto.clientEmail,
+      client_phone: createBookingDto.clientPhone,
+      client_contact_person: createBookingDto.clientContactPerson,
+      pickup_location: createBookingDto.pickupLocation,
+      dropoff_location: createBookingDto.dropoffLocation,
+      total_amount: createBookingDto.totalAmount,
+      advance_amount: createBookingDto.advanceAmount,
+    };
 
+    const booking = this.bookingRepository.create(bookingEntityData);
     const savedBooking = await this.bookingRepository.save(booking);
 
     // Update cab status to RENTED if booking is active
@@ -95,11 +104,11 @@ export class BookingService {
     // Emit event
     this.eventEmitter.emit('booking.created', {
       bookingId: savedBooking.id,
-      companyId: savedBooking.companyId,
-      cabId: savedBooking.cabId,
-      driverId: savedBooking.driverId,
-      startDate: savedBooking.startDate,
-      endDate: savedBooking.endDate,
+      companyId: savedBooking.company_id,
+      cabId: savedBooking.cab_id,
+      driverId: savedBooking.driver_id,
+      startDate: savedBooking.start_date,
+      endDate: savedBooking.end_date,
     });
 
     return this.findOne(savedBooking.id, currentUser);
@@ -117,7 +126,7 @@ export class BookingService {
       endDateTo,
       page = 1,
       limit = 50,
-      sortBy = 'createdAt',
+      sortBy = 'created_at',
       sortOrder = 'DESC',
     } = filterDto;
 
@@ -125,7 +134,7 @@ export class BookingService {
       .createQueryBuilder('booking')
       .leftJoinAndSelect('booking.cab', 'cab')
       .leftJoinAndSelect('booking.driver', 'driver')
-      .where('booking.companyId = :companyId', { companyId: currentUser.companyId });
+      .where('booking.company_id = :companyId', { companyId: currentUser.company_id });
 
     // Apply filters
     if (status) {
@@ -133,46 +142,46 @@ export class BookingService {
     }
 
     if (cabId) {
-      queryBuilder.andWhere('booking.cabId = :cabId', { cabId });
+      queryBuilder.andWhere('booking.cab_id = :cabId', { cabId });
     }
 
     if (driverId) {
-      queryBuilder.andWhere('booking.driverId = :driverId', { driverId });
+      queryBuilder.andWhere('booking.driver_id = :driverId', { driverId });
     }
 
     if (search) {
       queryBuilder.andWhere(
-        '(booking.clientName ILIKE :search OR booking.clientEmail ILIKE :search OR booking.clientPhone ILIKE :search OR booking.clientContactPerson ILIKE :search)',
+        '(booking.client_name ILIKE :search OR booking.client_email ILIKE :search OR booking.client_phone ILIKE :search OR booking.client_contact_person ILIKE :search)',
         { search: `%${search}%` },
       );
     }
 
     if (startDateFrom) {
-      queryBuilder.andWhere('booking.startDate >= :startDateFrom', { startDateFrom });
+      queryBuilder.andWhere('booking.start_date >= :startDateFrom', { startDateFrom });
     }
 
     if (startDateTo) {
-      queryBuilder.andWhere('booking.startDate <= :startDateTo', { startDateTo });
+      queryBuilder.andWhere('booking.start_date <= :startDateTo', { startDateTo });
     }
 
     if (endDateFrom) {
-      queryBuilder.andWhere('booking.endDate >= :endDateFrom', { endDateFrom });
+      queryBuilder.andWhere('booking.end_date >= :endDateFrom', { endDateFrom });
     }
 
     if (endDateTo) {
-      queryBuilder.andWhere('booking.endDate <= :endDateTo', { endDateTo });
+      queryBuilder.andWhere('booking.end_date <= :endDateTo', { endDateTo });
     }
 
     // Sorting
     const allowedSortFields = [
-      'createdAt',
-      'updatedAt',
-      'startDate',
-      'endDate',
-      'totalAmount',
+      'created_at',
+      'updated_at',
+      'start_date',
+      'end_date',
+      'total_amount',
       'status',
     ];
-    const sortField = allowedSortFields.includes(sortBy) ? sortBy : 'createdAt';
+    const sortField = allowedSortFields.includes(sortBy) ? sortBy : 'created_at';
     queryBuilder.orderBy(`booking.${sortField}`, sortOrder);
 
     // Pagination
@@ -194,7 +203,7 @@ export class BookingService {
 
   async findOne(id: string, currentUser: User): Promise<Booking> {
     const booking = await this.bookingRepository.findOne({
-      where: { id, companyId: currentUser.companyId },
+      where: { id, company_id: currentUser.company_id },
       relations: ['cab', 'driver'],
     });
 
@@ -210,8 +219,8 @@ export class BookingService {
 
     // If dates are being updated, validate and check conflicts
     if (updateBookingDto.startDate || updateBookingDto.endDate) {
-      const newStartDate = updateBookingDto.startDate || booking.startDate;
-      const newEndDate = updateBookingDto.endDate || booking.endDate;
+      const newStartDate = updateBookingDto.startDate || booking.start_date;
+      const newEndDate = updateBookingDto.endDate || booking.end_date;
 
       const start = new Date(newStartDate);
       const end = new Date(newEndDate);
@@ -222,10 +231,10 @@ export class BookingService {
 
       // Check for conflicts (excluding current booking)
       await this.checkBookingConflicts(
-        updateBookingDto.cabId || booking.cabId,
+        updateBookingDto.cabId || booking.cab_id,
         newStartDate.toString(),
         newEndDate.toString(),
-        currentUser.companyId,
+        currentUser.company_id,
         id,
       );
     }
@@ -233,7 +242,7 @@ export class BookingService {
     // If driver is being updated, validate
     if (updateBookingDto.driverId) {
       const driver = await this.driverRepository.findOne({
-        where: { id: updateBookingDto.driverId, companyId: currentUser.companyId, isActive: true },
+        where: { id: updateBookingDto.driverId, company_id: currentUser.company_id, is_active: true },
       });
 
       if (!driver) {
@@ -241,14 +250,45 @@ export class BookingService {
       }
     }
 
+    // Map DTO to entity fields
+    const {
+      cabId,
+      driverId,
+      startDate,
+      endDate,
+      clientName,
+      clientEmail,
+      clientPhone,
+      clientContactPerson,
+      pickupLocation,
+      dropoffLocation,
+      totalAmount,
+      advanceAmount,
+      ...rest
+    } = updateBookingDto;
+
+    const updateData: Partial<Booking> = { ...rest };
+    if (cabId) updateData.cab_id = cabId;
+    if (driverId) updateData.driver_id = driverId;
+    if (startDate) updateData.start_date = new Date(startDate);
+    if (endDate) updateData.end_date = new Date(endDate);
+    if (clientName) updateData.client_name = clientName;
+    if (clientEmail) updateData.client_email = clientEmail;
+    if (clientPhone) updateData.client_phone = clientPhone;
+    if (clientContactPerson) updateData.client_contact_person = clientContactPerson;
+    if (pickupLocation) updateData.pickup_location = pickupLocation;
+    if (dropoffLocation) updateData.dropoff_location = dropoffLocation;
+    if (totalAmount) updateData.total_amount = totalAmount;
+    if (advanceAmount) updateData.advance_amount = advanceAmount;
+
     // Update booking
-    Object.assign(booking, updateBookingDto);
+    Object.assign(booking, updateData);
     const updatedBooking = await this.bookingRepository.save(booking);
 
     // Emit event
     this.eventEmitter.emit('booking.updated', {
       bookingId: updatedBooking.id,
-      companyId: updatedBooking.companyId,
+      companyId: updatedBooking.company_id,
       changes: updateBookingDto,
     });
 
@@ -263,7 +303,7 @@ export class BookingService {
     const updatedBooking = await this.bookingRepository.save(booking);
 
     // Update cab status based on booking status
-    const cab = await this.cabRepository.findOne({ where: { id: booking.cabId } });
+    const cab = await this.cabRepository.findOne({ where: { id: booking.cab_id } });
     if (cab) {
       if (status === BookingStatus.ACTIVE) {
         cab.status = CabStatus.RENTED;
@@ -271,7 +311,7 @@ export class BookingService {
         // Only set to AVAILABLE if no other active bookings exist
         const activeBookings = await this.bookingRepository.count({
           where: {
-            cabId: cab.id,
+            cab_id: cab.id,
             status: BookingStatus.ACTIVE,
           },
         });
@@ -285,7 +325,7 @@ export class BookingService {
     // Emit event
     this.eventEmitter.emit('booking.status.changed', {
       bookingId: updatedBooking.id,
-      companyId: updatedBooking.companyId,
+      companyId: updatedBooking.company_id,
       oldStatus,
       newStatus: status,
     });
@@ -298,7 +338,7 @@ export class BookingService {
 
     // Validate driver
     const driver = await this.driverRepository.findOne({
-      where: { id: driverId, companyId: currentUser.companyId, isActive: true },
+      where: { id: driverId, company_id: currentUser.company_id, is_active: true },
     });
 
     if (!driver) {
@@ -308,19 +348,19 @@ export class BookingService {
     // Check if driver is available
     await this.checkDriverConflicts(
       driverId,
-      booking.startDate.toString(),
-      booking.endDate.toString(),
-      currentUser.companyId,
+      booking.start_date.toString(),
+      booking.end_date.toString(),
+      currentUser.company_id,
       id,
     );
 
-    booking.driverId = driverId;
+    booking.driver_id = driverId;
     await this.bookingRepository.save(booking);
 
     // Emit event
     this.eventEmitter.emit('booking.driver.assigned', {
       bookingId: booking.id,
-      companyId: booking.companyId,
+      companyId: booking.company_id,
       driverId,
     });
 
@@ -342,7 +382,7 @@ export class BookingService {
     // Emit event
     this.eventEmitter.emit('booking.deleted', {
       bookingId: id,
-      companyId: currentUser.companyId,
+      companyId: currentUser.company_id,
     });
 
     return { message: 'Booking deleted successfully' };
@@ -350,30 +390,30 @@ export class BookingService {
 
   async getStatistics(currentUser: User) {
     const totalBookings = await this.bookingRepository.count({
-      where: { companyId: currentUser.companyId },
+      where: { company_id: currentUser.company_id },
     });
 
     const pendingBookings = await this.bookingRepository.count({
-      where: { companyId: currentUser.companyId, status: BookingStatus.PENDING },
+      where: { company_id: currentUser.company_id, status: BookingStatus.PENDING },
     });
 
     const activeBookings = await this.bookingRepository.count({
-      where: { companyId: currentUser.companyId, status: BookingStatus.ACTIVE },
+      where: { company_id: currentUser.company_id, status: BookingStatus.ACTIVE },
     });
 
     const completedBookings = await this.bookingRepository.count({
-      where: { companyId: currentUser.companyId, status: BookingStatus.COMPLETED },
+      where: { company_id: currentUser.company_id, status: BookingStatus.COMPLETED },
     });
 
     const cancelledBookings = await this.bookingRepository.count({
-      where: { companyId: currentUser.companyId, status: BookingStatus.CANCELLED },
+      where: { company_id: currentUser.company_id, status: BookingStatus.CANCELLED },
     });
 
     // Calculate total revenue from completed bookings
     const revenueResult = await this.bookingRepository
       .createQueryBuilder('booking')
-      .select('SUM(booking.totalAmount)', 'total')
-      .where('booking.companyId = :companyId', { companyId: currentUser.companyId })
+      .select('SUM(booking.total_amount)', 'total')
+      .where('booking.company_id = :companyId', { companyId: currentUser.company_id })
       .andWhere('booking.status = :status', { status: BookingStatus.COMPLETED })
       .getRawOne();
 
@@ -396,13 +436,13 @@ export class BookingService {
   ): Promise<void> {
     const queryBuilder = this.bookingRepository
       .createQueryBuilder('booking')
-      .where('booking.cabId = :cabId', { cabId })
-      .andWhere('booking.companyId = :companyId', { companyId })
+      .where('booking.cab_id = :cabId', { cabId })
+      .andWhere('booking.company_id = :companyId', { companyId })
       .andWhere('booking.status IN (:...statuses)', {
         statuses: [BookingStatus.PENDING, BookingStatus.ACTIVE],
       })
       .andWhere(
-        '(booking.startDate < :endDate AND booking.endDate > :startDate)',
+        '(booking.start_date < :endDate AND booking.end_date > :startDate)',
         { startDate, endDate },
       );
 
@@ -414,7 +454,7 @@ export class BookingService {
 
     if (conflictingBooking) {
       throw new ConflictException(
-        `Cab is already booked for the selected period (${new Date(conflictingBooking.startDate).toLocaleDateString()} - ${new Date(conflictingBooking.endDate).toLocaleDateString()})`,
+        `Cab is already booked for the selected period (${new Date(conflictingBooking.start_date).toLocaleDateString()} - ${new Date(conflictingBooking.end_date).toLocaleDateString()})`,
       );
     }
   }
@@ -428,13 +468,13 @@ export class BookingService {
   ): Promise<void> {
     const queryBuilder = this.bookingRepository
       .createQueryBuilder('booking')
-      .where('booking.driverId = :driverId', { driverId })
-      .andWhere('booking.companyId = :companyId', { companyId })
+      .where('booking.driver_id = :driverId', { driverId })
+      .andWhere('booking.company_id = :companyId', { companyId })
       .andWhere('booking.status IN (:...statuses)', {
         statuses: [BookingStatus.PENDING, BookingStatus.ACTIVE],
       })
       .andWhere(
-        '(booking.startDate < :endDate AND booking.endDate > :startDate)',
+        '(booking.start_date < :endDate AND booking.end_date > :startDate)',
         { startDate, endDate },
       );
 
