@@ -47,5 +47,12 @@ export class AnalyticsController {
   async getDriverPerformance(@Query() queryDto: AnalyticsQueryDto, @CurrentUser() currentUser: User) {
     return this.analyticsService.getDriverPerformance(queryDto, currentUser);
   }
-}
 
+  @Get('revenue-over-time')
+  @Roles(UserRole.OWNER, UserRole.MANAGER)
+  @ApiOperation({ summary: 'Get revenue over time analytics (Owner and Manager only)' })
+  @ApiResponse({ status: 200, description: 'Revenue over time analytics retrieved successfully' })
+  async getRevenueOverTime(@Query() queryDto: AnalyticsQueryDto, @CurrentUser() currentUser: User) {
+    return this.analyticsService.getRevenueOverTime(queryDto, currentUser);
+  }
+}

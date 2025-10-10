@@ -40,10 +40,12 @@ export const CabList: React.FC = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [cabToDelete, setCabToDelete] = useState<string | null>(null);
 
-  const { data: cabs, isLoading, error } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['cabs', { status: statusFilter, search: searchQuery }],
     queryFn: () => cabService.getAll({ status: statusFilter, search: searchQuery }),
   });
+
+  const cabs = data?.data;
 
   const deleteMutation = useMutation({
     mutationFn: cabService.delete,
@@ -180,48 +182,48 @@ export const CabList: React.FC = () => {
 
                   <Box sx={{ mb: 2 }}>
                     <Chip
-                      label={cab.registrationNumber}
+                      label={cab.registration_number}
                       size="small"
                       sx={{ fontWeight: 600, bgcolor: '#e3f2fd' }}
                     />
                   </Box>
 
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                    {cab.seatingCapacity && (
+                    {cab.seating_capacity && (
                       <Typography variant="body2" color="text.secondary">
-                        Seats: {cab.seatingCapacity}
+                        Seats: {cab.seating_capacity}
                       </Typography>
                     )}
-                    {cab.fuelType && (
+                    {cab.fuel_type && (
                       <Typography variant="body2" color="text.secondary">
-                        Fuel: {cab.fuelType}
+                        Fuel: {cab.fuel_type}
                       </Typography>
                     )}
-                    {cab.dailyRentalRate && (
+                    {cab.daily_rental_rate && (
                       <Typography variant="body2" fontWeight={600} color="primary">
-                        ${cab.dailyRentalRate}/day
+                        ${cab.daily_rental_rate}/day
                       </Typography>
                     )}
                   </Box>
 
                   {/* Expiry Warnings */}
                   <Box sx={{ mt: 2 }}>
-                    {isExpired(cab.insuranceExpiry) && (
+                    {isExpired(cab.insurance_expiry) && (
                       <Alert severity="error" icon={<Warning />} sx={{ mb: 1 }}>
                         Insurance expired
                       </Alert>
                     )}
-                    {!isExpired(cab.insuranceExpiry) && isExpiringSoon(cab.insuranceExpiry) && (
+                    {!isExpired(cab.insurance_expiry) && isExpiringSoon(cab.insurance_expiry) && (
                       <Alert severity="warning" icon={<Warning />} sx={{ mb: 1 }}>
                         Insurance expiring soon
                       </Alert>
                     )}
-                    {isExpired(cab.registrationExpiry) && (
+                    {isExpired(cab.registration_expiry) && (
                       <Alert severity="error" icon={<Warning />} sx={{ mb: 1 }}>
                         Registration expired
                       </Alert>
                     )}
-                    {!isExpired(cab.registrationExpiry) && isExpiringSoon(cab.registrationExpiry) && (
+                    {!isExpired(cab.registration_expiry) && isExpiringSoon(cab.registration_expiry) && (
                       <Alert severity="warning" icon={<Warning />} sx={{ mb: 1 }}>
                         Registration expiring soon
                       </Alert>
@@ -267,4 +269,3 @@ export const CabList: React.FC = () => {
     </Box>
   );
 };
-

@@ -276,7 +276,7 @@ export const Dashboard: React.FC = () => {
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
               <DirectionsCar sx={{ mr: 1, color: 'primary.main' }} />
               <Typography variant="h6" fontWeight={600}>
-                Fleet Status
+                Cabs Status
               </Typography>
             </Box>
             <ResponsiveContainer width="100%" height={300}>

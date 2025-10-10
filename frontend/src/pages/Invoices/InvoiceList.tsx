@@ -24,17 +24,28 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { invoiceService } from '../../services/invoice.service';
 import { StatusBadge } from '../../components/StatusBadge';
 import { Invoice } from '../../types';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
+
+const safeFormatDate = (dateString: string, formatString: string) => {
+  try {
+    const date = parseISO(dateString);
+    return format(date, formatString);
+  } catch (error) {
+    return 'Invalid Date';
+  }
+};
 
 export const InvoiceList: React.FC = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [statusFilter, setStatusFilter] = useState<string>('');
 
-  const { data: invoices, isLoading, error } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['invoices', { status: statusFilter }],
-    queryFn: () => invoiceService.getAll({ status: statusFilter }),
+    queryFn: () => invoiceService.getAll(statusFilter ? { status: statusFilter } : undefined),
   });
+
+  const invoices = data?.data;
 
   const deleteMutation = useMutation({
     mutationFn: invoiceService.delete,
@@ -161,7 +172,7 @@ export const InvoiceList: React.FC = () => {
 
                   <Box sx={{ bgcolor: '#f5f5f5', p: 2, borderRadius: 1, mb: 2 }}>
                     <Typography variant="h4" fontWeight={700} color="primary">
-                      ${invoice.totalAmount.toLocaleString()}
+                      ${invoice.totalAmount?.toLocaleString() ?? 'N/A'}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
                       Total Amount
@@ -174,7 +185,7 @@ export const InvoiceList: React.FC = () => {
                         Subtotal:
                       </Typography>
                       <Typography variant="body2" fontWeight={600}>
-                        ${invoice.subtotal.toLocaleString()}
+                        ${invoice.subtotal?.toLocaleString() ?? 'N/A'}
                       </Typography>
                     </Box>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -182,7 +193,7 @@ export const InvoiceList: React.FC = () => {
                         Tax ({invoice.taxRate}%):
                       </Typography>
                       <Typography variant="body2" fontWeight={600}>
-                        ${invoice.taxAmount.toLocaleString()}
+                        ${invoice.taxAmount?.toLocaleString() ?? 'N/A'}
                       </Typography>
                     </Box>
                     {invoice.discount > 0 && (
@@ -191,7 +202,7 @@ export const InvoiceList: React.FC = () => {
                           Discount:
                         </Typography>
                         <Typography variant="body2" fontWeight={600} color="success.main">
-                          -${invoice.discount.toLocaleString()}
+                          -${invoice.discount?.toLocaleString() ?? 'N/A'}
                         </Typography>
                       </Box>
                     )}
@@ -199,11 +210,11 @@ export const InvoiceList: React.FC = () => {
 
                   <Box sx={{ mt: 2, pt: 2, borderTop: '1px solid #e0e0e0' }}>
                     <Typography variant="body2" color="text.secondary">
-                      Due Date: {format(new Date(invoice.dueDate), 'MMM dd, yyyy')}
+                      Due Date: {safeFormatDate(invoice.dueDate, 'MMM dd, yyyy')}
                     </Typography>
                     {invoice.paidDate && (
                       <Typography variant="body2" color="success.main">
-                        Paid: {format(new Date(invoice.paidDate), 'MMM dd, yyyy')}
+                        Paid: {safeFormatDate(invoice.paidDate, 'MMM dd, yyyy')}
                       </Typography>
                     )}
                   </Box>

@@ -25,13 +25,13 @@ export class CabService {
     const existingCab = await this.cabRepository.findOne({
       where: {
         company_id: currentUser.company_id,
-        registration_number: createCabDto.registrationNumber,
+        registration_number: createCabDto.registration_number,
       },
     });
 
     if (existingCab) {
       throw new ConflictException(
-        `Vehicle with registration number ${createCabDto.registrationNumber} already exists`,
+        `Vehicle with registration number ${createCabDto.registration_number} already exists`,
       );
     }
 
@@ -59,13 +59,13 @@ export class CabService {
       status,
       make,
       model,
-      fuelType,
+      fuel_type,
       search,
-      expiringDocuments,
+      expiring_documents,
       page = 1,
       limit = 50,
-      sortBy = 'createdAt',
-      sortOrder = 'DESC',
+      sort_by = 'created_at',
+      sort_order = 'DESC',
     } = filterDto;
 
     const queryBuilder = this.cabRepository
@@ -85,40 +85,40 @@ export class CabService {
       queryBuilder.andWhere('cab.model = :model', { model });
     }
 
-    if (fuelType) {
-      queryBuilder.andWhere('cab.fuelType = :fuelType', { fuelType });
+    if (fuel_type) {
+      queryBuilder.andWhere('cab.fuel_type = :fuel_type', { fuel_type });
     }
 
     if (search) {
       queryBuilder.andWhere(
-        '(cab.registrationNumber ILIKE :search OR cab.vin ILIKE :search OR cab.make ILIKE :search OR cab.model ILIKE :search)',
+        '(cab.registration_number ILIKE :search OR cab.vin ILIKE :search OR cab.make ILIKE :search OR cab.model ILIKE :search)',
         { search: `%${search}%` },
       );
     }
 
     // Filter for expiring documents (within 30 days)
-    if (expiringDocuments) {
+    if (expiring_documents) {
       const thirtyDaysFromNow = new Date();
       thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
 
       queryBuilder.andWhere(
-        '(cab.insuranceExpiry <= :expiryDate OR cab.registrationExpiry <= :expiryDate)',
+        '(cab.insurance_expiry <= :expiryDate OR cab.registration_expiry <= :expiryDate)',
         { expiryDate: thirtyDaysFromNow },
       );
     }
 
     // Sorting
     const allowedSortFields = [
-      'createdAt',
-      'updatedAt',
+      'created_at',
+      'updated_at',
       'make',
       'model',
       'year',
-      'registrationNumber',
+      'registration_number',
       'status',
     ];
-    const sortField = allowedSortFields.includes(sortBy) ? sortBy : 'createdAt';
-    queryBuilder.orderBy(`cab.${sortField}`, sortOrder);
+    const sortField = allowedSortFields.includes(sort_by) ? sort_by : 'created_at';
+    queryBuilder.orderBy(`cab.${sortField}`, sort_order);
 
     // Pagination
     const skip = (page - 1) * limit;
@@ -157,19 +157,19 @@ export class CabService {
 
     // If registration number is being updated, check for conflicts
     if (
-      updateCabDto.registrationNumber &&
-      updateCabDto.registrationNumber !== cab.registration_number
+      updateCabDto.registration_number &&
+      updateCabDto.registration_number !== cab.registration_number
     ) {
       const existingCab = await this.cabRepository.findOne({
         where: {
           company_id: currentUser.company_id,
-          registration_number: updateCabDto.registrationNumber,
+          registration_number: updateCabDto.registration_number,
         },
       });
 
       if (existingCab) {
         throw new ConflictException(
-          `Vehicle with registration number ${updateCabDto.registrationNumber} already exists`,
+          `Vehicle with registration number ${updateCabDto.registration_number} already exists`,
         );
       }
     }
@@ -330,4 +330,3 @@ export class CabService {
     };
   }
 }
-

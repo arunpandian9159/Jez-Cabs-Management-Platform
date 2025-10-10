@@ -37,7 +37,7 @@ export class CreateCabDto {
   @IsNotEmpty()
   @IsString()
   @MaxLength(50)
-  registrationNumber: string;
+  registration_number: string;
 
   @ApiPropertyOptional({ example: '1HGBH41JXMN109186', description: 'Vehicle Identification Number' })
   @IsOptional()
@@ -66,57 +66,56 @@ export class CreateCabDto {
   @IsNumber()
   @Min(1)
   @Max(50)
-  seatingCapacity?: number;
+  seating_capacity?: number;
 
   @ApiPropertyOptional({ example: 'Petrol', description: 'Fuel type (Petrol, Diesel, Electric, Hybrid)' })
   @IsOptional()
   @IsString()
   @MaxLength(50)
-  fuelType?: string;
+  fuel_type?: string;
 
   @ApiPropertyOptional({ example: '2025-12-31', description: 'Insurance expiry date (YYYY-MM-DD)' })
   @IsOptional()
   @IsDateString()
-  insuranceExpiry?: string;
+  insurance_expiry?: string;
 
   @ApiPropertyOptional({ example: 'ABC Insurance Co.', description: 'Insurance provider name' })
   @IsOptional()
   @IsString()
   @MaxLength(100)
-  insuranceProvider?: string;
+  insurance_provider?: string;
 
   @ApiPropertyOptional({ example: 'POL-123456', description: 'Insurance policy number' })
   @IsOptional()
   @IsString()
   @MaxLength(100)
-  insurancePolicyNumber?: string;
+  insurance_policy_number?: string;
 
   @ApiPropertyOptional({ example: '2026-06-30', description: 'Registration expiry date (YYYY-MM-DD)' })
   @IsOptional()
   @IsDateString()
-  registrationExpiry?: string;
+  registration_expiry?: string;
 
   @ApiPropertyOptional({ example: 'GPS-12345', description: 'GPS device identifier' })
   @IsOptional()
   @IsString()
   @MaxLength(100)
-  gpsDeviceId?: string;
+  gps_device_id?: string;
 
   @ApiPropertyOptional({ example: 150.00, description: 'Daily rental rate in currency' })
   @IsOptional()
   @IsNumber()
   @IsPositive()
-  dailyRentalRate?: number;
+  daily_rental_rate?: number;
 
   @ApiPropertyOptional({ example: 50000, description: 'Current odometer reading in kilometers' })
   @IsOptional()
   @IsNumber()
   @Min(0)
-  currentMileage?: number;
+  current_mileage?: number;
 
   @ApiPropertyOptional({ example: 'Recently serviced, excellent condition', description: 'Additional notes' })
   @IsOptional()
   @IsString()
   notes?: string;
 }
-

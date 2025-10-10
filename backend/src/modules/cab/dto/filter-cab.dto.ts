@@ -26,7 +26,7 @@ export class FilterCabDto {
   @ApiPropertyOptional({ description: 'Filter by fuel type', example: 'Petrol' })
   @IsOptional()
   @IsString()
-  fuelType?: string;
+  fuel_type?: string;
 
   @ApiPropertyOptional({ description: 'Search by registration number or VIN', example: 'ABC' })
   @IsOptional()
@@ -36,7 +36,7 @@ export class FilterCabDto {
   @ApiPropertyOptional({ description: 'Show only vehicles with expiring documents (within 30 days)', example: true })
   @IsOptional()
   @Type(() => Boolean)
-  expiringDocuments?: boolean;
+  expiring_documents?: boolean;
 
   @ApiPropertyOptional({ description: 'Page number for pagination', example: 1, default: 1 })
   @IsOptional()
@@ -52,14 +52,13 @@ export class FilterCabDto {
   @Min(1)
   limit?: number = 50;
 
-  @ApiPropertyOptional({ description: 'Sort by field', example: 'createdAt' })
+  @ApiPropertyOptional({ description: 'Sort by field', example: 'created_at' })
   @IsOptional()
   @IsString()
-  sortBy?: string = 'createdAt';
+  sort_by?: string = 'created_at';
 
   @ApiPropertyOptional({ description: 'Sort order', example: 'DESC', enum: ['ASC', 'DESC'] })
   @IsOptional()
   @IsEnum(['ASC', 'DESC'])
-  sortOrder?: 'ASC' | 'DESC' = 'DESC';
+  sort_order?: 'ASC' | 'DESC' = 'DESC';
 }
-

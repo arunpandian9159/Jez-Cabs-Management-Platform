@@ -31,7 +31,16 @@ import { LoadingSkeleton } from '../../components/LoadingSkeleton';
 import { EmptyState } from '../../components/EmptyState';
 import { ConfirmDialog } from '../../components/ConfirmDialog';
 import { Booking } from '../../types';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
+
+const safeFormatDate = (dateString: string, formatString: string) => {
+  try {
+    const date = parseISO(dateString);
+    return format(date, formatString);
+  } catch (error) {
+    return 'Invalid Date';
+  }
+};
 
 export const BookingList: React.FC = () => {
   const navigate = useNavigate();
@@ -42,10 +51,12 @@ export const BookingList: React.FC = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [bookingToDelete, setBookingToDelete] = useState<string | null>(null);
 
-  const { data: bookings, isLoading, error } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['bookings', { status: statusFilter, search: searchQuery }],
-    queryFn: () => bookingService.getAll({ status: statusFilter }),
+    queryFn: () => bookingService.getAll(statusFilter ? { status: statusFilter } : undefined),
   });
+
+  const bookings = data?.data;
 
   const deleteMutation = useMutation({
     mutationFn: bookingService.delete,
@@ -202,8 +213,8 @@ export const BookingList: React.FC = () => {
                       Rental Period
                     </Typography>
                     <Typography variant="body2" fontWeight={600}>
-                      {format(new Date(booking.startDate), 'MMM dd, yyyy')} -{' '}
-                      {format(new Date(booking.endDate), 'MMM dd, yyyy')}
+                      {safeFormatDate(booking.startDate, 'MMM dd, yyyy')} -{' '}
+                      {safeFormatDate(booking.endDate, 'MMM dd, yyyy')}
                     </Typography>
                   </Box>
 
@@ -259,4 +270,3 @@ export const BookingList: React.FC = () => {
     </Box>
   );
 };
-

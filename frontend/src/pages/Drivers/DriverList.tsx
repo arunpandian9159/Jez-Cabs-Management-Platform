@@ -42,10 +42,12 @@ export const DriverList: React.FC = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [driverToDelete, setDriverToDelete] = useState<string | null>(null);
 
-  const { data: drivers, isLoading, error } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['drivers', { isActive: showActiveOnly || undefined }],
     queryFn: () => driverService.getAll({ isActive: showActiveOnly || undefined }),
   });
+
+  const drivers = data?.data;
 
   const deleteMutation = useMutation({
     mutationFn: driverService.delete,
@@ -219,18 +221,18 @@ export const DriverList: React.FC = () => {
                       🪪 {driver.licenseNumber}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      📅 Expires: {format(new Date(driver.licenseExpiry), 'MMM dd, yyyy')}
+                      📅 Expires: {driver.licenseExpiry ? format(new Date(driver.licenseExpiry), 'MMM dd, yyyy') : 'N/A'}
                     </Typography>
                   </Box>
 
                   {/* Expiry Warnings */}
                   <Box>
-                    {isExpired(driver.licenseExpiry) && (
+                    {driver.licenseExpiry && isExpired(driver.licenseExpiry) && (
                       <Alert severity="error" icon={<Warning />} sx={{ mb: 1 }}>
                         License expired
                       </Alert>
                     )}
-                    {!isExpired(driver.licenseExpiry) && isExpiringSoon(driver.licenseExpiry) && (
+                    {driver.licenseExpiry && !isExpired(driver.licenseExpiry) && isExpiringSoon(driver.licenseExpiry) && (
                       <Alert severity="warning" icon={<Warning />} sx={{ mb: 1 }}>
                         License expiring soon
                       </Alert>
@@ -303,4 +305,3 @@ export const DriverList: React.FC = () => {
     </Box>
   );
 };
-

@@ -28,6 +28,8 @@ export const Reports: React.FC = () => {
       }),
   });
 
+  const chartData = revenueData?.data;
+
   if (isLoadingStats || isLoadingRevenue) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
@@ -57,7 +59,7 @@ export const Reports: React.FC = () => {
             </Typography>
           </Box>
           <ResponsiveContainer width="100%" height={400}>
-            <LineChart data={revenueData || []}>
+            <LineChart data={chartData || []}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis
                 dataKey="date"
@@ -158,19 +160,19 @@ export const Reports: React.FC = () => {
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 2, bgcolor: '#f5f5f5', borderRadius: 1 }}>
                   <Typography variant="body1">Total Revenue</Typography>
                   <Typography variant="h6" fontWeight={700}>
-                    ${stats?.revenue.totalRevenue.toLocaleString()}
+                    ${stats?.revenue.totalRevenue?.toLocaleString() ?? 'N/A'}
                   </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 2, bgcolor: '#f5f5f5', borderRadius: 1 }}>
                   <Typography variant="body1">Paid Revenue</Typography>
                   <Typography variant="h6" fontWeight={700} color="success.main">
-                    ${stats?.revenue.paidRevenue.toLocaleString()}
+                    ${stats?.revenue.paidRevenue?.toLocaleString() ?? 'N/A'}
                   </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 2, bgcolor: '#f5f5f5', borderRadius: 1 }}>
                   <Typography variant="body1">Pending Revenue</Typography>
                   <Typography variant="h6" fontWeight={700} color="warning.main">
-                    ${stats?.revenue.pendingRevenue.toLocaleString()}
+                    ${stats?.revenue.pendingRevenue?.toLocaleString() ?? 'N/A'}
                   </Typography>
                 </Box>
               </Box>
@@ -181,4 +183,3 @@ export const Reports: React.FC = () => {
     </Box>
   );
 };
-

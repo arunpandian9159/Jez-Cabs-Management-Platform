@@ -20,22 +20,22 @@ export interface Cab {
   make: string;
   model: string;
   year: number;
-  registrationNumber: string;
+  registration_number: string;
   vin?: string;
   status: 'AVAILABLE' | 'RENTED' | 'IN_MAINTENANCE';
   color?: string;
-  seatingCapacity?: number;
-  fuelType?: string;
-  insuranceExpiry?: string;
-  insuranceProvider?: string;
-  insurancePolicyNumber?: string;
-  registrationExpiry?: string;
-  gpsDeviceId?: string;
-  dailyRentalRate?: number;
-  currentMileage?: number;
+  seating_capacity?: number;
+  fuel_type?: string;
+  insurance_expiry?: string;
+  insurance_provider?: string;
+  insurance_policy_number?: string;
+  registration_expiry?: string;
+  gps_device_id?: string;
+  daily_rental_rate?: number;
+  current_mileage?: number;
   notes?: string;
-  createdAt: string;
-  updatedAt: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Driver {
@@ -142,4 +142,3 @@ export interface DashboardStats {
     collectionRate: number;
   };
 }
-

@@ -409,5 +409,23 @@ export class AnalyticsService {
 
     return Number(result?.total || 0);
   }
-}
 
+  async getRevenueOverTime(queryDto: AnalyticsQueryDto, currentUser: User) {
+    const { startDate, endDate } = this.getDateRange(queryDto);
+
+    const revenueData = await this.invoiceRepository
+      .createQueryBuilder('invoice')
+      .select("DATE_TRUNC('day', invoice.created_at)", 'date')
+      .addSelect('SUM(invoice.total_amount)', 'revenue')
+      .where('invoice.company_id = :company_id', { company_id: currentUser.company_id })
+      .andWhere('invoice.created_at BETWEEN :startDate AND :endDate', { startDate, endDate })
+      .groupBy("DATE_TRUNC('day', invoice.created_at)")
+      .orderBy("DATE_TRUNC('day', invoice.created_at)", 'ASC')
+      .getRawMany();
+
+    return revenueData.map((row) => ({
+      date: new Date(row.date).toISOString().split('T')[0], // Format as YYYY-MM-DD
+      revenue: parseFloat(row.revenue),
+    }));
+  }
+}

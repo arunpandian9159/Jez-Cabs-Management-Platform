@@ -10,7 +10,16 @@ export interface DriverFilters {
 
 export const driverService = {
   getAll: async (params?: DriverFilters) => {
-    const { data } = await axios.get('/drivers', { params });
+    const cleanParams: Record<string, any> = {};
+    if (params) {
+      Object.keys(params).forEach((key) => {
+        const filterKey = key as keyof DriverFilters;
+        if (params[filterKey] !== '' && params[filterKey] !== null && params[filterKey] !== undefined) {
+          cleanParams[filterKey] = params[filterKey];
+        }
+      });
+    }
+    const { data } = await axios.get('/drivers', { params: cleanParams });
     return data;
   },
 

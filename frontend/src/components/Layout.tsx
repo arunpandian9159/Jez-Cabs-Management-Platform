@@ -40,7 +40,7 @@ interface MenuItem {
 
 const menuItems: MenuItem[] = [
   { text: 'Dashboard', icon: <DashboardIcon />, path: '/app/dashboard' },
-  { text: 'Fleet', icon: <DirectionsCarIcon />, path: '/app/cabs' },
+  { text: 'Cabs', icon: <DirectionsCarIcon />, path: '/app/cabs' },
   { text: 'Drivers', icon: <PeopleIcon />, path: '/app/drivers' },
   { text: 'Bookings', icon: <BookIcon />, path: '/app/bookings' },
   { text: 'Checklists', icon: <ChecklistIcon />, path: '/app/checklists' },

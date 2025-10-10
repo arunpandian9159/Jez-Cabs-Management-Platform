@@ -12,7 +12,7 @@ export const analyticsService = {
     return data;
   },
 
-  getRevenueOverTime: async (params?: { startDate?: string; endDate?: string }): Promise<RevenueData[]> => {
+  getRevenueOverTime: async (params?: { startDate?: string; endDate?: string }) => {
     const { data } = await axios.get('/analytics/revenue-over-time', { params });
     return data;
   },

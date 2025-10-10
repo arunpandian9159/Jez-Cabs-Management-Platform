@@ -6,11 +6,24 @@ export interface CabFilters {
   search?: string;
   page?: number;
   limit?: number;
+  sort_by?: string;
+  sort_order?: 'ASC' | 'DESC';
+  fuel_type?: string;
+  expiring_documents?: boolean;
 }
 
 export const cabService = {
   getAll: async (params?: CabFilters) => {
-    const { data } = await axios.get('/cabs', { params });
+    const cleanParams: Record<string, any> = {};
+    if (params) {
+      Object.keys(params).forEach((key) => {
+        const filterKey = key as keyof CabFilters;
+        if (params[filterKey] !== '' && params[filterKey] !== null && params[filterKey] !== undefined) {
+          cleanParams[filterKey] = params[filterKey];
+        }
+      });
+    }
+    const { data } = await axios.get('/cabs', { params: cleanParams });
     return data;
   },
 

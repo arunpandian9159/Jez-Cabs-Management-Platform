@@ -20,10 +20,12 @@ import { format } from 'date-fns';
 export const ChecklistList: React.FC = () => {
   const navigate = useNavigate();
 
-  const { data: checklists, isLoading, error } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['checklists'],
     queryFn: () => checklistService.getAll(),
   });
+
+  const checklists = data?.data;
 
   if (isLoading) {
     return (
@@ -126,4 +128,3 @@ export const ChecklistList: React.FC = () => {
     </Box>
   );
 };
-
