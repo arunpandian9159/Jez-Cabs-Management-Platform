@@ -7,6 +7,10 @@ import {
   Card,
   CardContent,
   Alert,
+  Fade,
+  Grow,
+  useTheme,
+  alpha,
 } from '@mui/material';
 import {
   DirectionsCar,
@@ -15,10 +19,11 @@ import {
   AttachMoney,
   TrendingUp,
   Warning,
+  Assessment,
 } from '@mui/icons-material';
 import { useQuery } from '@tanstack/react-query';
 import { analyticsService } from '../services/analytics.service';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell} from 'recharts';
 import { format, subDays } from 'date-fns';
 import { LoadingSkeleton } from '../components/LoadingSkeleton';
 
@@ -30,41 +35,93 @@ interface StatCardProps {
   icon: React.ReactNode;
   color: string;
   subtitle?: string;
+  delay?: number;
 }
 
-const StatCard: React.FC<StatCardProps> = ({ title, value, icon, color, subtitle }) => (
-  <Card sx={{ height: '100%' }}>
-    <CardContent>
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-        <Box
-          sx={{
-            bgcolor: `${color}20`,
-            borderRadius: 2,
-            p: 1.5,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          {React.cloneElement(icon as React.ReactElement, { sx: { color, fontSize: 32 } } as any)}
-        </Box>
-      </Box>
-      <Typography variant="h4" fontWeight={700} gutterBottom>
-        {value}
-      </Typography>
-      <Typography variant="body2" color="text.secondary" gutterBottom>
-        {title}
-      </Typography>
-      {subtitle && (
-        <Typography variant="caption" color="text.secondary">
-          {subtitle}
-        </Typography>
-      )}
-    </CardContent>
-  </Card>
-);
+const StatCard: React.FC<StatCardProps> = ({ title, value, icon, color, subtitle, delay = 0 }) => {
+  const theme = useTheme();
+
+  return (
+    <Grow in timeout={600 + delay}>
+      <Card
+        sx={{
+          height: '100%',
+          cursor: 'pointer',
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          '&:hover': {
+            transform: 'translateY(-8px)',
+            boxShadow: `0 20px 40px ${alpha(color, 0.15)}`,
+            '& .stat-icon': {
+              transform: 'scale(1.1)',
+            },
+          },
+        }}
+        role="region"
+        aria-labelledby={`stat-${title.toLowerCase().replace(/\s+/g, '-')}`}
+      >
+        <CardContent sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+            <Box
+              className="stat-icon"
+              sx={{
+                bgcolor: alpha(color, 0.1),
+                borderRadius: 3,
+                p: 2,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'transform 0.3s ease',
+                border: `2px solid ${alpha(color, 0.2)}`,
+              }}
+              aria-hidden="true"
+            >
+              {React.cloneElement(icon as React.ReactElement, {
+                sx: { color, fontSize: 36 }
+              } as any)}
+            </Box>
+          </Box>
+          <Typography
+            variant="h3"
+            fontWeight={800}
+            gutterBottom
+            sx={{
+              color: theme.palette.text.primary,
+              fontSize: { xs: '1.8rem', sm: '2.2rem' },
+              lineHeight: 1.2,
+            }}
+            id={`stat-${title.toLowerCase().replace(/\s+/g, '-')}`}
+          >
+            {value}
+          </Typography>
+          <Typography
+            variant="body1"
+            color="text.secondary"
+            gutterBottom
+            sx={{ fontWeight: 600, mb: 0.5 }}
+          >
+            {title}
+          </Typography>
+          {subtitle && (
+            <Typography
+              variant="caption"
+              sx={{
+                color: alpha(theme.palette.text.secondary, 0.8),
+                fontWeight: 500,
+                display: 'block',
+                mt: 1,
+              }}
+            >
+              {subtitle}
+            </Typography>
+          )}
+        </CardContent>
+      </Card>
+    </Grow>
+  );
+};
 
 export const Dashboard: React.FC = () => {
+  const theme = useTheme();
   const { data: stats, isLoading, error } = useQuery({
     queryKey: ['dashboard-stats'],
     queryFn: analyticsService.getDashboardStats,
@@ -98,53 +155,83 @@ export const Dashboard: React.FC = () => {
   ];
 
   return (
-    <Box>
-      <Typography variant="h4" fontWeight={700} gutterBottom>
-        Dashboard
-      </Typography>
-      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-        Welcome back! Here's what's happening with your fleet today.
-      </Typography>
+    <Fade in timeout={800}>
+      <Box>
+        {/* Header Section */}
+        <Box sx={{ mb: 4 }}>
+          <Typography
+            variant="h3"
+            fontWeight={800}
+            gutterBottom
+            sx={{
+              background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              mb: 1,
+            }}
+          >
+            Dashboard Overview
+          </Typography>
+          <Typography variant="h6" color="text.secondary" sx={{ mb: 1, fontWeight: 400 }}>
+            Welcome back! Here's what's happening with your fleet today.
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Last updated: {format(new Date(), 'MMM dd, yyyy \'at\' h:mm a')}
+          </Typography>
+        </Box>
 
-      {/* KPI Cards */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <StatCard
-            title="Total Fleet"
-            value={stats?.fleet.totalCabs || 0}
-            icon={<DirectionsCar />}
-            color="#1976d2"
-            subtitle={`${stats?.fleet.utilizationRate.toFixed(1) || 0}% utilization`}
-          />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <StatCard
-            title="Active Drivers"
-            value={stats?.drivers.activeDrivers || 0}
-            icon={<People />}
-            color="#4caf50"
-            subtitle={`${stats?.drivers.totalDrivers || 0} total drivers`}
-          />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <StatCard
-            title="Active Bookings"
-            value={stats?.bookings.activeBookings || 0}
-            icon={<Book />}
-            color="#ff9800"
-            subtitle={`${stats?.bookings.pendingBookings || 0} pending`}
-          />
-        </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <StatCard
-            title="Total Revenue"
-            value={`$${stats?.revenue.totalRevenue.toLocaleString() || 0}`}
-            icon={<AttachMoney />}
-            color="#4caf50"
-            subtitle={`${stats?.revenue.collectionRate.toFixed(1) || 0}% collected`}
-          />
-        </Grid>
-      </Grid>
+        {/* KPI Cards Section */}
+        <Box sx={{ mb: 5 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+            <Assessment sx={{ mr: 1.5, color: 'primary.main', fontSize: 28 }} />
+            <Typography variant="h5" fontWeight={700} color="text.primary">
+              Key Performance Indicators
+            </Typography>
+          </Box>
+          <Grid container spacing={3}>
+            <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+              <StatCard
+                title="Total Fleet"
+                value={stats?.fleet.totalCabs || 0}
+                icon={<DirectionsCar />}
+                color="#1976d2"
+                subtitle={`${stats?.fleet.utilizationRate.toFixed(1) || 0}% utilization`}
+                delay={0}
+              />
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+              <StatCard
+                title="Active Drivers"
+                value={stats?.drivers.activeDrivers || 0}
+                icon={<People />}
+                color="#4caf50"
+                subtitle={`${stats?.drivers.totalDrivers || 0} total drivers`}
+                delay={100}
+              />
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+              <StatCard
+                title="Active Bookings"
+                value={stats?.bookings.activeBookings || 0}
+                icon={<Book />}
+                color="#ff9800"
+                subtitle={`${stats?.bookings.pendingBookings || 0} pending`}
+                delay={200}
+              />
+            </Grid>
+            <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+              <StatCard
+                title="Total Revenue"
+                value={`$${stats?.revenue.totalRevenue.toLocaleString() || 0}`}
+                icon={<AttachMoney />}
+                color="#4caf50"
+                subtitle={`${stats?.revenue.collectionRate.toFixed(1) || 0}% collected`}
+                delay={300}
+              />
+            </Grid>
+          </Grid>
+        </Box>
 
       {/* Charts */}
       <Grid container spacing={3}>
@@ -282,7 +369,7 @@ export const Dashboard: React.FC = () => {
           </Paper>
         </Grid>
       </Grid>
-    </Box>
+      </Box>
+    </Fade>
   );
 };
-
