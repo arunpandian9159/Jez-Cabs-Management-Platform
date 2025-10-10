@@ -361,7 +361,7 @@ npm run dev
 - Firebase Hosting
 
 ### Databases
-- PostgreSQL: AWS RDS, Heroku Postgres, Supabase
+- PostgreSQL: Supabase
 - MongoDB: MongoDB Atlas, AWS DocumentDB
 
 ---

@@ -1,48 +1,4 @@
-version: '3.8'
-
 services:
-  # PostgreSQL Database
-  postgres:
-    image: postgres:15-alpine
-    container_name: jezcabs-postgres
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: jezcabs
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - jezcabs-network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  # MongoDB Database
-  mongodb:
-    image: mongo:7
-    container_name: jezcabs-mongodb
-    restart: unless-stopped
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: admin
-      MONGO_INITDB_DATABASE: jezcabs
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongodb_data:/data/db
-    networks:
-      - jezcabs-network
-    healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   # RabbitMQ Message Broker
   rabbitmq:
     image: rabbitmq:3-management-alpine
@@ -91,8 +47,8 @@ services:
     environment:
       NODE_ENV: development
       PORT: 3000
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/jezcabs
-      MONGODB_URI: mongodb://admin:admin@mongodb:27017/jezcabs?authSource=admin
+      DATABASE_URL: postgresql://postgres:9159788313%40Abc@db.fzslrtmnihfpxeixsqqc.supabase.co:5432/postgres
+      MONGODB_URI: mongodb+srv://arunpandiancse2003_db_user:jaRM9YVQG9dz5BFw@cluster0.yb4ddau.mongodb.net/jezcabs?retryWrites=true&w=majority
       REDIS_HOST: redis
       REDIS_PORT: 6379
       RABBITMQ_URL: amqp://rabbitmq:rabbitmq@rabbitmq:5672
@@ -104,10 +60,6 @@ services:
       - ./backend:/app
       - /app/node_modules
     depends_on:
-      postgres:
-        condition: service_healthy
-      mongodb:
-        condition: service_healthy
       rabbitmq:
         condition: service_healthy
       redis:
@@ -138,10 +90,6 @@ services:
     command: npm run dev -- --host
 
 volumes:
-  postgres_data:
-    driver: local
-  mongodb_data:
-    driver: local
   rabbitmq_data:
     driver: local
   redis_data:
@@ -150,4 +98,3 @@ volumes:
 networks:
   jezcabs-network:
     driver: bridge
-
