@@ -45,7 +45,7 @@ export const Login: React.FC = () => {
       setError('');
       setIsLoading(true);
       await login(data);
-      navigate('/dashboard');
+      navigate('/app/dashboard');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to login. Please check your credentials.');
     } finally {
@@ -176,4 +176,3 @@ export const Login: React.FC = () => {
     </Box>
   );
 };
-

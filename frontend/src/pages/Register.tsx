@@ -52,7 +52,7 @@ export const Register: React.FC = () => {
       setError('');
       setIsLoading(true);
       await registerUser(data);
-      navigate('/dashboard');
+      navigate('/app/dashboard');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to register. Please try again.');
     } finally {
@@ -253,4 +253,3 @@ export const Register: React.FC = () => {
     </Box>
   );
 };
-

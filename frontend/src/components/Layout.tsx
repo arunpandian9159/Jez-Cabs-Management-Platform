@@ -39,13 +39,13 @@ interface MenuItem {
 }
 
 const menuItems: MenuItem[] = [
-  { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
-  { text: 'Fleet', icon: <DirectionsCarIcon />, path: '/cabs' },
-  { text: 'Drivers', icon: <PeopleIcon />, path: '/drivers' },
-  { text: 'Bookings', icon: <BookIcon />, path: '/bookings' },
-  { text: 'Checklists', icon: <ChecklistIcon />, path: '/checklists' },
-  { text: 'Invoices', icon: <ReceiptIcon />, path: '/invoices' },
-  { text: 'Reports', icon: <AssessmentIcon />, path: '/reports' },
+  { text: 'Dashboard', icon: <DashboardIcon />, path: '/app/dashboard' },
+  { text: 'Fleet', icon: <DirectionsCarIcon />, path: '/app/cabs' },
+  { text: 'Drivers', icon: <PeopleIcon />, path: '/app/drivers' },
+  { text: 'Bookings', icon: <BookIcon />, path: '/app/bookings' },
+  { text: 'Checklists', icon: <ChecklistIcon />, path: '/app/checklists' },
+  { text: 'Invoices', icon: <ReceiptIcon />, path: '/app/invoices' },
+  { text: 'Reports', icon: <AssessmentIcon />, path: '/app/reports' },
 ];
 
 export const Layout: React.FC = () => {
@@ -259,4 +259,3 @@ export const Layout: React.FC = () => {
     </Box>
   );
 };
-

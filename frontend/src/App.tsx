@@ -7,11 +7,15 @@ import { theme } from './theme';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Layout } from './components/Layout';
+import { PublicLayout } from './components/PublicLayout';
 import { LoadingSkeleton } from './components/LoadingSkeleton';
 
 // Auth Pages - Loaded immediately
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
+
+// Public Pages - Loaded immediately
+import { Home } from './pages/Home';
 
 // Lazy-loaded pages for code splitting
 const Dashboard = lazy(() => import('./pages/Dashboard').then(m => ({ default: m.Dashboard })));
@@ -53,19 +57,22 @@ function App() {
             <BrowserRouter>
               <Routes>
                 {/* Public Routes */}
+                <Route path="/" element={<PublicLayout />}>
+                  <Route index element={<Home />} />
+                </Route>
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
 
               {/* Protected Routes */}
               <Route
-                path="/"
+                path="/app/*"
                 element={
                   <ProtectedRoute>
                     <Layout />
                   </ProtectedRoute>
                 }
               >
-                <Route index element={<Navigate to="/dashboard" replace />} />
+                <Route index element={<Navigate to="/app/dashboard" replace />} />
                 <Route
                   path="dashboard"
                   element={
@@ -201,7 +208,7 @@ function App() {
               </Route>
 
               {/* Catch all */}
-              <Route path="*" element={<Navigate to="/dashboard" replace />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </BrowserRouter>
         </AuthProvider>
