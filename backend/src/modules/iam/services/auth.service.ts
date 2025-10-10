@@ -85,7 +85,7 @@ export class AuthService {
         lastName: savedUser.lastName,
         role: savedUser.role,
       },
-      token,
+      access_token: token,
     };
   }
 
@@ -131,7 +131,7 @@ export class AuthService {
         companyId: user.companyId,
         companyName: user.company.name,
       },
-      token,
+      access_token: token,
     };
   }
 
@@ -159,4 +159,3 @@ export class AuthService {
     return this.jwtService.sign(payload);
   }
 }
-
