@@ -6,7 +6,6 @@ import {
   Typography,
   Card,
   CardContent,
-  CircularProgress,
   Alert,
 } from '@mui/material';
 import {
@@ -21,6 +20,7 @@ import { useQuery } from '@tanstack/react-query';
 import { analyticsService } from '../services/analytics.service';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { format, subDays } from 'date-fns';
+import { LoadingSkeleton } from '../components/LoadingSkeleton';
 
 const COLORS = ['#4caf50', '#2196f3', '#ff9800', '#f44336'];
 
@@ -80,11 +80,7 @@ export const Dashboard: React.FC = () => {
   });
 
   if (isLoading) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
-        <CircularProgress />
-      </Box>
-    );
+    return <LoadingSkeleton variant="dashboard" />;
   }
 
   if (error) {
@@ -106,7 +102,7 @@ export const Dashboard: React.FC = () => {
       <Typography variant="h4" fontWeight={700} gutterBottom>
         Dashboard
       </Typography>
-      <Typography variant="body1" color="text.secondary" paragraph>
+      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
         Welcome back! Here's what's happening with your fleet today.
       </Typography>
 

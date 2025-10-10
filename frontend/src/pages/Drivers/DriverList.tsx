@@ -10,7 +10,6 @@ import {
   TextField,
   IconButton,
   Alert,
-  CircularProgress,
   InputAdornment,
   Chip,
   Switch,
@@ -26,15 +25,22 @@ import {
   CheckCircle,
 } from '@mui/icons-material';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useSnackbar } from 'notistack';
 import { driverService } from '../../services/driver.service';
+import { LoadingSkeleton } from '../../components/LoadingSkeleton';
+import { EmptyState } from '../../components/EmptyState';
+import { ConfirmDialog } from '../../components/ConfirmDialog';
 import { Driver } from '../../types';
 import { format } from 'date-fns';
 
 export const DriverList: React.FC = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { enqueueSnackbar } = useSnackbar();
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [showActiveOnly, setShowActiveOnly] = useState<boolean>(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [driverToDelete, setDriverToDelete] = useState<string | null>(null);
 
   const { data: drivers, isLoading, error } = useQuery({
     queryKey: ['drivers', { isActive: showActiveOnly || undefined }],
@@ -45,6 +51,12 @@ export const DriverList: React.FC = () => {
     mutationFn: driverService.delete,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['drivers'] });
+      enqueueSnackbar('Driver deleted successfully', { variant: 'success' });
+      setDeleteDialogOpen(false);
+      setDriverToDelete(null);
+    },
+    onError: () => {
+      enqueueSnackbar('Failed to delete driver', { variant: 'error' });
     },
   });
 
@@ -52,25 +64,26 @@ export const DriverList: React.FC = () => {
     mutationFn: driverService.toggleActive,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['drivers'] });
+      enqueueSnackbar('Driver status updated successfully', { variant: 'success' });
+    },
+    onError: () => {
+      enqueueSnackbar('Failed to update driver status', { variant: 'error' });
     },
   });
 
-  const handleDelete = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this driver?')) {
-      try {
-        await deleteMutation.mutateAsync(id);
-      } catch (error) {
-        console.error('Failed to delete driver:', error);
-      }
+  const handleDeleteClick = (id: string) => {
+    setDriverToDelete(id);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (driverToDelete) {
+      await deleteMutation.mutateAsync(driverToDelete);
     }
   };
 
   const handleToggleActive = async (id: string) => {
-    try {
-      await toggleActiveMutation.mutateAsync(id);
-    } catch (error) {
-      console.error('Failed to toggle driver status:', error);
-    }
+    await toggleActiveMutation.mutateAsync(id);
   };
 
   const isExpiringSoon = (date: string) => {
@@ -84,11 +97,7 @@ export const DriverList: React.FC = () => {
   };
 
   if (isLoading) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
-        <CircularProgress />
-      </Box>
-    );
+    return <LoadingSkeleton variant="list" count={6} />;
   }
 
   if (error) {
@@ -164,24 +173,17 @@ export const DriverList: React.FC = () => {
 
       {/* Drivers Grid */}
       {filteredDrivers && filteredDrivers.length === 0 ? (
-        <Card>
-          <CardContent sx={{ textAlign: 'center', py: 8 }}>
-            <People sx={{ fontSize: 80, color: 'text.secondary', mb: 2 }} />
-            <Typography variant="h6" color="text.secondary" gutterBottom>
-              No drivers found
-            </Typography>
-            <Typography variant="body2" color="text.secondary" paragraph>
-              {searchQuery || showActiveOnly
-                ? 'Try adjusting your filters'
-                : 'Get started by adding your first driver'}
-            </Typography>
-            {!searchQuery && !showActiveOnly && (
-              <Button variant="contained" startIcon={<Add />} onClick={() => navigate('/drivers/new')}>
-                Add Driver
-              </Button>
-            )}
-          </CardContent>
-        </Card>
+        <EmptyState
+          icon={People}
+          title="No drivers found"
+          description={
+            searchQuery || showActiveOnly
+              ? 'Try adjusting your filters to see more results'
+              : 'Get started by adding your first driver to your team'
+          }
+          actionLabel={!searchQuery && !showActiveOnly ? 'Add Driver' : undefined}
+          onAction={!searchQuery && !showActiveOnly ? () => navigate('/drivers/new') : undefined}
+        />
       ) : (
         <Grid container spacing={3}>
           {filteredDrivers?.map((driver: Driver) => (
@@ -264,7 +266,7 @@ export const DriverList: React.FC = () => {
                     </Button>
                     <IconButton
                       color="error"
-                      onClick={() => handleDelete(driver.id)}
+                      onClick={() => handleDeleteClick(driver.id)}
                       disabled={deleteMutation.isPending}
                     >
                       <Delete />
@@ -285,6 +287,19 @@ export const DriverList: React.FC = () => {
           ))}
         </Grid>
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        onConfirm={handleDeleteConfirm}
+        title="Delete Driver"
+        message="Are you sure you want to delete this driver? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        severity="error"
+        isLoading={deleteMutation.isPending}
+      />
     </Box>
   );
 };

@@ -12,7 +12,6 @@ import {
   IconButton,
   Chip,
   Alert,
-  CircularProgress,
   InputAdornment,
 } from '@mui/material';
 import {
@@ -24,15 +23,22 @@ import {
   Warning,
 } from '@mui/icons-material';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useSnackbar } from 'notistack';
 import { cabService } from '../../services/cab.service';
 import { StatusBadge } from '../../components/StatusBadge';
+import { LoadingSkeleton } from '../../components/LoadingSkeleton';
+import { EmptyState } from '../../components/EmptyState';
+import { ConfirmDialog } from '../../components/ConfirmDialog';
 import { Cab } from '../../types';
 
 export const CabList: React.FC = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { enqueueSnackbar } = useSnackbar();
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [cabToDelete, setCabToDelete] = useState<string | null>(null);
 
   const { data: cabs, isLoading, error } = useQuery({
     queryKey: ['cabs', { status: statusFilter, search: searchQuery }],
@@ -43,16 +49,23 @@ export const CabList: React.FC = () => {
     mutationFn: cabService.delete,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cabs'] });
+      enqueueSnackbar('Vehicle deleted successfully', { variant: 'success' });
+      setDeleteDialogOpen(false);
+      setCabToDelete(null);
+    },
+    onError: () => {
+      enqueueSnackbar('Failed to delete vehicle', { variant: 'error' });
     },
   });
 
-  const handleDelete = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this vehicle?')) {
-      try {
-        await deleteMutation.mutateAsync(id);
-      } catch (error) {
-        console.error('Failed to delete vehicle:', error);
-      }
+  const handleDeleteClick = (id: string) => {
+    setCabToDelete(id);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (cabToDelete) {
+      await deleteMutation.mutateAsync(cabToDelete);
     }
   };
 
@@ -69,11 +82,7 @@ export const CabList: React.FC = () => {
   };
 
   if (isLoading) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
-        <CircularProgress />
-      </Box>
-    );
+    return <LoadingSkeleton variant="list" count={6} />;
   }
 
   if (error) {
@@ -140,24 +149,17 @@ export const CabList: React.FC = () => {
 
       {/* Vehicle Grid */}
       {cabs && cabs.length === 0 ? (
-        <Card>
-          <CardContent sx={{ textAlign: 'center', py: 8 }}>
-            <DirectionsCar sx={{ fontSize: 80, color: 'text.secondary', mb: 2 }} />
-            <Typography variant="h6" color="text.secondary" gutterBottom>
-              No vehicles found
-            </Typography>
-            <Typography variant="body2" color="text.secondary" paragraph>
-              {searchQuery || statusFilter
-                ? 'Try adjusting your filters'
-                : 'Get started by adding your first vehicle'}
-            </Typography>
-            {!searchQuery && !statusFilter && (
-              <Button variant="contained" startIcon={<Add />} onClick={() => navigate('/cabs/new')}>
-                Add Vehicle
-              </Button>
-            )}
-          </CardContent>
-        </Card>
+        <EmptyState
+          icon={DirectionsCar}
+          title="No vehicles found"
+          description={
+            searchQuery || statusFilter
+              ? 'Try adjusting your filters to see more results'
+              : 'Get started by adding your first vehicle to your fleet'
+          }
+          actionLabel={!searchQuery && !statusFilter ? 'Add Vehicle' : undefined}
+          onAction={!searchQuery && !statusFilter ? () => navigate('/cabs/new') : undefined}
+        />
       ) : (
         <Grid container spacing={3}>
           {cabs?.map((cab: Cab) => (
@@ -238,7 +240,7 @@ export const CabList: React.FC = () => {
                   </Button>
                   <IconButton
                     color="error"
-                    onClick={() => handleDelete(cab.id)}
+                    onClick={() => handleDeleteClick(cab.id)}
                     disabled={deleteMutation.isPending}
                   >
                     <Delete />
@@ -249,6 +251,19 @@ export const CabList: React.FC = () => {
           ))}
         </Grid>
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        onConfirm={handleDeleteConfirm}
+        title="Delete Vehicle"
+        message="Are you sure you want to delete this vehicle? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        severity="error"
+        isLoading={deleteMutation.isPending}
+      />
     </Box>
   );
 };

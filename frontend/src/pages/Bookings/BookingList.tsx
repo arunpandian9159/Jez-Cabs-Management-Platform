@@ -11,7 +11,6 @@ import {
   MenuItem,
   IconButton,
   Alert,
-  CircularProgress,
   Chip,
   InputAdornment,
 } from '@mui/material';
@@ -25,16 +24,23 @@ import {
   DirectionsCar,
 } from '@mui/icons-material';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useSnackbar } from 'notistack';
 import { bookingService } from '../../services/booking.service';
 import { StatusBadge } from '../../components/StatusBadge';
+import { LoadingSkeleton } from '../../components/LoadingSkeleton';
+import { EmptyState } from '../../components/EmptyState';
+import { ConfirmDialog } from '../../components/ConfirmDialog';
 import { Booking } from '../../types';
 import { format } from 'date-fns';
 
 export const BookingList: React.FC = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { enqueueSnackbar } = useSnackbar();
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [bookingToDelete, setBookingToDelete] = useState<string | null>(null);
 
   const { data: bookings, isLoading, error } = useQuery({
     queryKey: ['bookings', { status: statusFilter, search: searchQuery }],
@@ -45,25 +51,28 @@ export const BookingList: React.FC = () => {
     mutationFn: bookingService.delete,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['bookings'] });
+      enqueueSnackbar('Booking deleted successfully', { variant: 'success' });
+      setDeleteDialogOpen(false);
+      setBookingToDelete(null);
+    },
+    onError: () => {
+      enqueueSnackbar('Failed to delete booking', { variant: 'error' });
     },
   });
 
-  const handleDelete = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this booking?')) {
-      try {
-        await deleteMutation.mutateAsync(id);
-      } catch (error) {
-        console.error('Failed to delete booking:', error);
-      }
+  const handleDeleteClick = (id: string) => {
+    setBookingToDelete(id);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (bookingToDelete) {
+      await deleteMutation.mutateAsync(bookingToDelete);
     }
   };
 
   if (isLoading) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
-        <CircularProgress />
-      </Box>
-    );
+    return <LoadingSkeleton variant="list" count={6} />;
   }
 
   if (error) {
@@ -141,24 +150,17 @@ export const BookingList: React.FC = () => {
 
       {/* Bookings Grid */}
       {filteredBookings && filteredBookings.length === 0 ? (
-        <Card>
-          <CardContent sx={{ textAlign: 'center', py: 8 }}>
-            <Book sx={{ fontSize: 80, color: 'text.secondary', mb: 2 }} />
-            <Typography variant="h6" color="text.secondary" gutterBottom>
-              No bookings found
-            </Typography>
-            <Typography variant="body2" color="text.secondary" paragraph>
-              {searchQuery || statusFilter
-                ? 'Try adjusting your filters'
-                : 'Get started by creating your first booking'}
-            </Typography>
-            {!searchQuery && !statusFilter && (
-              <Button variant="contained" startIcon={<Add />} onClick={() => navigate('/bookings/new')}>
-                New Booking
-              </Button>
-            )}
-          </CardContent>
-        </Card>
+        <EmptyState
+          icon={Book}
+          title="No bookings found"
+          description={
+            searchQuery || statusFilter
+              ? 'Try adjusting your filters to see more results'
+              : 'Get started by creating your first booking to manage your rental operations'
+          }
+          actionLabel={!searchQuery && !statusFilter ? 'New Booking' : undefined}
+          onAction={!searchQuery && !statusFilter ? () => navigate('/bookings/new') : undefined}
+        />
       ) : (
         <Grid container spacing={3}>
           {filteredBookings?.map((booking: Booking) => (
@@ -230,7 +232,7 @@ export const BookingList: React.FC = () => {
                   </Button>
                   <IconButton
                     color="error"
-                    onClick={() => handleDelete(booking.id)}
+                    onClick={() => handleDeleteClick(booking.id)}
                     disabled={deleteMutation.isPending}
                   >
                     <Delete />
@@ -241,6 +243,19 @@ export const BookingList: React.FC = () => {
           ))}
         </Grid>
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        onConfirm={handleDeleteConfirm}
+        title="Delete Booking"
+        message="Are you sure you want to delete this booking? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        severity="error"
+        isLoading={deleteMutation.isPending}
+      />
     </Box>
   );
 };

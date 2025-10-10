@@ -10,15 +10,16 @@ import {
   TextField,
   MenuItem,
   Alert,
-  CircularProgress,
 } from '@mui/material';
 import { Save, ArrowBack } from '@mui/icons-material';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useSnackbar } from 'notistack';
 import { bookingService } from '../../services/booking.service';
 import { cabService } from '../../services/cab.service';
+import { LoadingSkeleton } from '../../components/LoadingSkeleton';
 
 const bookingSchema = z.object({
   cabId: z.string().min(1, 'Vehicle is required'),
@@ -40,6 +41,7 @@ export const BookingForm: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const queryClient = useQueryClient();
+  const { enqueueSnackbar } = useSnackbar();
   const isEditMode = !!id;
 
   const { data: booking, isLoading: isLoadingBooking } = useQuery({
@@ -84,7 +86,11 @@ export const BookingForm: React.FC = () => {
     mutationFn: bookingService.create,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['bookings'] });
+      enqueueSnackbar('Booking created successfully', { variant: 'success' });
       navigate('/bookings');
+    },
+    onError: () => {
+      enqueueSnackbar('Failed to create booking', { variant: 'error' });
     },
   });
 
@@ -93,7 +99,11 @@ export const BookingForm: React.FC = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['bookings'] });
       queryClient.invalidateQueries({ queryKey: ['booking', id] });
+      enqueueSnackbar('Booking updated successfully', { variant: 'success' });
       navigate('/bookings');
+    },
+    onError: () => {
+      enqueueSnackbar('Failed to update booking', { variant: 'error' });
     },
   });
 
@@ -110,11 +120,7 @@ export const BookingForm: React.FC = () => {
   };
 
   if (isEditMode && isLoadingBooking) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
-        <CircularProgress />
-      </Box>
-    );
+    return <LoadingSkeleton variant="form" />;
   }
 
   const mutation = isEditMode ? updateMutation : createMutation;
