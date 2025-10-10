@@ -13,7 +13,7 @@ import {
   InputAdornment,
   IconButton,
 } from '@mui/material';
-import { Visibility, VisibilityOff, DirectionsCar } from '@mui/icons-material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -67,14 +67,48 @@ export const Register: React.FC = () => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        background: 'linear-gradient(135deg, #1e40af 0%, #0d9488 100%)',
         py: 4,
+        position: 'relative',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1) 0%, transparent 50%)',
+        },
       }}
     >
-      <Container maxWidth="md">
-        <Paper elevation={24} sx={{ p: 4, borderRadius: 3 }}>
+      <Container maxWidth="md" sx={{ position: 'relative', zIndex: 1 }}>
+        <Paper
+          elevation={24}
+          sx={{
+            p: 4,
+            borderRadius: 3,
+            backdropFilter: 'blur(10px)',
+            backgroundColor: 'rgba(255, 255, 255, 0.98)',
+            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+          }}
+        >
           <Box sx={{ textAlign: 'center', mb: 3 }}>
-            <DirectionsCar sx={{ fontSize: 60, color: 'primary.main', mb: 2 }} />
+            <Box
+              sx={{
+                width: 80,
+                height: 80,
+                borderRadius: 3,
+                bgcolor: 'primary.main',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '2.5rem',
+                mb: 2,
+                boxShadow: '0 8px 24px rgba(30, 64, 175, 0.3)',
+              }}
+            >
+              🚕
+            </Box>
             <Typography variant="h4" component="h1" gutterBottom fontWeight={700}>
               Create Your Account
             </Typography>

@@ -84,10 +84,26 @@ export const Layout: React.FC = () => {
 
   const drawer = (
     <Box>
-      <Toolbar>
-        <Typography variant="h6" noWrap component="div" sx={{ fontWeight: 700, color: 'primary.main' }}>
-          🚕 Jez Cabs
-        </Typography>
+      <Toolbar sx={{ py: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Box
+            sx={{
+              width: 40,
+              height: 40,
+              borderRadius: 2,
+              bgcolor: 'primary.main',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '1.5rem',
+            }}
+          >
+            🚕
+          </Box>
+          <Typography variant="h6" noWrap component="div" sx={{ fontWeight: 700, color: 'text.primary' }}>
+            Jez Cabs
+          </Typography>
+        </Box>
       </Toolbar>
       <Divider />
       <List>
@@ -97,6 +113,10 @@ export const Layout: React.FC = () => {
               selected={location.pathname === item.path}
               onClick={() => handleMenuClick(item.path)}
               sx={{
+                borderRadius: 2,
+                mx: 1,
+                mb: 0.5,
+                transition: 'all 0.2s ease-in-out',
                 '&.Mui-selected': {
                   backgroundColor: 'primary.main',
                   color: 'white',
@@ -106,6 +126,10 @@ export const Layout: React.FC = () => {
                   '& .MuiListItemIcon-root': {
                     color: 'white',
                   },
+                },
+                '&:hover': {
+                  backgroundColor: location.pathname === item.path ? 'primary.dark' : 'grey.100',
+                  transform: 'translateX(4px)',
                 },
               }}
             >
@@ -223,11 +247,14 @@ export const Layout: React.FC = () => {
           p: 3,
           width: { md: `calc(100% - ${drawerWidth}px)` },
           minHeight: '100vh',
-          bgcolor: '#f5f5f5',
+          bgcolor: 'background.default',
+          transition: 'background-color 0.3s ease',
         }}
       >
         <Toolbar />
-        <Outlet />
+        <Box sx={{ maxWidth: 1400, mx: 'auto' }}>
+          <Outlet />
+        </Box>
       </Box>
     </Box>
   );
