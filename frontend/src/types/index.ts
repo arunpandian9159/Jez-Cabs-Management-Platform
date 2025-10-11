@@ -93,26 +93,11 @@ export interface Invoice {
 }
 
 export interface Checklist {
-  _id: string;
-  cabId: string;
-  bookingId?: string;
-  templateName: string;
-  items: ChecklistItem[];
-  isComplete: boolean;
-  isApproved?: boolean;
-  approvedBy?: string;
-  approvedAt?: string;
-  rejectionReason?: string;
-  notes?: string;
+  id: string;
+  name: string;
+  description?: string;
   createdAt: string;
   updatedAt: string;
-}
-
-export interface ChecklistItem {
-  name: string;
-  status: 'PASS' | 'FAIL' | 'NA';
-  notes?: string;
-  imageUrl?: string;
 }
 
 export interface DashboardStats {

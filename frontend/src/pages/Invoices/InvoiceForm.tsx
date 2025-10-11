@@ -87,7 +87,7 @@ export const InvoiceForm: React.FC = () => {
     mutationFn: invoiceService.create,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['invoices'] });
-      navigate('/invoices');
+      navigate('/app/invoices');
     },
   });
 
@@ -96,7 +96,7 @@ export const InvoiceForm: React.FC = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['invoices'] });
       queryClient.invalidateQueries({ queryKey: ['invoice', id] });
-      navigate('/invoices');
+      navigate('/app/invoices');
     },
   });
 
@@ -131,7 +131,7 @@ export const InvoiceForm: React.FC = () => {
   return (
     <Box>
       <Box sx={{ mb: 3 }}>
-        <Button startIcon={<ArrowBack />} onClick={() => navigate('/invoices')} sx={{ mb: 2 }}>
+        <Button startIcon={<ArrowBack />} onClick={() => navigate('/app/invoices')} sx={{ mb: 2 }}>
           Back to Invoices
         </Button>
         <Typography variant="h4" fontWeight={700} gutterBottom>
@@ -320,7 +320,7 @@ export const InvoiceForm: React.FC = () => {
           >
             {mutation.isPending ? 'Saving...' : isEditMode ? 'Update Invoice' : 'Create Invoice'}
           </Button>
-          <Button variant="outlined" size="large" onClick={() => navigate('/invoices')}>
+          <Button variant="outlined" size="large" onClick={() => navigate('/app/invoices')}>
             Cancel
           </Button>
         </Box>
@@ -328,4 +328,3 @@ export const InvoiceForm: React.FC = () => {
     </Box>
   );
 };
-

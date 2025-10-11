@@ -72,7 +72,7 @@ export const DriverForm: React.FC = () => {
     mutationFn: driverService.create,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['drivers'] });
-      navigate('/drivers');
+      navigate('/app/drivers');
     },
   });
 
@@ -81,7 +81,7 @@ export const DriverForm: React.FC = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['drivers'] });
       queryClient.invalidateQueries({ queryKey: ['driver', id] });
-      navigate('/drivers');
+      navigate('/app/drivers');
     },
   });
 
@@ -110,7 +110,7 @@ export const DriverForm: React.FC = () => {
   return (
     <Box>
       <Box sx={{ mb: 3 }}>
-        <Button startIcon={<ArrowBack />} onClick={() => navigate('/drivers')} sx={{ mb: 2 }}>
+        <Button startIcon={<ArrowBack />} onClick={() => navigate('/app/drivers')} sx={{ mb: 2 }}>
           Back to Drivers
         </Button>
         <Typography variant="h4" fontWeight={700} gutterBottom>
@@ -263,7 +263,7 @@ export const DriverForm: React.FC = () => {
           >
             {mutation.isPending ? 'Saving...' : isEditMode ? 'Update Driver' : 'Add Driver'}
           </Button>
-          <Button variant="outlined" size="large" onClick={() => navigate('/drivers')}>
+          <Button variant="outlined" size="large" onClick={() => navigate('/app/drivers')}>
             Cancel
           </Button>
         </Box>
@@ -271,4 +271,3 @@ export const DriverForm: React.FC = () => {
     </Box>
   );
 };
-

@@ -105,7 +105,7 @@ export const CabList: React.FC = () => {
         <Button
           variant="contained"
           startIcon={<Add />}
-          onClick={() => navigate('/cabs/new')}
+          onClick={() => navigate('/app/cabs/new')}
           size="large"
         >
           Add Vehicle
@@ -160,7 +160,7 @@ export const CabList: React.FC = () => {
               : 'Get started by adding your first vehicle to your fleet'
           }
           actionLabel={!searchQuery && !statusFilter ? 'Add Vehicle' : undefined}
-          onAction={!searchQuery && !statusFilter ? () => navigate('/cabs/new') : undefined}
+          onAction={!searchQuery && !statusFilter ? () => navigate('/app/cabs/new') : undefined}
         />
       ) : (
         <Grid container spacing={3}>
@@ -236,7 +236,7 @@ export const CabList: React.FC = () => {
                     fullWidth
                     variant="outlined"
                     startIcon={<Edit />}
-                    onClick={() => navigate(`/cabs/${cab.id}/edit`)}
+                    onClick={() => navigate(`/app/cabs/${cab.id}/edit`)}
                   >
                     Edit
                   </Button>

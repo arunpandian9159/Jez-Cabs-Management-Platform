@@ -83,7 +83,7 @@ export const CabForm: React.FC = () => {
     mutationFn: cabService.create,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cabs'] });
-      navigate('/cabs');
+      navigate('/app/cabs');
     },
   });
 
@@ -92,7 +92,7 @@ export const CabForm: React.FC = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cabs'] });
       queryClient.invalidateQueries({ queryKey: ['cab', id] });
-      navigate('/cabs');
+      navigate('/app/cabs');
     },
   });
 
@@ -121,7 +121,7 @@ export const CabForm: React.FC = () => {
   return (
     <Box>
       <Box sx={{ mb: 3 }}>
-        <Button startIcon={<ArrowBack />} onClick={() => navigate('/cabs')} sx={{ mb: 2 }}>
+        <Button startIcon={<ArrowBack />} onClick={() => navigate('/app/cabs')} sx={{ mb: 2 }}>
           Back to Fleet
         </Button>
         <Typography variant="h4" fontWeight={700} gutterBottom>
@@ -346,7 +346,7 @@ export const CabForm: React.FC = () => {
           >
             {mutation.isPending ? 'Saving...' : isEditMode ? 'Update Vehicle' : 'Add Vehicle'}
           </Button>
-          <Button variant="outlined" size="large" onClick={() => navigate('/cabs')}>
+          <Button variant="outlined" size="large" onClick={() => navigate('/app/cabs')}>
             Cancel
           </Button>
         </Box>
@@ -354,4 +354,3 @@ export const CabForm: React.FC = () => {
     </Box>
   );
 };
-

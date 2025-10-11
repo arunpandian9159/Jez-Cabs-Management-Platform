@@ -11,7 +11,7 @@ import {
   CircularProgress,
   Chip,
 } from '@mui/material';
-import { Add, CheckCircle, Cancel, Checklist as ChecklistIcon } from '@mui/icons-material';
+import { Add, Edit, Checklist as ChecklistIcon } from '@mui/icons-material';
 import { useQuery } from '@tanstack/react-query';
 import { checklistService } from '../../services/checklist.service';
 import { Checklist } from '../../types';
@@ -47,13 +47,13 @@ export const ChecklistList: React.FC = () => {
             Checklists
           </Typography>
           <Typography variant="body1" color="text.secondary">
-            Vehicle inspection and maintenance checklists
+            Manage your vehicle inspection and maintenance checklists
           </Typography>
         </Box>
         <Button
           variant="contained"
           startIcon={<Add />}
-          onClick={() => navigate('/checklists/new')}
+          onClick={() => navigate('/app/checklists/new')}
           size="large"
         >
           New Checklist
@@ -70,7 +70,7 @@ export const ChecklistList: React.FC = () => {
             <Typography variant="body2" color="text.secondary" paragraph>
               Get started by creating your first checklist
             </Typography>
-            <Button variant="contained" startIcon={<Add />} onClick={() => navigate('/checklists/new')}>
+            <Button variant="contained" startIcon={<Add />} onClick={() => navigate('/app/checklists/new')}>
               New Checklist
             </Button>
           </CardContent>
@@ -78,47 +78,26 @@ export const ChecklistList: React.FC = () => {
       ) : (
         <Grid container spacing={3}>
           {checklists?.map((checklist: Checklist) => (
-            <Grid size={{ xs: 12, md: 6, lg: 4 }} key={checklist._id}>
+            <Grid size={{ xs: 12, md: 6, lg: 4 }} key={checklist.id}>
               <Card>
                 <CardContent>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', mb: 2 }}>
-                    <Typography variant="h6" fontWeight={700}>
-                      {checklist.templateName}
-                    </Typography>
-                    {checklist.isComplete ? (
-                      <Chip icon={<CheckCircle />} label="Complete" color="success" size="small" />
-                    ) : (
-                      <Chip label="Incomplete" color="warning" size="small" />
-                    )}
-                  </Box>
-
-                  <Box sx={{ mb: 2 }}>
-                    {checklist.isApproved === true && (
-                      <Chip icon={<CheckCircle />} label="Approved" color="success" size="small" />
-                    )}
-                    {checklist.isApproved === false && (
-                      <Chip icon={<Cancel />} label="Rejected" color="error" size="small" />
-                    )}
-                  </Box>
-
-                  <Typography variant="body2" color="text.secondary" gutterBottom>
-                    Items: {checklist.items.length}
+                  <Typography variant="h6" fontWeight={700} gutterBottom>
+                    {checklist.name}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary" gutterBottom>
+                  <Typography variant="body2" color="text.secondary" paragraph>
+                    {checklist.description}
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary" display="block">
                     Created: {format(new Date(checklist.createdAt), 'MMM dd, yyyy')}
                   </Typography>
-
-                  {checklist.rejectionReason && (
-                    <Alert severity="error" sx={{ mt: 2 }}>
-                      {checklist.rejectionReason}
-                    </Alert>
-                  )}
-
-                  {checklist.notes && (
-                    <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-                      {checklist.notes}
-                    </Typography>
-                  )}
+                  <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+                    <Button
+                      startIcon={<Edit />}
+                      onClick={() => navigate(`/app/checklists/edit/${checklist.id}`)}
+                    >
+                      Edit
+                    </Button>
+                  </Box>
                 </CardContent>
               </Card>
             </Grid>

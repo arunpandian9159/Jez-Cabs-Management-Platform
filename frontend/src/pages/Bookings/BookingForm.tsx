@@ -87,7 +87,7 @@ export const BookingForm: React.FC = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['bookings'] });
       enqueueSnackbar('Booking created successfully', { variant: 'success' });
-      navigate('/bookings');
+      navigate('/app/bookings');
     },
     onError: () => {
       enqueueSnackbar('Failed to create booking', { variant: 'error' });
@@ -100,7 +100,7 @@ export const BookingForm: React.FC = () => {
       queryClient.invalidateQueries({ queryKey: ['bookings'] });
       queryClient.invalidateQueries({ queryKey: ['booking', id] });
       enqueueSnackbar('Booking updated successfully', { variant: 'success' });
-      navigate('/bookings');
+      navigate('/app/bookings');
     },
     onError: () => {
       enqueueSnackbar('Failed to update booking', { variant: 'error' });
@@ -128,7 +128,7 @@ export const BookingForm: React.FC = () => {
   return (
     <Box>
       <Box sx={{ mb: 3 }}>
-        <Button startIcon={<ArrowBack />} onClick={() => navigate('/bookings')} sx={{ mb: 2 }}>
+        <Button startIcon={<ArrowBack />} onClick={() => navigate('/app/bookings')} sx={{ mb: 2 }}>
           Back to Bookings
         </Button>
         <Typography variant="h4" fontWeight={700} gutterBottom>
@@ -316,7 +316,7 @@ export const BookingForm: React.FC = () => {
           >
             {mutation.isPending ? 'Saving...' : isEditMode ? 'Update Booking' : 'Create Booking'}
           </Button>
-          <Button variant="outlined" size="large" onClick={() => navigate('/bookings')}>
+          <Button variant="outlined" size="large" onClick={() => navigate('/app/bookings')}>
             Cancel
           </Button>
         </Box>

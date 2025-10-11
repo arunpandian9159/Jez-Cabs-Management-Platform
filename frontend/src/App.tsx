@@ -26,6 +26,7 @@ const BookingForm = lazy(() => import('./pages/Bookings/BookingForm').then(m => 
 const DriverList = lazy(() => import('./pages/Drivers/DriverList').then(m => ({ default: m.DriverList })));
 const DriverForm = lazy(() => import('./pages/Drivers/DriverForm').then(m => ({ default: m.DriverForm })));
 const ChecklistList = lazy(() => import('./pages/Checklists/ChecklistList').then(m => ({ default: m.ChecklistList })));
+const ChecklistForm = lazy(() => import('./pages/Checklists/ChecklistForm').then(m => ({ default: m.ChecklistForm })));
 const InvoiceList = lazy(() => import('./pages/Invoices/InvoiceList').then(m => ({ default: m.InvoiceList })));
 const InvoiceForm = lazy(() => import('./pages/Invoices/InvoiceForm').then(m => ({ default: m.InvoiceForm })));
 const Reports = lazy(() => import('./pages/Reports/Reports').then(m => ({ default: m.Reports })));
@@ -166,6 +167,22 @@ function App() {
                     element={
                       <Suspense fallback={<LoadingSkeleton variant="list" />}>
                         <ChecklistList />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="checklists/new"
+                    element={
+                      <Suspense fallback={<LoadingSkeleton variant="form" />}>
+                        <ChecklistForm />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="checklists/edit/:id"
+                    element={
+                      <Suspense fallback={<LoadingSkeleton variant="form" />}>
+                        <ChecklistForm />
                       </Suspense>
                     }
                   />

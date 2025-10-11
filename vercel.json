@@ -7,22 +7,11 @@
     },
     {
       "src": "frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "installCommand": "npm install",
-        "buildCommand": "npm run build",
-        "outputDirectory": "dist"
-      }
+      "use": "@vercel/static-build"
     }
   ],
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/backend/src/main.ts"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/frontend/index.html"
-    }
+    { "source": "/api/(.*)", "destination": "/backend/src/main.ts" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

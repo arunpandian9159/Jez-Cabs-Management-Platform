@@ -132,7 +132,7 @@ export const DriverList: React.FC = () => {
         <Button
           variant="contained"
           startIcon={<Add />}
-          onClick={() => navigate('/drivers/new')}
+          onClick={() => navigate('/app/drivers/new')}
           size="large"
         >
           Add Driver
@@ -184,7 +184,7 @@ export const DriverList: React.FC = () => {
               : 'Get started by adding your first driver to your team'
           }
           actionLabel={!searchQuery && !showActiveOnly ? 'Add Driver' : undefined}
-          onAction={!searchQuery && !showActiveOnly ? () => navigate('/drivers/new') : undefined}
+          onAction={!searchQuery && !showActiveOnly ? () => navigate('/app/drivers/new') : undefined}
         />
       ) : (
         <Grid container spacing={3}>
@@ -262,7 +262,7 @@ export const DriverList: React.FC = () => {
                       fullWidth
                       variant="outlined"
                       startIcon={<Edit />}
-                      onClick={() => navigate(`/drivers/${driver.id}/edit`)}
+                      onClick={() => navigate(`/app/drivers/${driver.id}/edit`)}
                     >
                       Edit
                     </Button>

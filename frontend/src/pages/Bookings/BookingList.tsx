@@ -114,7 +114,7 @@ export const BookingList: React.FC = () => {
         <Button
           variant="contained"
           startIcon={<Add />}
-          onClick={() => navigate('/bookings/new')}
+          onClick={() => navigate('/app/bookings/new')}
           size="large"
         >
           New Booking
@@ -170,7 +170,7 @@ export const BookingList: React.FC = () => {
               : 'Get started by creating your first booking to manage your rental operations'
           }
           actionLabel={!searchQuery && !statusFilter ? 'New Booking' : undefined}
-          onAction={!searchQuery && !statusFilter ? () => navigate('/bookings/new') : undefined}
+          onAction={!searchQuery && !statusFilter ? () => navigate('/app/bookings/new') : undefined}
         />
       ) : (
         <Grid container spacing={3}>
@@ -237,7 +237,7 @@ export const BookingList: React.FC = () => {
                     fullWidth
                     variant="outlined"
                     startIcon={<Edit />}
-                    onClick={() => navigate(`/bookings/${booking.id}/edit`)}
+                    onClick={() => navigate(`/app/bookings/${booking.id}/edit`)}
                   >
                     Edit
                   </Button>

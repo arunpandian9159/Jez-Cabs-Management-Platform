@@ -105,7 +105,7 @@ export const InvoiceList: React.FC = () => {
         <Button
           variant="contained"
           startIcon={<Add />}
-          onClick={() => navigate('/invoices/new')}
+          onClick={() => navigate('/app/invoices/new')}
           size="large"
         >
           New Invoice
@@ -146,7 +146,7 @@ export const InvoiceList: React.FC = () => {
                 : 'Get started by creating your first invoice'}
             </Typography>
             {!statusFilter && (
-              <Button variant="contained" startIcon={<Add />} onClick={() => navigate('/invoices/new')}>
+              <Button variant="contained" startIcon={<Add />} onClick={() => navigate('/app/invoices/new')}>
                 New Invoice
               </Button>
             )}
@@ -226,7 +226,7 @@ export const InvoiceList: React.FC = () => {
                       fullWidth
                       variant="outlined"
                       startIcon={<Edit />}
-                      onClick={() => navigate(`/invoices/${invoice.id}/edit`)}
+                      onClick={() => navigate(`/app/invoices/${invoice.id}/edit`)}
                     >
                       Edit
                     </Button>
