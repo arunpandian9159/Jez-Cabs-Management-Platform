@@ -202,7 +202,7 @@ export const BookingList: React.FC = () => {
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <DirectionsCar sx={{ fontSize: 18, color: 'text.secondary' }} />
                         <Typography variant="body2" color="text.secondary">
-                          {booking.cab.make} {booking.cab.model} ({booking.cab.registrationNumber})
+                          {booking.cab.make} {booking.cab.model} ({booking.cab.registration_number})
                         </Typography>
                       </Box>
                     )}

@@ -63,149 +63,149 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
 
-              {/* Protected Routes */}
-              <Route
-                path="/app/*"
-                element={
-                  <ProtectedRoute>
-                    <Layout />
-                  </ProtectedRoute>
-                }
-              >
-                <Route index element={<Navigate to="/app/dashboard" replace />} />
+                {/* Protected Routes */}
                 <Route
-                  path="dashboard"
+                  path="/app"
                   element={
-                    <Suspense fallback={<LoadingSkeleton variant="dashboard" />}>
-                      <Dashboard />
-                    </Suspense>
+                    <ProtectedRoute>
+                      <Layout />
+                    </ProtectedRoute>
                   }
-                />
+                >
+                  <Route index element={<Navigate to="/app/dashboard" replace />} />
+                  <Route
+                    path="dashboard"
+                    element={
+                      <Suspense fallback={<LoadingSkeleton variant="dashboard" />}>
+                        <Dashboard />
+                      </Suspense>
+                    }
+                  />
 
-                {/* Fleet Management */}
-                <Route
-                  path="cabs"
-                  element={
-                    <Suspense fallback={<LoadingSkeleton variant="list" />}>
-                      <CabList />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="cabs/new"
-                  element={
-                    <Suspense fallback={<LoadingSkeleton variant="form" />}>
-                      <CabForm />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="cabs/:id/edit"
-                  element={
-                    <Suspense fallback={<LoadingSkeleton variant="form" />}>
-                      <CabForm />
-                    </Suspense>
-                  }
-                />
+                  {/* Fleet Management */}
+                  <Route
+                    path="cabs"
+                    element={
+                      <Suspense fallback={<LoadingSkeleton variant="list" />}>
+                        <CabList />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="cabs/new"
+                    element={
+                      <Suspense fallback={<LoadingSkeleton variant="form" />}>
+                        <CabForm />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="cabs/:id/edit"
+                    element={
+                      <Suspense fallback={<LoadingSkeleton variant="form" />}>
+                        <CabForm />
+                      </Suspense>
+                    }
+                  />
 
-                {/* Bookings */}
-                <Route
-                  path="bookings"
-                  element={
-                    <Suspense fallback={<LoadingSkeleton variant="list" />}>
-                      <BookingList />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="bookings/new"
-                  element={
-                    <Suspense fallback={<LoadingSkeleton variant="form" />}>
-                      <BookingForm />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="bookings/:id/edit"
-                  element={
-                    <Suspense fallback={<LoadingSkeleton variant="form" />}>
-                      <BookingForm />
-                    </Suspense>
-                  }
-                />
+                  {/* Bookings */}
+                  <Route
+                    path="bookings"
+                    element={
+                      <Suspense fallback={<LoadingSkeleton variant="list" />}>
+                        <BookingList />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="bookings/new"
+                    element={
+                      <Suspense fallback={<LoadingSkeleton variant="form" />}>
+                        <BookingForm />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="bookings/:id/edit"
+                    element={
+                      <Suspense fallback={<LoadingSkeleton variant="form" />}>
+                        <BookingForm />
+                      </Suspense>
+                    }
+                  />
 
-                {/* Drivers */}
-                <Route
-                  path="drivers"
-                  element={
-                    <Suspense fallback={<LoadingSkeleton variant="list" />}>
-                      <DriverList />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="drivers/new"
-                  element={
-                    <Suspense fallback={<LoadingSkeleton variant="form" />}>
-                      <DriverForm />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="drivers/:id/edit"
-                  element={
-                    <Suspense fallback={<LoadingSkeleton variant="form" />}>
-                      <DriverForm />
-                    </Suspense>
-                  }
-                />
+                  {/* Drivers */}
+                  <Route
+                    path="drivers"
+                    element={
+                      <Suspense fallback={<LoadingSkeleton variant="list" />}>
+                        <DriverList />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="drivers/new"
+                    element={
+                      <Suspense fallback={<LoadingSkeleton variant="form" />}>
+                        <DriverForm />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="drivers/:id/edit"
+                    element={
+                      <Suspense fallback={<LoadingSkeleton variant="form" />}>
+                        <DriverForm />
+                      </Suspense>
+                    }
+                  />
 
-                {/* Checklists */}
-                <Route
-                  path="checklists"
-                  element={
-                    <Suspense fallback={<LoadingSkeleton variant="list" />}>
-                      <ChecklistList />
-                    </Suspense>
-                  }
-                />
+                  {/* Checklists */}
+                  <Route
+                    path="checklists"
+                    element={
+                      <Suspense fallback={<LoadingSkeleton variant="list" />}>
+                        <ChecklistList />
+                      </Suspense>
+                    }
+                  />
 
-                {/* Invoices */}
-                <Route
-                  path="invoices"
-                  element={
-                    <Suspense fallback={<LoadingSkeleton variant="list" />}>
-                      <InvoiceList />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="invoices/new"
-                  element={
-                    <Suspense fallback={<LoadingSkeleton variant="form" />}>
-                      <InvoiceForm />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="invoices/:id/edit"
-                  element={
-                    <Suspense fallback={<LoadingSkeleton variant="form" />}>
-                      <InvoiceForm />
-                    </Suspense>
-                  }
-                />
+                  {/* Invoices */}
+                  <Route
+                    path="invoices"
+                    element={
+                      <Suspense fallback={<LoadingSkeleton variant="list" />}>
+                        <InvoiceList />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="invoices/new"
+                    element={
+                      <Suspense fallback={<LoadingSkeleton variant="form" />}>
+                        <InvoiceForm />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="invoices/:id/edit"
+                    element={
+                      <Suspense fallback={<LoadingSkeleton variant="form" />}>
+                        <InvoiceForm />
+                      </Suspense>
+                    }
+                  />
 
-                {/* Reports */}
-                <Route
-                  path="reports"
-                  element={
-                    <Suspense fallback={<LoadingSkeleton variant="dashboard" />}>
-                      <Reports />
-                    </Suspense>
-                  }
-                />
-              </Route>
+                  {/* Reports */}
+                  <Route
+                    path="reports"
+                    element={
+                      <Suspense fallback={<LoadingSkeleton variant="dashboard" />}>
+                        <Reports />
+                      </Suspense>
+                    }
+                  />
+                </Route>
 
               {/* Catch all */}
               <Route path="*" element={<Navigate to="/" replace />} />
