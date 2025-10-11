@@ -1,19 +1,20 @@
 import { createTheme, alpha } from '@mui/material/styles';
 
 // Professional & Trustworthy Color Scheme for B2B Cab Management Platform
+// Colors synchronized with Tailwind CSS configuration
 const colors = {
   // Primary - Deep Blue (Trust, Security, Professionalism)
   primary: {
-    main: '#1e40af', // Deep Blue
-    light: '#3b82f6', // Lighter Blue
-    dark: '#1e3a8a', // Darker Blue
+    main: '#1e40af', // Deep Blue - matches Tailwind primary-600
+    light: '#3b82f6', // Lighter Blue - matches Tailwind primary-500
+    dark: '#1e3a8a', // Darker Blue - matches Tailwind primary-700
     contrastText: '#ffffff',
   },
   // Secondary/Accent - Teal (Modern, Tech-focused CTA)
   secondary: {
-    main: '#0d9488', // Teal
-    light: '#14b8a6', // Lighter Teal
-    dark: '#0f766e', // Darker Teal
+    main: '#0d9488', // Teal - matches Tailwind secondary-600
+    light: '#14b8a6', // Lighter Teal - matches Tailwind secondary-500
+    dark: '#0f766e', // Darker Teal - matches Tailwind secondary-700
     contrastText: '#ffffff',
   },
   // Semantic Colors
@@ -80,29 +81,30 @@ export const theme = createTheme({
   typography: {
     fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
     h1: {
-      fontSize: '2.5rem',
+      fontSize: '3rem', // Increased for more impact
+      fontWeight: 800, // Bolder for modern look
+      lineHeight: 1.1,
+      letterSpacing: '-0.025em',
+      color: colors.grey[800],
+    },
+    h2: {
+      fontSize: '2.25rem', // Increased
       fontWeight: 700,
       lineHeight: 1.2,
       letterSpacing: '-0.02em',
       color: colors.grey[800],
     },
-    h2: {
-      fontSize: '2rem',
-      fontWeight: 700,
-      lineHeight: 1.3,
-      letterSpacing: '-0.01em',
-      color: colors.grey[800],
-    },
     h3: {
-      fontSize: '1.75rem',
-      fontWeight: 600,
-      lineHeight: 1.3,
+      fontSize: '1.875rem', // Increased
+      fontWeight: 700, // Bolder
+      lineHeight: 1.25,
+      letterSpacing: '-0.01em',
       color: colors.grey[800],
     },
     h4: {
       fontSize: '1.5rem',
       fontWeight: 600,
-      lineHeight: 1.4,
+      lineHeight: 1.3,
       color: colors.grey[700],
     },
     h5: {
@@ -112,7 +114,7 @@ export const theme = createTheme({
       color: colors.grey[700],
     },
     h6: {
-      fontSize: '1rem',
+      fontSize: '1.125rem', // Slightly larger
       fontWeight: 600,
       lineHeight: 1.5,
       color: colors.grey[700],
@@ -121,20 +123,23 @@ export const theme = createTheme({
       fontSize: '1rem',
       lineHeight: 1.6,
       color: colors.grey[700],
+      fontWeight: 400,
     },
     body2: {
       fontSize: '0.875rem',
       lineHeight: 1.6,
       color: colors.grey[600],
+      fontWeight: 400,
     },
     button: {
       fontWeight: 600,
       textTransform: 'none',
-      letterSpacing: '0.02em',
+      letterSpacing: '0.025em',
+      fontSize: '0.95rem',
     },
   },
   shape: {
-    borderRadius: 12,
+    borderRadius: 16, // Increased for more modern look
   },
   shadows: [
     'none',
@@ -168,43 +173,62 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           textTransform: 'none',
-          borderRadius: 8,
+          borderRadius: 12, // More rounded for modern look
           fontWeight: 600,
-          padding: '10px 20px',
+          padding: '12px 24px', // Increased padding
           boxShadow: 'none',
-          transition: 'all 0.2s ease-in-out',
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', // Smoother transition
+          fontSize: '0.95rem',
+          letterSpacing: '0.025em',
           '&:hover': {
-            boxShadow: `0px 4px 12px ${alpha(colors.primary.main, 0.2)}`,
-            transform: 'translateY(-1px)',
+            boxShadow: `0px 8px 20px ${alpha(colors.primary.main, 0.25)}`,
+            transform: 'translateY(-2px)',
+          },
+          '&:active': {
+            transform: 'translateY(0px)',
           },
         },
         contained: {
+          background: `linear-gradient(135deg, ${colors.primary.main}, ${colors.primary.dark})`,
           '&:hover': {
-            boxShadow: `0px 6px 16px ${alpha(colors.primary.main, 0.3)}`,
+            background: `linear-gradient(135deg, ${colors.primary.dark}, ${colors.primary.main})`,
+            boxShadow: `0px 12px 24px ${alpha(colors.primary.main, 0.35)}`,
           },
         },
         outlined: {
           borderWidth: 2,
+          borderColor: colors.primary.main,
           '&:hover': {
             borderWidth: 2,
+            borderColor: colors.primary.dark,
+            backgroundColor: alpha(colors.primary.main, 0.04),
           },
         },
         sizeLarge: {
-          padding: '12px 28px',
-          fontSize: '1rem',
+          padding: '16px 32px',
+          fontSize: '1.05rem',
+          borderRadius: 14,
+        },
+        sizeSmall: {
+          padding: '8px 16px',
+          fontSize: '0.875rem',
+          borderRadius: 10,
         },
       },
     },
     MuiCard: {
       styleOverrides: {
         root: {
-          borderRadius: 12,
-          boxShadow: `0px 2px 8px ${alpha(colors.grey[900], 0.08)}`,
-          border: `1px solid ${colors.grey[200]}`,
-          transition: 'all 0.2s ease-in-out',
+          borderRadius: 16, // More rounded
+          boxShadow: `0px 4px 12px ${alpha(colors.grey[900], 0.06)}`,
+          border: `1px solid ${alpha(colors.grey[200], 0.8)}`,
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          background: 'rgba(255, 255, 255, 0.95)',
+          backdropFilter: 'blur(10px)',
           '&:hover': {
-            boxShadow: `0px 8px 24px ${alpha(colors.grey[900], 0.12)}`,
-            transform: 'translateY(-2px)',
+            boxShadow: `0px 12px 32px ${alpha(colors.grey[900], 0.15)}`,
+            transform: 'translateY(-4px)',
+            borderColor: alpha(colors.primary.main, 0.2),
           },
         },
       },

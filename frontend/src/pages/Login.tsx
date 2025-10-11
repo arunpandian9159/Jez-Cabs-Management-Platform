@@ -69,104 +69,96 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <Fade in timeout={800}>
-      <Box
-        sx={{
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
-          position: 'relative',
-          overflow: 'hidden',
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%)',
-          },
-          '&::after': {
-            content: '""',
-            position: 'absolute',
-            top: '20%',
-            right: '15%',
-            width: 200,
-            height: 200,
-            borderRadius: '50%',
-            background: 'rgba(255, 255, 255, 0.05)',
-            filter: 'blur(30px)',
-          },
-        }}
-      >
-        <Container maxWidth="sm" sx={{ position: 'relative', zIndex: 1 }}>
-          <Grow in timeout={1000}>
-            <Paper
-              elevation={24}
-              sx={{
-                p: { xs: 3, sm: 4 },
-                borderRadius: 4,
-                backdropFilter: 'blur(20px)',
-                backgroundColor: 'rgba(255, 255, 255, 0.98)',
-                boxShadow: '0 25px 80px rgba(0, 0, 0, 0.15)',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                position: 'relative',
-                overflow: 'hidden',
-                '&::before': {
-                  content: '""',
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: 4,
-                  background: `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-                },
-              }}
-            >
-              <Box sx={{ textAlign: 'center', mb: 4 }}>
-                <Grow in timeout={1200}>
-                  <Box
-                    sx={{
-                      width: { xs: 70, sm: 90 },
-                      height: { xs: 70, sm: 90 },
-                      borderRadius: 3,
-                      bgcolor: success ? alpha(theme.palette.success.main, 0.1) : 'primary.main',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: { xs: '2rem', sm: '2.5rem' },
-                      mb: 3,
-                      boxShadow: success
-                        ? `0 12px 32px ${alpha(theme.palette.success.main, 0.3)}`
-                        : `0 12px 32px ${alpha(theme.palette.primary.main, 0.3)}`,
-                      transition: 'all 0.3s ease',
-                      border: `3px solid ${success ? theme.palette.success.main : 'rgba(255, 255, 255, 0.3)'}`,
-                    }}
-                  >
-                    {success ? <CheckCircle sx={{ fontSize: '3rem', color: 'success.main' }} /> : '🚕'}
-                  </Box>
-                </Grow>
+    <div className="min-h-screen bg-gradient-to-br from-primary-600 via-primary-700 to-secondary-600 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0">
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-white/5 to-transparent"></div>
+        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-secondary-400/10 rounded-full blur-2xl animate-bounce-soft"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent rotate-12"></div>
+        </div>
+      </div>
 
-                <Fade in timeout={1400}>
-                  <Typography
-                    variant="h4"
-                    component="h1"
-                    gutterBottom
-                    fontWeight={800}
-                    sx={{ color: theme.palette.text.primary }}
-                  >
-                    {success ? 'Welcome Back!' : 'Jez Cabs Management'}
-                  </Typography>
-                </Fade>
+      <Fade in timeout={800}>
+        <Box
+          sx={{
+            minHeight: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'relative',
+            zIndex: 10,
+          }}
+        >
+          <Container maxWidth="sm" sx={{ position: 'relative', zIndex: 1 }}>
+            <div className="animate-fade-in-up">
+              <Paper
+                elevation={0}
+                className="glass-effect"
+                sx={{
+                  p: { xs: 4, sm: 6 },
+                  borderRadius: 6,
+                  backdropFilter: 'blur(20px)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                  boxShadow: '0 32px 64px rgba(0, 0, 0, 0.12)',
+                  border: '1px solid rgba(255, 255, 255, 0.3)',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: 6,
+                    background: `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                    borderRadius: '24px 24px 0 0',
+                  },
+                }}
+              >
+                <div className="text-center mb-8">
+                  <div className="animate-scale-in">
+                    <div className={`
+                      w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-6 rounded-2xl flex items-center justify-center text-4xl sm:text-5xl
+                      transition-all duration-500 transform hover:scale-105
+                      ${success
+                        ? 'bg-success-50 border-4 border-success-500 shadow-xl shadow-success-500/30'
+                        : 'bg-gradient-to-br from-primary-500 to-primary-600 border-4 border-white/30 shadow-xl shadow-primary-500/30'
+                      }
+                    `}>
+                      {success ? (
+                        <CheckCircle sx={{ fontSize: '3rem', color: 'success.main' }} />
+                      ) : (
+                        <span className="text-white">🚕</span>
+                      )}
+                    </div>
+                  </div>
 
-                <Fade in timeout={1600}>
-                  <Typography variant="body1" color="text.secondary" sx={{ fontWeight: 500 }}>
-                    {success ? 'Login successful! Redirecting...' : 'Sign in to your account'}
-                  </Typography>
-                </Fade>
-              </Box>
+                  <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+                    <Typography
+                      variant="h3"
+                      component="h1"
+                      className={`font-bold mb-2 text-center ${
+                        success ? 'text-gradient-secondary' : 'text-gradient-primary'
+                      }`}
+                      sx={{
+                        fontSize: { xs: '1.875rem', sm: '2.25rem' },
+                        fontWeight: 800,
+                        letterSpacing: '-0.025em',
+                      }}
+                    >
+                      {success ? 'Welcome Back!' : 'Jez Cabs Management'}
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      className="text-gray-600 text-center mb-2"
+                      sx={{ fontSize: '1.1rem', fontWeight: 400 }}
+                    >
+                      {success ? 'Login successful! Redirecting...' : 'Sign in to your account to continue'}
+                    </Typography>
+                  </div>
+                </div>
 
               {success ? (
                 <Fade in timeout={1800}>
@@ -195,8 +187,8 @@ export const Login: React.FC = () => {
                     </Grow>
                   )}
 
-                  <form onSubmit={handleSubmit(onSubmit)} noValidate>
-                    <Box sx={{ mb: 3 }}>
+                  <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-6">
+                    <div className="animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
                       <TextField
                         fullWidth
                         label="Email Address"
@@ -206,29 +198,42 @@ export const Login: React.FC = () => {
                         helperText={errors.email?.message}
                         autoComplete="email"
                         autoFocus
+                        className="input-modern"
                         sx={{
                           '& .MuiOutlinedInput-root': {
-                            borderRadius: 2,
-                            transition: 'all 0.3s ease',
+                            borderRadius: 3,
+                            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                            backdropFilter: 'blur(10px)',
+                            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                             '&:hover': {
-                              boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.1)}`,
+                              boxShadow: `0 8px 20px ${alpha(theme.palette.primary.main, 0.15)}`,
+                              transform: 'translateY(-1px)',
                             },
                             '&.Mui-focused': {
-                              boxShadow: `0 4px 16px ${alpha(theme.palette.primary.main, 0.2)}`,
+                              boxShadow: `0 12px 24px ${alpha(theme.palette.primary.main, 0.25)}`,
+                              transform: 'translateY(-2px)',
                             },
                           },
+                          '& .MuiInputLabel-root': {
+                            fontWeight: 500,
+                          },
                         }}
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              <Email sx={{ color: errors.email ? 'error.main' : emailValue ? 'success.main' : 'text.secondary' }} />
-                            </InputAdornment>
-                          ),
+                        slotProps={{
+                          input: {
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <Email sx={{
+                                  color: errors.email ? 'error.main' : emailValue ? 'success.main' : 'text.secondary',
+                                  transition: 'color 0.2s ease'
+                                }} />
+                              </InputAdornment>
+                            ),
+                          },
                         }}
                       />
-                    </Box>
+                    </div>
 
-                    <Box sx={{ mb: 3 }}>
+                    <div className="animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
                       <TextField
                         fullWidth
                         label="Password"
@@ -239,61 +244,83 @@ export const Login: React.FC = () => {
                         autoComplete="current-password"
                         sx={{
                           '& .MuiOutlinedInput-root': {
-                            borderRadius: 2,
-                            transition: 'all 0.3s ease',
+                            borderRadius: 3,
+                            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                            backdropFilter: 'blur(10px)',
+                            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                             '&:hover': {
-                              boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.1)}`,
+                              boxShadow: `0 8px 20px ${alpha(theme.palette.primary.main, 0.15)}`,
+                              transform: 'translateY(-1px)',
                             },
                             '&.Mui-focused': {
-                              boxShadow: `0 4px 16px ${alpha(theme.palette.primary.main, 0.2)}`,
+                              boxShadow: `0 12px 24px ${alpha(theme.palette.primary.main, 0.25)}`,
+                              transform: 'translateY(-2px)',
                             },
                           },
+                          '& .MuiInputLabel-root': {
+                            fontWeight: 500,
+                          },
                         }}
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              <Lock sx={{ color: errors.password ? 'error.main' : passwordValue ? 'success.main' : 'text.secondary' }} />
-                            </InputAdornment>
-                          ),
-                          endAdornment: (
-                            <InputAdornment position="end">
-                              <IconButton
-                                onClick={() => setShowPassword(!showPassword)}
-                                edge="end"
-                                sx={{ color: 'text.secondary' }}
-                                aria-label={showPassword ? 'Hide password' : 'Show password'}
-                              >
-                                {showPassword ? <VisibilityOff /> : <Visibility />}
-                              </IconButton>
-                            </InputAdornment>
-                          ),
+                        slotProps={{
+                          input: {
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <Lock sx={{
+                                  color: errors.password ? 'error.main' : passwordValue ? 'success.main' : 'text.secondary',
+                                  transition: 'color 0.2s ease'
+                                }} />
+                              </InputAdornment>
+                            ),
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <IconButton
+                                  onClick={() => setShowPassword(!showPassword)}
+                                  edge="end"
+                                  sx={{
+                                    color: 'text.secondary',
+                                    transition: 'all 0.2s ease',
+                                    '&:hover': {
+                                      color: 'primary.main',
+                                      transform: 'scale(1.1)',
+                                    }
+                                  }}
+                                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                                >
+                                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                                </IconButton>
+                              </InputAdornment>
+                            ),
+                          },
                         }}
                       />
-                    </Box>
+                    </div>
 
-                    <Grow in timeout={2000}>
+                    <div className="animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
                       <Button
                         type="submit"
                         fullWidth
                         variant="contained"
                         size="large"
                         disabled={isLoading || !isValid}
+                        className="btn-primary-modern"
                         sx={{
-                          py: 1.8,
+                          py: 2.5,
                           fontSize: '1.1rem',
                           fontWeight: 700,
-                          borderRadius: 3,
+                          borderRadius: 4,
                           textTransform: 'none',
-                          boxShadow: `0 8px 24px ${alpha(theme.palette.primary.main, 0.3)}`,
+                          background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
+                          boxShadow: `0 12px 32px ${alpha(theme.palette.primary.main, 0.35)}`,
                           '&:hover': {
-                            boxShadow: `0 12px 32px ${alpha(theme.palette.primary.main, 0.4)}`,
-                            transform: 'translateY(-2px)',
+                            background: `linear-gradient(135deg, ${theme.palette.primary.dark}, ${theme.palette.secondary.main})`,
+                            boxShadow: `0 16px 40px ${alpha(theme.palette.primary.main, 0.45)}`,
+                            transform: 'translateY(-3px)',
                           },
                           '&:disabled': {
                             opacity: 0.7,
                             transform: 'none',
                           },
-                          transition: 'all 0.3s ease',
+                          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                         }}
                       >
                         {isLoading ? (
@@ -305,18 +332,17 @@ export const Login: React.FC = () => {
                           'Sign In'
                         )}
                       </Button>
-                    </Grow>
+                    </div>
 
-                    <Fade in timeout={2200}>
-                      <Box sx={{ textAlign: 'center', mt: 3 }}>
-                        <Typography variant="body2" color="text.secondary">
+                    <div className="animate-fade-in-up" style={{ animationDelay: '0.7s' }}>
+                      <div className="text-center mt-6">
+                        <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.95rem' }}>
                           Don't have an account?{' '}
                           <Link
                             component={RouterLink}
                             to="/register"
+                            className="text-primary-600 hover:text-primary-700 font-semibold transition-colors duration-200"
                             sx={{
-                              fontWeight: 600,
-                              color: 'primary.main',
                               textDecoration: 'none',
                               '&:hover': {
                                 textDecoration: 'underline',
@@ -326,15 +352,16 @@ export const Login: React.FC = () => {
                             Register here
                           </Link>
                         </Typography>
-                      </Box>
-                    </Fade>
+                      </div>
+                    </div>
                   </form>
                 </>
               )}
             </Paper>
-          </Grow>
-        </Container>
-      </Box>
-    </Fade>
+            </div>
+          </Container>
+        </Box>
+      </Fade>
+    </div>
   );
 };

@@ -39,14 +39,51 @@ export const Reports: React.FC = () => {
   }
 
   return (
-    <Box>
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="h4" fontWeight={700} gutterBottom>
-          Reports & Analytics
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Comprehensive business insights and performance metrics
-        </Typography>
+    <div className="animate-fade-in-up">
+      {/* Header Section */}
+      <Box sx={{ mb: 6 }}>
+        <Box className="animate-scale-in">
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+            <Box
+              sx={{
+                background: 'linear-gradient(135deg, #4caf50, #2e7d32)',
+                borderRadius: 3,
+                p: 1.5,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mr: 2,
+                boxShadow: '0 8px 20px rgba(76, 175, 80, 0.3)',
+              }}
+            >
+              <Assessment sx={{ color: 'white', fontSize: 28 }} />
+            </Box>
+            <Box>
+              <Typography
+                variant="h2"
+                fontWeight={900}
+                className="text-gradient-primary"
+                sx={{
+                  fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
+                  lineHeight: 1.1,
+                  letterSpacing: '-0.02em',
+                }}
+              >
+                Reports & Analytics
+              </Typography>
+              <Typography
+                variant="h6"
+                color="text.secondary"
+                sx={{
+                  fontWeight: 500,
+                  fontSize: '1.1rem',
+                }}
+              >
+                Comprehensive business insights and performance metrics
+              </Typography>
+            </Box>
+          </Box>
+        </Box>
       </Box>
 
       {/* Revenue Report */}
@@ -180,6 +217,6 @@ export const Reports: React.FC = () => {
           </Card>
         </Grid>
       </Grid>
-    </Box>
+    </div>
   );
 };

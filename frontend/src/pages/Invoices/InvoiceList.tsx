@@ -92,24 +92,76 @@ export const InvoiceList: React.FC = () => {
   }
 
   return (
-    <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Box>
-          <Typography variant="h4" fontWeight={700} gutterBottom>
-            Invoices
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
-            Manage your billing and invoices
-          </Typography>
+    <div className="animate-fade-in-up">
+      {/* Header Section */}
+      <Box sx={{ mb: 6 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 4 }}>
+          <Box className="animate-scale-in">
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+              <Box
+                sx={{
+                  background: 'linear-gradient(135deg, #ff9800, #f57c00)',
+                  borderRadius: 3,
+                  p: 1.5,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  mr: 2,
+                  boxShadow: '0 8px 20px rgba(255, 152, 0, 0.3)',
+                }}
+              >
+                <Receipt sx={{ color: 'white', fontSize: 28 }} />
+              </Box>
+              <Box>
+                <Typography
+                  variant="h2"
+                  fontWeight={900}
+                  className="text-gradient-primary"
+                  sx={{
+                    fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
+                    lineHeight: 1.1,
+                    letterSpacing: '-0.02em',
+                  }}
+                >
+                  Invoice Management
+                </Typography>
+                <Typography
+                  variant="h6"
+                  color="text.secondary"
+                  sx={{
+                    fontWeight: 500,
+                    fontSize: '1.1rem',
+                  }}
+                >
+                  Manage your billing and invoices efficiently
+                </Typography>
+              </Box>
+            </Box>
+          </Box>
+
+          <Button
+            variant="contained"
+            startIcon={<Add />}
+            onClick={() => navigate('/app/invoices/new')}
+            className="btn-primary-modern"
+            sx={{
+              px: 4,
+              py: 1.5,
+              fontSize: '1rem',
+              fontWeight: 600,
+              borderRadius: 3,
+              textTransform: 'none',
+              boxShadow: '0 8px 20px rgba(255, 152, 0, 0.3)',
+              background: 'linear-gradient(135deg, #ff9800, #f57c00)',
+              '&:hover': {
+                boxShadow: '0 12px 24px rgba(255, 152, 0, 0.4)',
+                transform: 'translateY(-2px)',
+              },
+            }}
+          >
+            New Invoice
+          </Button>
         </Box>
-        <Button
-          variant="contained"
-          startIcon={<Add />}
-          onClick={() => navigate('/app/invoices/new')}
-          size="large"
-        >
-          New Invoice
-        </Button>
       </Box>
 
       {/* Filters */}
@@ -256,6 +308,6 @@ export const InvoiceList: React.FC = () => {
           ))}
         </Grid>
       )}
-    </Box>
+    </div>
   );
 };

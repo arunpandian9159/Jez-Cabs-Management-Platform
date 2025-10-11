@@ -87,49 +87,38 @@ export const Register: React.FC = () => {
   };
 
   return (
-    <Fade in timeout={800}>
-      <Box
-        sx={{
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
-          py: { xs: 2, md: 4 },
-          position: 'relative',
-          overflow: 'hidden',
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1) 0%, transparent 50%)',
-          },
-          '&::after': {
-            content: '""',
-            position: 'absolute',
-            top: '30%',
-            left: '20%',
-            width: 250,
-            height: 250,
-            borderRadius: '50%',
-            background: 'rgba(255, 255, 255, 0.08)',
-            filter: 'blur(35px)',
-          },
-        }}
-      >
+    <div className="min-h-screen bg-gradient-to-br from-primary-600 via-primary-700 to-secondary-600 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0">
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-white/5 to-transparent"></div>
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-secondary-400/10 rounded-full blur-2xl animate-bounce-soft"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent rotate-12"></div>
+        </div>
+      </div>
+
+      <Fade in timeout={800}>
+        <Box
+          sx={{
+            minHeight: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            py: { xs: 2, md: 4 },
+            position: 'relative',
+            zIndex: 10,
+          }}
+        >
         <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
-          <Grow in timeout={1000}>
+          <div className="animate-scale-in">
             <Paper
-              elevation={24}
+              elevation={0}
+              className="glass-effect"
               sx={{
                 p: { xs: 3, sm: 4 },
                 borderRadius: 4,
-                backdropFilter: 'blur(20px)',
-                backgroundColor: 'rgba(255, 255, 255, 0.98)',
-                boxShadow: '0 25px 80px rgba(0, 0, 0, 0.15)',
+                boxShadow: '0 32px 64px rgba(0, 0, 0, 0.15)',
                 border: '1px solid rgba(255, 255, 255, 0.2)',
                 position: 'relative',
                 overflow: 'hidden',
@@ -555,9 +544,10 @@ export const Register: React.FC = () => {
                 </>
               )}
             </Paper>
-          </Grow>
+          </div>
         </Container>
-      </Box>
-    </Fade>
+        </Box>
+      </Fade>
+    </div>
   );
 };

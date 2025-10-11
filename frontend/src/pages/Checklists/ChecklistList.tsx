@@ -9,7 +9,6 @@ import {
   Typography,
   Alert,
   CircularProgress,
-  Chip,
 } from '@mui/material';
 import { Add, Edit, Checklist as ChecklistIcon } from '@mui/icons-material';
 import { useQuery } from '@tanstack/react-query';

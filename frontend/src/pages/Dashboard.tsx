@@ -7,8 +7,6 @@ import {
   Card,
   CardContent,
   Alert,
-  Fade,
-  Grow,
   useTheme,
   alpha,
 } from '@mui/material';
@@ -42,81 +40,143 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, icon, color, subtitle
   const theme = useTheme();
 
   return (
-    <Grow in timeout={600 + delay}>
+    <div className="animate-fade-in-up" style={{ animationDelay: `${delay * 0.1}s` }}>
       <Card
+        className="card-modern group"
         sx={{
           height: '100%',
           cursor: 'pointer',
-          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          position: 'relative',
+          overflow: 'hidden',
+          background: `linear-gradient(135deg, ${alpha(color, 0.02)}, ${alpha(color, 0.08)})`,
+          border: `1px solid ${alpha(color, 0.1)}`,
+          transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
           '&:hover': {
-            transform: 'translateY(-8px)',
-            boxShadow: `0 20px 40px ${alpha(color, 0.15)}`,
+            transform: 'translateY(-12px) scale(1.02)',
+            boxShadow: `0 25px 50px ${alpha(color, 0.25)}`,
+            border: `1px solid ${alpha(color, 0.3)}`,
             '& .stat-icon': {
-              transform: 'scale(1.1)',
+              transform: 'scale(1.15) rotate(5deg)',
+              background: `linear-gradient(135deg, ${color}, ${alpha(color, 0.8)})`,
+              color: 'white',
             },
+            '& .stat-value': {
+              transform: 'scale(1.05)',
+            },
+            '& .stat-bg': {
+              opacity: 1,
+              transform: 'scale(1.2)',
+            },
+          },
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: 4,
+            background: `linear-gradient(90deg, ${color}, ${alpha(color, 0.6)})`,
+            borderRadius: '16px 16px 0 0',
           },
         }}
         role="region"
         aria-labelledby={`stat-${title.toLowerCase().replace(/\s+/g, '-')}`}
       >
-        <CardContent sx={{ p: 3 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+        {/* Background decoration */}
+        <Box
+          className="stat-bg"
+          sx={{
+            position: 'absolute',
+            top: -20,
+            right: -20,
+            width: 100,
+            height: 100,
+            borderRadius: '50%',
+            background: `radial-gradient(circle, ${alpha(color, 0.1)}, transparent)`,
+            opacity: 0.5,
+            transition: 'all 0.4s ease',
+            transform: 'scale(1)',
+          }}
+        />
+
+        <CardContent sx={{ p: 4, position: 'relative', zIndex: 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', mb: 3 }}>
+            <Box sx={{ flex: 1 }}>
+              <Typography
+                variant="body1"
+                color="text.secondary"
+                sx={{
+                  fontWeight: 600,
+                  mb: 1,
+                  fontSize: '0.95rem',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px',
+                }}
+              >
+                {title}
+              </Typography>
+              <Typography
+                className="stat-value"
+                variant="h2"
+                fontWeight={900}
+                sx={{
+                  color: theme.palette.text.primary,
+                  fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
+                  lineHeight: 1,
+                  transition: 'transform 0.3s ease',
+                  background: `linear-gradient(135deg, ${theme.palette.text.primary}, ${alpha(color, 0.8)})`,
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                }}
+                id={`stat-${title.toLowerCase().replace(/\s+/g, '-')}`}
+              >
+                {value}
+              </Typography>
+              {subtitle && (
+                <Typography
+                  variant="caption"
+                  sx={{
+                    color: alpha(theme.palette.text.secondary, 0.8),
+                    fontWeight: 500,
+                    display: 'block',
+                    mt: 1,
+                    fontSize: '0.85rem',
+                  }}
+                >
+                  {subtitle}
+                </Typography>
+              )}
+            </Box>
+
             <Box
               className="stat-icon"
               sx={{
-                bgcolor: alpha(color, 0.1),
-                borderRadius: 3,
-                p: 2,
+                background: `linear-gradient(135deg, ${alpha(color, 0.15)}, ${alpha(color, 0.25)})`,
+                borderRadius: 4,
+                p: 2.5,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                transition: 'transform 0.3s ease',
+                transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                 border: `2px solid ${alpha(color, 0.2)}`,
+                backdropFilter: 'blur(10px)',
+                boxShadow: `0 8px 20px ${alpha(color, 0.15)}`,
               }}
               aria-hidden="true"
             >
               {React.cloneElement(icon as React.ReactElement, {
-                sx: { color, fontSize: 36 }
+                sx: {
+                  color,
+                  fontSize: 40,
+                  transition: 'all 0.3s ease',
+                }
               } as any)}
             </Box>
           </Box>
-          <Typography
-            variant="h3"
-            fontWeight={800}
-            gutterBottom
-            sx={{
-              color: theme.palette.text.primary,
-              fontSize: { xs: '1.8rem', sm: '2.2rem' },
-              lineHeight: 1.2,
-            }}
-            id={`stat-${title.toLowerCase().replace(/\s+/g, '-')}`}
-          >
-            {value}
-          </Typography>
-          <Typography
-            variant="body1"
-            color="text.secondary"
-            gutterBottom
-            sx={{ fontWeight: 600, mb: 0.5 }}
-          >
-            {title}
-          </Typography>
-          {subtitle && (
-            <Typography
-              variant="caption"
-              sx={{
-                color: alpha(theme.palette.text.secondary, 0.8),
-                fontWeight: 500,
-                display: 'block',
-                mt: 1,
-              }}
-            >
-              {subtitle}
-            </Typography>
-          )}
         </CardContent>
       </Card>
-    </Grow>
+    </div>
   );
 };
 
@@ -155,40 +215,91 @@ export const Dashboard: React.FC = () => {
   ];
 
   return (
-    <Fade in timeout={800}>
+    <div className="animate-fade-in-up">
       <Box>
         {/* Header Section */}
-        <Box sx={{ mb: 4 }}>
-          <Typography
-            variant="h3"
-            fontWeight={800}
-            gutterBottom
-            sx={{
-              background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-              backgroundClip: 'text',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              mb: 1,
-            }}
-          >
-            Dashboard Overview
-          </Typography>
-          <Typography variant="h6" color="text.secondary" sx={{ mb: 1, fontWeight: 400 }}>
-            Welcome back! Here's what's happening with your fleet today.
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Last updated: {format(new Date(), 'MMM dd, yyyy \'at\' h:mm a')}
-          </Typography>
+        <Box sx={{ mb: 6 }}>
+          <Box className="animate-scale-in" sx={{ mb: 3 }}>
+            <Typography
+              variant="h2"
+              fontWeight={900}
+              className="text-gradient-primary"
+              sx={{
+                fontSize: { xs: '2.5rem', sm: '3rem', md: '3.5rem' },
+                lineHeight: 1.1,
+                mb: 2,
+                letterSpacing: '-0.02em',
+              }}
+            >
+              Dashboard Overview
+            </Typography>
+            <Typography
+              variant="h6"
+              color="text.secondary"
+              sx={{
+                mb: 2,
+                fontWeight: 500,
+                fontSize: '1.25rem',
+                maxWidth: 600,
+              }}
+            >
+              Welcome back! Here's what's happening with your fleet today.
+            </Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+                p: 2,
+                borderRadius: 3,
+                background: alpha(theme.palette.primary.main, 0.05),
+                border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+                width: 'fit-content',
+              }}
+            >
+              <Box
+                sx={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: '50%',
+                  bgcolor: 'success.main',
+                  animation: 'pulse 2s infinite',
+                }}
+              />
+              <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
+                Last updated: {format(new Date(), 'MMM dd, yyyy \'at\' h:mm a')}
+              </Typography>
+            </Box>
+          </Box>
         </Box>
 
         {/* KPI Cards Section */}
-        <Box sx={{ mb: 5 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-            <Assessment sx={{ mr: 1.5, color: 'primary.main', fontSize: 28 }} />
-            <Typography variant="h5" fontWeight={700} color="text.primary">
-              Key Performance Indicators
-            </Typography>
+        <Box sx={{ mb: 6 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
+            <Box
+              sx={{
+                background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                borderRadius: 3,
+                p: 1.5,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mr: 2,
+                boxShadow: `0 8px 20px ${alpha(theme.palette.primary.main, 0.3)}`,
+              }}
+            >
+              <Assessment sx={{ color: 'white', fontSize: 28 }} />
+            </Box>
+            <Box>
+              <Typography variant="h4" fontWeight={800} color="text.primary" sx={{ mb: 0.5 }}>
+                Key Performance Indicators
+              </Typography>
+              <Typography variant="body1" color="text.secondary" sx={{ fontWeight: 500 }}>
+                Real-time insights into your business performance
+              </Typography>
+            </Box>
           </Box>
+
           <Grid container spacing={3}>
             <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
               <StatCard
@@ -233,71 +344,246 @@ export const Dashboard: React.FC = () => {
           </Grid>
         </Box>
 
-      {/* Charts */}
-      <Grid container spacing={3}>
+      {/* Charts Section */}
+      <Box sx={{ mb: 4 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
+          <Box
+            sx={{
+              background: `linear-gradient(135deg, ${theme.palette.success.main}, ${theme.palette.info.main})`,
+              borderRadius: 3,
+              p: 1.5,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              mr: 2,
+              boxShadow: `0 8px 20px ${alpha(theme.palette.success.main, 0.3)}`,
+            }}
+          >
+            <TrendingUp sx={{ color: 'white', fontSize: 28 }} />
+          </Box>
+          <Box>
+            <Typography variant="h4" fontWeight={800} color="text.primary" sx={{ mb: 0.5 }}>
+              Analytics & Insights
+            </Typography>
+            <Typography variant="body1" color="text.secondary" sx={{ fontWeight: 500 }}>
+              Detailed performance metrics and trends
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
+
+      <Grid container spacing={4}>
         {/* Revenue Chart */}
         <Grid size={{ xs: 12, lg: 8 }}>
-          <Paper sx={{ p: 3 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-              <TrendingUp sx={{ mr: 1, color: 'primary.main' }} />
-              <Typography variant="h6" fontWeight={600}>
-                Revenue Over Time (Last 30 Days)
-              </Typography>
+          <Paper
+            className="card-modern"
+            sx={{
+              p: 4,
+              background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.02)}, ${alpha(theme.palette.primary.main, 0.05)})`,
+              border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+              position: 'relative',
+              overflow: 'hidden',
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: 4,
+                background: `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.success.main})`,
+                borderRadius: '16px 16px 0 0',
+              },
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
+              <Box
+                sx={{
+                  background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.15)}, ${alpha(theme.palette.primary.main, 0.25)})`,
+                  borderRadius: 3,
+                  p: 1.5,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  mr: 2,
+                  border: `2px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                }}
+              >
+                <TrendingUp sx={{ color: 'primary.main', fontSize: 24 }} />
+              </Box>
+              <Box>
+                <Typography variant="h5" fontWeight={700} color="text.primary">
+                  Revenue Over Time
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
+                  Last 30 days performance
+                </Typography>
+              </Box>
             </Box>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={revenueData || []}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis
-                  dataKey="date"
-                  tickFormatter={(value) => format(new Date(value), 'MMM dd')}
-                />
-                <YAxis />
-                <Tooltip
-                  labelFormatter={(value) => format(new Date(value), 'MMM dd, yyyy')}
-                  formatter={(value: number) => [`$${value.toFixed(2)}`, 'Revenue']}
-                />
-                <Legend />
-                <Line
-                  type="monotone"
-                  dataKey="revenue"
-                  stroke="#1976d2"
-                  strokeWidth={2}
-                  dot={{ fill: '#1976d2' }}
-                  name="Revenue"
-                />
-              </LineChart>
-            </ResponsiveContainer>
+            <Box sx={{
+              borderRadius: 2,
+              overflow: 'hidden',
+              background: alpha(theme.palette.background.paper, 0.5),
+              p: 2,
+            }}>
+              <ResponsiveContainer width="100%" height={320}>
+                <LineChart data={revenueData || []}>
+                  <CartesianGrid strokeDasharray="3 3" stroke={alpha(theme.palette.primary.main, 0.1)} />
+                  <XAxis
+                    dataKey="date"
+                    tickFormatter={(value) => format(new Date(value), 'MMM dd')}
+                    stroke={theme.palette.text.secondary}
+                    fontSize={12}
+                  />
+                  <YAxis stroke={theme.palette.text.secondary} fontSize={12} />
+                  <Tooltip
+                    labelFormatter={(value) => format(new Date(value), 'MMM dd, yyyy')}
+                    formatter={(value: number) => [`$${value.toFixed(2)}`, 'Revenue']}
+                    contentStyle={{
+                      backgroundColor: theme.palette.background.paper,
+                      border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+                      borderRadius: 12,
+                      boxShadow: `0 8px 20px ${alpha(theme.palette.grey[900], 0.15)}`,
+                    }}
+                  />
+                  <Legend />
+                  <Line
+                    type="monotone"
+                    dataKey="revenue"
+                    stroke={theme.palette.primary.main}
+                    strokeWidth={3}
+                    dot={{ fill: theme.palette.primary.main, strokeWidth: 2, r: 6 }}
+                    activeDot={{ r: 8, stroke: theme.palette.primary.main, strokeWidth: 2 }}
+                    name="Revenue"
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </Box>
           </Paper>
         </Grid>
 
         {/* Fleet Status */}
         <Grid size={{ xs: 12, lg: 4 }}>
-          <Paper sx={{ p: 3 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-              <DirectionsCar sx={{ mr: 1, color: 'primary.main' }} />
-              <Typography variant="h6" fontWeight={600}>
-                Cabs Status
-              </Typography>
+          <Paper
+            className="card-modern"
+            sx={{
+              p: 4,
+              background: `linear-gradient(135deg, ${alpha(theme.palette.secondary.main, 0.02)}, ${alpha(theme.palette.secondary.main, 0.05)})`,
+              border: `1px solid ${alpha(theme.palette.secondary.main, 0.1)}`,
+              position: 'relative',
+              overflow: 'hidden',
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: 4,
+                background: `linear-gradient(90deg, ${theme.palette.secondary.main}, ${theme.palette.warning.main})`,
+                borderRadius: '16px 16px 0 0',
+              },
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
+              <Box
+                sx={{
+                  background: `linear-gradient(135deg, ${alpha(theme.palette.secondary.main, 0.15)}, ${alpha(theme.palette.secondary.main, 0.25)})`,
+                  borderRadius: 3,
+                  p: 1.5,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  mr: 2,
+                  border: `2px solid ${alpha(theme.palette.secondary.main, 0.2)}`,
+                }}
+              >
+                <DirectionsCar sx={{ color: 'secondary.main', fontSize: 24 }} />
+              </Box>
+              <Box>
+                <Typography variant="h5" fontWeight={700} color="text.primary">
+                  Fleet Status
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 500 }}>
+                  Current cab distribution
+                </Typography>
+              </Box>
             </Box>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={fleetData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, value }) => `${name}: ${value}`}
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="value"
+
+            <Box sx={{
+              borderRadius: 2,
+              overflow: 'hidden',
+              background: alpha(theme.palette.background.paper, 0.5),
+              p: 2,
+              mb: 3,
+            }}>
+              <ResponsiveContainer width="100%" height={280}>
+                <PieChart>
+                  <Pie
+                    data={fleetData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    outerRadius={90}
+                    fill="#8884d8"
+                    dataKey="value"
+                    stroke="none"
+                  >
+                    {fleetData.map((_entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: theme.palette.background.paper,
+                      border: `1px solid ${alpha(theme.palette.secondary.main, 0.2)}`,
+                      borderRadius: 12,
+                      boxShadow: `0 8px 20px ${alpha(theme.palette.grey[900], 0.15)}`,
+                    }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </Box>
+
+            <Box sx={{ mt: 3 }}>
+              {fleetData.map((item, index) => (
+                <Box
+                  key={item.name}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    p: 2,
+                    mb: 1,
+                    borderRadius: 2,
+                    background: alpha(COLORS[index % COLORS.length], 0.1),
+                    border: `1px solid ${alpha(COLORS[index % COLORS.length], 0.2)}`,
+                    transition: 'all 0.2s ease',
+                    '&:hover': {
+                      transform: 'translateX(4px)',
+                      background: alpha(COLORS[index % COLORS.length], 0.15),
+                    },
+                  }}
                 >
-                  {fleetData.map((_entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Box
+                      sx={{
+                        width: 16,
+                        height: 16,
+                        borderRadius: '50%',
+                        bgcolor: COLORS[index % COLORS.length],
+                        mr: 2,
+                        boxShadow: `0 2px 8px ${alpha(COLORS[index % COLORS.length], 0.3)}`,
+                      }}
+                    />
+                    <Typography variant="body1" fontWeight={600} color="text.primary">
+                      {item.name}
+                    </Typography>
+                  </Box>
+                  <Typography variant="h6" fontWeight={700} color="text.primary">
+                    {item.value}
+                  </Typography>
+                </Box>
+              ))}
+            </Box>
           </Paper>
         </Grid>
 
@@ -370,6 +656,6 @@ export const Dashboard: React.FC = () => {
         </Grid>
       </Grid>
       </Box>
-    </Fade>
+    </div>
   );
 };

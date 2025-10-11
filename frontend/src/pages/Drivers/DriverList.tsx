@@ -21,6 +21,7 @@ import {
   Delete,
   Search,
   People,
+  Person,
   Warning,
   CheckCircle,
 } from '@mui/icons-material';
@@ -119,42 +120,132 @@ export const DriverList: React.FC = () => {
   });
 
   return (
-    <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Box>
-          <Typography variant="h4" fontWeight={700} gutterBottom>
-            Drivers
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
-            Manage your driver roster
-          </Typography>
+    <div className="animate-fade-in-up">
+      {/* Header Section */}
+      <Box sx={{ mb: 6 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 4 }}>
+          <Box className="animate-scale-in">
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+              <Box
+                sx={{
+                  background: 'linear-gradient(135deg, #9c27b0, #7b1fa2)',
+                  borderRadius: 3,
+                  p: 1.5,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  mr: 2,
+                  boxShadow: '0 8px 20px rgba(156, 39, 176, 0.3)',
+                }}
+              >
+                <Person sx={{ color: 'white', fontSize: 28 }} />
+              </Box>
+              <Box>
+                <Typography
+                  variant="h2"
+                  fontWeight={900}
+                  className="text-gradient-primary"
+                  sx={{
+                    fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
+                    lineHeight: 1.1,
+                    letterSpacing: '-0.02em',
+                  }}
+                >
+                  Driver Management
+                </Typography>
+                <Typography
+                  variant="h6"
+                  color="text.secondary"
+                  sx={{
+                    fontWeight: 500,
+                    fontSize: '1.1rem',
+                  }}
+                >
+                  Manage your driver roster efficiently
+                </Typography>
+              </Box>
+            </Box>
+          </Box>
+
+          <Button
+            variant="contained"
+            startIcon={<Add />}
+            onClick={() => navigate('/app/drivers/new')}
+            className="btn-primary-modern"
+            sx={{
+              px: 4,
+              py: 1.5,
+              fontSize: '1rem',
+              fontWeight: 600,
+              borderRadius: 3,
+              textTransform: 'none',
+              boxShadow: '0 8px 20px rgba(156, 39, 176, 0.3)',
+              background: 'linear-gradient(135deg, #9c27b0, #7b1fa2)',
+              '&:hover': {
+                boxShadow: '0 12px 24px rgba(156, 39, 176, 0.4)',
+                transform: 'translateY(-2px)',
+              },
+            }}
+          >
+            Add Driver
+          </Button>
         </Box>
-        <Button
-          variant="contained"
-          startIcon={<Add />}
-          onClick={() => navigate('/app/drivers/new')}
-          size="large"
-        >
-          Add Driver
-        </Button>
       </Box>
 
-      {/* Filters */}
-      <Card sx={{ mb: 3 }}>
-        <CardContent>
-          <Grid container spacing={2} alignItems="center">
+      {/* Filters Section */}
+      <Card
+        className="card-modern"
+        sx={{
+          mb: 4,
+          background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.95))',
+          backdropFilter: 'blur(10px)',
+          border: '1px solid rgba(156, 39, 176, 0.1)',
+        }}
+      >
+        <CardContent sx={{ p: 4 }}>
+          <Box sx={{ mb: 3 }}>
+            <Typography variant="h6" fontWeight={700} color="text.primary" sx={{ mb: 2 }}>
+              Search & Filter
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+              Find drivers by name, contact details, or filter by status
+            </Typography>
+          </Box>
+
+          <Grid container spacing={3} alignItems="center">
             <Grid size={{ xs: 12, md: 8 }}>
               <TextField
                 fullWidth
                 placeholder="Search by name, email, phone, or license number..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Search />
-                    </InputAdornment>
-                  ),
+                className="input-modern"
+                slotProps={{
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Search sx={{ color: 'text.secondary' }} />
+                      </InputAdornment>
+                    ),
+                  },
+                }}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: 3,
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    backdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(156, 39, 176, 0.1)',
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                      border: '1px solid rgba(156, 39, 176, 0.3)',
+                      backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                    },
+                    '&.Mui-focused': {
+                      border: '2px solid rgba(156, 39, 176, 0.5)',
+                      backgroundColor: 'rgba(255, 255, 255, 1)',
+                      boxShadow: '0 8px 20px rgba(156, 39, 176, 0.15)',
+                    },
+                  },
                 }}
               />
             </Grid>
@@ -164,9 +255,21 @@ export const DriverList: React.FC = () => {
                   <Switch
                     checked={showActiveOnly}
                     onChange={(e) => setShowActiveOnly(e.target.checked)}
+                    sx={{
+                      '& .MuiSwitch-switchBase.Mui-checked': {
+                        color: '#9c27b0',
+                      },
+                      '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                        backgroundColor: '#9c27b0',
+                      },
+                    }}
                   />
                 }
-                label="Active Drivers Only"
+                label={
+                  <Typography variant="body2" fontWeight={600} color="text.primary">
+                    Active Drivers Only
+                  </Typography>
+                }
               />
             </Grid>
           </Grid>
@@ -302,6 +405,6 @@ export const DriverList: React.FC = () => {
         severity="error"
         isLoading={deleteMutation.isPending}
       />
-    </Box>
+    </div>
   );
 };
