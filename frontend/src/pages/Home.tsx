@@ -1,61 +1,43 @@
 import React from 'react';
-import {
-  Box,
-  Container,
-  Typography,
-  Button,
-  Grid,
-  Card,
-  CardContent,
-  Chip,
-  Stack,
-  Fade,
-  Grow,
-  useTheme,
-  alpha
-} from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
-import PeopleIcon from '@mui/icons-material/People';
-import AnalyticsIcon from '@mui/icons-material/Analytics';
-import SecurityIcon from '@mui/icons-material/Security';
-import SpeedIcon from '@mui/icons-material/Speed';
-import SupportIcon from '@mui/icons-material/Support';
-import StarIcon from '@mui/icons-material/Star';
+import { Car, Users, BarChart3, Shield, Zap, Headphones, Star } from 'lucide-react';
+import { Button } from '../components/ui/button';
+import { Card, CardContent } from '../components/ui/card';
+
 
 const features = [
   {
-    icon: <DirectionsCarIcon sx={{ fontSize: 48, color: 'primary.main' }} />,
+    icon: <Car className="h-12 w-12 text-blue-600" />,
     title: 'Fleet Management',
     description: 'Comprehensive cab fleet tracking and management system with real-time GPS monitoring, maintenance scheduling, and utilization analytics.',
     delay: 0,
   },
   {
-    icon: <PeopleIcon sx={{ fontSize: 48, color: 'primary.main' }} />,
+    icon: <Users className="h-12 w-12 text-blue-600" />,
     title: 'Driver Management',
     description: 'Complete driver profiles, scheduling, performance tracking, and automated shift management for optimal fleet operations.',
     delay: 100,
   },
   {
-    icon: <AnalyticsIcon sx={{ fontSize: 48, color: 'primary.main' }} />,
+    icon: <BarChart3 className="h-12 w-12 text-blue-600" />,
     title: 'Analytics & Reports',
     description: 'Detailed insights and reporting for business intelligence with customizable dashboards and automated report generation.',
     delay: 200,
   },
   {
-    icon: <SecurityIcon sx={{ fontSize: 48, color: 'primary.main' }} />,
+    icon: <Shield className="h-12 w-12 text-blue-600" />,
     title: 'Secure & Reliable',
     description: 'Enterprise-grade security with reliable data management, encrypted communications, and comprehensive backup systems.',
     delay: 300,
   },
   {
-    icon: <SpeedIcon sx={{ fontSize: 48, color: 'primary.main' }} />,
+    icon: <Zap className="h-12 w-12 text-blue-600" />,
     title: 'Real-time Updates',
     description: 'Live tracking and instant notifications for all operations with push notifications and real-time status updates.',
     delay: 400,
   },
   {
-    icon: <SupportIcon sx={{ fontSize: 48, color: 'primary.main' }} />,
+    icon: <Headphones className="h-12 w-12 text-blue-600" />,
     title: '24/7 Support',
     description: 'Round-the-clock technical support and maintenance with dedicated account managers and priority response times.',
     delay: 500,
@@ -63,424 +45,169 @@ const features = [
 ];
 
 export const Home: React.FC = () => {
-  const theme = useTheme();
-
   return (
-    <Fade in timeout={1000}>
-      <Box>
-        {/* Hero Section */}
-        <Box
-          sx={{
-            background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
-            color: 'white',
-            py: { xs: 10, md: 16 },
-            position: 'relative',
-            overflow: 'hidden',
-            '&::before': {
-              content: '""',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              background: 'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%)',
-            },
-            '&::after': {
-              content: '""',
-              position: 'absolute',
-              top: '10%',
-              right: '10%',
-              width: 300,
-              height: 300,
-              borderRadius: '50%',
-              background: 'rgba(255, 255, 255, 0.05)',
-              filter: 'blur(40px)',
-            },
-          }}
-        >
-          <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
-            <Box sx={{ textAlign: 'center' }}>
-              <Grow in timeout={1200}>
-                <Box
-                  sx={{
-                    width: { xs: 80, md: 120 },
-                    height: { xs: 80, md: 120 },
-                    borderRadius: 4,
-                    bgcolor: 'rgba(255, 255, 255, 0.15)',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: { xs: '2.5rem', md: '4rem' },
-                    mb: 4,
-                    backdropFilter: 'blur(20px)',
-                    border: '2px solid rgba(255, 255, 255, 0.2)',
-                    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
-                  }}
-                >
-                  🚕
-                </Box>
-              </Grow>
+    <div className="animate-fade-in-up">
+      {/* Hero Section */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 to-teal-600 text-white py-20 md:py-32">
+        {/* Background decorations */}
+        <div className="absolute inset-0 bg-gradient-radial from-white/10 via-transparent to-transparent opacity-50" />
+        <div className="absolute top-[10%] right-[10%] w-72 h-72 rounded-full bg-white/5 blur-3xl" />
 
-              <Fade in timeout={1400}>
-                <Typography
-                  variant="h1"
-                  component="h1"
-                  gutterBottom
-                  sx={{
-                    fontWeight: 900,
-                    fontSize: { xs: '2.2rem', sm: '3rem', md: '4.5rem' },
-                    mb: 3,
-                    lineHeight: 1.1,
-                    textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                  }}
-                >
-                  Jez Cabs Management Platform
-                </Typography>
-              </Fade>
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center">
+            <div className="animate-scale-in mb-8">
+              <div className="inline-flex items-center justify-center w-20 h-20 md:w-32 md:h-32 rounded-2xl bg-white/15 backdrop-blur-xl border-2 border-white/20 shadow-2xl text-4xl md:text-6xl mb-8">
+                🚕
+              </div>
+            </div>
 
-              <Fade in timeout={1600}>
-                <Typography
-                  variant="h4"
-                  sx={{
-                    mb: 5,
-                    opacity: 0.95,
-                    fontSize: { xs: '1.1rem', md: '1.4rem' },
-                    maxWidth: 900,
-                    mx: 'auto',
-                    lineHeight: 1.4,
-                    fontWeight: 400,
-                  }}
-                >
-                  Streamline your cab business operations with our comprehensive management platform.
-                  Manage fleets, drivers, bookings, and analytics all in one place.
-                </Typography>
-              </Fade>
+            <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+              <h1 className="text-4xl sm:text-5xl md:text-7xl font-black mb-6 leading-tight tracking-tight drop-shadow-lg">
+                Jez Cabs Management Platform
+              </h1>
+            </div>
 
-              <Grow in timeout={1800}>
-                <Stack
-                  direction={{ xs: 'column', sm: 'row' }}
-                  spacing={3}
-                  justifyContent="center"
-                  sx={{ mb: 6 }}
-                >
-                  <Button
-                    component={RouterLink}
-                    to="/login"
-                    variant="contained"
-                    size="large"
-                    sx={{
-                      px: 5,
-                      py: 2,
-                      fontSize: '1.1rem',
-                      fontWeight: 600,
-                      bgcolor: 'white',
-                      color: 'primary.main',
-                      borderRadius: 3,
-                      boxShadow: '0 8px 24px rgba(0, 0, 0, 0.15)',
-                      '&:hover': {
-                        bgcolor: 'grey.50',
-                        transform: 'translateY(-2px)',
-                        boxShadow: '0 12px 32px rgba(0, 0, 0, 0.2)',
-                      },
-                      transition: 'all 0.3s ease',
-                    }}
-                  >
-                    Get Started Free
-                  </Button>
-                  <Button
-                    component={RouterLink}
-                    to="/register"
-                    variant="outlined"
-                    size="large"
-                    sx={{
-                      px: 5,
-                      py: 2,
-                      fontSize: '1.1rem',
-                      fontWeight: 600,
-                      borderColor: 'white',
-                      color: 'white',
-                      borderRadius: 3,
-                      borderWidth: 2,
-                      '&:hover': {
-                        borderColor: 'white',
-                        bgcolor: 'rgba(255, 255, 255, 0.1)',
-                        transform: 'translateY(-2px)',
-                        boxShadow: '0 8px 24px rgba(255, 255, 255, 0.1)',
-                      },
-                      transition: 'all 0.3s ease',
-                    }}
-                  >
-                    Sign Up Free
-                  </Button>
-                </Stack>
-              </Grow>
+            <div className="animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+              <p className="text-lg md:text-xl mb-10 opacity-95 max-w-4xl mx-auto leading-relaxed font-light">
+                Streamline your cab business operations with our comprehensive management platform.
+                Manage fleets, drivers, bookings, and analytics all in one place.
+              </p>
+            </div>
 
-              <Fade in timeout={2000}>
-                <Stack
-                  direction="row"
-                  spacing={2}
-                  justifyContent="center"
-                  flexWrap="wrap"
-                  sx={{ mb: 4 }}
-                >
-                  {[
-                    { label: 'Fleet Management', icon: '🚗' },
-                    { label: 'Driver Tracking', icon: '👨‍🚗' },
-                    { label: 'Booking System', icon: '📅' },
-                    { label: 'Analytics', icon: '📊' },
-                  ].map((chip) => (
-                    <Chip
-                      key={chip.label}
-                      label={`${chip.icon} ${chip.label}`}
-                      sx={{
-                        bgcolor: 'rgba(255, 255, 255, 0.15)',
-                        color: 'white',
-                        fontWeight: 500,
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
-                        backdropFilter: 'blur(10px)',
-                        '&:hover': {
-                          bgcolor: 'rgba(255, 255, 255, 0.2)',
-                        },
-                      }}
-                    />
-                  ))}
-                </Stack>
-              </Fade>
+            <div className="animate-fade-in-up flex flex-col sm:flex-row gap-6 justify-center mb-12" style={{ animationDelay: '0.6s' }}>
+              <Button
+                asChild
+                className="px-8 py-4 text-lg font-semibold bg-white text-blue-600 rounded-xl shadow-2xl hover:bg-gray-50 hover:-translate-y-1 hover:shadow-3xl transition-all duration-300"
+              >
+                <RouterLink to="/login">
+                  Get Started Free
+                </RouterLink>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                className="px-8 py-4 text-lg font-semibold border-2 border-white text-white rounded-xl hover:bg-white/10 hover:-translate-y-1 hover:shadow-xl transition-all duration-300"
+              >
+                <RouterLink to="/register">
+                  Sign Up Free
+                </RouterLink>
+              </Button>
+            </div>
 
-              <Fade in timeout={2200}>
-                <Box sx={{ mt: 6 }}>
-                  <Typography variant="body1" sx={{ opacity: 0.8, mb: 2 }}>
-                    Trusted by 500+ cab operators worldwide
-                  </Typography>
-                  <Stack direction="row" spacing={1} justifyContent="center">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <StarIcon key={star} sx={{ color: '#ffd700', fontSize: 24 }} />
-                    ))}
-                    <Typography variant="body2" sx={{ ml: 1, opacity: 0.8 }}>
-                      4.9/5 rating
-                    </Typography>
-                  </Stack>
-                </Box>
-              </Fade>
-            </Box>
-          </Container>
-        </Box>
+            <div className="animate-fade-in-up flex flex-wrap gap-4 justify-center mb-8" style={{ animationDelay: '0.8s' }}>
+              {[
+                { label: 'Fleet Management', icon: '🚗' },
+                { label: 'Driver Tracking', icon: '👨‍🚗' },
+                { label: 'Booking System', icon: '📅' },
+                { label: 'Analytics', icon: '📊' },
+              ].map((chip) => (
+                <div
+                  key={chip.label}
+                  className="px-4 py-2 bg-white/15 text-white font-medium border border-white/20 rounded-full backdrop-blur-sm hover:bg-white/20 transition-colors duration-200"
+                >
+                  {chip.icon} {chip.label}
+                </div>
+              ))}
+            </div>
+
+            <div className="animate-fade-in-up mt-12" style={{ animationDelay: '1s' }}>
+              <p className="text-white/80 mb-4">
+                Trusted by 500+ cab operators worldwide
+              </p>
+              <div className="flex items-center justify-center gap-1">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Star key={star} className="h-6 w-6 text-yellow-400 fill-current" />
+                ))}
+                <span className="ml-2 text-white/80">4.9/5 rating</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Features Section */}
-      <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: 'grey.50' }}>
-        <Container maxWidth="lg">
-          <Box sx={{ textAlign: 'center', mb: 8 }}>
-            <Typography
-              variant="h3"
-              component="h2"
-              gutterBottom
-              sx={{ fontWeight: 700, mb: 2 }}
-            >
+      <div className="py-16 md:py-24 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold mb-4 text-gray-900">
               Powerful Features for Modern Cab Management
-            </Typography>
-            <Typography
-              variant="h6"
-              color="text.secondary"
-              sx={{ maxWidth: 600, mx: 'auto' }}
-            >
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Everything you need to run a successful cab business efficiently and effectively
-            </Typography>
-          </Box>
+            </p>
+          </div>
 
-          <Grid container spacing={4}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
-                <Grow in timeout={800 + feature.delay}>
-                  <Card
-                    sx={{
-                      height: '100%',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      cursor: 'pointer',
-                      transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                      border: '1px solid',
-                      borderColor: 'divider',
-                      '&:hover': {
-                        transform: 'translateY(-12px) scale(1.02)',
-                        boxShadow: `0 24px 48px ${alpha(theme.palette.primary.main, 0.15)}`,
-                        borderColor: alpha(theme.palette.primary.main, 0.3),
-                        '& .feature-icon': {
-                          transform: 'scale(1.1)',
-                          color: theme.palette.primary.main,
-                        },
-                      },
-                    }}
-                    role="article"
-                    aria-labelledby={`feature-${index}-title`}
-                  >
-                    <CardContent sx={{ flexGrow: 1, textAlign: 'center', p: 4 }}>
-                      <Box
-                        className="feature-icon"
-                        sx={{
-                          mb: 3,
-                          transition: 'all 0.3s ease',
-                          p: 2,
-                          borderRadius: 3,
-                          bgcolor: alpha(theme.palette.primary.main, 0.08),
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                        }}
-                        aria-hidden="true"
-                      >
-                        {feature.icon}
-                      </Box>
-                      <Typography
-                        variant="h5"
-                        component="h3"
-                        gutterBottom
-                        sx={{
-                          fontWeight: 700,
-                          mb: 2,
-                          color: theme.palette.text.primary,
-                        }}
-                        id={`feature-${index}-title`}
-                      >
-                        {feature.title}
-                      </Typography>
-                      <Typography
-                        variant="body1"
-                        color="text.secondary"
-                        sx={{
-                          lineHeight: 1.6,
-                          fontSize: '0.95rem',
-                        }}
-                      >
-                        {feature.description}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grow>
-              </Grid>
+              <div
+                key={index}
+                className="animate-fade-in-up group"
+                style={{ animationDelay: `${feature.delay}ms` }}
+              >
+                <Card className="h-full cursor-pointer transition-all duration-500 hover:-translate-y-3 hover:scale-105 hover:shadow-2xl border border-gray-200 hover:border-blue-300">
+                  <CardContent className="flex-1 text-center p-8">
+                    <div className="mb-6 p-4 rounded-xl bg-blue-50 inline-flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:bg-blue-100">
+                      {feature.icon}
+                    </div>
+                    <h3 className="text-xl font-bold mb-4 text-gray-900">
+                      {feature.title}
+                    </h3>
+                    <p className="text-gray-600 leading-relaxed text-sm">
+                      {feature.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
             ))}
-          </Grid>
-        </Container>
-      </Box>
+          </div>
+        </div>
+      </div>
 
       {/* CTA Section */}
-      <Box
-        sx={{
-          py: { xs: 10, md: 12 },
-          background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
-          color: 'white',
-          position: 'relative',
-          overflow: 'hidden',
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'radial-gradient(circle at 30% 70%, rgba(255,255,255,0.1) 0%, transparent 50%)',
-          },
-        }}
-      >
-        <Container maxWidth="md" sx={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
-          <Fade in timeout={1000}>
-            <Typography
-              variant="h2"
-              component="h2"
-              gutterBottom
-              sx={{
-                fontWeight: 800,
-                mb: 3,
-                fontSize: { xs: '2rem', md: '2.5rem' },
-                textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-              }}
-            >
+      <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 to-teal-600 text-white py-20 md:py-24">
+        {/* Background decoration */}
+        <div className="absolute inset-0 bg-gradient-radial from-white/10 via-transparent to-transparent opacity-50" />
+
+        <div className="container mx-auto px-4 relative z-10 text-center max-w-4xl">
+          <div className="animate-fade-in-up">
+            <h2 className="text-3xl md:text-5xl font-extrabold mb-6 drop-shadow-lg">
               Ready to Transform Your Cab Business?
-            </Typography>
-          </Fade>
+            </h2>
+          </div>
 
-          <Fade in timeout={1200}>
-            <Typography
-              variant="h5"
-              sx={{
-                mb: 5,
-                opacity: 0.95,
-                fontSize: { xs: '1.1rem', md: '1.3rem' },
-                lineHeight: 1.5,
-                maxWidth: 700,
-                mx: 'auto',
-              }}
-            >
+          <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+            <p className="text-lg md:text-xl mb-10 opacity-95 leading-relaxed max-w-3xl mx-auto">
               Join thousands of cab operators who trust Jez Cabs Management Platform to streamline their operations and boost profitability.
-            </Typography>
-          </Fade>
+            </p>
+          </div>
 
-          <Grow in timeout={1400}>
-            <Stack
-              direction={{ xs: 'column', sm: 'row' }}
-              spacing={3}
-              justifyContent="center"
-              sx={{ mb: 4 }}
+          <div className="animate-fade-in-up flex flex-col sm:flex-row gap-6 justify-center mb-8" style={{ animationDelay: '0.4s' }}>
+            <Button
+              asChild
+              className="px-10 py-5 text-xl font-bold bg-white text-blue-600 rounded-xl shadow-2xl hover:bg-gray-50 hover:-translate-y-2 hover:shadow-3xl transition-all duration-300"
             >
-              <Button
-                component={RouterLink}
-                to="/register"
-                variant="contained"
-                size="large"
-                sx={{
-                  px: 6,
-                  py: 2.5,
-                  fontSize: '1.2rem',
-                  fontWeight: 700,
-                  bgcolor: 'white',
-                  color: 'primary.main',
-                  borderRadius: 3,
-                  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.2)',
-                  '&:hover': {
-                    bgcolor: 'grey.50',
-                    transform: 'translateY(-3px)',
-                    boxShadow: '0 16px 40px rgba(0, 0, 0, 0.3)',
-                  },
-                  transition: 'all 0.3s ease',
-                }}
-              >
+              <RouterLink to="/register">
                 Start Free Trial
-              </Button>
-              <Button
-                component={RouterLink}
-                to="/login"
-                variant="outlined"
-                size="large"
-                sx={{
-                  px: 6,
-                  py: 2.5,
-                  fontSize: '1.2rem',
-                  fontWeight: 700,
-                  borderColor: 'white',
-                  color: 'white',
-                  borderRadius: 3,
-                  borderWidth: 2,
-                  '&:hover': {
-                    borderColor: 'white',
-                    bgcolor: 'rgba(255, 255, 255, 0.1)',
-                    transform: 'translateY(-3px)',
-                    boxShadow: '0 8px 24px rgba(255, 255, 255, 0.1)',
-                  },
-                  transition: 'all 0.3s ease',
-                }}
-              >
+              </RouterLink>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              className="px-10 py-5 text-xl font-bold border-2 border-white text-white rounded-xl hover:bg-white/10 hover:-translate-y-2 hover:shadow-xl transition-all duration-300"
+            >
+              <RouterLink to="/login">
                 Sign In
-              </Button>
-            </Stack>
-          </Grow>
+              </RouterLink>
+            </Button>
+          </div>
 
-          <Fade in timeout={1600}>
-            <Typography variant="body2" sx={{ opacity: 0.8, fontSize: '0.9rem' }}>
+          <div className="animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
+            <p className="text-white/80 text-sm">
               No credit card required • 14-day free trial • Cancel anytime
-            </Typography>
-          </Fade>
-        </Container>
-      </Box>
-      </Box>
-    </Fade>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
