@@ -1,9 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { ThemeProvider, CssBaseline } from '@mui/material';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { SnackbarProvider } from 'notistack';
-import { theme } from './theme';
+import { Toaster } from './components/ui/toaster';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Layout } from './components/Layout';
@@ -44,19 +42,9 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <SnackbarProvider
-          maxSnack={3}
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-          autoHideDuration={4000}
-        >
-          <AuthProvider>
-            <BrowserRouter>
-              <Routes>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
                 {/* Public Routes */}
                 <Route path="/" element={<PublicLayout />}>
                   <Route index element={<Home />} />
@@ -229,9 +217,8 @@ function App() {
             </Routes>
           </BrowserRouter>
         </AuthProvider>
-        </SnackbarProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+        <Toaster />
+      </QueryClientProvider>
   );
 }
 
