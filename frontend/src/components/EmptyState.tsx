@@ -1,9 +1,10 @@
 import React from 'react';
-import { Box, Typography, Button, Card, CardContent } from '@mui/material';
-import { SvgIconComponent } from '@mui/icons-material';
+import { Card, CardContent } from './ui/card';
+import { Button } from './ui/button';
+import { LucideIcon } from 'lucide-react';
 
 interface EmptyStateProps {
-  icon: SvgIconComponent;
+  icon: LucideIcon;
   title: string;
   description: string;
   actionLabel?: string;
@@ -23,43 +24,32 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
 }) => {
   return (
     <Card>
-      <CardContent sx={{ textAlign: 'center', py: 8, px: 4 }}>
-        <Box
-          sx={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: 120,
-            height: 120,
-            borderRadius: '50%',
-            bgcolor: 'grey.100',
-            mb: 3,
-          }}
-        >
-          <Icon sx={{ fontSize: 64, color: 'grey.400' }} />
-        </Box>
+      <CardContent className="text-center py-16 px-8">
+        <div className="inline-flex items-center justify-center w-30 h-30 rounded-full bg-gray-100 mb-6">
+          <Icon className="h-16 w-16 text-gray-400" />
+        </div>
 
-        <Typography variant="h5" fontWeight={700} gutterBottom color="text.primary">
+        <h3 className="text-xl font-bold text-gray-900 mb-2">
           {title}
-        </Typography>
+        </h3>
 
-        <Typography variant="body1" color="text.secondary" paragraph sx={{ maxWidth: 500, mx: 'auto' }}>
+        <p className="text-gray-600 mb-6 max-w-md mx-auto">
           {description}
-        </Typography>
+        </p>
 
         {(actionLabel || secondaryActionLabel) && (
-          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', mt: 3 }}>
+          <div className="flex gap-4 justify-center">
             {actionLabel && onAction && (
-              <Button variant="contained" size="large" onClick={onAction}>
+              <Button onClick={onAction} size="lg">
                 {actionLabel}
               </Button>
             )}
             {secondaryActionLabel && onSecondaryAction && (
-              <Button variant="outlined" size="large" onClick={onSecondaryAction}>
+              <Button variant="outline" size="lg" onClick={onSecondaryAction}>
                 {secondaryActionLabel}
               </Button>
             )}
-          </Box>
+          </div>
         )}
       </CardContent>
     </Card>

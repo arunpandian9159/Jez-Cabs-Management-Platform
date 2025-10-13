@@ -1,35 +1,30 @@
 import React from 'react';
-import { Chip } from '@mui/material';
+import { Badge } from './ui/badge';
 
 interface StatusBadgeProps {
   status: string;
 }
 
 export const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
-  const getStatusColor = (status: string) => {
+  const getStatusVariant = (status: string) => {
     switch (status) {
       case 'AVAILABLE':
+      case 'COMPLETED':
+      case 'PAID':
         return 'success';
       case 'RENTED':
       case 'ACTIVE':
+      case 'SENT':
         return 'info';
       case 'IN_MAINTENANCE':
       case 'MAINTENANCE':
-        return 'warning';
       case 'PENDING':
         return 'warning';
-      case 'COMPLETED':
-        return 'success';
       case 'CANCELLED':
-        return 'error';
-      case 'PAID':
-        return 'success';
-      case 'SENT':
-        return 'info';
-      case 'DRAFT':
-        return 'default';
       case 'OVERDUE':
-        return 'error';
+        return 'destructive';
+      case 'DRAFT':
+        return 'secondary';
       default:
         return 'default';
     }
@@ -40,12 +35,9 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
   };
 
   return (
-    <Chip
-      label={getStatusLabel(status)}
-      color={getStatusColor(status) as any}
-      size="small"
-      sx={{ fontWeight: 600 }}
-    />
+    <Badge variant={getStatusVariant(status) as any}>
+      {getStatusLabel(status)}
+    </Badge>
   );
 };
 

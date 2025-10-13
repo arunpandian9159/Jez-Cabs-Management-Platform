@@ -1,5 +1,6 @@
 import React from 'react';
-import { Box, Card, CardContent, Grid, Skeleton } from '@mui/material';
+import { Card, CardContent } from './ui/card';
+import { Skeleton } from './ui/skeleton';
 
 interface LoadingSkeletonProps {
   variant?: 'card' | 'list' | 'table' | 'dashboard' | 'form';
@@ -12,98 +13,94 @@ export const LoadingSkeleton: React.FC<LoadingSkeletonProps> = ({
 }) => {
   if (variant === 'dashboard') {
     return (
-      <Box>
+      <div className="space-y-6">
         {/* Header */}
-        <Box sx={{ mb: 4 }}>
-          <Skeleton variant="text" width={200} height={40} sx={{ mb: 1 }} />
-          <Skeleton variant="text" width={300} height={24} />
-        </Box>
+        <div className="space-y-2">
+          <Skeleton className="h-10 w-48" />
+          <Skeleton className="h-6 w-72" />
+        </div>
 
         {/* KPI Cards */}
-        <Grid container spacing={3} sx={{ mb: 4 }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-6">
           {[1, 2, 3, 4].map((i) => (
-            <Grid size={{ xs: 12, sm: 6, md: 3 }} key={i}>
-              <Card>
-                <CardContent>
-                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-                    <Skeleton variant="circular" width={56} height={56} />
-                  </Box>
-                  <Skeleton variant="text" width="60%" height={40} sx={{ mb: 1 }} />
-                  <Skeleton variant="text" width="80%" height={20} sx={{ mb: 0.5 }} />
-                  <Skeleton variant="text" width="50%" height={16} />
-                </CardContent>
-              </Card>
-            </Grid>
+            <Card key={i}>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <Skeleton className="h-14 w-14 rounded-full" />
+                </div>
+                <Skeleton className="h-10 w-3/5 mb-2" />
+                <Skeleton className="h-5 w-4/5 mb-1" />
+                <Skeleton className="h-4 w-1/2" />
+              </CardContent>
+            </Card>
           ))}
-        </Grid>
+        </div>
 
         {/* Charts */}
-        <Grid container spacing={3}>
-          <Grid size={{ xs: 12, lg: 8 }}>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
             <Card>
-              <CardContent>
-                <Skeleton variant="text" width={200} height={32} sx={{ mb: 2 }} />
-                <Skeleton variant="rectangular" height={300} sx={{ borderRadius: 2 }} />
+              <CardContent className="p-6">
+                <Skeleton className="h-8 w-48 mb-4" />
+                <Skeleton className="h-[300px] w-full rounded-lg" />
               </CardContent>
             </Card>
-          </Grid>
-          <Grid size={{ xs: 12, lg: 4 }}>
+          </div>
+          <div>
             <Card>
-              <CardContent>
-                <Skeleton variant="text" width={150} height={32} sx={{ mb: 2 }} />
-                <Skeleton variant="circular" width={200} height={200} sx={{ mx: 'auto' }} />
+              <CardContent className="p-6">
+                <Skeleton className="h-8 w-36 mb-4" />
+                <Skeleton className="h-48 w-48 rounded-full mx-auto" />
               </CardContent>
             </Card>
-          </Grid>
-        </Grid>
-      </Box>
+          </div>
+        </div>
+      </div>
     );
   }
 
   if (variant === 'form') {
     return (
-      <Box>
-        <Box sx={{ mb: 3 }}>
-          <Skeleton variant="text" width={200} height={40} sx={{ mb: 1 }} />
-          <Skeleton variant="text" width={300} height={24} />
-        </Box>
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <Skeleton className="h-10 w-48" />
+          <Skeleton className="h-6 w-72" />
+        </div>
 
-        <Card sx={{ mb: 3 }}>
-          <CardContent>
-            <Skeleton variant="text" width={150} height={28} sx={{ mb: 2 }} />
-            <Grid container spacing={2}>
+        <Card>
+          <CardContent className="p-6">
+            <Skeleton className="h-7 w-36 mb-4" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[1, 2, 3, 4].map((i) => (
-                <Grid size={{ xs: 12, md: 6 }} key={i}>
-                  <Skeleton variant="rectangular" height={56} sx={{ borderRadius: 1 }} />
-                </Grid>
+                <Skeleton key={i} className="h-14 w-full rounded-md" />
               ))}
-            </Grid>
+            </div>
           </CardContent>
         </Card>
 
-        <Box sx={{ display: 'flex', gap: 2 }}>
-          <Skeleton variant="rectangular" width={120} height={42} sx={{ borderRadius: 1 }} />
-          <Skeleton variant="rectangular" width={100} height={42} sx={{ borderRadius: 1 }} />
-        </Box>
-      </Box>
+        <div className="flex gap-4">
+          <Skeleton className="h-10 w-28 rounded-md" />
+          <Skeleton className="h-10 w-24 rounded-md" />
+        </div>
+      </div>
     );
   }
 
   if (variant === 'table') {
     return (
       <Card>
-        <CardContent>
-          <Box sx={{ mb: 2 }}>
-            <Skeleton variant="text" width={200} height={32} />
-          </Box>
+        <CardContent className="p-6">
+          <div className="mb-4">
+            <Skeleton className="h-8 w-48" />
+          </div>
           {[...Array(count)].map((_, i) => (
-            <Box key={i} sx={{ display: 'flex', gap: 2, mb: 2, alignItems: 'center' }}>
-              <Skeleton variant="rectangular" width="30%" height={40} />
-              <Skeleton variant="rectangular" width="25%" height={40} />
-              <Skeleton variant="rectangular" width="20%" height={40} />
-              <Skeleton variant="rectangular" width="15%" height={40} />
-              <Skeleton variant="rectangular" width="10%" height={40} />
-            </Box>
+            <div key={i} className="flex gap-4 mb-4 items-center">
+              <Skeleton className="h-10 w-[30%]" />
+              <Skeleton className="h-10 w-[25%]" />
+              <Skeleton className="h-10 w-[20%]" />
+              <Skeleton className="h-10 w-[15%]" />
+              <Skeleton className="h-10 w-[10%]" />
+            </div>
           ))}
         </CardContent>
       </Card>
@@ -112,76 +109,70 @@ export const LoadingSkeleton: React.FC<LoadingSkeletonProps> = ({
 
   if (variant === 'list') {
     return (
-      <Box>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-          <Box>
-            <Skeleton variant="text" width={200} height={40} sx={{ mb: 1 }} />
-            <Skeleton variant="text" width={250} height={24} />
-          </Box>
-          <Skeleton variant="rectangular" width={140} height={42} sx={{ borderRadius: 1 }} />
-        </Box>
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <div className="space-y-2">
+            <Skeleton className="h-10 w-48" />
+            <Skeleton className="h-6 w-60" />
+          </div>
+          <Skeleton className="h-10 w-32 rounded-md" />
+        </div>
 
-        <Card sx={{ mb: 3 }}>
-          <CardContent>
-            <Grid container spacing={2}>
-              <Grid size={{ xs: 12, md: 6 }}>
-                <Skeleton variant="rectangular" height={56} sx={{ borderRadius: 1 }} />
-              </Grid>
-              <Grid size={{ xs: 12, md: 6 }}>
-                <Skeleton variant="rectangular" height={56} sx={{ borderRadius: 1 }} />
-              </Grid>
-            </Grid>
+        <Card>
+          <CardContent className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Skeleton className="h-14 w-full rounded-md" />
+              <Skeleton className="h-14 w-full rounded-md" />
+            </div>
           </CardContent>
         </Card>
 
-        <Grid container spacing={3}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {[...Array(count)].map((_, i) => (
-            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={i}>
-              <Card>
-                <CardContent>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-                    <Box sx={{ flex: 1 }}>
-                      <Skeleton variant="text" width="70%" height={28} sx={{ mb: 0.5 }} />
-                      <Skeleton variant="text" width="50%" height={20} />
-                    </Box>
-                    <Skeleton variant="rectangular" width={80} height={24} sx={{ borderRadius: 1 }} />
-                  </Box>
-                  <Skeleton variant="text" width="90%" height={20} sx={{ mb: 0.5 }} />
-                  <Skeleton variant="text" width="80%" height={20} sx={{ mb: 0.5 }} />
-                  <Skeleton variant="text" width="60%" height={20} sx={{ mb: 2 }} />
-                  <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
-                    <Skeleton variant="rectangular" width={60} height={24} sx={{ borderRadius: 1 }} />
-                    <Skeleton variant="rectangular" width={80} height={24} sx={{ borderRadius: 1 }} />
-                  </Box>
-                  <Box sx={{ display: 'flex', gap: 1 }}>
-                    <Skeleton variant="rectangular" height={36} sx={{ flex: 1, borderRadius: 1 }} />
-                    <Skeleton variant="rectangular" width={40} height={36} sx={{ borderRadius: 1 }} />
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
+            <Card key={i}>
+              <CardContent className="p-6">
+                <div className="flex justify-between mb-4">
+                  <div className="flex-1 space-y-1">
+                    <Skeleton className="h-7 w-3/4" />
+                    <Skeleton className="h-5 w-1/2" />
+                  </div>
+                  <Skeleton className="h-6 w-20 rounded-md" />
+                </div>
+                <div className="space-y-2 mb-4">
+                  <Skeleton className="h-5 w-full" />
+                  <Skeleton className="h-5 w-4/5" />
+                  <Skeleton className="h-5 w-3/5" />
+                </div>
+                <div className="flex gap-2 mb-4">
+                  <Skeleton className="h-6 w-16 rounded-md" />
+                  <Skeleton className="h-6 w-20 rounded-md" />
+                </div>
+                <div className="flex gap-2">
+                  <Skeleton className="h-9 flex-1 rounded-md" />
+                  <Skeleton className="h-9 w-10 rounded-md" />
+                </div>
+              </CardContent>
+            </Card>
           ))}
-        </Grid>
-      </Box>
+        </div>
+      </div>
     );
   }
 
   // Default: card variant
   return (
-    <Grid container spacing={3}>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
       {[...Array(count)].map((_, i) => (
-        <Grid size={{ xs: 12, sm: 6, md: 4 }} key={i}>
-          <Card>
-            <CardContent>
-              <Skeleton variant="text" width="60%" height={32} sx={{ mb: 1 }} />
-              <Skeleton variant="text" width="80%" height={24} sx={{ mb: 2 }} />
-              <Skeleton variant="rectangular" height={120} sx={{ mb: 2, borderRadius: 1 }} />
-              <Skeleton variant="text" width="40%" height={28} />
-            </CardContent>
-          </Card>
-        </Grid>
+        <Card key={i}>
+          <CardContent className="p-6">
+            <Skeleton className="h-8 w-3/5 mb-2" />
+            <Skeleton className="h-6 w-4/5 mb-4" />
+            <Skeleton className="h-[120px] w-full mb-4 rounded-md" />
+            <Skeleton className="h-7 w-2/5" />
+          </CardContent>
+        </Card>
       ))}
-    </Grid>
+    </div>
   );
 };
 

@@ -1,142 +1,91 @@
 import React from 'react';
 import { Outlet, Link as RouterLink } from 'react-router-dom';
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
-  Box,
-  Container,
-  Link,
-} from '@mui/material';
+import { Button } from './ui/button';
 
 export const PublicLayout: React.FC = () => {
   return (
-    <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div className="min-h-screen flex flex-col">
       {/* Header/Navigation */}
-      <AppBar position="static" sx={{ bgcolor: 'white', color: 'text.primary', boxShadow: 1 }}>
-        <Container maxWidth="lg">
-          <Toolbar sx={{ px: { xs: 0, sm: 0 } }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexGrow: 1 }}>
-              <Box
-                sx={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: 2,
-                  bgcolor: 'primary.main',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '1.5rem',
-                }}
-              >
+      <header className="bg-white shadow-sm border-b border-gray-200">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-lg bg-blue-600 flex items-center justify-center text-xl">
                 🚕
-              </Box>
-              <Typography variant="h6" component="div" sx={{ fontWeight: 700, color: 'text.primary' }}>
+              </div>
+              <h1 className="text-xl font-bold text-gray-900">
                 Jez Cabs
-              </Typography>
-            </Box>
+              </h1>
+            </div>
 
-            <Box sx={{ display: 'flex', gap: 2 }}>
+            <div className="flex gap-3">
               <Button
-                component={RouterLink}
-                to="/login"
-                variant="outlined"
-                sx={{
-                  borderColor: 'primary.main',
-                  color: 'primary.main',
-                  '&:hover': {
-                    bgcolor: 'primary.main',
-                    color: 'white',
-                  },
-                }}
+                asChild
+                variant="outline"
+                className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white"
               >
-                Login
+                <RouterLink to="/login">
+                  Login
+                </RouterLink>
               </Button>
               <Button
-                component={RouterLink}
-                to="/register"
-                variant="contained"
-                sx={{
-                  bgcolor: 'primary.main',
-                  '&:hover': {
-                    bgcolor: 'primary.dark',
-                  },
-                }}
+                asChild
+                className="bg-blue-600 hover:bg-blue-700 text-white"
               >
-                Sign Up
+                <RouterLink to="/register">
+                  Sign Up
+                </RouterLink>
               </Button>
-            </Box>
-          </Toolbar>
-        </Container>
-      </AppBar>
+            </div>
+          </div>
+        </div>
+      </header>
 
       {/* Main Content */}
-      <Box sx={{ flexGrow: 1 }}>
+      <main className="flex-1">
         <Outlet />
-      </Box>
+      </main>
 
       {/* Footer */}
-      <Box sx={{ bgcolor: 'grey.900', color: 'white', py: 6, mt: 'auto' }}>
-        <Container maxWidth="lg">
-          <Box sx={{ textAlign: 'center', mb: 4 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, mb: 2 }}>
-              <Box
-                sx={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: 2,
-                  bgcolor: 'primary.main',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '1.5rem',
-                }}
-              >
+      <footer className="bg-gray-900 text-white py-12 mt-auto">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-lg bg-blue-600 flex items-center justify-center text-xl">
                 🚕
-              </Box>
-              <Typography variant="h6" sx={{ fontWeight: 700 }}>
+              </div>
+              <h2 className="text-xl font-bold">
                 Jez Cabs Management Platform
-              </Typography>
-            </Box>
-            <Typography variant="body2" color="grey.400" sx={{ maxWidth: 600, mx: 'auto', mb: 3 }}>
+              </h2>
+            </div>
+            <p className="text-gray-400 max-w-2xl mx-auto mb-6">
               Streamline your cab business operations with our comprehensive management platform.
               Manage fleets, drivers, bookings, and analytics all in one place.
-            </Typography>
-          </Box>
+            </p>
+          </div>
 
-          <Box sx={{ borderTop: 1, borderColor: 'grey.800', pt: 4 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'center', gap: 4, mb: 3, flexWrap: 'wrap' }}>
-              <Link
-                component={RouterLink}
+          <div className="border-t border-gray-800 pt-8">
+            <div className="flex justify-center gap-8 mb-6 flex-wrap">
+              <RouterLink
                 to="/login"
-                color="grey.400"
-                sx={{
-                  textDecoration: 'none',
-                  '&:hover': { color: 'white' },
-                }}
+                className="text-gray-400 hover:text-white transition-colors duration-200"
               >
                 Login
-              </Link>
-              <Link
-                component={RouterLink}
+              </RouterLink>
+              <RouterLink
                 to="/register"
-                color="grey.400"
-                sx={{
-                  textDecoration: 'none',
-                  '&:hover': { color: 'white' },
-                }}
+                className="text-gray-400 hover:text-white transition-colors duration-200"
               >
                 Sign Up
-              </Link>
-            </Box>
+              </RouterLink>
+            </div>
 
-            <Typography variant="body2" color="grey.500" sx={{ textAlign: 'center' }}>
+            <p className="text-gray-500 text-center text-sm">
               © {new Date().getFullYear()} Jez Cabs Management Platform. All rights reserved.
-            </Typography>
-          </Box>
-        </Container>
-      </Box>
-    </Box>
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
   );
 };

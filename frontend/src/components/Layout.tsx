@@ -1,40 +1,22 @@
 import React, { useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import {
-  Box,
-  Drawer,
-  AppBar,
-  Toolbar,
-  List,
-  Typography,
-  Divider,
-  IconButton,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Avatar,
   Menu,
-  MenuItem,
-  useTheme,
-  useMediaQuery,
-  alpha,
-  Badge,
-} from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
-import PeopleIcon from '@mui/icons-material/People';
-import BookIcon from '@mui/icons-material/Book';
-import ReceiptIcon from '@mui/icons-material/Receipt';
-import ChecklistIcon from '@mui/icons-material/Checklist';
-import AssessmentIcon from '@mui/icons-material/Assessment';
-import LogoutIcon from '@mui/icons-material/Logout';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import SettingsIcon from '@mui/icons-material/Settings';
+  LayoutDashboard,
+  Car,
+  Users,
+  BookOpen,
+  Receipt,
+  CheckSquare,
+  BarChart3,
+  LogOut,
+  Bell,
+  Settings,
+} from 'lucide-react';
+import { Sheet, SheetContent } from './ui/sheet';
+import { Button } from './ui/button';
+import { Badge } from './ui/badge';
 import { useAuth } from '../contexts/AuthContext';
-
-const drawerWidth = 280;
 
 interface MenuItem {
   text: string;
@@ -43,20 +25,18 @@ interface MenuItem {
 }
 
 const menuItems: MenuItem[] = [
-  { text: 'Dashboard', icon: <DashboardIcon />, path: '/app/dashboard' },
-  { text: 'Cabs', icon: <DirectionsCarIcon />, path: '/app/cabs' },
-  { text: 'Drivers', icon: <PeopleIcon />, path: '/app/drivers' },
-  { text: 'Bookings', icon: <BookIcon />, path: '/app/bookings' },
-  { text: 'Checklists', icon: <ChecklistIcon />, path: '/app/checklists' },
-  { text: 'Invoices', icon: <ReceiptIcon />, path: '/app/invoices' },
-  { text: 'Reports', icon: <AssessmentIcon />, path: '/app/reports' },
+  { text: 'Dashboard', icon: <LayoutDashboard className="h-5 w-5" />, path: '/app/dashboard' },
+  { text: 'Cabs', icon: <Car className="h-5 w-5" />, path: '/app/cabs' },
+  { text: 'Drivers', icon: <Users className="h-5 w-5" />, path: '/app/drivers' },
+  { text: 'Bookings', icon: <BookOpen className="h-5 w-5" />, path: '/app/bookings' },
+  { text: 'Checklists', icon: <CheckSquare className="h-5 w-5" />, path: '/app/checklists' },
+  { text: 'Invoices', icon: <Receipt className="h-5 w-5" />, path: '/app/invoices' },
+  { text: 'Reports', icon: <BarChart3 className="h-5 w-5" />, path: '/app/reports' },
 ];
 
 export const Layout: React.FC = () => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
@@ -67,372 +47,178 @@ export const Layout: React.FC = () => {
 
   const handleMenuClick = (path: string) => {
     navigate(path);
-    if (isMobile) {
-      setMobileOpen(false);
-    }
-  };
-
-  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleProfileMenuClose = () => {
-    setAnchorEl(null);
+    setMobileOpen(false);
   };
 
   const handleLogout = () => {
     logout();
     navigate('/login');
-    handleProfileMenuClose();
   };
 
   const drawer = (
-    <Box className="h-full bg-gradient-to-b from-white to-gray-50">
-      <Toolbar sx={{ py: 3, px: 3 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
-          <Box
-            className="animate-scale-in"
-            sx={{
-              width: 48,
-              height: 48,
-              borderRadius: 3,
-              background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '1.75rem',
-              boxShadow: `0 8px 20px ${alpha(theme.palette.primary.main, 0.3)}`,
-              transition: 'all 0.3s ease',
-              '&:hover': {
-                transform: 'scale(1.05)',
-                boxShadow: `0 12px 24px ${alpha(theme.palette.primary.main, 0.4)}`,
-              },
-            }}
-          >
+    <div className="h-full bg-gradient-to-b from-white to-gray-50">
+      <div className="py-6 px-6">
+        <div className="flex items-center gap-3 w-full">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-teal-600 flex items-center justify-center text-2xl shadow-lg hover:scale-105 transition-transform duration-300 animate-scale-in">
             🚕
-          </Box>
-          <Box>
-            <Typography
-              variant="h5"
-              component="div"
-              className="text-gradient-primary font-bold"
-              sx={{
-                fontWeight: 800,
-                fontSize: '1.5rem',
-                letterSpacing: '-0.02em',
-              }}
-            >
+          </div>
+          <div>
+            <h2 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-teal-600 bg-clip-text text-transparent">
               Jez Cabs
-            </Typography>
-            <Typography
-              variant="caption"
-              sx={{
-                color: 'text.secondary',
-                fontWeight: 500,
-                fontSize: '0.75rem',
-              }}
-            >
+            </h2>
+            <p className="text-xs text-gray-500 font-medium">
               Management Platform
-            </Typography>
-          </Box>
-        </Box>
-      </Toolbar>
-      <Box sx={{ px: 2, mb: 2 }}>
-        <Divider sx={{
-          borderColor: alpha(theme.palette.primary.main, 0.1),
-          borderWidth: 1,
-        }} />
-      </Box>
-      <List sx={{ px: 2 }}>
-        {menuItems.map((item, index) => (
-          <ListItem key={item.text} disablePadding sx={{ mb: 1 }}>
-            <ListItemButton
-              selected={location.pathname === item.path}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="px-4 mb-4">
+        <div className="border-t border-blue-100"></div>
+      </div>
+      <nav className="px-4 space-y-2">
+        {menuItems.map((item, index) => {
+          const isActive = location.pathname === item.path;
+          return (
+            <button
+              key={item.text}
               onClick={() => handleMenuClick(item.path)}
-              className="animate-fade-in-up"
-              sx={{
-                borderRadius: 3,
-                py: 1.5,
-                px: 2,
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                animationDelay: `${index * 0.1}s`,
-                '&.Mui-selected': {
-                  background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
-                  color: 'white',
-                  boxShadow: `0 8px 20px ${alpha(theme.palette.primary.main, 0.3)}`,
-                  transform: 'translateX(8px)',
-                  '&:hover': {
-                    background: `linear-gradient(135deg, ${theme.palette.primary.dark}, ${theme.palette.secondary.main})`,
-                    boxShadow: `0 12px 24px ${alpha(theme.palette.primary.main, 0.4)}`,
-                  },
-                  '& .MuiListItemIcon-root': {
-                    color: 'white',
-                  },
-                  '& .MuiListItemText-primary': {
-                    fontWeight: 600,
-                  },
-                },
-                '&:hover': {
-                  backgroundColor: location.pathname === item.path
-                    ? 'transparent'
-                    : alpha(theme.palette.primary.main, 0.08),
-                  transform: location.pathname === item.path
-                    ? 'translateX(8px)'
-                    : 'translateX(6px)',
-                  boxShadow: location.pathname === item.path
-                    ? `0 12px 24px ${alpha(theme.palette.primary.main, 0.4)}`
-                    : `0 4px 12px ${alpha(theme.palette.primary.main, 0.15)}`,
-                },
-              }}
+              className={`
+                w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all duration-300 animate-fade-in-up
+                ${isActive
+                  ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-500/30 transform translate-x-2'
+                  : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700 hover:transform hover:translate-x-1 hover:shadow-md'
+                }
+              `}
+              style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <ListItemIcon
-                sx={{
-                  color: location.pathname === item.path ? 'white' : 'inherit',
-                }}
-              >
+              <span className={isActive ? 'text-white' : 'text-gray-500'}>
                 {item.icon}
-              </ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    </Box>
+              </span>
+              <span className={`font-medium ${isActive ? 'font-semibold' : ''}`}>
+                {item.text}
+              </span>
+            </button>
+          );
+        })}
+      </nav>
+    </div>
   );
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <AppBar
-        position="fixed"
-        elevation={0}
-        className="glass-effect"
-        sx={{
-          width: { md: `calc(100% - ${drawerWidth}px)` },
-          ml: { md: `${drawerWidth}px` },
-          backgroundColor: 'rgba(255, 255, 255, 0.95)',
-          backdropFilter: 'blur(20px)',
-          borderBottom: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
-          color: 'text.primary',
-        }}
-      >
-        <Toolbar sx={{ py: 1 }}>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{
-              mr: 2,
-              display: { md: 'none' },
-              color: 'primary.main',
-              '&:hover': {
-                backgroundColor: alpha(theme.palette.primary.main, 0.1),
-              },
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
+    <div className="flex">
+      {/* Desktop Sidebar */}
+      <div className="hidden md:flex md:w-[280px] md:flex-col md:fixed md:inset-y-0">
+        <div className="flex-1 flex flex-col min-h-0 border-r border-gray-200">
+          {drawer}
+        </div>
+      </div>
 
-          <Box sx={{ flexGrow: 1 }}>
-            <Typography
-              variant="h5"
-              component="div"
-              sx={{
-                fontWeight: 700,
-                fontSize: '1.5rem',
-                color: 'text.primary',
-                letterSpacing: '-0.01em',
-              }}
-            >
-              {menuItems.find((item) => item.path === location.pathname)?.text || 'Dashboard'}
-            </Typography>
-            <Typography
-              variant="caption"
-              sx={{
-                color: 'text.secondary',
-                fontWeight: 500,
-              }}
-            >
-              Welcome back, {user?.firstName}
-            </Typography>
-          </Box>
+      {/* Mobile Sidebar */}
+      <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+        <SheetContent side="left" className="w-[280px] p-0">
+          {drawer}
+        </SheetContent>
+      </Sheet>
 
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <IconButton
-              sx={{
-                color: 'text.secondary',
-                transition: 'all 0.2s ease',
-                '&:hover': {
-                  color: 'primary.main',
-                  backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                  transform: 'scale(1.05)',
-                },
-              }}
-            >
-              <Badge badgeContent={3} color="error">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-
-            <Box sx={{ display: { xs: 'none', sm: 'flex' }, alignItems: 'center', gap: 1.5 }}>
-              <Box sx={{ textAlign: 'right' }}>
-                <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
-                  {user?.firstName} {user?.lastName}
-                </Typography>
-                <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                  Administrator
-                </Typography>
-              </Box>
-            </Box>
-
-            <IconButton
-              onClick={handleProfileMenuOpen}
-              sx={{
-                p: 0,
-                transition: 'all 0.2s ease',
-                '&:hover': {
-                  transform: 'scale(1.05)',
-                },
-              }}
-            >
-              <Avatar
-                sx={{
-                  bgcolor: 'primary.main',
-                  background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-                  width: 44,
-                  height: 44,
-                  fontSize: '1.1rem',
-                  fontWeight: 600,
-                  boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.3)}`,
-                }}
+      {/* Main Content */}
+      <div className="md:pl-[280px] flex flex-col w-0 flex-1">
+        {/* Top Navigation */}
+        <div className="sticky top-0 z-10 flex-shrink-0 flex h-16 bg-white/95 backdrop-blur-sm border-b border-blue-100 shadow-sm">
+          <div className="flex-1 px-4 flex justify-between items-center">
+            <div className="flex items-center">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="md:hidden mr-2 text-blue-600 hover:bg-blue-50"
+                onClick={handleDrawerToggle}
               >
-                {user?.firstName?.[0]}{user?.lastName?.[0]}
-              </Avatar>
-            </IconButton>
-          </Box>
-        </Toolbar>
-      </AppBar>
+                <Menu className="h-5 w-5" />
+              </Button>
+              <div>
+                <h1 className="text-xl font-bold text-gray-900 tracking-tight">
+                  {menuItems.find((item) => item.path === location.pathname)?.text || 'Dashboard'}
+                </h1>
+                <p className="text-sm text-gray-500 font-medium">
+                  Welcome back, {user?.firstName}
+                </p>
+              </div>
+            </div>
 
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleProfileMenuClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        PaperProps={{
-          sx: {
-            borderRadius: 3,
-            mt: 1,
-            minWidth: 200,
-            boxShadow: `0 12px 32px ${alpha(theme.palette.grey[900], 0.15)}`,
-            border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
-            '& .MuiMenuItem-root': {
-              borderRadius: 2,
-              mx: 1,
-              my: 0.5,
-              transition: 'all 0.2s ease',
-              '&:hover': {
-                backgroundColor: alpha(theme.palette.primary.main, 0.08),
-                transform: 'translateX(4px)',
-              },
-            },
-          },
-        }}
-      >
-        <MenuItem disabled sx={{ opacity: 1 }}>
-          <Box>
-            <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
-              {user?.firstName} {user?.lastName}
-            </Typography>
-            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-              {user?.email}
-            </Typography>
-          </Box>
-        </MenuItem>
-        <Divider sx={{ my: 1 }} />
-        <MenuItem onClick={() => {}}>
-          <ListItemIcon>
-            <SettingsIcon fontSize="small" sx={{ color: 'text.secondary' }} />
-          </ListItemIcon>
-          Settings
-        </MenuItem>
-        <MenuItem onClick={handleLogout}>
-          <ListItemIcon>
-            <LogoutIcon fontSize="small" sx={{ color: 'error.main' }} />
-          </ListItemIcon>
-          <Typography sx={{ color: 'error.main' }}>Logout</Typography>
-        </MenuItem>
-      </Menu>
+            <div className="flex items-center gap-4">
+              {/* Notifications */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative text-gray-500 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200 hover:scale-105"
+              >
+                <Bell className="h-5 w-5" />
+                <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center text-xs bg-red-500 text-white">
+                  3
+                </Badge>
+              </Button>
 
-      <Box
-        component="nav"
-        sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}
-      >
-        <Drawer
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true,
-          }}
-          sx={{
-            display: { xs: 'block', md: 'none' },
-            '& .MuiDrawer-paper': {
-              boxSizing: 'border-box',
-              width: drawerWidth,
-              borderRight: 'none',
-              boxShadow: `0 8px 32px ${alpha(theme.palette.grey[900], 0.15)}`,
-            },
-          }}
-        >
-          {drawer}
-        </Drawer>
-        <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: 'none', md: 'block' },
-            '& .MuiDrawer-paper': {
-              boxSizing: 'border-box',
-              width: drawerWidth,
-              borderRight: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
-              boxShadow: 'none',
-            },
-          }}
-          open
-        >
-          {drawer}
-        </Drawer>
-      </Box>
+              {/* User Info */}
+              <div className="hidden sm:flex items-center gap-3">
+                <div className="text-right">
+                  <p className="text-sm font-semibold text-gray-900">
+                    {user?.firstName} {user?.lastName}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    Administrator
+                  </p>
+                </div>
+              </div>
 
-      <Box
-        component="main"
-        className="bg-gradient-to-br from-gray-50 to-white"
-        sx={{
-          flexGrow: 1,
-          p: { xs: 2, sm: 3, md: 4 },
-          width: { md: `calc(100% - ${drawerWidth}px)` },
-          minHeight: '100vh',
-          transition: 'all 0.3s ease',
-        }}
-      >
-        <Toolbar sx={{ mb: 2 }} />
-        <Box
-          sx={{
-            maxWidth: 1400,
-            mx: 'auto',
-            position: 'relative',
-          }}
-          className="animate-fade-in-up"
-        >
-          <Outlet />
-        </Box>
-      </Box>
-    </Box>
+              {/* User Avatar */}
+              <Button
+                variant="ghost"
+                className="p-0 h-auto hover:scale-105 transition-transform duration-200"
+                onClick={() => setUserMenuOpen(!userMenuOpen)}
+              >
+                <div className="w-11 h-11 rounded-full bg-gradient-to-br from-blue-600 to-teal-600 flex items-center justify-center text-white font-semibold text-sm shadow-lg">
+                  {user?.firstName?.[0]}{user?.lastName?.[0]}
+                </div>
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* User Menu Dropdown */}
+        {userMenuOpen && (
+          <div className="absolute top-16 right-4 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+            <div className="px-4 py-3 border-b border-gray-100">
+              <p className="text-sm font-semibold text-gray-900">
+                {user?.firstName} {user?.lastName}
+              </p>
+              <p className="text-xs text-gray-500">
+                {user?.email}
+              </p>
+            </div>
+            <div className="py-1">
+              <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3">
+                <Settings className="h-4 w-4 text-gray-500" />
+                Settings
+              </button>
+              <button
+                onClick={handleLogout}
+                className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-3"
+              >
+                <LogOut className="h-4 w-4 text-red-500" />
+                Logout
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Main Content Area */}
+        <main className="flex-1 bg-gradient-to-br from-gray-50 to-white min-h-screen">
+          <div className="p-4 sm:p-6 md:p-8">
+            <div className="max-w-7xl mx-auto animate-fade-in-up">
+              <Outlet />
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
   );
 };
