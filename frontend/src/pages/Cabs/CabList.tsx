@@ -1,40 +1,31 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Grid,
-  Typography,
-  TextField,
-  MenuItem,
-  IconButton,
-  Chip,
-  Alert,
-  InputAdornment,
-} from '@mui/material';
-import {
-  Add,
+  Plus,
   Edit,
-  Delete,
+  Trash2,
   Search,
-  DirectionsCar,
-  Warning,
-} from '@mui/icons-material';
+  Car,
+  AlertTriangle,
+} from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useSnackbar } from 'notistack';
+import { toast } from 'sonner';
 import { cabService } from '../../services/cab.service';
 import { StatusBadge } from '../../components/StatusBadge';
 import { LoadingSkeleton } from '../../components/LoadingSkeleton';
 import { EmptyState } from '../../components/EmptyState';
 import { ConfirmDialog } from '../../components/ConfirmDialog';
+import { Button } from '../../components/ui/button';
+import { Card, CardContent } from '../../components/ui/card';
+import { Input } from '../../components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../components/ui/table';
+import { Badge } from '../../components/ui/badge';
 import { Cab } from '../../types';
 
 export const CabList: React.FC = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { enqueueSnackbar } = useSnackbar();
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -51,12 +42,12 @@ export const CabList: React.FC = () => {
     mutationFn: cabService.delete,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cabs'] });
-      enqueueSnackbar('Vehicle deleted successfully', { variant: 'success' });
+      toast.success('Vehicle deleted successfully');
       setDeleteDialogOpen(false);
       setCabToDelete(null);
     },
     onError: () => {
-      enqueueSnackbar('Failed to delete vehicle', { variant: 'error' });
+      toast.error('Failed to delete vehicle');
     },
   });
 
@@ -88,178 +79,91 @@ export const CabList: React.FC = () => {
   }
 
   if (error) {
-    return <Alert severity="error">Failed to load vehicles. Please try again later.</Alert>;
+    return (
+      <div className="p-6 bg-red-50 border border-red-200 rounded-lg">
+        <p className="text-red-700 font-medium">
+          Failed to load vehicles. Please try again later.
+        </p>
+      </div>
+    );
   }
 
   return (
     <div className="animate-fade-in-up">
       {/* Header Section */}
-      <Box sx={{ mb: 6 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 4 }}>
-          <Box className="animate-scale-in">
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-              <Box
-                sx={{
-                  background: 'linear-gradient(135deg, #1976d2, #0d9488)',
-                  borderRadius: 3,
-                  p: 1.5,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  mr: 2,
-                  boxShadow: '0 8px 20px rgba(25, 118, 210, 0.3)',
-                }}
-              >
-                <DirectionsCar sx={{ color: 'white', fontSize: 28 }} />
-              </Box>
-              <Box>
-                <Typography
-                  variant="h2"
-                  fontWeight={900}
-                  className="text-gradient-primary"
-                  sx={{
-                    fontSize: { xs: '2rem', sm: '2.5rem', md: '3rem' },
-                    lineHeight: 1.1,
-                    letterSpacing: '-0.02em',
-                  }}
-                >
+      <div className="mb-12">
+        <div className="flex justify-between items-start mb-8">
+          <div className="animate-scale-in">
+            <div className="flex items-center mb-4">
+              <div className="bg-gradient-to-br from-blue-600 to-teal-600 rounded-xl p-3 flex items-center justify-center mr-4 shadow-lg">
+                <Car className="text-white h-7 w-7" />
+              </div>
+              <div>
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-black leading-tight tracking-tight bg-gradient-to-r from-blue-600 to-teal-600 bg-clip-text text-transparent">
                   Fleet Management
-                </Typography>
-                <Typography
-                  variant="h6"
-                  color="text.secondary"
-                  sx={{
-                    fontWeight: 500,
-                    fontSize: '1.1rem',
-                  }}
-                >
+                </h1>
+                <p className="text-lg text-gray-600 font-medium">
                   Manage your vehicle fleet efficiently
-                </Typography>
-              </Box>
-            </Box>
-          </Box>
+                </p>
+              </div>
+            </div>
+          </div>
 
           <Button
-            variant="contained"
-            startIcon={<Add />}
             onClick={() => navigate('/app/cabs/new')}
-            className="btn-primary-modern"
-            sx={{
-              px: 4,
-              py: 1.5,
-              fontSize: '1rem',
-              fontWeight: 600,
-              borderRadius: 3,
-              textTransform: 'none',
-              boxShadow: '0 8px 20px rgba(25, 118, 210, 0.3)',
-              '&:hover': {
-                boxShadow: '0 12px 24px rgba(25, 118, 210, 0.4)',
-                transform: 'translateY(-2px)',
-              },
-            }}
+            className="flex items-center gap-2 px-6 py-3 text-base font-semibold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
           >
+            <Plus className="h-5 w-5" />
             Add Vehicle
           </Button>
-        </Box>
-      </Box>
+        </div>
+      </div>
 
       {/* Filters Section */}
-      <Card
-        className="card-modern"
-        sx={{
-          mb: 4,
-          background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.95))',
-          backdropFilter: 'blur(10px)',
-          border: '1px solid rgba(25, 118, 210, 0.1)',
-        }}
-      >
-        <CardContent sx={{ p: 4 }}>
-          <Box sx={{ mb: 3 }}>
-            <Typography variant="h6" fontWeight={700} color="text.primary" sx={{ mb: 2 }}>
+      <Card className="mb-8 bg-gradient-to-br from-white/90 to-white/95 backdrop-blur-sm border border-blue-100">
+        <CardContent className="p-6">
+          <div className="mb-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-2">
               Search & Filter
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+            </h2>
+            <p className="text-gray-600">
               Find vehicles by registration, make, model, or filter by status
-            </Typography>
-          </Box>
+            </p>
+          </div>
 
-          <Grid container spacing={3}>
-            <Grid size={{ xs: 12, md: 8 }}>
-              <TextField
-                fullWidth
-                placeholder="Search by registration, make, or model..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="input-modern"
-                slotProps={{
-                  input: {
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Search sx={{ color: 'text.secondary' }} />
-                      </InputAdornment>
-                    ),
-                  },
-                }}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: 3,
-                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(25, 118, 210, 0.1)',
-                    transition: 'all 0.3s ease',
-                    '&:hover': {
-                      border: '1px solid rgba(25, 118, 210, 0.3)',
-                      backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                    },
-                    '&.Mui-focused': {
-                      border: '2px solid rgba(25, 118, 210, 0.5)',
-                      backgroundColor: 'rgba(255, 255, 255, 1)',
-                      boxShadow: '0 8px 20px rgba(25, 118, 210, 0.15)',
-                    },
-                  },
-                }}
-              />
-            </Grid>
-            <Grid size={{ xs: 12, md: 4 }}>
-              <TextField
-                fullWidth
-                select
-                label="Filter by Status"
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: 3,
-                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(25, 118, 210, 0.1)',
-                    transition: 'all 0.3s ease',
-                    '&:hover': {
-                      border: '1px solid rgba(25, 118, 210, 0.3)',
-                      backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                    },
-                    '&.Mui-focused': {
-                      border: '2px solid rgba(25, 118, 210, 0.5)',
-                      backgroundColor: 'rgba(255, 255, 255, 1)',
-                      boxShadow: '0 8px 20px rgba(25, 118, 210, 0.15)',
-                    },
-                  },
-                }}
-              >
-                <MenuItem value="">All Status</MenuItem>
-                <MenuItem value="AVAILABLE">Available</MenuItem>
-                <MenuItem value="RENTED">Rented</MenuItem>
-                <MenuItem value="IN_MAINTENANCE">In Maintenance</MenuItem>
-              </TextField>
-            </Grid>
-          </Grid>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="md:col-span-2">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <Input
+                  placeholder="Search by registration, make, or model..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 bg-white/80 backdrop-blur-sm border-blue-100 focus:border-blue-300 focus:bg-white transition-all duration-300"
+                />
+              </div>
+            </div>
+            <div>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="bg-white/80 backdrop-blur-sm border-blue-100 focus:border-blue-300 focus:bg-white transition-all duration-300">
+                  <SelectValue placeholder="Filter by Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">All Status</SelectItem>
+                  <SelectItem value="AVAILABLE">Available</SelectItem>
+                  <SelectItem value="RENTED">Rented</SelectItem>
+                  <SelectItem value="IN_MAINTENANCE">In Maintenance</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
         </CardContent>
       </Card>
 
-      {/* Vehicle Grid */}
+      {/* Vehicle List */}
       {cabs && cabs.length === 0 ? (
         <EmptyState
-          icon={DirectionsCar}
+          icon={Car}
           title="No vehicles found"
           description={
             searchQuery || statusFilter
@@ -270,196 +174,119 @@ export const CabList: React.FC = () => {
           onAction={!searchQuery && !statusFilter ? () => navigate('/app/cabs/new') : undefined}
         />
       ) : (
-        <Grid container spacing={4}>
-          {cabs?.map((cab: Cab, index: number) => (
-            <Grid size={{ xs: 12, sm: 6, lg: 4 }} key={cab.id}>
-              <Card
-                className="card-modern group"
-                sx={{
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  position: 'relative',
-                  overflow: 'hidden',
-                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.95))',
-                  backdropFilter: 'blur(10px)',
-                  border: '1px solid rgba(25, 118, 210, 0.1)',
-                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                  animationDelay: `${index * 0.1}s`,
-                  '&:hover': {
-                    transform: 'translateY(-8px) scale(1.02)',
-                    boxShadow: '0 20px 40px rgba(25, 118, 210, 0.2)',
-                    border: '1px solid rgba(25, 118, 210, 0.3)',
-                    '& .cab-actions': {
-                      opacity: 1,
-                      transform: 'translateY(0)',
-                    },
-                    '& .cab-registration': {
-                      transform: 'scale(1.05)',
-                    },
-                  },
-                  '&::before': {
-                    content: '""',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    height: 4,
-                    background: cab.status === 'AVAILABLE'
-                      ? 'linear-gradient(90deg, #4caf50, #2e7d32)'
-                      : cab.status === 'RENTED'
-                      ? 'linear-gradient(90deg, #2196f3, #1565c0)'
-                      : 'linear-gradient(90deg, #ff9800, #f57c00)',
-                    borderRadius: '16px 16px 0 0',
-                  },
-                }}
-              >
-                <CardContent sx={{ flexGrow: 1, p: 3 }}>
-                  {/* Header */}
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 3 }}>
-                    <Box sx={{ flex: 1 }}>
-                      <Typography
-                        variant="h5"
-                        fontWeight={800}
-                        sx={{
-                          mb: 0.5,
-                          color: 'text.primary',
-                          fontSize: '1.4rem',
-                        }}
-                      >
-                        {cab.make} {cab.model}
-                      </Typography>
-                      <Typography
-                        variant="body1"
-                        color="text.secondary"
-                        sx={{ fontWeight: 500 }}
-                      >
-                        {cab.year}
-                      </Typography>
-                    </Box>
-                    <StatusBadge status={cab.status} />
-                  </Box>
-
-                  {/* Registration */}
-                  <Box sx={{ mb: 3 }}>
-                    <Chip
-                      className="cab-registration"
-                      label={cab.registration_number}
-                      sx={{
-                        fontWeight: 700,
-                        fontSize: '0.9rem',
-                        background: 'linear-gradient(135deg, rgba(25, 118, 210, 0.1), rgba(25, 118, 210, 0.2))',
-                        color: 'primary.main',
-                        border: '1px solid rgba(25, 118, 210, 0.3)',
-                        transition: 'transform 0.3s ease',
-                        px: 2,
-                        py: 1,
-                      }}
-                    />
-                  </Box>
-
-                  {/* Vehicle Details */}
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mb: 3 }}>
-                    {cab.seating_capacity && (
-                      <Typography variant="body2" color="text.secondary">
-                        Seats: {cab.seating_capacity}
-                      </Typography>
-                    )}
-                    {cab.fuel_type && (
-                      <Typography variant="body2" color="text.secondary">
-                        Fuel: {cab.fuel_type}
-                      </Typography>
-                    )}
-                    {cab.daily_rental_rate && (
-                      <Typography variant="body2" fontWeight={600} color="primary">
-                        ${cab.daily_rental_rate}/day
-                      </Typography>
-                    )}
-                  </Box>
-
-                  {/* Expiry Warnings */}
-                  <Box sx={{ mt: 2 }}>
-                    {isExpired(cab.insurance_expiry) && (
-                      <Alert severity="error" icon={<Warning />} sx={{ mb: 1 }}>
-                        Insurance expired
-                      </Alert>
-                    )}
-                    {!isExpired(cab.insurance_expiry) && isExpiringSoon(cab.insurance_expiry) && (
-                      <Alert severity="warning" icon={<Warning />} sx={{ mb: 1 }}>
-                        Insurance expiring soon
-                      </Alert>
-                    )}
-                    {isExpired(cab.registration_expiry) && (
-                      <Alert severity="error" icon={<Warning />} sx={{ mb: 1 }}>
-                        Registration expired
-                      </Alert>
-                    )}
-                    {!isExpired(cab.registration_expiry) && isExpiringSoon(cab.registration_expiry) && (
-                      <Alert severity="warning" icon={<Warning />} sx={{ mb: 1 }}>
-                        Registration expiring soon
-                      </Alert>
-                    )}
-                  </Box>
-                  {/* Actions */}
-                  <Box
-                    className="cab-actions"
-                    sx={{
-                      display: 'flex',
-                      gap: 1,
-                      mt: 3,
-                      opacity: 0,
-                      transform: 'translateY(10px)',
-                      transition: 'all 0.3s ease',
-                    }}
-                  >
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      startIcon={<Edit />}
-                      onClick={() => navigate(`/app/cabs/${cab.id}/edit`)}
-                      sx={{
-                        flex: 1,
-                        borderRadius: 2,
-                        textTransform: 'none',
-                        fontWeight: 600,
-                        borderColor: 'primary.main',
-                        color: 'primary.main',
-                        '&:hover': {
-                          backgroundColor: 'primary.main',
-                          color: 'white',
-                          transform: 'translateY(-2px)',
-                          boxShadow: '0 4px 12px rgba(25, 118, 210, 0.3)',
-                        },
-                      }}
-                    >
-                      Edit
-                    </Button>
-                    <IconButton
-                      size="small"
-                      onClick={() => handleDeleteClick(cab.id)}
-                      disabled={deleteMutation.isPending}
-                      sx={{
-                        color: 'error.main',
-                        border: '1px solid',
-                        borderColor: 'error.main',
-                        borderRadius: 2,
-                        transition: 'all 0.2s ease',
-                        '&:hover': {
-                          backgroundColor: 'error.main',
-                          color: 'white',
-                          transform: 'translateY(-2px)',
-                          boxShadow: '0 4px 12px rgba(244, 67, 54, 0.3)',
-                        },
-                      }}
-                    >
-                      <Delete fontSize="small" />
-                    </IconButton>
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
+        <Card>
+          <CardContent className="p-0">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Vehicle</TableHead>
+                  <TableHead>Registration</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Year</TableHead>
+                  <TableHead>Rental Rate</TableHead>
+                  <TableHead>Insurance</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {cabs?.map((cab: Cab) => (
+                  <TableRow key={cab.id} className="hover:bg-gray-50">
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-teal-500 flex items-center justify-center">
+                          <Car className="h-5 w-5 text-white" />
+                        </div>
+                        <div>
+                          <div className="font-semibold text-gray-900">
+                            {cab.make} {cab.model}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {cab.color && `${cab.color} • `}
+                            {cab.seatingCapacity && `${cab.seatingCapacity} seats`}
+                          </div>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge className="bg-blue-100 text-blue-800 font-mono">
+                        {cab.registrationNumber}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <StatusBadge status={cab.status} />
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-gray-900 font-medium">{cab.year}</span>
+                    </TableCell>
+                    <TableCell>
+                      {cab.dailyRentalRate ? (
+                        <span className="text-green-600 font-semibold">
+                          ${cab.dailyRentalRate}/day
+                        </span>
+                      ) : (
+                        <span className="text-gray-400">-</span>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <div className="space-y-1">
+                        {cab.insuranceExpiry && (
+                          <div className="flex items-center gap-1">
+                            {isExpired(cab.insuranceExpiry) ? (
+                              <AlertTriangle className="h-4 w-4 text-red-500" />
+                            ) : isExpiringSoon(cab.insuranceExpiry) ? (
+                              <AlertTriangle className="h-4 w-4 text-orange-500" />
+                            ) : (
+                              <div className="h-4 w-4 rounded-full bg-green-500" />
+                            )}
+                            <span className="text-xs text-gray-600">
+                              {new Date(cab.insuranceExpiry).toLocaleDateString()}
+                            </span>
+                          </div>
+                        )}
+                        {cab.registrationExpiry && (
+                          <div className="flex items-center gap-1">
+                            {isExpired(cab.registrationExpiry) ? (
+                              <AlertTriangle className="h-4 w-4 text-red-500" />
+                            ) : isExpiringSoon(cab.registrationExpiry) ? (
+                              <AlertTriangle className="h-4 w-4 text-orange-500" />
+                            ) : (
+                              <div className="h-4 w-4 rounded-full bg-green-500" />
+                            )}
+                            <span className="text-xs text-gray-600">
+                              {new Date(cab.registrationExpiry).toLocaleDateString()}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => navigate(`/app/cabs/${cab.id}/edit`)}
+                          className="flex items-center gap-1"
+                        >
+                          <Edit className="h-4 w-4" />
+                          Edit
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleDeleteClick(cab.id)}
+                          disabled={deleteMutation.isPending}
+                          className="border-red-300 text-red-700 hover:bg-red-500 hover:text-white"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
       )}
 
       {/* Delete Confirmation Dialog */}
