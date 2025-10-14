@@ -1,23 +1,19 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Grid,
-  Typography,
-  TextField,
-  MenuItem,
-  Alert,
-  CircularProgress,
-} from '@mui/material';
-import { Save, ArrowBack } from '@mui/icons-material';
+import { Save, ArrowLeft } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { cabService } from '../../services/cab.service';
+import { Button } from '../../components/ui/button';
+import { Card, CardContent } from '../../components/ui/card';
+import { Input } from '../../components/ui/input';
+import { Label } from '../../components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
+import { Textarea } from '../../components/ui/textarea';
+import { LoadingSkeleton } from '../../components/LoadingSkeleton';
 
 const cabSchema = z.object({
   make: z.string().min(1, 'Make is required'),
@@ -83,7 +79,11 @@ export const CabForm: React.FC = () => {
     mutationFn: cabService.create,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cabs'] });
+      toast.success('Vehicle created successfully');
       navigate('/app/cabs');
+    },
+    onError: () => {
+      toast.error('Failed to create vehicle');
     },
   });
 
@@ -92,7 +92,11 @@ export const CabForm: React.FC = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cabs'] });
       queryClient.invalidateQueries({ queryKey: ['cab', id] });
+      toast.success('Vehicle updated successfully');
       navigate('/app/cabs');
+    },
+    onError: () => {
+      toast.error('Failed to update vehicle');
     },
   });
 
@@ -109,248 +113,302 @@ export const CabForm: React.FC = () => {
   };
 
   if (isEditMode && isLoadingCab) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
-        <CircularProgress />
-      </Box>
-    );
+    return <LoadingSkeleton variant="form" />;
   }
 
   const mutation = isEditMode ? updateMutation : createMutation;
 
   return (
-    <Box>
-      <Box sx={{ mb: 3 }}>
-        <Button startIcon={<ArrowBack />} onClick={() => navigate('/app/cabs')} sx={{ mb: 2 }}>
+    <div className="animate-fade-in-up">
+      {/* Header Section */}
+      <div className="mb-8">
+        <Button
+          variant="outline"
+          onClick={() => navigate('/app/cabs')}
+          className="mb-4 flex items-center gap-2"
+        >
+          <ArrowLeft className="h-4 w-4" />
           Back to Fleet
         </Button>
-        <Typography variant="h4" fontWeight={700} gutterBottom>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
           {isEditMode ? 'Edit Vehicle' : 'Add New Vehicle'}
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
+        </h1>
+        <p className="text-gray-600">
           {isEditMode ? 'Update vehicle information' : 'Add a new vehicle to your fleet'}
-        </Typography>
-      </Box>
+        </p>
+      </div>
 
       {mutation.isError && (
-        <Alert severity="error" sx={{ mb: 3 }}>
-          Failed to save vehicle. Please try again.
-        </Alert>
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-red-700 font-medium">
+            Failed to save vehicle. Please try again.
+          </p>
+        </div>
       )}
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Card>
-          <CardContent>
-            <Typography variant="h6" gutterBottom>
+        <Card className="mb-6">
+          <CardContent className="p-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">
               Basic Information
-            </Typography>
-            <Grid container spacing={2} sx={{ mb: 3 }}>
-              <Grid size={{ xs: 12, md: 6 }}>
-                <TextField
-                  fullWidth
-                  label="Make"
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div>
+                <Label htmlFor="make">Make</Label>
+                <Input
+                  id="make"
                   {...register('make')}
-                  error={!!errors.make}
-                  helperText={errors.make?.message}
+                  className={errors.make ? 'border-red-500' : ''}
                 />
-              </Grid>
-              <Grid size={{ xs: 12, md: 6 }}>
-                <TextField
-                  fullWidth
-                  label="Model"
+                {errors.make && (
+                  <p className="text-sm text-red-600 mt-1">{errors.make.message}</p>
+                )}
+              </div>
+              <div>
+                <Label htmlFor="model">Model</Label>
+                <Input
+                  id="model"
                   {...register('model')}
-                  error={!!errors.model}
-                  helperText={errors.model?.message}
+                  className={errors.model ? 'border-red-500' : ''}
                 />
-              </Grid>
-              <Grid size={{ xs: 12, md: 4 }}>
-                <TextField
-                  fullWidth
-                  label="Year"
+                {errors.model && (
+                  <p className="text-sm text-red-600 mt-1">{errors.model.message}</p>
+                )}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+              <div>
+                <Label htmlFor="year">Year</Label>
+                <Input
+                  id="year"
                   type="number"
                   {...register('year', { valueAsNumber: true })}
-                  error={!!errors.year}
-                  helperText={errors.year?.message}
+                  className={errors.year ? 'border-red-500' : ''}
                 />
-              </Grid>
-              <Grid size={{ xs: 12, md: 4 }}>
-                <TextField
-                  fullWidth
-                  label="Registration Number"
+                {errors.year && (
+                  <p className="text-sm text-red-600 mt-1">{errors.year.message}</p>
+                )}
+              </div>
+              <div>
+                <Label htmlFor="registrationNumber">Registration Number</Label>
+                <Input
+                  id="registrationNumber"
                   {...register('registrationNumber')}
-                  error={!!errors.registrationNumber}
-                  helperText={errors.registrationNumber?.message}
+                  className={errors.registrationNumber ? 'border-red-500' : ''}
                 />
-              </Grid>
-              <Grid size={{ xs: 12, md: 4 }}>
-                <TextField
-                  fullWidth
-                  label="VIN (Optional)"
+                {errors.registrationNumber && (
+                  <p className="text-sm text-red-600 mt-1">{errors.registrationNumber.message}</p>
+                )}
+              </div>
+              <div>
+                <Label htmlFor="vin">VIN (Optional)</Label>
+                <Input
+                  id="vin"
                   {...register('vin')}
-                  error={!!errors.vin}
-                  helperText={errors.vin?.message}
+                  className={errors.vin ? 'border-red-500' : ''}
                 />
-              </Grid>
-              <Grid size={{ xs: 12, md: 4 }}>
-                <TextField
-                  fullWidth
-                  select
-                  label="Status"
-                  {...register('status')}
-                  error={!!errors.status}
-                  helperText={errors.status?.message}
-                  defaultValue="AVAILABLE"
-                >
-                  <MenuItem value="AVAILABLE">Available</MenuItem>
-                  <MenuItem value="RENTED">Rented</MenuItem>
-                  <MenuItem value="IN_MAINTENANCE">In Maintenance</MenuItem>
-                </TextField>
-              </Grid>
-              <Grid size={{ xs: 12, md: 4 }}>
-                <TextField
-                  fullWidth
-                  label="Color (Optional)"
+                {errors.vin && (
+                  <p className="text-sm text-red-600 mt-1">{errors.vin.message}</p>
+                )}
+              </div>
+              <div>
+                <Label htmlFor="status">Status</Label>
+                <Select {...register('status')} defaultValue="AVAILABLE">
+                  <SelectTrigger className={errors.status ? 'border-red-500' : ''}>
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="AVAILABLE">Available</SelectItem>
+                    <SelectItem value="RENTED">Rented</SelectItem>
+                    <SelectItem value="IN_MAINTENANCE">In Maintenance</SelectItem>
+                  </SelectContent>
+                </Select>
+                {errors.status && (
+                  <p className="text-sm text-red-600 mt-1">{errors.status.message}</p>
+                )}
+              </div>
+              <div>
+                <Label htmlFor="color">Color (Optional)</Label>
+                <Input
+                  id="color"
                   {...register('color')}
-                  error={!!errors.color}
-                  helperText={errors.color?.message}
+                  className={errors.color ? 'border-red-500' : ''}
                 />
-              </Grid>
-              <Grid size={{ xs: 12, md: 4 }}>
-                <TextField
-                  fullWidth
-                  label="Fuel Type (Optional)"
+                {errors.color && (
+                  <p className="text-sm text-red-600 mt-1">{errors.color.message}</p>
+                )}
+              </div>
+              <div>
+                <Label htmlFor="fuelType">Fuel Type (Optional)</Label>
+                <Input
+                  id="fuelType"
                   {...register('fuelType')}
-                  error={!!errors.fuelType}
-                  helperText={errors.fuelType?.message}
+                  className={errors.fuelType ? 'border-red-500' : ''}
                 />
-              </Grid>
-            </Grid>
-
-            <Typography variant="h6" gutterBottom>
-              Capacity & Pricing
-            </Typography>
-            <Grid container spacing={2} sx={{ mb: 3 }}>
-              <Grid size={{ xs: 12, md: 4 }}>
-                <TextField
-                  fullWidth
-                  label="Seating Capacity (Optional)"
-                  type="number"
-                  {...register('seatingCapacity', { valueAsNumber: true })}
-                  error={!!errors.seatingCapacity}
-                  helperText={errors.seatingCapacity?.message}
-                />
-              </Grid>
-              <Grid size={{ xs: 12, md: 4 }}>
-                <TextField
-                  fullWidth
-                  label="Daily Rental Rate (Optional)"
-                  type="number"
-                  {...register('dailyRentalRate', { valueAsNumber: true })}
-                  error={!!errors.dailyRentalRate}
-                  helperText={errors.dailyRentalRate?.message}
-                />
-              </Grid>
-              <Grid size={{ xs: 12, md: 4 }}>
-                <TextField
-                  fullWidth
-                  label="Current Mileage (Optional)"
-                  type="number"
-                  {...register('currentMileage', { valueAsNumber: true })}
-                  error={!!errors.currentMileage}
-                  helperText={errors.currentMileage?.message}
-                />
-              </Grid>
-            </Grid>
-
-            <Typography variant="h6" gutterBottom>
-              Insurance & Registration
-            </Typography>
-            <Grid container spacing={2} sx={{ mb: 3 }}>
-              <Grid size={{ xs: 12, md: 6 }}>
-                <TextField
-                  fullWidth
-                  label="Insurance Provider (Optional)"
-                  {...register('insuranceProvider')}
-                  error={!!errors.insuranceProvider}
-                  helperText={errors.insuranceProvider?.message}
-                />
-              </Grid>
-              <Grid size={{ xs: 12, md: 6 }}>
-                <TextField
-                  fullWidth
-                  label="Insurance Policy Number (Optional)"
-                  {...register('insurancePolicyNumber')}
-                  error={!!errors.insurancePolicyNumber}
-                  helperText={errors.insurancePolicyNumber?.message}
-                />
-              </Grid>
-              <Grid size={{ xs: 12, md: 6 }}>
-                <TextField
-                  fullWidth
-                  label="Insurance Expiry (Optional)"
-                  type="date"
-                  InputLabelProps={{ shrink: true }}
-                  {...register('insuranceExpiry')}
-                  error={!!errors.insuranceExpiry}
-                  helperText={errors.insuranceExpiry?.message}
-                />
-              </Grid>
-              <Grid size={{ xs: 12, md: 6 }}>
-                <TextField
-                  fullWidth
-                  label="Registration Expiry (Optional)"
-                  type="date"
-                  InputLabelProps={{ shrink: true }}
-                  {...register('registrationExpiry')}
-                  error={!!errors.registrationExpiry}
-                  helperText={errors.registrationExpiry?.message}
-                />
-              </Grid>
-            </Grid>
-
-            <Typography variant="h6" gutterBottom>
-              Additional Information
-            </Typography>
-            <Grid container spacing={2}>
-              <Grid size={{ xs: 12 }}>
-                <TextField
-                  fullWidth
-                  label="GPS Device ID (Optional)"
-                  {...register('gpsDeviceId')}
-                  error={!!errors.gpsDeviceId}
-                  helperText={errors.gpsDeviceId?.message}
-                />
-              </Grid>
-              <Grid size={{ xs: 12 }}>
-                <TextField
-                  fullWidth
-                  label="Notes (Optional)"
-                  multiline
-                  rows={3}
-                  {...register('notes')}
-                  error={!!errors.notes}
-                  helperText={errors.notes?.message}
-                />
-              </Grid>
-            </Grid>
+                {errors.fuelType && (
+                  <p className="text-sm text-red-600 mt-1">{errors.fuelType.message}</p>
+                )}
+              </div>
+            </div>
           </CardContent>
         </Card>
 
-        <Box sx={{ mt: 3, display: 'flex', gap: 2 }}>
+        <Card className="mb-6">
+          <CardContent className="p-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">
+              Capacity & Pricing
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+
+              <div>
+                <Label htmlFor="seatingCapacity">Seating Capacity (Optional)</Label>
+                <Input
+                  id="seatingCapacity"
+                  type="number"
+                  {...register('seatingCapacity', { valueAsNumber: true })}
+                  className={errors.seatingCapacity ? 'border-red-500' : ''}
+                />
+                {errors.seatingCapacity && (
+                  <p className="text-sm text-red-600 mt-1">{errors.seatingCapacity.message}</p>
+                )}
+              </div>
+              <div>
+                <Label htmlFor="dailyRentalRate">Daily Rental Rate (Optional)</Label>
+                <Input
+                  id="dailyRentalRate"
+                  type="number"
+                  {...register('dailyRentalRate', { valueAsNumber: true })}
+                  className={errors.dailyRentalRate ? 'border-red-500' : ''}
+                />
+                {errors.dailyRentalRate && (
+                  <p className="text-sm text-red-600 mt-1">{errors.dailyRentalRate.message}</p>
+                )}
+              </div>
+              <div>
+                <Label htmlFor="currentMileage">Current Mileage (Optional)</Label>
+                <Input
+                  id="currentMileage"
+                  type="number"
+                  {...register('currentMileage', { valueAsNumber: true })}
+                  className={errors.currentMileage ? 'border-red-500' : ''}
+                />
+                {errors.currentMileage && (
+                  <p className="text-sm text-red-600 mt-1">{errors.currentMileage.message}</p>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="mb-6">
+          <CardContent className="p-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">
+              Insurance & Registration
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+
+              <div>
+                <Label htmlFor="insuranceProvider">Insurance Provider (Optional)</Label>
+                <Input
+                  id="insuranceProvider"
+                  {...register('insuranceProvider')}
+                  className={errors.insuranceProvider ? 'border-red-500' : ''}
+                />
+                {errors.insuranceProvider && (
+                  <p className="text-sm text-red-600 mt-1">{errors.insuranceProvider.message}</p>
+                )}
+              </div>
+              <div>
+                <Label htmlFor="insurancePolicyNumber">Insurance Policy Number (Optional)</Label>
+                <Input
+                  id="insurancePolicyNumber"
+                  {...register('insurancePolicyNumber')}
+                  className={errors.insurancePolicyNumber ? 'border-red-500' : ''}
+                />
+                {errors.insurancePolicyNumber && (
+                  <p className="text-sm text-red-600 mt-1">{errors.insurancePolicyNumber.message}</p>
+                )}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div>
+                <Label htmlFor="insuranceExpiry">Insurance Expiry (Optional)</Label>
+                <Input
+                  id="insuranceExpiry"
+                  type="date"
+                  {...register('insuranceExpiry')}
+                  className={errors.insuranceExpiry ? 'border-red-500' : ''}
+                />
+                {errors.insuranceExpiry && (
+                  <p className="text-sm text-red-600 mt-1">{errors.insuranceExpiry.message}</p>
+                )}
+              </div>
+              <div>
+                <Label htmlFor="registrationExpiry">Registration Expiry (Optional)</Label>
+                <Input
+                  id="registrationExpiry"
+                  type="date"
+                  {...register('registrationExpiry')}
+                  className={errors.registrationExpiry ? 'border-red-500' : ''}
+                />
+                {errors.registrationExpiry && (
+                  <p className="text-sm text-red-600 mt-1">{errors.registrationExpiry.message}</p>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="mb-6">
+          <CardContent className="p-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">
+              Additional Information
+            </h2>
+            <div className="space-y-6">
+
+              <div>
+                <Label htmlFor="gpsDeviceId">GPS Device ID (Optional)</Label>
+                <Input
+                  id="gpsDeviceId"
+                  {...register('gpsDeviceId')}
+                  className={errors.gpsDeviceId ? 'border-red-500' : ''}
+                />
+                {errors.gpsDeviceId && (
+                  <p className="text-sm text-red-600 mt-1">{errors.gpsDeviceId.message}</p>
+                )}
+              </div>
+              <div>
+                <Label htmlFor="notes">Notes (Optional)</Label>
+                <Textarea
+                  id="notes"
+                  rows={3}
+                  {...register('notes')}
+                  className={errors.notes ? 'border-red-500' : ''}
+                />
+                {errors.notes && (
+                  <p className="text-sm text-red-600 mt-1">{errors.notes.message}</p>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <div className="flex gap-4">
           <Button
             type="submit"
-            variant="contained"
-            size="large"
-            startIcon={<Save />}
             disabled={mutation.isPending}
+            className="flex items-center gap-2"
           >
+            <Save className="h-4 w-4" />
             {mutation.isPending ? 'Saving...' : isEditMode ? 'Update Vehicle' : 'Add Vehicle'}
           </Button>
-          <Button variant="outlined" size="large" onClick={() => navigate('/app/cabs')}>
+          <Button variant="outline" onClick={() => navigate('/app/cabs')}>
             Cancel
           </Button>
-        </Box>
+        </div>
       </form>
-    </Box>
+    </div>
   );
 };
