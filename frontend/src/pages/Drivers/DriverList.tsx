@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Users } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -20,7 +21,6 @@ import {
   Edit,
   Delete,
   Search,
-  People,
   Person,
   Warning,
   CheckCircle,
@@ -279,7 +279,7 @@ export const DriverList: React.FC = () => {
       {/* Drivers Grid */}
       {filteredDrivers && filteredDrivers.length === 0 ? (
         <EmptyState
-          icon={People}
+          icon={Users}
           title="No drivers found"
           description={
             searchQuery || showActiveOnly
@@ -365,10 +365,10 @@ export const DriverList: React.FC = () => {
                       fullWidth
                       variant="outlined"
                       startIcon={<Edit />}
-                      onClick={() => navigate(`/app/drivers/${driver.id}/edit`)}
+                      onClick={() => navigate(`/ app / drivers / ${driver.id}/edit`)}
                     >
                       Edit
-                    </Button>
+                    </Button >
                     <IconButton
                       color="error"
                       onClick={() => handleDeleteClick(driver.id)}
@@ -376,7 +376,7 @@ export const DriverList: React.FC = () => {
                     >
                       <Delete />
                     </IconButton>
-                  </Box>
+                  </Box >
                   <Button
                     fullWidth
                     variant={driver.isActive ? 'outlined' : 'contained'}
@@ -386,11 +386,11 @@ export const DriverList: React.FC = () => {
                   >
                     {driver.isActive ? 'Deactivate' : 'Activate'}
                   </Button>
-                </Box>
-              </Card>
-            </Grid>
+                </Box >
+              </Card >
+            </Grid >
           ))}
-        </Grid>
+        </Grid >
       )}
 
       {/* Delete Confirmation Dialog */}
@@ -405,6 +405,6 @@ export const DriverList: React.FC = () => {
         severity="error"
         isLoading={deleteMutation.isPending}
       />
-    </div>
+    </div >
   );
 };

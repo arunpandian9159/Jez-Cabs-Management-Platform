@@ -19,19 +19,19 @@ const cabSchema = z.object({
   make: z.string().min(1, 'Make is required'),
   model: z.string().min(1, 'Model is required'),
   year: z.number().min(1900).max(new Date().getFullYear() + 1),
-  registrationNumber: z.string().min(1, 'Registration number is required'),
+  registration_number: z.string().min(1, 'Registration number is required'),
   vin: z.string().optional(),
   status: z.enum(['AVAILABLE', 'RENTED', 'IN_MAINTENANCE']),
   color: z.string().optional(),
-  seatingCapacity: z.number().optional(),
-  fuelType: z.string().optional(),
-  insuranceExpiry: z.string().optional(),
-  insuranceProvider: z.string().optional(),
-  insurancePolicyNumber: z.string().optional(),
-  registrationExpiry: z.string().optional(),
-  gpsDeviceId: z.string().optional(),
-  dailyRentalRate: z.number().optional(),
-  currentMileage: z.number().optional(),
+  seating_capacity: z.number().optional(),
+  fuel_type: z.string().optional(),
+  insurance_expiry: z.string().optional(),
+  insurance_provider: z.string().optional(),
+  insurance_policy_number: z.string().optional(),
+  registration_expiry: z.string().optional(),
+  gps_device_id: z.string().optional(),
+  daily_rental_rate: z.number().optional(),
+  current_mileage: z.number().optional(),
   notes: z.string().optional(),
 });
 
@@ -66,11 +66,11 @@ export const CabForm: React.FC = () => {
       reset({
         ...cab,
         year: Number(cab.year),
-        seatingCapacity: cab.seatingCapacity ? Number(cab.seatingCapacity) : undefined,
-        dailyRentalRate: cab.dailyRentalRate ? Number(cab.dailyRentalRate) : undefined,
-        currentMileage: cab.currentMileage ? Number(cab.currentMileage) : undefined,
-        insuranceExpiry: cab.insuranceExpiry ? cab.insuranceExpiry.split('T')[0] : undefined,
-        registrationExpiry: cab.registrationExpiry ? cab.registrationExpiry.split('T')[0] : undefined,
+        seating_capacity: cab.seating_capacity ? Number(cab.seating_capacity) : undefined,
+        daily_rental_rate: cab.daily_rental_rate ? Number(cab.daily_rental_rate) : undefined,
+        current_mileage: cab.current_mileage ? Number(cab.current_mileage) : undefined,
+        insurance_expiry: cab.insurance_expiry ? cab.insurance_expiry.split('T')[0] : undefined,
+        registration_expiry: cab.registration_expiry ? cab.registration_expiry.split('T')[0] : undefined,
       });
     }
   }, [cab, reset]);
@@ -191,14 +191,14 @@ export const CabForm: React.FC = () => {
                 )}
               </div>
               <div>
-                <Label htmlFor="registrationNumber">Registration Number</Label>
+                <Label htmlFor="registration_number">Registration Number</Label>
                 <Input
-                  id="registrationNumber"
-                  {...register('registrationNumber')}
-                  className={errors.registrationNumber ? 'border-red-500' : ''}
+                  id="registration_number"
+                  {...register('registration_number')}
+                  className={errors.registration_number ? 'border-red-500' : ''}
                 />
-                {errors.registrationNumber && (
-                  <p className="text-sm text-red-600 mt-1">{errors.registrationNumber.message}</p>
+                {errors.registration_number && (
+                  <p className="text-sm text-red-600 mt-1">{errors.registration_number.message}</p>
                 )}
               </div>
               <div>
@@ -240,14 +240,14 @@ export const CabForm: React.FC = () => {
                 )}
               </div>
               <div>
-                <Label htmlFor="fuelType">Fuel Type (Optional)</Label>
+                <Label htmlFor="fuel_type">Fuel Type (Optional)</Label>
                 <Input
-                  id="fuelType"
-                  {...register('fuelType')}
-                  className={errors.fuelType ? 'border-red-500' : ''}
+                  id="fuel_type"
+                  {...register('fuel_type')}
+                  className={errors.fuel_type ? 'border-red-500' : ''}
                 />
-                {errors.fuelType && (
-                  <p className="text-sm text-red-600 mt-1">{errors.fuelType.message}</p>
+                {errors.fuel_type && (
+                  <p className="text-sm text-red-600 mt-1">{errors.fuel_type.message}</p>
                 )}
               </div>
             </div>
@@ -262,39 +262,39 @@ export const CabForm: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
 
               <div>
-                <Label htmlFor="seatingCapacity">Seating Capacity (Optional)</Label>
+                <Label htmlFor="seating_capacity">Seating Capacity (Optional)</Label>
                 <Input
-                  id="seatingCapacity"
+                  id="seating_capacity"
                   type="number"
-                  {...register('seatingCapacity', { valueAsNumber: true })}
-                  className={errors.seatingCapacity ? 'border-red-500' : ''}
+                  {...register('seating_capacity', { valueAsNumber: true })}
+                  className={errors.seating_capacity ? 'border-red-500' : ''}
                 />
-                {errors.seatingCapacity && (
-                  <p className="text-sm text-red-600 mt-1">{errors.seatingCapacity.message}</p>
+                {errors.seating_capacity && (
+                  <p className="text-sm text-red-600 mt-1">{errors.seating_capacity.message}</p>
                 )}
               </div>
               <div>
-                <Label htmlFor="dailyRentalRate">Daily Rental Rate (Optional)</Label>
+                <Label htmlFor="daily_rental_rate">Daily Rental Rate (Optional)</Label>
                 <Input
-                  id="dailyRentalRate"
+                  id="daily_rental_rate"
                   type="number"
-                  {...register('dailyRentalRate', { valueAsNumber: true })}
-                  className={errors.dailyRentalRate ? 'border-red-500' : ''}
+                  {...register('daily_rental_rate', { valueAsNumber: true })}
+                  className={errors.daily_rental_rate ? 'border-red-500' : ''}
                 />
-                {errors.dailyRentalRate && (
-                  <p className="text-sm text-red-600 mt-1">{errors.dailyRentalRate.message}</p>
+                {errors.daily_rental_rate && (
+                  <p className="text-sm text-red-600 mt-1">{errors.daily_rental_rate.message}</p>
                 )}
               </div>
               <div>
-                <Label htmlFor="currentMileage">Current Mileage (Optional)</Label>
+                <Label htmlFor="current_mileage">Current Mileage (Optional)</Label>
                 <Input
-                  id="currentMileage"
+                  id="current_mileage"
                   type="number"
-                  {...register('currentMileage', { valueAsNumber: true })}
-                  className={errors.currentMileage ? 'border-red-500' : ''}
+                  {...register('current_mileage', { valueAsNumber: true })}
+                  className={errors.current_mileage ? 'border-red-500' : ''}
                 />
-                {errors.currentMileage && (
-                  <p className="text-sm text-red-600 mt-1">{errors.currentMileage.message}</p>
+                {errors.current_mileage && (
+                  <p className="text-sm text-red-600 mt-1">{errors.current_mileage.message}</p>
                 )}
               </div>
             </div>
@@ -309,52 +309,52 @@ export const CabForm: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
 
               <div>
-                <Label htmlFor="insuranceProvider">Insurance Provider (Optional)</Label>
+                <Label htmlFor="insurance_provider">Insurance Provider (Optional)</Label>
                 <Input
-                  id="insuranceProvider"
-                  {...register('insuranceProvider')}
-                  className={errors.insuranceProvider ? 'border-red-500' : ''}
+                  id="insurance_provider"
+                  {...register('insurance_provider')}
+                  className={errors.insurance_provider ? 'border-red-500' : ''}
                 />
-                {errors.insuranceProvider && (
-                  <p className="text-sm text-red-600 mt-1">{errors.insuranceProvider.message}</p>
+                {errors.insurance_provider && (
+                  <p className="text-sm text-red-600 mt-1">{errors.insurance_provider.message}</p>
                 )}
               </div>
               <div>
-                <Label htmlFor="insurancePolicyNumber">Insurance Policy Number (Optional)</Label>
+                <Label htmlFor="insurance_policy_number">Insurance Policy Number (Optional)</Label>
                 <Input
-                  id="insurancePolicyNumber"
-                  {...register('insurancePolicyNumber')}
-                  className={errors.insurancePolicyNumber ? 'border-red-500' : ''}
+                  id="insurance_policy_number"
+                  {...register('insurance_policy_number')}
+                  className={errors.insurance_policy_number ? 'border-red-500' : ''}
                 />
-                {errors.insurancePolicyNumber && (
-                  <p className="text-sm text-red-600 mt-1">{errors.insurancePolicyNumber.message}</p>
+                {errors.insurance_policy_number && (
+                  <p className="text-sm text-red-600 mt-1">{errors.insurance_policy_number.message}</p>
                 )}
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div>
-                <Label htmlFor="insuranceExpiry">Insurance Expiry (Optional)</Label>
+                <Label htmlFor="insurance_expiry">Insurance Expiry (Optional)</Label>
                 <Input
-                  id="insuranceExpiry"
+                  id="insurance_expiry"
                   type="date"
-                  {...register('insuranceExpiry')}
-                  className={errors.insuranceExpiry ? 'border-red-500' : ''}
+                  {...register('insurance_expiry')}
+                  className={errors.insurance_expiry ? 'border-red-500' : ''}
                 />
-                {errors.insuranceExpiry && (
-                  <p className="text-sm text-red-600 mt-1">{errors.insuranceExpiry.message}</p>
+                {errors.insurance_expiry && (
+                  <p className="text-sm text-red-600 mt-1">{errors.insurance_expiry.message}</p>
                 )}
               </div>
               <div>
-                <Label htmlFor="registrationExpiry">Registration Expiry (Optional)</Label>
+                <Label htmlFor="registration_expiry">Registration Expiry (Optional)</Label>
                 <Input
-                  id="registrationExpiry"
+                  id="registration_expiry"
                   type="date"
-                  {...register('registrationExpiry')}
-                  className={errors.registrationExpiry ? 'border-red-500' : ''}
+                  {...register('registration_expiry')}
+                  className={errors.registration_expiry ? 'border-red-500' : ''}
                 />
-                {errors.registrationExpiry && (
-                  <p className="text-sm text-red-600 mt-1">{errors.registrationExpiry.message}</p>
+                {errors.registration_expiry && (
+                  <p className="text-sm text-red-600 mt-1">{errors.registration_expiry.message}</p>
                 )}
               </div>
             </div>
@@ -369,14 +369,14 @@ export const CabForm: React.FC = () => {
             <div className="space-y-6">
 
               <div>
-                <Label htmlFor="gpsDeviceId">GPS Device ID (Optional)</Label>
+                <Label htmlFor="gps_device_id">GPS Device ID (Optional)</Label>
                 <Input
-                  id="gpsDeviceId"
-                  {...register('gpsDeviceId')}
-                  className={errors.gpsDeviceId ? 'border-red-500' : ''}
+                  id="gps_device_id"
+                  {...register('gps_device_id')}
+                  className={errors.gps_device_id ? 'border-red-500' : ''}
                 />
-                {errors.gpsDeviceId && (
-                  <p className="text-sm text-red-600 mt-1">{errors.gpsDeviceId.message}</p>
+                {errors.gps_device_id && (
+                  <p className="text-sm text-red-600 mt-1">{errors.gps_device_id.message}</p>
                 )}
               </div>
               <div>

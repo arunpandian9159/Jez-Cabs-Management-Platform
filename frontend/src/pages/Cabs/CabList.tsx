@@ -202,14 +202,14 @@ export const CabList: React.FC = () => {
                           </div>
                           <div className="text-sm text-gray-500">
                             {cab.color && `${cab.color} • `}
-                            {cab.seatingCapacity && `${cab.seatingCapacity} seats`}
+                            {cab.seating_capacity && `${cab.seating_capacity} seats`}
                           </div>
                         </div>
                       </div>
                     </TableCell>
                     <TableCell>
                       <Badge className="bg-blue-100 text-blue-800 font-mono">
-                        {cab.registrationNumber}
+                        {cab.registration_number}
                       </Badge>
                     </TableCell>
                     <TableCell>
@@ -219,9 +219,9 @@ export const CabList: React.FC = () => {
                       <span className="text-gray-900 font-medium">{cab.year}</span>
                     </TableCell>
                     <TableCell>
-                      {cab.dailyRentalRate ? (
+                      {cab.daily_rental_rate ? (
                         <span className="text-green-600 font-semibold">
-                          ${cab.dailyRentalRate}/day
+                          ${cab.daily_rental_rate}/day
                         </span>
                       ) : (
                         <span className="text-gray-400">-</span>
@@ -229,31 +229,31 @@ export const CabList: React.FC = () => {
                     </TableCell>
                     <TableCell>
                       <div className="space-y-1">
-                        {cab.insuranceExpiry && (
+                        {cab.insurance_expiry && (
                           <div className="flex items-center gap-1">
-                            {isExpired(cab.insuranceExpiry) ? (
+                            {isExpired(cab.insurance_expiry) ? (
                               <AlertTriangle className="h-4 w-4 text-red-500" />
-                            ) : isExpiringSoon(cab.insuranceExpiry) ? (
+                            ) : isExpiringSoon(cab.insurance_expiry) ? (
                               <AlertTriangle className="h-4 w-4 text-orange-500" />
                             ) : (
                               <div className="h-4 w-4 rounded-full bg-green-500" />
                             )}
                             <span className="text-xs text-gray-600">
-                              {new Date(cab.insuranceExpiry).toLocaleDateString()}
+                              {new Date(cab.insurance_expiry).toLocaleDateString()}
                             </span>
                           </div>
                         )}
-                        {cab.registrationExpiry && (
+                        {cab.registration_expiry && (
                           <div className="flex items-center gap-1">
-                            {isExpired(cab.registrationExpiry) ? (
+                            {isExpired(cab.registration_expiry) ? (
                               <AlertTriangle className="h-4 w-4 text-red-500" />
-                            ) : isExpiringSoon(cab.registrationExpiry) ? (
+                            ) : isExpiringSoon(cab.registration_expiry) ? (
                               <AlertTriangle className="h-4 w-4 text-orange-500" />
                             ) : (
                               <div className="h-4 w-4 rounded-full bg-green-500" />
                             )}
                             <span className="text-xs text-gray-600">
-                              {new Date(cab.registrationExpiry).toLocaleDateString()}
+                              {new Date(cab.registration_expiry).toLocaleDateString()}
                             </span>
                           </div>
                         )}

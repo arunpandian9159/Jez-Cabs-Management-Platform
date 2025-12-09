@@ -8,7 +8,7 @@ services:
       RABBITMQ_DEFAULT_USER: rabbitmq
       RABBITMQ_DEFAULT_PASS: rabbitmq
     ports:
-      - "5672:5672"   # AMQP port
+      - "5672:5672" # AMQP port
       - "15672:15672" # Management UI
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
@@ -32,7 +32,7 @@ services:
     networks:
       - jezcabs-network
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: [ "CMD", "redis-cli", "ping" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -48,7 +48,7 @@ services:
     environment:
       NODE_ENV: development
       PORT: 3000
-      DATABASE_URL: postgresql://postgres:9159788313%40Abc@db.fzslrtmnihfpxeixsqqc.supabase.co:5432/postgres
+      DATABASE_URL: postgresql://postgres.fzslrtmnihfpxeixsqqc:9159788313%40Abc@aws-1-ap-south-1.pooler.supabase.com:5432/postgres
       MONGODB_URI: mongodb+srv://arunpandiancse2003_db_user:jaRM9YVQG9dz5BFw@cluster0.yb4ddau.mongodb.net/jezcabs?retryWrites=true&w=majority
       REDIS_HOST: redis
       REDIS_PORT: 6379
