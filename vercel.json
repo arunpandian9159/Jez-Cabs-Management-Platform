@@ -1,17 +1,14 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "backend/src/main.ts",
-      "use": "@vercel/node"
+      "source": "/api/(.*)",
+      "destination": "/backend/dist/main.js"
     },
     {
-      "src": "frontend/package.json",
-      "use": "@vercel/static-build"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
-  ],
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "/backend/src/main.ts" },
-    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
