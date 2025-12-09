@@ -8,6 +8,7 @@ import { AppService } from './app.service';
 import databaseConfig from './config/database.config';
 import mongodbConfig from './config/mongodb.config';
 import jwtConfig from './config/jwt.config';
+import supabaseConfig from './config/supabase.config';
 import { IamModule } from './modules/iam/iam.module';
 import { CabModule } from './modules/cab/cab.module';
 import { DriverModule } from './modules/driver/driver.module';
@@ -17,17 +18,21 @@ import { InvoiceModule } from './modules/invoice/invoice.module';
 import { TelematicsModule } from './modules/telematics/telematics.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { NotificationModule } from './modules/notification/notification.module';
+import { SupabaseModule } from './common/supabase.module';
 
 @Module({
   imports: [
     // Configuration
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [databaseConfig, mongodbConfig, jwtConfig],
+      load: [databaseConfig, mongodbConfig, jwtConfig, supabaseConfig],
       envFilePath: '.env',
     }),
 
-    // PostgreSQL Database
+    // Supabase Module (for Supabase client operations)
+    SupabaseModule,
+
+    // Supabase PostgreSQL Database (via TypeORM)
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => configService.get('database')!,
@@ -66,4 +71,4 @@ import { NotificationModule } from './modules/notification/notification.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
