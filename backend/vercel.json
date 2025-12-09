@@ -1,0 +1,16 @@
+{
+    "$schema": "https://openapi.vercel.sh/vercel.json",
+    "version": 2,
+    "functions": {
+        "dist/main.js": {
+            "runtime": "@vercel/node@3"
+        }
+    },
+    "rewrites": [
+        {
+            "source": "/(.*)",
+            "destination": "/dist/main.js"
+        }
+    ],
+    "outputDirectory": "dist"
+}
