@@ -10,7 +10,6 @@ import {
   Filter,
   SlidersHorizontal,
   Sparkles,
-  MoreHorizontal,
 } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Car, Users, BookOpen, ClipboardList, FileText, AlertCircle, Sparkles } from 'lucide-react';
+import { AlertCircle, Sparkles } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
 
@@ -11,14 +11,7 @@ interface EmptyStateProps {
   onAction?: () => void;
 }
 
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  Car,
-  Users,
-  BookOpen,
-  ClipboardList,
-  FileText,
-  AlertCircle,
-};
+
 
 export const EmptyState: React.FC<EmptyStateProps> = ({
   icon: Icon = AlertCircle,

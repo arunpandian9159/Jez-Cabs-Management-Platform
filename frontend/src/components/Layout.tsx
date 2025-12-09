@@ -13,12 +13,10 @@ import {
   Bell,
   Settings,
   ChevronRight,
-  X,
   Sparkles,
 } from 'lucide-react';
 import { Sheet, SheetContent } from './ui/sheet';
 import { Button } from './ui/button';
-import { Badge } from './ui/badge';
 import { useAuth } from '../contexts/AuthContext';
 
 interface MenuItem {
@@ -124,8 +122,8 @@ export const Layout: React.FC = () => {
 
               {/* Icon container */}
               <span className={`relative z-10 transition-all duration-300 ${isActive
-                  ? 'text-white'
-                  : 'text-slate-500 group-hover:text-blue-400'
+                ? 'text-white'
+                : 'text-slate-500 group-hover:text-blue-400'
                 }`}>
                 {item.icon}
               </span>
@@ -138,8 +136,8 @@ export const Layout: React.FC = () => {
 
               {/* Hover arrow */}
               <ChevronRight className={`ml-auto h-4 w-4 transition-all duration-300 ${isActive
-                  ? 'opacity-100 translate-x-0'
-                  : 'opacity-0 -translate-x-2 group-hover:opacity-60 group-hover:translate-x-0'
+                ? 'opacity-100 translate-x-0'
+                : 'opacity-0 -translate-x-2 group-hover:opacity-60 group-hover:translate-x-0'
                 }`} />
 
               {/* Hover background effect */}

@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { analyticsService } from '../services/analytics.service';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area } from 'recharts';
+import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area } from 'recharts';
 import { format, subDays } from 'date-fns';
 import { LoadingSkeleton } from '../components/LoadingSkeleton';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
@@ -31,7 +31,7 @@ interface StatCardProps {
   delay?: number;
 }
 
-const StatCard: React.FC<StatCardProps> = ({ title, value, icon, color, bgGradient, subtitle, trend, delay = 0 }) => {
+const StatCard: React.FC<StatCardProps> = ({ title, value, icon, bgGradient, subtitle, trend, delay = 0 }) => {
   return (
     <div className="animate-fade-in-up" style={{ animationDelay: `${delay * 0.1}s` }}>
       <Card
