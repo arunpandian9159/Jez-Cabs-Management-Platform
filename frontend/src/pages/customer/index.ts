@@ -1,2 +1,10 @@
 export { CustomerDashboard } from './Dashboard';
-export { LocationEntry, CabSelection } from './booking';
+export { LocationEntry, CabSelection, DriverSearch, LiveTracking, TripComplete } from './booking';
+export { BrowseCabs, ActiveRentals } from './rentals';
+export { PlanTrip, TripHistory } from './trips';
+export { Payments } from './payments';
+export { Disputes } from './disputes';
+export { EmergencyContacts } from './EmergencyContacts';
+export { SafetyCenter } from './SafetyCenter';
+export { TripExchange } from './TripExchange';
+export { PostTrip } from './PostTrip';

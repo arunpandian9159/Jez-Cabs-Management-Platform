@@ -2,9 +2,11 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute, PublicOnlyRoute } from './components/ProtectedRoute';
-import { PublicLayout, CustomerLayout } from './components/layout';
+import { PublicLayout, CustomerLayout, DriverLayout, CabOwnerLayout } from './components/layout';
 import { Home, Login, Register } from './pages/public';
-import { CustomerDashboard, LocationEntry, CabSelection } from './pages/customer';
+import { CustomerDashboard, LocationEntry, CabSelection, DriverSearch, LiveTracking, TripComplete, BrowseCabs, ActiveRentals, PlanTrip, TripHistory, Payments, Disputes } from './pages/customer';
+import { DriverDashboard, ActiveTrip, TripHistory as DriverTripHistory, Earnings, DriverProfile, DriverSettings } from './pages/driver';
+import { OwnerDashboard, ManageCabs, ManageDrivers, OwnerEarnings, OwnerSettings, Contracts } from './pages/owner';
 import { ROUTES } from './lib/constants';
 
 // Create React Query client
@@ -50,27 +52,42 @@ function App() {
                                 <Route path={ROUTES.CUSTOMER.BOOK} element={<Navigate to={ROUTES.CUSTOMER.BOOK_LOCATION} replace />} />
                                 <Route path={ROUTES.CUSTOMER.BOOK_LOCATION} element={<LocationEntry />} />
                                 <Route path={ROUTES.CUSTOMER.BOOK_SELECT_CAB} element={<CabSelection />} />
-                                <Route path={ROUTES.CUSTOMER.BOOK_SEARCHING} element={<PlaceholderPage title="Searching Driver" />} />
-                                <Route path={ROUTES.CUSTOMER.BOOK_TRACKING} element={<PlaceholderPage title="Live Tracking" />} />
-                                <Route path={ROUTES.CUSTOMER.BOOK_COMPLETE} element={<PlaceholderPage title="Trip Complete" />} />
+                                <Route path={ROUTES.CUSTOMER.BOOK_SEARCHING} element={<DriverSearch />} />
+                                <Route path={ROUTES.CUSTOMER.BOOK_TRACKING} element={<LiveTracking />} />
+                                <Route path={ROUTES.CUSTOMER.BOOK_COMPLETE} element={<TripComplete />} />
                                 <Route path={ROUTES.CUSTOMER.RENTALS} element={<Navigate to={ROUTES.CUSTOMER.RENTALS_BROWSE} replace />} />
-                                <Route path={ROUTES.CUSTOMER.RENTALS_BROWSE} element={<PlaceholderPage title="Browse Cabs" />} />
-                                <Route path={ROUTES.CUSTOMER.RENTALS_ACTIVE} element={<PlaceholderPage title="Active Rentals" />} />
-                                <Route path={ROUTES.CUSTOMER.TRIPS} element={<PlaceholderPage title="Trip History" />} />
-                                <Route path={ROUTES.CUSTOMER.PAYMENTS} element={<PlaceholderPage title="Payments" />} />
-                                <Route path={ROUTES.CUSTOMER.DISPUTES} element={<PlaceholderPage title="Disputes" />} />
+                                <Route path={ROUTES.CUSTOMER.RENTALS_BROWSE} element={<BrowseCabs />} />
+                                <Route path={ROUTES.CUSTOMER.RENTALS_ACTIVE} element={<ActiveRentals />} />
+                                <Route path={ROUTES.CUSTOMER.TRIPS} element={<TripHistory />} />
+                                <Route path="/customer/trips/plan" element={<PlanTrip />} />
+                                <Route path={ROUTES.CUSTOMER.PAYMENTS} element={<Payments />} />
+                                <Route path={ROUTES.CUSTOMER.DISPUTES} element={<Disputes />} />
                                 <Route path={ROUTES.CUSTOMER.PROFILE} element={<PlaceholderPage title="Profile" />} />
                             </Route>
                         </Route>
 
-                        {/* Driver routes - placeholder */}
+                        {/* Driver routes */}
                         <Route element={<ProtectedRoute allowedRoles={['driver']} />}>
-                            <Route path="/driver/*" element={<PlaceholderPage title="Driver Dashboard" />} />
+                            <Route element={<DriverLayout />}>
+                                <Route path="/driver" element={<DriverDashboard />} />
+                                <Route path="/driver/trip" element={<ActiveTrip />} />
+                                <Route path="/driver/trips" element={<DriverTripHistory />} />
+                                <Route path="/driver/earnings" element={<Earnings />} />
+                                <Route path="/driver/profile" element={<DriverProfile />} />
+                                <Route path="/driver/settings" element={<DriverSettings />} />
+                            </Route>
                         </Route>
 
-                        {/* Cab Owner routes - placeholder */}
+                        {/* Cab Owner routes */}
                         <Route element={<ProtectedRoute allowedRoles={['cab_owner']} />}>
-                            <Route path="/owner/*" element={<PlaceholderPage title="Cab Owner Dashboard" />} />
+                            <Route element={<CabOwnerLayout />}>
+                                <Route path="/owner" element={<OwnerDashboard />} />
+                                <Route path="/owner/cabs" element={<ManageCabs />} />
+                                <Route path="/owner/drivers" element={<ManageDrivers />} />
+                                <Route path="/owner/earnings" element={<OwnerEarnings />} />
+                                <Route path="/owner/contracts" element={<Contracts />} />
+                                <Route path="/owner/settings" element={<OwnerSettings />} />
+                            </Route>
                         </Route>
 
                         {/* Trip Planner routes - placeholder */}
