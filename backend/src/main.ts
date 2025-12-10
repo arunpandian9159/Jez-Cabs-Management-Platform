@@ -1,11 +1,23 @@
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { ValidationPipe, VersioningType, INestApplication } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ExpressAdapter, NestExpressApplication } from '@nestjs/platform-express';
+import express, { Express } from 'express';
 import { AppModule } from './app.module';
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+const server: Express = express();
+let cachedApp: INestApplication | null = null;
+
+async function createApp(): Promise<INestApplication> {
+  if (cachedApp) {
+    return cachedApp;
+  }
+
+  const app = await NestFactory.create<NestExpressApplication>(
+    AppModule,
+    new ExpressAdapter(server),
+  );
   const configService = app.get(ConfigService);
 
   // Global prefix
@@ -18,10 +30,10 @@ async function bootstrap() {
     defaultVersion: '1',
   });
 
-  // CORS
+  // CORS - Allow all origins for Vercel deployment
   app.enableCors({
-    origin: configService.get('CORS_ORIGIN', 'http://localhost:5173'),
-    credentials: configService.get('CORS_CREDENTIALS', true),
+    origin: true,
+    credentials: true,
   });
 
   // Global validation pipe
@@ -78,13 +90,32 @@ async function bootstrap() {
       },
     });
 
-    console.log(`📚 Swagger documentation available at: http://localhost:${configService.get('PORT', 3000)}/${swaggerPath}`);
+    console.log(`📚 Swagger documentation available at: /${swaggerPath}`);
   }
 
-  const port = configService.get('PORT', 3000);
-  await app.listen(port);
+  await app.init();
+  cachedApp = app;
+  return app;
+}
 
+// For local development
+async function bootstrap() {
+  const app = await createApp();
+  const configService = app.get(ConfigService);
+  const port = configService.get('PORT', 3000);
+  const apiPrefix = configService.get('API_PREFIX', 'api');
+  
+  await app.listen(port);
   console.log(`🚀 Application is running on: http://localhost:${port}/${apiPrefix}`);
 }
 
-bootstrap();
+// Check if running locally or on Vercel
+if (process.env.VERCEL !== '1') {
+  bootstrap();
+}
+
+// Export for Vercel serverless
+export default async function handler(req: any, res: any) {
+  await createApp();
+  server(req, res);
+}
