@@ -1,11 +1,25 @@
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { ValidationPipe, VersioningType, INestApplication } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ExpressAdapter, NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const express = require('express');
+const expressApp = express();
+let cachedApp: INestApplication<any> | null = null;
+
+async function createApp(): Promise<INestApplication<any>> {
+  if (cachedApp) {
+    return cachedApp;
+  }
+
+  const app = await NestFactory.create<NestExpressApplication>(
+    AppModule,
+    new ExpressAdapter(expressApp),
+    { logger: ['error', 'warn'] }
+  );
   const configService = app.get(ConfigService);
 
   // Global prefix
@@ -77,14 +91,41 @@ async function bootstrap() {
         persistAuthorization: true,
       },
     });
-
-    console.log(`📚 Swagger documentation available at: http://localhost:${configService.get('PORT', 3000)}/${swaggerPath}`);
   }
 
-  const port = configService.get('PORT', 3000);
-  await app.listen(port);
+  await app.init();
+  cachedApp = app;
+  return app;
+}
 
+// For local development
+async function bootstrap() {
+  const app = await createApp();
+  const configService = app.get(ConfigService);
+  const port = configService.get('PORT', 3000);
+  const apiPrefix = configService.get('API_PREFIX', 'api');
+
+  await app.listen(port);
   console.log(`🚀 Application is running on: http://localhost:${port}/${apiPrefix}`);
 }
 
-bootstrap();
+// Check if running on Vercel (serverless) or locally
+const isVercel = process.env.VERCEL === '1';
+
+if (!isVercel) {
+  bootstrap();
+}
+
+// Export handler for Vercel Serverless
+module.exports = async (req: any, res: any) => {
+  try {
+    await createApp();
+    expressApp(req, res);
+  } catch (error) {
+    console.error('Vercel handler error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+// Also export as default for ESM compatibility
+export default module.exports;
