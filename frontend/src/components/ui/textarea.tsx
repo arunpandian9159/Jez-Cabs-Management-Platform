@@ -1,24 +1,68 @@
-import * as React from "react"
+import { forwardRef, TextareaHTMLAttributes } from 'react';
+import { cn } from '../../lib/utils';
+import { AlertCircle } from 'lucide-react';
 
-import { cn } from "../../lib/utils"
+export interface TextAreaProps
+    extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+    label?: string;
+    error?: string;
+    hint?: string;
+    containerClassName?: string;
+}
 
-export interface TextareaProps
-  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {}
+export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
+    (
+        {
+            className,
+            containerClassName,
+            label,
+            error,
+            hint,
+            id,
+            rows = 4,
+            ...props
+        },
+        ref
+    ) => {
+        const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
 
-const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ className, ...props }, ref) => {
-    return (
-      <textarea
-        className={cn(
-          "flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-          className
-        )}
-        ref={ref} 
-        {...props}
-      />
-    )
-  } 
-)
-Textarea.displayName = "Textarea"
+        return (
+            <div className={cn('space-y-1.5', containerClassName)}>
+                {label && (
+                    <label
+                        htmlFor={inputId}
+                        className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                    >
+                        {label}
+                    </label>
+                )}
+                <textarea
+                    ref={ref}
+                    id={inputId}
+                    rows={rows}
+                    className={cn(
+                        'flex w-full rounded-lg border bg-white px-3 py-2 text-sm transition-all duration-200 placeholder:text-gray-400 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-900 resize-y min-h-[80px]',
+                        error
+                            ? 'border-error-500 focus-visible:border-error-500 focus-visible:ring-2 focus-visible:ring-error-500/20'
+                            : 'border-gray-300 focus-visible:border-primary-500 focus-visible:ring-2 focus-visible:ring-primary-500/20 dark:border-gray-700',
+                        className
+                    )}
+                    {...props}
+                />
+                {(error || hint) && (
+                    <p
+                        className={cn(
+                            'flex items-center gap-1 text-xs',
+                            error ? 'text-error-600' : 'text-gray-500'
+                        )}
+                    >
+                        {error && <AlertCircle className="h-3 w-3" />}
+                        {error || hint}
+                    </p>
+                )}
+            </div>
+        );
+    }
+);
 
-export { Textarea }
+TextArea.displayName = 'TextArea';

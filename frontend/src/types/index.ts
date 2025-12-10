@@ -1,129 +1,272 @@
-export interface User {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  role: 'OWNER' | 'MANAGER' | 'STAFF';
-  companyId: string;
+// Re-export all types from a single entry point
+export * from './api.types';
+export * from './booking.types';
+export * from './rental.types';
+export * from './driver.types';
+export * from './emergency.types';
+export * from './payment.types';
+
+// Dispute types
+export type DisputeCategory =
+    | 'fare_issue'
+    | 'route_issue'
+    | 'driver_behavior'
+    | 'vehicle_condition'
+    | 'safety_concern'
+    | 'payment_issue'
+    | 'cancellation_issue'
+    | 'rental_damage'
+    | 'other';
+
+export type DisputeStatus =
+    | 'submitted'
+    | 'under_review'
+    | 'awaiting_response'
+    | 'investigating'
+    | 'resolved'
+    | 'escalated'
+    | 'closed';
+
+export type DisputePriority = 'low' | 'medium' | 'high' | 'critical';
+
+export interface Dispute {
+    id: string;
+    ticketNumber: string;
+    complainantId: string;
+    complainantType: 'customer' | 'driver' | 'owner';
+    complainantName: string;
+
+    // Related entity
+    relatedTo: 'booking' | 'rental' | 'payment' | 'cancellation' | 'safety' | 'other';
+    bookingId?: string;
+    rentalId?: string;
+    transactionId?: string;
+    emergencyId?: string;
+
+    // Dispute details
+    category: DisputeCategory;
+    subject: string;
+    description: string;
+
+    // Evidence
+    evidence: DisputeEvidence[];
+
+    // Status
+    status: DisputeStatus;
+    priority: DisputePriority;
+
+    // Assignment
+    assignedTo?: string;
+    assignedAt?: string;
+
+    // Resolution
+    resolution?: string;
+    refundAmount?: number;
+    compensationAmount?: number;
+    actionTaken?: string;
+    resolvedAt?: string;
+    resolvedBy?: string;
+
+    // Messages
+    messages: DisputeMessage[];
+
+    createdAt: string;
+    updatedAt: string;
 }
 
-export interface Company {
-  id: string;
-  name: string;
-  email: string;
-  phone?: string;
-  address?: string;
+export interface DisputeEvidence {
+    id: string;
+    type: 'image' | 'video' | 'document' | 'audio';
+    url: string;
+    description?: string;
+    uploadedBy: string;
+    uploadedAt: string;
 }
 
-export interface Cab {
-  id: string;
-  make: string;
-  model: string;
-  year: number;
-  registration_number: string;
-  vin?: string;
-  status: 'AVAILABLE' | 'RENTED' | 'IN_MAINTENANCE';
-  color?: string;
-  seating_capacity?: number;
-  fuel_type?: string;
-  insurance_expiry?: string;
-  insurance_provider?: string;
-  insurance_policy_number?: string;
-  registration_expiry?: string;
-  gps_device_id?: string;
-  daily_rental_rate?: number;
-  current_mileage?: number;
-  notes?: string;
-  created_at: string;
-  updated_at: string;
+export interface DisputeMessage {
+    id: string;
+    senderId: string;
+    senderName: string;
+    senderType: 'complainant' | 'respondent' | 'support';
+    message: string;
+    attachments?: string[];
+    createdAt: string;
 }
 
-export interface Driver {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  licenseNumber: string;
-  licenseExpiry: string;
-  address?: string;
-  emergencyContact?: string;
-  emergencyPhone?: string;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
+// Community Trip Exchange types
+export type ExchangeStatus =
+    | 'posted'
+    | 'offers_received'
+    | 'negotiating'
+    | 'confirmed'
+    | 'in_progress'
+    | 'completed'
+    | 'cancelled'
+    | 'expired';
+
+export interface TripExchangePost {
+    id: string;
+    posterId: string;
+    posterName: string;
+    posterRating: number;
+
+    // Trip details
+    pickup: {
+        address: string;
+        city: string;
+        coordinates: { lat: number; lng: number };
+    };
+    destination: {
+        address: string;
+        city: string;
+        coordinates: { lat: number; lng: number };
+    };
+    tripDate: string;
+    tripTime: string;
+    estimatedDistance: number;
+    estimatedDuration: number;
+
+    // Customer info
+    customerName?: string;
+    customerPhone?: string;
+    passengerCount: number;
+    cabTypeRequired: string;
+
+    // Exchange terms
+    originalFare: number;
+    offeredSplit: number; // percentage for offering driver
+    minimumRating?: number;
+    requiresOwnCab: boolean;
+    additionalNotes?: string;
+
+    // Status
+    status: ExchangeStatus;
+    interestedCount: number;
+    expiresAt: string;
+
+    createdAt: string;
+    updatedAt: string;
 }
 
-export interface Booking {
-  id: string;
-  cabId: string;
-  driverId?: string;
-  customerName: string;
-  customerEmail: string;
-  customerPhone: string;
-  startDate: string;
-  endDate: string;
-  pickupLocation: string;
-  dropoffLocation?: string;
-  status: 'PENDING' | 'ACTIVE' | 'COMPLETED' | 'CANCELLED';
-  totalAmount?: number;
-  notes?: string;
-  createdAt: string;
-  updatedAt: string;
-  cab?: Cab;
-  driver?: Driver;
+export interface TripExchangeInterest {
+    id: string;
+    postId: string;
+    driverId: string;
+    driverName: string;
+    driverRating: number;
+    driverPhoto?: string;
+    cabDetails?: {
+        make: string;
+        model: string;
+        registrationNumber: string;
+    };
+    proposedSplit: number;
+    message?: string;
+    status: 'pending' | 'accepted' | 'rejected' | 'negotiating' | 'withdrawn';
+    createdAt: string;
 }
 
-export interface Invoice {
-  id: string;
-  bookingId: string;
-  invoiceNumber: string;
-  status: 'DRAFT' | 'SENT' | 'PAID' | 'OVERDUE' | 'CANCELLED';
-  subtotal: number;
-  taxRate: number;
-  taxAmount: number;
-  discount: number;
-  totalAmount: number;
-  dueDate: string;
-  paidDate?: string;
-  notes?: string;
-  createdAt: string;
-  updatedAt: string;
-  booking?: Booking;
+export interface TripExchangeAgreement {
+    id: string;
+    postId: string;
+    originalDriverId: string;
+    takingDriverId: string;
+    agreedSplit: number;
+    customerTransferred: boolean;
+    tripStarted: boolean;
+    tripCompleted: boolean;
+    paymentSettled: boolean;
+    createdAt: string;
 }
 
-export interface Checklist {
-  id: string;
-  name: string;
-  description?: string;
-  createdAt: string;
-  updatedAt: string;
+// Trip Planner types
+export interface TripPlanRequest {
+    id: string;
+    plannerId: string;
+    title: string;
+    description?: string;
+
+    // Route
+    origin: {
+        address: string;
+        city: string;
+        coordinates: { lat: number; lng: number };
+    };
+    destination: {
+        address: string;
+        city: string;
+        coordinates: { lat: number; lng: number };
+    };
+    waypoints?: Array<{
+        address: string;
+        stopDuration?: number; // minutes
+    }>;
+
+    // Schedule
+    departureDate: string;
+    departureTime: string;
+    returnDate?: string;
+    isRoundTrip: boolean;
+
+    // Requirements
+    passengerCount: number;
+    luggageCount: number;
+    cabTypePreference?: string[];
+    specialRequirements?: string[];
+
+    // Budget
+    budgetMin?: number;
+    budgetMax?: number;
+
+    // Status
+    status: 'draft' | 'submitted' | 'offers_received' | 'negotiating' | 'confirmed' | 'cancelled';
+    offersCount: number;
+
+    createdAt: string;
+    updatedAt: string;
+    expiresAt: string;
 }
 
-export interface DashboardStats {
-  fleet: {
-    totalCabs: number;
-    availableCabs: number;
-    rentedCabs: number;
-    maintenanceCabs: number;
-    utilizationRate: number;
-  };
-  drivers: {
-    totalDrivers: number;
-    activeDrivers: number;
-    inactiveDrivers: number;
-  };
-  bookings: {
-    totalBookings: number;
-    activeBookings: number;
-    completedBookings: number;
-    pendingBookings: number;
-  };
-  revenue: {
-    totalRevenue: number;
-    paidRevenue: number;
-    pendingRevenue: number;
-    overdueInvoices: number;
-    collectionRate: number;
-  };
+export interface TripPlanOffer {
+    id: string;
+    requestId: string;
+    providerId: string;
+    providerType: 'driver' | 'cab_owner' | 'agency';
+    providerName: string;
+    providerRating: number;
+
+    // Vehicle
+    cabDetails: {
+        make: string;
+        model: string;
+        type: string;
+        seats: number;
+        features: string[];
+        images: string[];
+    };
+
+    // Driver (if included)
+    driverIncluded: boolean;
+    driverDetails?: {
+        name: string;
+        experience: number;
+        rating: number;
+        languages: string[];
+    };
+
+    // Pricing
+    basePrice: number;
+    perKmRate: number;
+    driverAllowance?: number;
+    tollsIncluded: boolean;
+    estimatedTolls?: number;
+    totalPrice: number;
+
+    // Terms
+    cancellationPolicy: string;
+    paymentTerms: string;
+    validUntil: string;
+
+    status: 'pending' | 'negotiating' | 'accepted' | 'rejected' | 'expired';
+    createdAt: string;
 }
