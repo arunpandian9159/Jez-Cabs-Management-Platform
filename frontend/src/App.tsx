@@ -4,7 +4,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute, PublicOnlyRoute } from './components/ProtectedRoute';
 import { PublicLayout, CustomerLayout, DriverLayout, CabOwnerLayout } from './components/layout';
 import { Home, Login, Register } from './pages/public';
-import { CustomerDashboard, LocationEntry, CabSelection, DriverSearch, LiveTracking, TripComplete, BrowseCabs, ActiveRentals, PlanTrip, TripHistory, Payments, Disputes } from './pages/customer';
+import { CustomerDashboard, LocationEntry, CabSelection, DriverSearch, LiveTracking, TripComplete, BrowseCabs, ActiveRentals, PlanTrip, TripHistory, Payments, Disputes, EmergencyContacts, SafetyCenter, TripExchange, PostTrip, ShareRide, ExchangeHistory } from './pages/customer';
 import { DriverDashboard, ActiveTrip, TripHistory as DriverTripHistory, Earnings, DriverProfile, DriverSettings } from './pages/driver';
 import { OwnerDashboard, ManageCabs, ManageDrivers, OwnerEarnings, OwnerSettings, Contracts } from './pages/owner';
 import { ROUTES } from './lib/constants';
@@ -62,6 +62,12 @@ function App() {
                                 <Route path="/customer/trips/plan" element={<PlanTrip />} />
                                 <Route path={ROUTES.CUSTOMER.PAYMENTS} element={<Payments />} />
                                 <Route path={ROUTES.CUSTOMER.DISPUTES} element={<Disputes />} />
+                                <Route path="/customer/safety" element={<SafetyCenter />} />
+                                <Route path="/customer/safety/contacts" element={<EmergencyContacts />} />
+                                <Route path="/customer/safety/share" element={<ShareRide />} />
+                                <Route path="/customer/community" element={<TripExchange />} />
+                                <Route path="/customer/community/post" element={<PostTrip />} />
+                                <Route path="/customer/community/history" element={<ExchangeHistory />} />
                                 <Route path={ROUTES.CUSTOMER.PROFILE} element={<PlaceholderPage title="Profile" />} />
                             </Route>
                         </Route>

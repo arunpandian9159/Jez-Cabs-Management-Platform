@@ -8,3 +8,5 @@ export { EmergencyContacts } from './EmergencyContacts';
 export { SafetyCenter } from './SafetyCenter';
 export { TripExchange } from './TripExchange';
 export { PostTrip } from './PostTrip';
+export { ShareRide } from './ShareRide';
+export { ExchangeHistory } from './ExchangeHistory';
