@@ -32,21 +32,30 @@ CMD ["/bin/sh", "/usr/local/bin/start.sh"]
 # Production build stage
 FROM node:20-alpine AS build
 
+# Install dependencies for native modules (bcrypt needs these)
+RUN apk add --no-cache python3 make g++
+
 WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm ci --only=production && npm cache clean --force
+# Install ALL dependencies (including devDependencies for building)
+RUN npm ci --legacy-peer-deps
 
 COPY . .
 
+# Build the application
 RUN npm run build
+
+# Prune devDependencies after build
+RUN npm prune --production
 
 # Production stage
 FROM node:20-alpine AS production
 
 WORKDIR /app
 
+# Copy only what's needed for production
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/package*.json ./
@@ -54,3 +63,4 @@ COPY --from=build /app/package*.json ./
 EXPOSE 3000
 
 CMD ["node", "dist/main"]
+
