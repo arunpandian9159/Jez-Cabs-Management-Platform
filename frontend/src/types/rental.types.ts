@@ -1,4 +1,4 @@
-import type { LatLng, Location, Cab } from './booking.types';
+import type { Location, Cab } from './booking.types';
 
 // Rental types
 export type RentalType = 'with_driver' | 'self_drive';
