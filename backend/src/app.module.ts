@@ -42,9 +42,7 @@ import { HealthModule } from './health/health.module';
     // MongoDB Database
     MongooseModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        uri: configService.get('mongodb.uri'),
-      }),
+      useFactory: (configService: ConfigService) => ({ uri: configService.get('mongodb.uri'), }),
     }),
 
     // Event Emitter for event-driven architecture
