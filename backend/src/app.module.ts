@@ -19,6 +19,7 @@ import { TelematicsModule } from './modules/telematics/telematics.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { NotificationModule } from './modules/notification/notification.module';
 import { SupabaseModule } from './common/supabase.module';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -67,6 +68,7 @@ import { SupabaseModule } from './common/supabase.module';
     TelematicsModule,
     AnalyticsModule,
     NotificationModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

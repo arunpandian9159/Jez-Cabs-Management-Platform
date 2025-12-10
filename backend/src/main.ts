@@ -18,10 +18,15 @@ async function bootstrap() {
     defaultVersion: '1',
   });
 
-  // CORS
+  // CORS - Support multiple origins for development and production
+  const corsOrigins = configService.get('CORS_ORIGIN', 'http://localhost:5173');
+  const origins = corsOrigins.split(',').map((origin: string) => origin.trim());
+
   app.enableCors({
-    origin: configService.get('CORS_ORIGIN', 'http://localhost:5173'),
-    credentials: configService.get('CORS_CREDENTIALS', true),
+    origin: origins.length === 1 ? origins[0] : origins,
+    credentials: configService.get('CORS_CREDENTIALS', 'true') === 'true',
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   });
 
   // Global validation pipe
