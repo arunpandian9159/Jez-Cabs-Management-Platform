@@ -1,5 +1,5 @@
 import { forwardRef, InputHTMLAttributes, useState } from 'react';
-import { cva, type VariantProps } from 'class-variance-authority';
+import { cva } from 'class-variance-authority';
 import { cn } from '../../lib/utils';
 import { Eye, EyeOff, AlertCircle } from 'lucide-react';
 
@@ -29,8 +29,9 @@ const inputVariants = cva(
 );
 
 export interface InputProps
-    extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>,
-    VariantProps<typeof inputVariants> {
+    extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'prefix'> {
+    variant?: 'default' | 'error' | 'success' | null;
+    inputSize?: 'sm' | 'md' | 'lg' | null;
     label?: string;
     error?: string;
     hint?: string;
