@@ -1,0 +1,402 @@
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import {
+    FileText,
+    Plus,
+    Search,
+    CheckCircle,
+    AlertCircle,
+    Download,
+    Eye,
+    MoreVertical,
+    Calendar,
+    User,
+    Car,
+} from 'lucide-react';
+import { Button } from '../../components/ui/Button';
+import { Card } from '../../components/ui/Card';
+import { Badge } from '../../components/ui/Badge';
+import { Input } from '../../components/ui/Input';
+import { Select } from '../../components/ui/Select';
+import { Modal } from '../../components/ui/Modal';
+import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
+import { formatCurrency, formatDate } from '../../lib/utils';
+
+// Mock contracts data
+const contracts = [
+    {
+        id: 'c1',
+        type: 'driver',
+        title: 'Driver Employment Contract',
+        partyName: 'Rajesh Kumar',
+        vehicleAssigned: 'KA 01 AB 1234',
+        startDate: '2024-03-15',
+        endDate: '2025-03-14',
+        status: 'active',
+        commission: 75,
+        monthlyTarget: 50000,
+        documents: ['agreement.pdf', 'id_proof.pdf'],
+    },
+    {
+        id: 'c2',
+        type: 'driver',
+        title: 'Driver Employment Contract',
+        partyName: 'Suresh Menon',
+        vehicleAssigned: 'KA 01 CD 5678',
+        startDate: '2024-06-01',
+        endDate: '2025-05-31',
+        status: 'active',
+        commission: 70,
+        monthlyTarget: 45000,
+        documents: ['agreement.pdf'],
+    },
+    {
+        id: 'c3',
+        type: 'driver',
+        title: 'Driver Employment Contract',
+        partyName: 'Mahesh Rao',
+        vehicleAssigned: 'KA 09 GH 3456',
+        startDate: '2024-08-01',
+        endDate: '2025-07-31',
+        status: 'expiring',
+        commission: 72,
+        monthlyTarget: 48000,
+        documents: ['agreement.pdf', 'id_proof.pdf', 'license.pdf'],
+    },
+    {
+        id: 'c4',
+        type: 'platform',
+        title: 'Platform Partnership Agreement',
+        partyName: 'Jez Cabs Platform',
+        vehicleAssigned: 'All Vehicles',
+        startDate: '2024-01-01',
+        endDate: '2024-12-31',
+        status: 'expired',
+        commission: 15,
+        monthlyTarget: 0,
+        documents: ['platform_agreement.pdf'],
+    },
+    {
+        id: 'c5',
+        type: 'insurance',
+        title: 'Fleet Insurance Policy',
+        partyName: 'National Insurance Co.',
+        vehicleAssigned: 'All Vehicles',
+        startDate: '2024-06-01',
+        endDate: '2025-05-31',
+        status: 'active',
+        premium: 120000,
+        documents: ['insurance_policy.pdf', 'coverage_details.pdf'],
+    },
+];
+
+export function Contracts() {
+    const [activeTab, setActiveTab] = useState('all');
+    const [searchQuery, setSearchQuery] = useState('');
+    const [statusFilter, setStatusFilter] = useState('all');
+    const [selectedContract, setSelectedContract] = useState<typeof contracts[0] | null>(null);
+    const [showNewContractModal, setShowNewContractModal] = useState(false);
+
+    const filteredContracts = contracts.filter((contract) => {
+        const matchesSearch = contract.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            contract.partyName.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesStatus = statusFilter === 'all' || contract.status === statusFilter;
+        const matchesTab = activeTab === 'all' || contract.type === activeTab;
+        return matchesSearch && matchesStatus && matchesTab;
+    });
+
+    const getStatusBadge = (status: string) => {
+        switch (status) {
+            case 'active':
+                return <Badge variant="success">Active</Badge>;
+            case 'expiring':
+                return <Badge variant="warning">Expiring Soon</Badge>;
+            case 'expired':
+                return <Badge variant="error">Expired</Badge>;
+            case 'pending':
+                return <Badge variant="primary">Pending</Badge>;
+            default:
+                return null;
+        }
+    };
+
+    const activeContracts = contracts.filter(c => c.status === 'active').length;
+    const expiringContracts = contracts.filter(c => c.status === 'expiring').length;
+    const expiredContracts = contracts.filter(c => c.status === 'expired').length;
+
+    return (
+        <div className="space-y-6">
+            {/* Header */}
+            <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex items-center justify-between"
+            >
+                <div>
+                    <h1 className="text-2xl font-bold text-gray-900 mb-1">Contracts</h1>
+                    <p className="text-gray-500">Manage driver agreements and partnerships</p>
+                </div>
+                <Button leftIcon={<Plus className="w-5 h-5" />} onClick={() => setShowNewContractModal(true)}>
+                    New Contract
+                </Button>
+            </motion.div>
+
+            {/* Stats */}
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="grid grid-cols-3 gap-4"
+            >
+                <Card padding="md" className="text-center">
+                    <div className="flex items-center justify-center gap-2 mb-1">
+                        <CheckCircle className="w-5 h-5 text-success-600" />
+                        <span className="text-2xl font-bold text-gray-900">{activeContracts}</span>
+                    </div>
+                    <p className="text-sm text-gray-500">Active Contracts</p>
+                </Card>
+                <Card padding="md" className="text-center">
+                    <div className="flex items-center justify-center gap-2 mb-1">
+                        <AlertCircle className="w-5 h-5 text-warning-600" />
+                        <span className="text-2xl font-bold text-warning-600">{expiringContracts}</span>
+                    </div>
+                    <p className="text-sm text-gray-500">Expiring Soon</p>
+                </Card>
+                <Card padding="md" className="text-center">
+                    <div className="flex items-center justify-center gap-2 mb-1">
+                        <AlertCircle className="w-5 h-5 text-error-600" />
+                        <span className="text-2xl font-bold text-error-600">{expiredContracts}</span>
+                    </div>
+                    <p className="text-sm text-gray-500">Expired</p>
+                </Card>
+            </motion.div>
+
+            {/* Filters */}
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+            >
+                <TabsRoot value={activeTab} onValueChange={setActiveTab}>
+                    <div className="flex items-center justify-between mb-4">
+                        <TabsList>
+                            <TabsTrigger value="all">All ({contracts.length})</TabsTrigger>
+                            <TabsTrigger value="driver">Driver ({contracts.filter(c => c.type === 'driver').length})</TabsTrigger>
+                            <TabsTrigger value="platform">Platform ({contracts.filter(c => c.type === 'platform').length})</TabsTrigger>
+                            <TabsTrigger value="insurance">Insurance ({contracts.filter(c => c.type === 'insurance').length})</TabsTrigger>
+                        </TabsList>
+
+                        <div className="flex gap-3">
+                            <Input
+                                placeholder="Search contracts..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                prefix={<Search className="w-4 h-4" />}
+                                className="w-64"
+                            />
+                            <Select
+                                options={[
+                                    { value: 'all', label: 'All Status' },
+                                    { value: 'active', label: 'Active' },
+                                    { value: 'expiring', label: 'Expiring' },
+                                    { value: 'expired', label: 'Expired' },
+                                ]}
+                                value={statusFilter}
+                                onValueChange={setStatusFilter}
+                            />
+                        </div>
+                    </div>
+
+                    <TabsContent value={activeTab}>
+                        <div className="space-y-3">
+                            {filteredContracts.map((contract, index) => (
+                                <motion.div
+                                    key={contract.id}
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: index * 0.05 }}
+                                >
+                                    <Card padding="md" interactive onClick={() => setSelectedContract(contract)}>
+                                        <div className="flex items-center gap-4">
+                                            <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${contract.type === 'driver' ? 'bg-primary-100' :
+                                                contract.type === 'platform' ? 'bg-accent-100' :
+                                                    'bg-success-100'
+                                                }`}>
+                                                {contract.type === 'driver' ? (
+                                                    <User className="w-6 h-6 text-primary-600" />
+                                                ) : contract.type === 'platform' ? (
+                                                    <FileText className="w-6 h-6 text-accent-600" />
+                                                ) : (
+                                                    <Car className="w-6 h-6 text-success-600" />
+                                                )}
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <p className="font-medium text-gray-900">{contract.title}</p>
+                                                    {getStatusBadge(contract.status)}
+                                                </div>
+                                                <div className="flex items-center gap-3 text-sm text-gray-500">
+                                                    <span>{contract.partyName}</span>
+                                                    <span>•</span>
+                                                    <span>{contract.vehicleAssigned}</span>
+                                                </div>
+                                            </div>
+                                            <div className="text-right">
+                                                <div className="flex items-center gap-1 text-sm text-gray-500 mb-1">
+                                                    <Calendar className="w-3 h-3" />
+                                                    <span>{formatDate(contract.startDate)} - {formatDate(contract.endDate)}</span>
+                                                </div>
+                                                {contract.commission && (
+                                                    <p className="text-sm font-medium text-gray-900">
+                                                        {contract.commission}% commission
+                                                    </p>
+                                                )}
+                                            </div>
+                                            <button className="p-2 hover:bg-gray-100 rounded-lg">
+                                                <MoreVertical className="w-5 h-5 text-gray-400" />
+                                            </button>
+                                        </div>
+                                    </Card>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </TabsContent>
+                </TabsRoot>
+            </motion.div>
+
+            {/* Contract Details Modal */}
+            <Modal
+                open={!!selectedContract}
+                onOpenChange={() => setSelectedContract(null)}
+                title="Contract Details"
+                size="lg"
+            >
+                {selectedContract && (
+                    <div className="space-y-6">
+                        {/* Header */}
+                        <div className="flex items-start gap-4">
+                            <div className={`w-16 h-16 rounded-lg flex items-center justify-center ${selectedContract.type === 'driver' ? 'bg-primary-100' :
+                                selectedContract.type === 'platform' ? 'bg-accent-100' :
+                                    'bg-success-100'
+                                }`}>
+                                {selectedContract.type === 'driver' ? (
+                                    <User className="w-8 h-8 text-primary-600" />
+                                ) : selectedContract.type === 'platform' ? (
+                                    <FileText className="w-8 h-8 text-accent-600" />
+                                ) : (
+                                    <Car className="w-8 h-8 text-success-600" />
+                                )}
+                            </div>
+                            <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-1">
+                                    <h3 className="text-lg font-semibold text-gray-900">{selectedContract.title}</h3>
+                                    {getStatusBadge(selectedContract.status)}
+                                </div>
+                                <p className="text-gray-500">{selectedContract.partyName}</p>
+                            </div>
+                        </div>
+
+                        {/* Details Grid */}
+                        <div className="grid grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
+                            <div>
+                                <p className="text-sm text-gray-500">Start Date</p>
+                                <p className="font-medium text-gray-900">{formatDate(selectedContract.startDate)}</p>
+                            </div>
+                            <div>
+                                <p className="text-sm text-gray-500">End Date</p>
+                                <p className="font-medium text-gray-900">{formatDate(selectedContract.endDate)}</p>
+                            </div>
+                            <div>
+                                <p className="text-sm text-gray-500">Vehicle Assigned</p>
+                                <p className="font-medium text-gray-900">{selectedContract.vehicleAssigned}</p>
+                            </div>
+                            {selectedContract.commission && (
+                                <div>
+                                    <p className="text-sm text-gray-500">Commission Rate</p>
+                                    <p className="font-medium text-gray-900">{selectedContract.commission}%</p>
+                                </div>
+                            )}
+                            {(selectedContract.monthlyTarget ?? 0) > 0 && (
+                                <div>
+                                    <p className="text-sm text-gray-500">Monthly Target</p>
+                                    <p className="font-medium text-gray-900">{formatCurrency(selectedContract.monthlyTarget ?? 0)}</p>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Documents */}
+                        <div>
+                            <h4 className="font-medium text-gray-900 mb-3">Attached Documents</h4>
+                            <div className="space-y-2">
+                                {selectedContract.documents.map((doc) => (
+                                    <div key={doc} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                        <div className="flex items-center gap-3">
+                                            <FileText className="w-5 h-5 text-gray-400" />
+                                            <span className="text-gray-900">{doc}</span>
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <Button variant="ghost" size="sm" leftIcon={<Eye className="w-4 h-4" />}>
+                                                View
+                                            </Button>
+                                            <Button variant="ghost" size="sm" leftIcon={<Download className="w-4 h-4" />}>
+                                                Download
+                                            </Button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Actions */}
+                        <div className="flex gap-3 pt-4 border-t border-gray-100">
+                            <Button variant="outline" fullWidth>
+                                Edit Contract
+                            </Button>
+                            {selectedContract.status === 'expiring' && (
+                                <Button fullWidth>
+                                    Renew Contract
+                                </Button>
+                            )}
+                            {selectedContract.status === 'active' && (
+                                <Button variant="danger" fullWidth>
+                                    Terminate Contract
+                                </Button>
+                            )}
+                        </div>
+                    </div>
+                )}
+            </Modal>
+
+            {/* New Contract Modal */}
+            <Modal
+                open={showNewContractModal}
+                onOpenChange={setShowNewContractModal}
+                title="Create New Contract"
+                size="md"
+            >
+                <div className="space-y-4">
+                    <p className="text-gray-500">
+                        Contract creation form will be implemented here with fields for:
+                    </p>
+                    <ul className="list-disc list-inside text-gray-600 space-y-1">
+                        <li>Contract Type (Driver/Platform/Insurance)</li>
+                        <li>Party Name</li>
+                        <li>Vehicle Assignment</li>
+                        <li>Duration (Start & End Date)</li>
+                        <li>Commission Rate / Premium</li>
+                        <li>Monthly Targets</li>
+                        <li>Document Uploads</li>
+                    </ul>
+                    <div className="flex gap-3 pt-4">
+                        <Button variant="outline" fullWidth onClick={() => setShowNewContractModal(false)}>
+                            Cancel
+                        </Button>
+                        <Button fullWidth onClick={() => setShowNewContractModal(false)}>
+                            Create Contract
+                        </Button>
+                    </div>
+                </div>
+            </Modal>
+        </div>
+    );
+}
