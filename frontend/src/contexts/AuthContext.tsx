@@ -30,65 +30,6 @@ const roleHomePaths: Record<UserRole, string> = {
     support: ROUTES.SUPPORT.DASHBOARD,
 };
 
-// Mock users for development testing (when backend is not available)
-const mockUsers: Record<string, { password: string; user: User }> = {
-    'customer@test.com': {
-        password: 'password',
-        user: {
-            id: 'mock-customer-1',
-            email: 'customer@test.com',
-            firstName: 'Test',
-            lastName: 'Customer',
-            phone: '+91 98765 43210',
-            role: 'customer',
-            isVerified: true,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-        },
-    },
-    'driver@test.com': {
-        password: 'password',
-        user: {
-            id: 'mock-driver-1',
-            email: 'driver@test.com',
-            firstName: 'Test',
-            lastName: 'Driver',
-            phone: '+91 98765 43211',
-            role: 'driver',
-            isVerified: true,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-        },
-    },
-    'owner@test.com': {
-        password: 'password',
-        user: {
-            id: 'mock-owner-1',
-            email: 'owner@test.com',
-            firstName: 'Test',
-            lastName: 'Owner',
-            phone: '+91 98765 43212',
-            role: 'cab_owner',
-            isVerified: true,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-        },
-    },
-    'admin@test.com': {
-        password: 'password',
-        user: {
-            id: 'mock-admin-1',
-            email: 'admin@test.com',
-            firstName: 'Admin',
-            lastName: 'User',
-            phone: '+91 98765 43213',
-            role: 'admin',
-            isVerified: true,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-        },
-    },
-};
 
 export function AuthProvider({ children }: { children: ReactNode }) {
     const navigate = useNavigate();
@@ -150,30 +91,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 isLoading: false,
             });
 
-            // PublicOnlyRoute will automatically redirect to role-specific dashboard
-        } catch {
-            // If API fails, try mock login for development
-            const mockUser = mockUsers[credentials.email];
-            if (mockUser && mockUser.password === credentials.password) {
-                const mockToken = 'mock-token-' + Date.now();
-
-                storage.set(STORAGE_KEYS.AUTH_TOKEN, mockToken);
-                storage.set(STORAGE_KEYS.USER, mockUser.user);
-
-                setState({
-                    user: mockUser.user,
-                    token: mockToken,
-                    isAuthenticated: true,
-                    isLoading: false,
-                });
-
-                // Navigate to role-specific dashboard
-                const homePath = roleHomePaths[mockUser.user.role] || ROUTES.HOME;
-                navigate(homePath);
-            } else {
-                setState((prev) => ({ ...prev, isLoading: false }));
-                throw new Error('Invalid credentials');
-            }
+            // Navigate to role-specific dashboard
+            const homePath = roleHomePaths[response.user.role] || ROUTES.HOME;
+            navigate(homePath);
+        } catch (error) {
+            setState((prev) => ({ ...prev, isLoading: false }));
+            throw error;
         }
     }, [navigate]);
 
@@ -193,13 +116,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 isLoading: false,
             });
 
-            // Navigate to role-specific onboarding or let PublicOnlyRoute redirect to dashboard
+            // Navigate to role-specific onboarding or dashboard
             if (data.role === 'driver') {
                 navigate(ROUTES.DRIVER.ONBOARDING);
             } else if (data.role === 'cab_owner') {
                 navigate(ROUTES.OWNER.CABS_REGISTER);
+            } else {
+                // For customer and trip_planner, navigate to their dashboard
+                const homePath = roleHomePaths[data.role] || ROUTES.HOME;
+                navigate(homePath);
             }
-            // For other roles, PublicOnlyRoute will automatically redirect to dashboard
         } catch (error) {
             setState((prev) => ({ ...prev, isLoading: false }));
             throw error;

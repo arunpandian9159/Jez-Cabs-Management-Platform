@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
 import { storage } from './utils';
-import type { ApiError, ApiResponse } from '../types';
+import type { ApiError } from '../types';
 
 // API base URL from environment
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
@@ -60,42 +60,43 @@ api.interceptors.response.use(
 );
 
 // Helper methods for common HTTP operations
+// Note: Backend returns responses directly (not wrapped in {data: T})
 export const apiClient = {
     async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
-        const response = await api.get<ApiResponse<T>>(url, config);
-        return response.data.data;
+        const response = await api.get<T>(url, config);
+        return response.data;
     },
 
     async post<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
-        const response = await api.post<ApiResponse<T>>(url, data, config);
-        return response.data.data;
+        const response = await api.post<T>(url, data, config);
+        return response.data;
     },
 
     async put<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
-        const response = await api.put<ApiResponse<T>>(url, data, config);
-        return response.data.data;
+        const response = await api.put<T>(url, data, config);
+        return response.data;
     },
 
     async patch<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
-        const response = await api.patch<ApiResponse<T>>(url, data, config);
-        return response.data.data;
+        const response = await api.patch<T>(url, data, config);
+        return response.data;
     },
 
     async delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
-        const response = await api.delete<ApiResponse<T>>(url, config);
-        return response.data.data;
+        const response = await api.delete<T>(url, config);
+        return response.data;
     },
 
     // For file uploads
     async upload<T>(url: string, formData: FormData, config?: AxiosRequestConfig): Promise<T> {
-        const response = await api.post<ApiResponse<T>>(url, formData, {
+        const response = await api.post<T>(url, formData, {
             ...config,
             headers: {
                 ...config?.headers,
                 'Content-Type': 'multipart/form-data',
             },
         });
-        return response.data.data;
+        return response.data;
     },
 };
 
