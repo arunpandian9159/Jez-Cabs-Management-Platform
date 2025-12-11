@@ -31,7 +31,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
                 {label && (
                     <label
                         htmlFor={inputId}
-                        className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                        className="block text-sm font-medium text-gray-700"
                     >
                         {label}
                     </label>
@@ -41,10 +41,10 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
                     id={inputId}
                     rows={rows}
                     className={cn(
-                        'flex w-full rounded-lg border bg-white px-3 py-2 text-sm transition-all duration-200 placeholder:text-gray-400 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-900 resize-y min-h-[80px]',
+                        'flex w-full rounded-lg border bg-white px-3 py-2 text-sm transition-all duration-200 placeholder:text-gray-400 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 resize-y min-h-[80px]',
                         error
                             ? 'border-error-500 focus-visible:border-error-500 focus-visible:ring-2 focus-visible:ring-error-500/20'
-                            : 'border-gray-300 focus-visible:border-primary-500 focus-visible:ring-2 focus-visible:ring-primary-500/20 dark:border-gray-700',
+                            : 'border-gray-300 focus-visible:border-primary-500 focus-visible:ring-2 focus-visible:ring-primary-500/20',
                         className
                     )}
                     {...props}

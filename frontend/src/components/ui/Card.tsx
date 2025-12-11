@@ -7,11 +7,11 @@ const cardVariants = cva(
     {
         variants: {
             variant: {
-                default: 'bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-800',
-                elevated: 'bg-white border-gray-200 shadow-md hover:shadow-lg dark:bg-gray-900 dark:border-gray-800',
-                outline: 'bg-transparent border-gray-300 dark:border-gray-700',
-                ghost: 'bg-gray-50 border-transparent dark:bg-gray-800/50',
-                gradient: 'bg-gradient-to-br from-white to-gray-50 border-gray-200 dark:from-gray-900 dark:to-gray-800 dark:border-gray-700',
+                default: 'bg-white border-gray-200',
+                elevated: 'bg-white border-gray-200 shadow-md hover:shadow-lg',
+                outline: 'bg-transparent border-gray-300',
+                ghost: 'bg-gray-50 border-transparent',
+                gradient: 'bg-gradient-to-br from-white to-gray-50 border-gray-200',
             },
             padding: {
                 none: 'p-0',
@@ -21,7 +21,7 @@ const cardVariants = cva(
                 xl: 'p-8',
             },
             interactive: {
-                true: 'cursor-pointer hover:border-primary-300 hover:shadow-md active:scale-[0.99] dark:hover:border-primary-700',
+                true: 'cursor-pointer hover:border-primary-300 hover:shadow-md active:scale-[0.99]',
                 false: '',
             },
         },
@@ -67,7 +67,7 @@ export const CardTitle = forwardRef<
     <h3
         ref={ref}
         className={cn(
-            'text-lg font-semibold leading-none tracking-tight text-gray-900 dark:text-gray-100',
+            'text-lg font-semibold leading-none tracking-tight text-gray-900',
             className
         )}
         {...props}
@@ -81,7 +81,7 @@ export const CardDescription = forwardRef<
 >(({ className, ...props }, ref) => (
     <p
         ref={ref}
-        className={cn('text-sm text-gray-500 dark:text-gray-400', className)}
+        className={cn('text-sm text-gray-500', className)}
         {...props}
     />
 ));

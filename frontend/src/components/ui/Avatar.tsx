@@ -3,7 +3,7 @@ import { getInitials } from '../../lib/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 const avatarVariants = cva(
-    'relative inline-flex items-center justify-center rounded-full font-medium overflow-hidden bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-300',
+    'relative inline-flex items-center justify-center rounded-full font-medium overflow-hidden bg-gray-200 text-gray-600',
     {
         variants: {
             size: {
@@ -69,7 +69,7 @@ export function Avatar({
             {status && (
                 <span
                     className={cn(
-                        'absolute bottom-0 right-0 block rounded-full ring-2 ring-white dark:ring-gray-900',
+                        'absolute bottom-0 right-0 block rounded-full ring-2 ring-white',
                         statusColors[status],
                         size === 'xs' && 'h-1.5 w-1.5',
                         size === 'sm' && 'h-2 w-2',
@@ -109,14 +109,14 @@ export function AvatarGroup({
                     src={avatar.src}
                     name={avatar.name}
                     size={size}
-                    className="ring-2 ring-white dark:ring-gray-900"
+                    className="ring-2 ring-white"
                 />
             ))}
             {remainingCount > 0 && (
                 <div
                     className={cn(
                         avatarVariants({ size }),
-                        'ring-2 ring-white dark:ring-gray-900 bg-gray-300 dark:bg-gray-600'
+                        'ring-2 ring-white bg-gray-300'
                     )}
                 >
                     +{remainingCount}
