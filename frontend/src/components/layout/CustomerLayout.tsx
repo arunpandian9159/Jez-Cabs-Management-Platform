@@ -62,14 +62,14 @@ export function CustomerLayout() {
             {/* Sidebar */}
             <aside
                 className={cn(
-                    'fixed top-0 left-0 z-50 h-full w-72 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 transition-transform duration-300 lg:translate-x-0',
+                    'fixed top-0 left-0 z-50 h-full w-72 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 transition-transform duration-300 lg:translate-x-0 shadow-xl lg:shadow-none',
                     sidebarOpen ? 'translate-x-0' : '-translate-x-full'
                 )}
             >
                 {/* Logo */}
                 <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200 dark:border-gray-800">
                     <Link to={ROUTES.CUSTOMER.DASHBOARD} className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center">
+                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center shadow-lg">
                             <Car className="w-5 h-5 text-white" />
                         </div>
                         <span className="text-xl font-bold text-gray-900 dark:text-white">
@@ -78,7 +78,7 @@ export function CustomerLayout() {
                     </Link>
                     <button
                         onClick={() => setSidebarOpen(false)}
-                        className="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+                        className="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400"
                     >
                         <X className="w-5 h-5" />
                     </button>
@@ -99,11 +99,11 @@ export function CustomerLayout() {
                                 className={cn(
                                     'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200',
                                     isActive
-                                        ? 'bg-primary-50 text-primary-700 dark:bg-primary-950 dark:text-primary-300'
+                                        ? 'bg-primary-50 text-primary-700 dark:bg-primary-950 dark:text-primary-300 shadow-sm'
                                         : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
                                 )}
                             >
-                                <Icon className={cn('w-5 h-5', isActive && 'text-primary-600')} />
+                                <Icon className={cn('w-5 h-5', isActive ? 'text-primary-600 dark:text-primary-400' : '')} />
                                 {item.label}
                             </Link>
                         );
