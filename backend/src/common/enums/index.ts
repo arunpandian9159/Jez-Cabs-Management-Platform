@@ -2,4 +2,10 @@ export * from './user-role.enum';
 export * from './cab-status.enum';
 export * from './booking-status.enum';
 export * from './invoice-status.enum';
-
+export * from './trip-status.enum';
+export * from './driver-status.enum';
+export * from './cab-type.enum';
+export * from './payment.enum';
+export * from './dispute.enum';
+export * from './rental-status.enum';
+export * from './verification-status.enum';

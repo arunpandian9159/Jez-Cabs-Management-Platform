@@ -1,7 +1,8 @@
 export enum UserRole {
-  OWNER = 'OWNER',
-  MANAGER = 'MANAGER',
-  DRIVER = 'DRIVER',
-  ADMIN = 'ADMIN',
-  STAFF = 'STAFF',
+  CUSTOMER = 'customer',
+  DRIVER = 'driver',
+  CAB_OWNER = 'cab_owner',
+  TRIP_PLANNER = 'trip_planner',
+  ADMIN = 'admin',
+  SUPPORT = 'support',
 }

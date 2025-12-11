@@ -12,11 +12,11 @@ import supabaseConfig from './config/supabase.config';
 import { IamModule } from './modules/iam/iam.module';
 import { CabModule } from './modules/cab/cab.module';
 import { DriverModule } from './modules/driver/driver.module';
-import { BookingModule } from './modules/booking/booking.module';
-import { ChecklistModule } from './modules/checklist/checklist.module';
-import { InvoiceModule } from './modules/invoice/invoice.module';
-import { TelematicsModule } from './modules/telematics/telematics.module';
-import { AnalyticsModule } from './modules/analytics/analytics.module';
+import { TripsModule } from './modules/trips/trips.module';
+import { RentalsModule } from './modules/rentals/rentals.module';
+import { DisputesModule } from './modules/disputes/disputes.module';
+import { SafetyModule } from './modules/safety/safety.module';
+import { CommunityModule } from './modules/community/community.module';
 import { NotificationModule } from './modules/notification/notification.module';
 import { SupabaseModule } from './common/supabase.module';
 import { HealthModule } from './health/health.module';
@@ -60,11 +60,11 @@ import { HealthModule } from './health/health.module';
     IamModule,
     CabModule,
     DriverModule,
-    BookingModule,
-    ChecklistModule,
-    InvoiceModule,
-    TelematicsModule,
-    AnalyticsModule,
+    TripsModule,
+    RentalsModule,
+    DisputesModule,
+    SafetyModule,
+    CommunityModule,
     NotificationModule,
     HealthModule,
   ],

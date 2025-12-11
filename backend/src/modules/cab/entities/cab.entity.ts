@@ -8,32 +8,39 @@ import {
   JoinColumn,
   Index,
 } from 'typeorm';
-import { CabStatus } from '../../../common/enums';
-import { Company } from '../../iam/entities';
+import { CabStatus, CabType } from '../../../common/enums';
+import { User } from '../../iam/entities/user.entity';
 
 @Entity('cabs')
-@Index(['company_id', 'registration_number'], { unique: true })
 export class Cab {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ type: 'uuid' })
-  company_id: string;
+  @Index()
+  owner_id: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
-  make: string | null;
+  @Column({ type: 'uuid', nullable: true })
+  assigned_driver_id: string | null;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
-  model: string | null;
+  @Column({ type: 'varchar', length: 100 })
+  make: string;
+
+  @Column({ type: 'varchar', length: 100 })
+  model: string;
 
   @Column({ type: 'int', nullable: true })
   year: number | null;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
-  registration_number: string | null;
+  @Column({ type: 'varchar', length: 50 })
+  registration_number: string;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
-  vin: string;
+  @Column({
+    type: 'enum',
+    enum: CabType,
+    default: CabType.SEDAN,
+  })
+  cab_type: CabType;
 
   @Column({
     type: 'enum',
@@ -44,37 +51,52 @@ export class Cab {
   status: CabStatus;
 
   @Column({ type: 'varchar', length: 50, nullable: true })
-  color: string;
+  color: string | null;
 
-  @Column({ type: 'int', nullable: true })
+  @Column({ type: 'int', default: 4 })
   seating_capacity: number;
 
   @Column({ type: 'varchar', length: 50, nullable: true })
-  fuel_type: string;
+  fuel_type: string | null;
 
-  @Column({ type: 'date', nullable: true })
-  insurance_expiry: Date;
-
-  @Column({ type: 'varchar', length: 100, nullable: true })
-  insurance_provider: string;
-
-  @Column({ type: 'varchar', length: 100, nullable: true })
-  insurance_policy_number: string;
-
-  @Column({ type: 'date', nullable: true })
-  registration_expiry: Date;
-
-  @Column({ type: 'varchar', length: 100, nullable: true })
-  gps_device_id: string;
-
-  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
-  daily_rental_rate: number;
-
-  @Column({ type: 'int', default: 0 })
-  current_mileage: number;
+  @Column({ type: 'boolean', default: true })
+  ac_available: boolean;
 
   @Column({ type: 'text', nullable: true })
-  notes: string;
+  image_url: string | null;
+
+  @Column({ type: 'date', nullable: true })
+  insurance_expiry: Date | null;
+
+  @Column({ type: 'date', nullable: true })
+  registration_expiry: Date | null;
+
+  @Column({ type: 'date', nullable: true })
+  fitness_expiry: Date | null;
+
+  @Column({ type: 'date', nullable: true })
+  permit_expiry: Date | null;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 50 })
+  base_fare: number;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 12 })
+  per_km_rate: number;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 2 })
+  per_min_rate: number;
+
+  @Column({ type: 'decimal', precision: 3, scale: 2, default: 5.0 })
+  rating: number;
+
+  @Column({ type: 'int', default: 0 })
+  total_trips: number;
+
+  @Column({ type: 'decimal', precision: 10, scale: 8, nullable: true })
+  current_location_lat: number | null;
+
+  @Column({ type: 'decimal', precision: 11, scale: 8, nullable: true })
+  current_location_lng: number | null;
 
   @CreateDateColumn()
   created_at: Date;
@@ -83,7 +105,11 @@ export class Cab {
   updated_at: Date;
 
   // Relations
-  @ManyToOne(() => Company, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'company_id' })
-  company: Company;
+  @ManyToOne(() => User, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'owner_id' })
+  owner: User;
+
+  @ManyToOne(() => User, { nullable: true })
+  @JoinColumn({ name: 'assigned_driver_id' })
+  assigned_driver: User | null;
 }
