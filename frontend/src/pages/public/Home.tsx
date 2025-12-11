@@ -458,46 +458,147 @@ export function Home() {
             </section>
 
             {/* Services Section */}
-            <section id="services" className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
-                <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-16">
-                        <h2 className="text-3xl sm:text-4xl font-bold mb-4" style={{ color: '#0f172a' }}>
+            <section id="services" className="py-24 px-4 sm:px-6 lg:px-8 bg-white relative overflow-hidden">
+                {/* Subtle Background Pattern */}
+                <div
+                    className="absolute inset-0 opacity-[0.015]"
+                    style={{
+                        backgroundImage: `
+                            radial-gradient(circle at 2px 2px, #2563eb 1px, transparent 0)
+                        `,
+                        backgroundSize: '40px 40px'
+                    }}
+                />
+
+                <div className="max-w-7xl mx-auto relative z-10">
+                    {/* Section Header with Animation */}
+                    <div className="text-center mb-20">
+                        <div
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold mb-6 animate-fade-in-down"
+                            style={{
+                                background: 'linear-gradient(135deg, #dbeafe 0%, #ccfbf1 100%)',
+                                color: '#1d4ed8',
+                                border: '1px solid rgba(59, 130, 246, 0.2)',
+                            }}
+                        >
+                            <Zap className="w-4 h-4" />
+                            What We Offer
+                        </div>
+                        <h2
+                            className="text-4xl sm:text-5xl font-bold mb-6 animate-fade-in-up"
+                            style={{
+                                color: '#0f172a',
+                                animationDelay: '0.1s',
+                                animationFillMode: 'both'
+                            }}
+                        >
                             Our Services
                         </h2>
-                        <p className="text-lg max-w-2xl mx-auto" style={{ color: '#475569' }}>
-                            Whether you need a quick ride or want to rent a cab for days, we've got you covered
+                        <p
+                            className="text-lg sm:text-xl max-w-3xl mx-auto leading-relaxed animate-fade-in-up"
+                            style={{
+                                color: '#475569',
+                                animationDelay: '0.2s',
+                                animationFillMode: 'both'
+                            }}
+                        >
+                            Whether you need a quick ride or want to rent a cab for days, we've got you covered with premium services tailored to your needs
                         </p>
                     </div>
 
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    {/* Services Grid with Staggered Animation */}
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
                         {services.map((service, index) => {
                             const Icon = service.icon;
                             return (
                                 <div
                                     key={index}
-                                    className="group p-6 rounded-2xl border transition-all duration-300 bg-white hover:shadow-xl"
+                                    className="group relative animate-fade-in-up"
                                     style={{
-                                        borderColor: '#e2e8f0'
-                                    }}
-                                    onMouseEnter={(e) => {
-                                        e.currentTarget.style.borderColor = 'transparent';
-                                        e.currentTarget.style.background = 'linear-gradient(to bottom right, #eff6ff, #f0fdfa)';
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        e.currentTarget.style.borderColor = '#e2e8f0';
-                                        e.currentTarget.style.background = '#ffffff';
+                                        animationDelay: `${0.3 + index * 0.1}s`,
+                                        animationFillMode: 'both'
                                     }}
                                 >
+                                    {/* Card */}
                                     <div
-                                        className={`w-14 h-14 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform bg-gradient-to-br ${service.color}`}
+                                        className="relative p-8 rounded-3xl border transition-all duration-500 bg-white cursor-pointer h-full"
+                                        style={{
+                                            borderColor: '#e2e8f0',
+                                            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.borderColor = 'transparent';
+                                            e.currentTarget.style.background = 'linear-gradient(135deg, #eff6ff 0%, #f0fdfa 100%)';
+                                            e.currentTarget.style.transform = 'translateY(-8px)';
+                                            e.currentTarget.style.boxShadow = '0 20px 40px rgba(37, 99, 235, 0.15), 0 0 0 1px rgba(37, 99, 235, 0.1)';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.borderColor = '#e2e8f0';
+                                            e.currentTarget.style.background = '#ffffff';
+                                            e.currentTarget.style.transform = 'translateY(0)';
+                                            e.currentTarget.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.05)';
+                                        }}
                                     >
-                                        <Icon className="w-7 h-7 text-white" />
-                                    </div>
+                                        {/* Gradient Overlay on Hover */}
+                                        <div
+                                            className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                                            style={{
+                                                background: `linear-gradient(135deg, ${service.color.includes('2563eb') ? 'rgba(37, 99, 235, 0.03)' : 'rgba(13, 148, 136, 0.03)'} 0%, transparent 100%)`
+                                            }}
+                                        />
 
-                                    <h3 className="text-xl font-semibold mb-3" style={{ color: '#0f172a' }}>
-                                        {service.title}
-                                    </h3>
-                                    <p style={{ color: '#475569' }}>{service.description}</p>
+                                        {/* Icon Container */}
+                                        <div className="relative mb-6">
+                                            <div
+                                                className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500 bg-gradient-to-br ${service.color} group-hover:scale-110 group-hover:rotate-3`}
+                                                style={{
+                                                    boxShadow: '0 4px 15px rgba(37, 99, 235, 0.2)'
+                                                }}
+                                            >
+                                                <Icon className="w-8 h-8 text-white group-hover:scale-110 transition-transform duration-300" />
+                                            </div>
+                                            {/* Glow Effect */}
+                                            <div
+                                                className={`absolute inset-0 w-16 h-16 rounded-2xl bg-gradient-to-br ${service.color} opacity-0 group-hover:opacity-30 blur-xl transition-opacity duration-500`}
+                                            />
+                                        </div>
+
+                                        {/* Content */}
+                                        <div className="relative">
+                                            <h3
+                                                className="text-xl font-bold mb-3 transition-all duration-300"
+                                                style={{
+                                                    color: '#0f172a',
+                                                }}
+                                                onMouseEnter={(e) => {
+                                                    e.currentTarget.style.backgroundImage = 'linear-gradient(135deg, #2563eb, #0d9488)';
+                                                    e.currentTarget.style.webkitBackgroundClip = 'text';
+                                                    e.currentTarget.style.backgroundClip = 'text';
+                                                    e.currentTarget.style.webkitTextFillColor = 'transparent';
+                                                    e.currentTarget.style.color = 'transparent';
+                                                }}
+                                                onMouseLeave={(e) => {
+                                                    e.currentTarget.style.backgroundImage = 'none';
+                                                    e.currentTarget.style.webkitTextFillColor = '#0f172a';
+                                                    e.currentTarget.style.color = '#0f172a';
+                                                }}
+                                            >
+                                                {service.title}
+                                            </h3>
+                                            <p
+                                                className="leading-relaxed transition-colors duration-300"
+                                                style={{ color: '#475569' }}
+                                            >
+                                                {service.description}
+                                            </p>
+                                        </div>
+
+                                        {/* Hover Arrow Indicator */}
+                                        <div className="mt-6 flex items-center gap-2 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                                            <span style={{ color: '#2563eb' }}>Learn more</span>
+                                            <ArrowRight className="w-4 h-4" style={{ color: '#2563eb' }} />
+                                        </div>
+                                    </div>
                                 </div>
                             );
                         })}
@@ -508,82 +609,250 @@ export function Home() {
             {/* How It Works Section */}
             <section
                 id="how-it-works"
-                className="py-20 px-4 sm:px-6 lg:px-8"
+                className="py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden"
                 style={{
-                    background: 'linear-gradient(to bottom right, #eff6ff, #ffffff, #f0fdfa)'
+                    background: 'linear-gradient(135deg, #eff6ff 0%, #ffffff 50%, #f0fdfa 100%)'
                 }}
             >
-                <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-16">
-                        <h2 className="text-3xl sm:text-4xl font-bold mb-4" style={{ color: '#0f172a' }}>
+                {/* Animated Background Orbs */}
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                    <div
+                        className="absolute top-20 left-10 w-96 h-96 rounded-full opacity-20 animate-float"
+                        style={{
+                            background: 'radial-gradient(circle, #bfdbfe 0%, transparent 70%)',
+                            animationDuration: '12s'
+                        }}
+                    />
+                    <div
+                        className="absolute bottom-20 right-10 w-80 h-80 rounded-full opacity-15 animate-float"
+                        style={{
+                            background: 'radial-gradient(circle, #99f6e4 0%, transparent 70%)',
+                            animationDuration: '10s',
+                            animationDelay: '2s'
+                        }}
+                    />
+                </div>
+
+                <div className="max-w-7xl mx-auto relative z-10">
+                    {/* Section Header */}
+                    <div className="text-center mb-20">
+                        <div
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold mb-6 animate-fade-in-down"
+                            style={{
+                                background: 'linear-gradient(135deg, #dbeafe 0%, #ccfbf1 100%)',
+                                color: '#1d4ed8',
+                                border: '1px solid rgba(59, 130, 246, 0.2)',
+                            }}
+                        >
+                            <Map className="w-4 h-4" />
+                            Simple Process
+                        </div>
+                        <h2
+                            className="text-4xl sm:text-5xl font-bold mb-6 animate-fade-in-up"
+                            style={{
+                                color: '#0f172a',
+                                animationDelay: '0.1s',
+                                animationFillMode: 'both'
+                            }}
+                        >
                             How It Works
                         </h2>
-                        <p className="text-lg max-w-2xl mx-auto" style={{ color: '#475569' }}>
-                            Getting started is simple. Follow these easy steps to book your ride
+                        <p
+                            className="text-lg sm:text-xl max-w-3xl mx-auto leading-relaxed animate-fade-in-up"
+                            style={{
+                                color: '#475569',
+                                animationDelay: '0.2s',
+                                animationFillMode: 'both'
+                            }}
+                        >
+                            Getting started is simple. Follow these easy steps to book your ride and experience seamless travel
                         </p>
                     </div>
 
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    {/* Steps Grid */}
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6 mb-16">
                         {steps.map((step, index) => {
                             const Icon = step.icon;
                             return (
-                                <div key={index} className="relative">
-                                    {/* Connector Line */}
+                                <div
+                                    key={index}
+                                    className="relative animate-fade-in-up"
+                                    style={{
+                                        animationDelay: `${0.3 + index * 0.1}s`,
+                                        animationFillMode: 'both'
+                                    }}
+                                >
+                                    {/* Animated Connector Line */}
                                     {index < steps.length - 1 && (
-                                        <div
-                                            className="hidden lg:block absolute top-20 left-full w-full h-0.5 z-0"
-                                            style={{
-                                                background: 'linear-gradient(to right, #bfdbfe, #99f6e4)'
-                                            }}
-                                        />
+                                        <div className="hidden lg:block absolute top-24 left-full w-full h-1 z-0 overflow-hidden">
+                                            {/* Base Line */}
+                                            <div
+                                                className="absolute inset-0"
+                                                style={{
+                                                    background: 'linear-gradient(to right, #e0f2fe, #ccfbf1)',
+                                                    opacity: 0.3
+                                                }}
+                                            />
+                                            {/* Animated Progress Line */}
+                                            <div
+                                                className="absolute inset-0 animate-progress-indeterminate"
+                                                style={{
+                                                    background: 'linear-gradient(to right, #2563eb, #0d9488)',
+                                                    width: '25%',
+                                                    animationDelay: `${index * 0.5}s`
+                                                }}
+                                            />
+                                        </div>
                                     )}
 
+                                    {/* Step Card */}
                                     <div
-                                        className="relative p-6 rounded-2xl border hover:shadow-xl transition-all duration-300 z-10"
+                                        className="group relative p-8 rounded-3xl border transition-all duration-500 z-10 cursor-pointer h-full"
                                         style={{
                                             backgroundColor: '#ffffff',
-                                            borderColor: '#e2e8f0'
+                                            borderColor: '#e2e8f0',
+                                            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.transform = 'translateY(-8px) scale(1.02)';
+                                            e.currentTarget.style.borderColor = 'transparent';
+                                            e.currentTarget.style.background = 'linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%)';
+                                            e.currentTarget.style.boxShadow = '0 20px 40px rgba(37, 99, 235, 0.15), 0 0 0 1px rgba(37, 99, 235, 0.1)';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                                            e.currentTarget.style.borderColor = '#e2e8f0';
+                                            e.currentTarget.style.background = '#ffffff';
+                                            e.currentTarget.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.05)';
                                         }}
                                     >
-                                        <div
-                                            className="absolute -top-4 -right-4 w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm"
-                                            style={{
-                                                background: 'linear-gradient(to bottom right, #2563eb, #0d9488)'
-                                            }}
-                                        >
-                                            {step.number}
+                                        {/* Step Number Badge */}
+                                        <div className="absolute -top-5 -right-5 z-20">
+                                            <div
+                                                className="relative w-14 h-14 rounded-full flex items-center justify-center text-white font-bold text-lg transition-all duration-300 group-hover:scale-110"
+                                                style={{
+                                                    background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)',
+                                                    boxShadow: '0 4px 15px rgba(37, 99, 235, 0.4)'
+                                                }}
+                                            >
+                                                {step.number}
+                                            </div>
                                         </div>
 
-                                        <div
-                                            className="w-14 h-14 rounded-xl flex items-center justify-center mb-4"
-                                            style={{
-                                                background: 'linear-gradient(to bottom right, #dbeafe, #ccfbf1)'
-                                            }}
-                                        >
-                                            <Icon className="w-7 h-7" style={{ color: '#1d4ed8' }} />
+                                        {/* Icon Container */}
+                                        <div className="relative mb-6">
+                                            <div
+                                                className="w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-3"
+                                                style={{
+                                                    background: 'linear-gradient(135deg, #dbeafe 0%, #ccfbf1 100%)',
+                                                    boxShadow: '0 4px 12px rgba(37, 99, 235, 0.1)'
+                                                }}
+                                            >
+                                                <Icon
+                                                    className="w-8 h-8 transition-all duration-300 group-hover:scale-110"
+                                                    style={{ color: '#1d4ed8' }}
+                                                />
+                                            </div>
+                                            {/* Icon Glow */}
+                                            <div
+                                                className="absolute inset-0 w-16 h-16 rounded-2xl opacity-0 group-hover:opacity-40 blur-xl transition-opacity duration-500"
+                                                style={{
+                                                    background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)',
+                                                }}
+                                            />
                                         </div>
 
-                                        <h3 className="text-xl font-semibold mb-3" style={{ color: '#0f172a' }}>
-                                            {step.title}
-                                        </h3>
-                                        <p style={{ color: '#475569' }}>{step.description}</p>
+                                        {/* Content */}
+                                        <div className="relative">
+                                            <h3
+                                                className="text-xl font-bold mb-3 transition-all duration-300"
+                                                style={{
+                                                    color: '#0f172a',
+                                                }}
+                                                onMouseEnter={(e) => {
+                                                    e.currentTarget.style.backgroundImage = 'linear-gradient(135deg, #2563eb, #0d9488)';
+                                                    e.currentTarget.style.webkitBackgroundClip = 'text';
+                                                    e.currentTarget.style.backgroundClip = 'text';
+                                                    e.currentTarget.style.webkitTextFillColor = 'transparent';
+                                                    e.currentTarget.style.color = 'transparent';
+                                                }}
+                                                onMouseLeave={(e) => {
+                                                    e.currentTarget.style.backgroundImage = 'none';
+                                                    e.currentTarget.style.webkitTextFillColor = '#0f172a';
+                                                    e.currentTarget.style.color = '#0f172a';
+                                                }}
+                                            >
+                                                {step.title}
+                                            </h3>
+                                            <p
+                                                className="leading-relaxed transition-colors duration-300"
+                                                style={{ color: '#475569' }}
+                                            >
+                                                {step.description}
+                                            </p>
+                                        </div>
+
+                                        {/* Progress Indicator */}
+                                        <div className="mt-6 flex items-center gap-1">
+                                            {[...Array(4)].map((_, i) => (
+                                                <div
+                                                    key={i}
+                                                    className="h-1 rounded-full transition-all duration-300"
+                                                    style={{
+                                                        width: i === index ? '24px' : '8px',
+                                                        background: i === index
+                                                            ? 'linear-gradient(to right, #2563eb, #0d9488)'
+                                                            : '#e2e8f0'
+                                                    }}
+                                                />
+                                            ))}
+                                        </div>
                                     </div>
                                 </div>
                             );
                         })}
                     </div>
 
-                    <div className="mt-16 text-center">
+                    {/* CTA Button */}
+                    <div
+                        className="text-center animate-fade-in-up"
+                        style={{
+                            animationDelay: '0.7s',
+                            animationFillMode: 'both'
+                        }}
+                    >
                         <Link to={ROUTES.REGISTER}>
                             <button
-                                className="px-8 py-3 text-white rounded-lg hover:shadow-lg transition-all font-medium"
+                                className="group relative px-10 py-5 text-white rounded-2xl transition-all font-bold text-lg inline-flex items-center gap-3 overflow-hidden"
                                 style={{
-                                    background: 'linear-gradient(to right, #2563eb, #0d9488)'
+                                    background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)',
+                                    boxShadow: '0 8px 30px rgba(37, 99, 235, 0.3)'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(-3px) scale(1.05)';
+                                    e.currentTarget.style.boxShadow = '0 15px 40px rgba(37, 99, 235, 0.4)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                                    e.currentTarget.style.boxShadow = '0 8px 30px rgba(37, 99, 235, 0.3)';
                                 }}
                             >
-                                Get Started Now
+                                {/* Shimmer Effect */}
+                                <div
+                                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                                    style={{
+                                        background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)',
+                                        backgroundSize: '200% 100%',
+                                        animation: 'shimmer 2s infinite'
+                                    }}
+                                />
+                                <span className="relative z-10">Get Started Now</span>
+                                <ArrowRight className="relative z-10 w-5 h-5 transition-transform group-hover:translate-x-2" />
                             </button>
                         </Link>
+                        <p className="mt-4 text-sm" style={{ color: '#64748b' }}>
+                            No credit card required • Free to start
+                        </p>
                     </div>
                 </div>
             </section>
@@ -638,31 +907,53 @@ export function Home() {
             {/* For Owners Section */}
             <section
                 id="for-owners"
-                className="py-20 px-4 sm:px-6 lg:px-8 text-white"
+                className="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden"
                 style={{
-                    background: 'linear-gradient(to bottom right, #0f172a, #1e293b)'
+                    background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)'
                 }}
             >
-                <div className="max-w-7xl mx-auto">
-                    <div className="grid lg:grid-cols-2 gap-12 items-center">
+                {/* Animated Background Elements */}
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                    <div
+                        className="absolute top-20 left-10 w-72 h-72 rounded-full opacity-20 animate-float"
+                        style={{
+                            background: 'radial-gradient(circle, #3b82f6 0%, transparent 70%)',
+                            animationDuration: '8s'
+                        }}
+                    />
+                    <div
+                        className="absolute bottom-20 right-10 w-96 h-96 rounded-full opacity-15 animate-float"
+                        style={{
+                            background: 'radial-gradient(circle, #14b8a6 0%, transparent 70%)',
+                            animationDuration: '10s',
+                            animationDelay: '2s'
+                        }}
+                    />
+                </div>
+
+                <div className="max-w-7xl mx-auto relative z-10">
+                    <div className="grid lg:grid-cols-2 gap-16 items-center">
                         {/* Left Content */}
                         <div className="space-y-8">
                             <div
-                                className="inline-block px-4 py-2 rounded-full text-sm font-medium"
+                                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold shadow-lg animate-fade-in-down"
                                 style={{
-                                    backgroundColor: 'rgba(37, 99, 235, 0.2)',
-                                    color: '#93c5fd'
+                                    background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.3) 0%, rgba(20, 184, 166, 0.3) 100%)',
+                                    color: '#93c5fd',
+                                    border: '1px solid rgba(147, 197, 253, 0.3)',
+                                    backdropFilter: 'blur(10px)'
                                 }}
                             >
+                                <Car className="w-4 h-4" />
                                 For Cab Owners
                             </div>
 
-                            <h2 className="text-3xl sm:text-4xl font-bold text-white">
+                            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight" style={{ color: '#ffffff' }}>
                                 Manage Your Fleet
                                 <span
-                                    className="block"
+                                    className="block mt-2"
                                     style={{
-                                        background: 'linear-gradient(to right, #60a5fa, #2dd4bf)',
+                                        background: 'linear-gradient(135deg, #60a5fa 0%, #2dd4bf 100%)',
                                         WebkitBackgroundClip: 'text',
                                         WebkitTextFillColor: 'transparent',
                                         backgroundClip: 'text'
@@ -672,27 +963,55 @@ export function Home() {
                                 </span>
                             </h2>
 
-                            <p style={{ color: '#cbd5e1' }} className="text-lg">
+                            <p style={{ color: '#e2e8f0' }} className="text-lg leading-relaxed">
                                 Take control of your cab business with our comprehensive management platform.
                                 Track vehicles, manage drivers, and grow your revenue effortlessly.
                             </p>
 
-                            <div className="grid sm:grid-cols-2 gap-4">
+                            {/* Enhanced Feature Cards */}
+                            <div className="grid sm:grid-cols-2 gap-5">
                                 {ownerFeatures.map((feature, index) => {
                                     const Icon = feature.icon;
                                     return (
-                                        <div key={index} className="flex gap-3">
-                                            <div
-                                                className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
-                                                style={{
-                                                    background: 'linear-gradient(to bottom right, #2563eb, #0d9488)'
-                                                }}
-                                            >
-                                                <Icon className="w-5 h-5 text-white" />
-                                            </div>
-                                            <div>
-                                                <h4 className="text-white font-semibold mb-1">{feature.title}</h4>
-                                                <p className="text-sm" style={{ color: '#94a3b8' }}>{feature.description}</p>
+                                        <div
+                                            key={index}
+                                            className="group p-5 rounded-2xl transition-all duration-300 cursor-pointer"
+                                            style={{
+                                                background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.6) 100%)',
+                                                border: '1px solid rgba(148, 163, 184, 0.2)',
+                                                backdropFilter: 'blur(10px)'
+                                            }}
+                                            onMouseEnter={(e) => {
+                                                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(37, 99, 235, 0.2) 0%, rgba(13, 148, 136, 0.2) 100%)';
+                                                e.currentTarget.style.borderColor = 'rgba(96, 165, 250, 0.5)';
+                                                e.currentTarget.style.transform = 'translateY(-4px)';
+                                                e.currentTarget.style.boxShadow = '0 10px 30px rgba(37, 99, 235, 0.3)';
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.6) 100%)';
+                                                e.currentTarget.style.borderColor = 'rgba(148, 163, 184, 0.2)';
+                                                e.currentTarget.style.transform = 'translateY(0)';
+                                                e.currentTarget.style.boxShadow = 'none';
+                                            }}
+                                        >
+                                            <div className="flex gap-4">
+                                                <div
+                                                    className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300"
+                                                    style={{
+                                                        background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)',
+                                                        boxShadow: '0 4px 15px rgba(37, 99, 235, 0.4)'
+                                                    }}
+                                                >
+                                                    <Icon className="w-6 h-6 text-white" />
+                                                </div>
+                                                <div className="flex-1">
+                                                    <h4 className="text-white font-bold mb-1.5 text-base" style={{ color: '#f1f5f9' }}>
+                                                        {feature.title}
+                                                    </h4>
+                                                    <p className="text-sm leading-relaxed" style={{ color: '#cbd5e1' }}>
+                                                        {feature.description}
+                                                    </p>
+                                                </div>
                                             </div>
                                         </div>
                                     );
@@ -701,59 +1020,121 @@ export function Home() {
 
                             <Link to={ROUTES.REGISTER}>
                                 <button
-                                    className="px-8 py-3 text-white rounded-lg transition-all font-medium hover:shadow-lg"
+                                    className="group px-8 py-4 text-white rounded-xl transition-all font-semibold text-lg inline-flex items-center gap-3 shadow-xl"
                                     style={{
-                                        background: 'linear-gradient(to right, #2563eb, #0d9488)',
-                                        boxShadow: '0 0 20px rgba(37, 99, 235, 0.3)'
+                                        background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)',
+                                        boxShadow: '0 8px 30px rgba(37, 99, 235, 0.4)'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        e.currentTarget.style.transform = 'translateY(-2px)';
+                                        e.currentTarget.style.boxShadow = '0 12px 40px rgba(37, 99, 235, 0.5)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.currentTarget.style.transform = 'translateY(0)';
+                                        e.currentTarget.style.boxShadow = '0 8px 30px rgba(37, 99, 235, 0.4)';
                                     }}
                                 >
                                     Start Managing Your Fleet
+                                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                                 </button>
                             </Link>
                         </div>
 
                         {/* Right Content */}
                         <div className="space-y-6">
+                            {/* Key Benefits Card */}
                             <div
-                                className="backdrop-blur-sm p-8 rounded-2xl"
+                                className="backdrop-blur-xl p-8 rounded-3xl transition-all duration-300 hover:shadow-2xl"
                                 style={{
-                                    backgroundColor: 'rgba(30, 41, 59, 0.5)',
-                                    border: '1px solid #334155'
+                                    background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.8) 100%)',
+                                    border: '1px solid rgba(148, 163, 184, 0.3)',
+                                    boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)'
                                 }}
                             >
-                                <h3 className="text-xl font-bold text-white mb-6">Key Benefits</h3>
+                                <div className="flex items-center gap-3 mb-6">
+                                    <div
+                                        className="w-10 h-10 rounded-xl flex items-center justify-center"
+                                        style={{
+                                            background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)'
+                                        }}
+                                    >
+                                        <Star className="w-5 h-5 text-white" />
+                                    </div>
+                                    <h3 className="text-2xl font-bold" style={{ color: '#ffffff' }}>Key Benefits</h3>
+                                </div>
                                 <div className="space-y-4">
                                     {ownerBenefits.map((benefit, index) => (
-                                        <div key={index} className="flex items-center gap-3">
-                                            <CheckCircle className="w-5 h-5 flex-shrink-0" style={{ color: '#2dd4bf' }} />
-                                            <span style={{ color: '#cbd5e1' }}>{benefit}</span>
+                                        <div
+                                            key={index}
+                                            className="flex items-center gap-3 p-3 rounded-xl transition-all duration-200 hover:bg-white/5"
+                                        >
+                                            <CheckCircle
+                                                className="w-6 h-6 flex-shrink-0"
+                                                style={{ color: '#2dd4bf' }}
+                                            />
+                                            <span className="text-base" style={{ color: '#e2e8f0' }}>
+                                                {benefit}
+                                            </span>
                                         </div>
                                     ))}
                                 </div>
                             </div>
 
+                            {/* Book Drivers Card */}
                             <div
-                                className="p-8 rounded-2xl"
+                                className="p-8 rounded-3xl relative overflow-hidden group transition-all duration-300 hover:shadow-2xl"
                                 style={{
-                                    background: 'linear-gradient(to bottom right, #2563eb, #0d9488)'
+                                    background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)',
+                                    boxShadow: '0 10px 40px rgba(37, 99, 235, 0.3)'
                                 }}
                             >
-                                <h4 className="text-xl font-bold text-white mb-2">Book Drivers Separately</h4>
-                                <p className="text-white/90 mb-4">
-                                    Need professional drivers for your fleet? Browse our network of verified,
-                                    experienced drivers and hire them directly.
-                                </p>
-                                <Link to={ROUTES.REGISTER}>
-                                    <button
-                                        className="px-6 py-2 rounded-lg font-medium transition-colors hover:bg-gray-100"
-                                        style={{
-                                            backgroundColor: '#ffffff',
-                                            color: '#1d4ed8'
-                                        }}
-                                    >
-                                        Browse Drivers
-                                    </button>
-                                </Link>
+                                {/* Animated background overlay */}
+                                <div
+                                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                    style={{
+                                        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%)'
+                                    }}
+                                />
+
+                                <div className="relative z-10">
+                                    <div className="flex items-center gap-3 mb-3">
+                                        <div
+                                            className="w-10 h-10 rounded-xl flex items-center justify-center"
+                                            style={{
+                                                backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                                                backdropFilter: 'blur(10px)'
+                                            }}
+                                        >
+                                            <Users className="w-5 h-5 text-white" />
+                                        </div>
+                                        <h4 className="text-2xl font-bold text-white">Book Drivers Separately</h4>
+                                    </div>
+                                    <p className="text-white/95 mb-6 leading-relaxed text-base">
+                                        Need professional drivers for your fleet? Browse our network of verified,
+                                        experienced drivers and hire them directly.
+                                    </p>
+                                    <Link to={ROUTES.REGISTER}>
+                                        <button
+                                            className="px-6 py-3 rounded-xl font-semibold transition-all inline-flex items-center gap-2 group/btn"
+                                            style={{
+                                                backgroundColor: '#ffffff',
+                                                color: '#1d4ed8',
+                                                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)'
+                                            }}
+                                            onMouseEnter={(e) => {
+                                                e.currentTarget.style.transform = 'translateY(-2px)';
+                                                e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.3)';
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.currentTarget.style.transform = 'translateY(0)';
+                                                e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.2)';
+                                            }}
+                                        >
+                                            Browse Drivers
+                                            <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                                        </button>
+                                    </Link>
+                                </div>
                             </div>
                         </div>
                     </div>
