@@ -23,46 +23,77 @@ import { Input } from '../../components/ui/Input';
 import { Modal } from '../../components/ui/Modal';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
 
-// Mock driver profile data
-const driverProfile = {
-    id: 'd1',
-    name: 'Rajesh Kumar',
-    phone: '+91 98765 43210',
-    email: 'rajesh.kumar@email.com',
-    address: '123 MG Road, Koramangala, Bangalore - 560034',
-    dateOfBirth: '1990-05-15',
-    licenseNumber: 'KA01 2019 0012345',
-    licenseExpiry: '2026-05-14',
-    aadharNumber: '****  ****  1234',
-    panNumber: '****1234A',
-    bankAccount: '****4567',
-    bankName: 'HDFC Bank',
-    ifscCode: 'HDFC0001234',
-    rating: 4.8,
-    totalTrips: 1248,
-    totalEarnings: 485000,
-    joinedDate: '2024-03-15',
-    verificationStatus: 'verified',
-    documents: [
-        { type: 'Driving License', status: 'verified', expiry: '2026-05-14' },
-        { type: 'Aadhar Card', status: 'verified', expiry: null },
-        { type: 'PAN Card', status: 'verified', expiry: null },
-        { type: 'Police Verification', status: 'pending', expiry: null },
-        { type: 'Medical Certificate', status: 'expiring', expiry: '2025-01-15' },
-    ],
+// TODO: Fetch driver profile from API
+// API endpoint: GET /api/v1/driver/profile
+interface Document {
+    type: string;
+    status: string;
+    expiry: string | null;
+}
+interface Vehicle {
+    make: string;
+    model: string;
+    year: number;
+    color: string;
+    registrationNumber: string;
+    fuelType: string;
+}
+interface DriverProfile {
+    id: string;
+    name: string;
+    phone: string;
+    email: string;
+    address: string;
+    dateOfBirth: string;
+    licenseNumber: string;
+    licenseExpiry: string;
+    aadharNumber: string;
+    panNumber: string;
+    bankAccount: string;
+    bankName: string;
+    ifscCode: string;
+    rating: number;
+    totalTrips: number;
+    totalEarnings: number;
+    joinedDate: string;
+    verificationStatus: string;
+    documents: Document[];
+    vehicle: Vehicle;
+}
+const driverProfile: DriverProfile = {
+    id: '',
+    name: '',
+    phone: '',
+    email: '',
+    address: '',
+    dateOfBirth: '',
+    licenseNumber: '',
+    licenseExpiry: '',
+    aadharNumber: '',
+    panNumber: '',
+    bankAccount: '',
+    bankName: '',
+    ifscCode: '',
+    rating: 0,
+    totalTrips: 0,
+    totalEarnings: 0,
+    joinedDate: '',
+    verificationStatus: '',
+    documents: [],
     vehicle: {
-        make: 'Maruti',
-        model: 'Swift Dzire',
-        year: 2023,
-        color: 'White',
-        registrationNumber: 'KA 01 AB 1234',
-        fuelType: 'Petrol',
+        make: '',
+        model: '',
+        year: 0,
+        color: '',
+        registrationNumber: '',
+        fuelType: '',
     },
 };
 
 export function DriverProfile() {
     const [activeTab, setActiveTab] = useState('profile');
     const [showEditModal, setShowEditModal] = useState(false);
+    // TODO: Initialize form with data fetched from API
     const [editForm, setEditForm] = useState({
         name: driverProfile.name,
         phone: driverProfile.phone,

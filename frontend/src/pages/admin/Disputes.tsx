@@ -24,76 +24,53 @@ import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/u
 import { TextArea } from '../../components/ui/TextArea';
 import { formatCurrency, formatDate } from '../../lib/utils';
 
-// Mock disputes data
-const disputes = [
-    {
-        id: 'd1',
-        ticketNo: 'DSP-2024-001',
-        customer: { name: 'Rahul Mehta', phone: '+91 98765 43210', email: 'rahul@email.com' },
-        driver: { name: 'Ramesh Kumar', phone: '+91 98765 43211', vehicleNo: 'KA 01 AB 1234' },
-        trip: { id: 'T123', from: 'Koramangala', to: 'Whitefield', date: '2025-12-10', fare: 450 },
-        issue: 'Fare dispute',
-        description: 'Customer claims the fare was higher than the estimated amount shown during booking.',
-        priority: 'high',
-        status: 'open',
-        createdAt: '2025-12-10T09:30:00',
-        messages: [
-            { from: 'customer', text: 'I was charged ₹450 but the app showed ₹380 estimate.', time: '09:30' },
-            { from: 'support', text: 'Thank you for reporting. We are looking into this.', time: '09:45' },
-        ],
-    },
-    {
-        id: 'd2',
-        ticketNo: 'DSP-2024-002',
-        customer: { name: 'Anita Sharma', phone: '+91 98765 43212', email: 'anita@email.com' },
-        driver: { name: 'Suresh Menon', phone: '+91 98765 43213', vehicleNo: 'KA 01 CD 5678' },
-        trip: { id: 'T124', from: 'Indiranagar', to: 'Electronic City', date: '2025-12-09', fare: 580 },
-        issue: 'Driver behavior',
-        description: 'Customer reports that the driver was rude and drove recklessly.',
-        priority: 'high',
-        status: 'in_progress',
-        createdAt: '2025-12-09T14:20:00',
-        assignedTo: 'Support Agent 1',
-        messages: [
-            { from: 'customer', text: 'The driver was very rude and drove dangerously.', time: '14:20' },
-            { from: 'support', text: 'We apologize for your experience. We have initiated an investigation.', time: '14:45' },
-        ],
-    },
-    {
-        id: 'd3',
-        ticketNo: 'DSP-2024-003',
-        customer: { name: 'Vijay Kumar', phone: '+91 98765 43214', email: 'vijay@email.com' },
-        driver: { name: 'Mahesh Rao', phone: '+91 98765 43215', vehicleNo: 'KA 09 GH 3456' },
-        trip: { id: 'T125', from: 'HSR Layout', to: 'MG Road', date: '2025-12-08', fare: 320 },
-        issue: 'Route deviation',
-        description: 'Driver took a longer route than necessary, increasing the fare.',
-        priority: 'medium',
-        status: 'open',
-        createdAt: '2025-12-08T16:00:00',
-        messages: [],
-    },
-    {
-        id: 'd4',
-        ticketNo: 'DSP-2024-004',
-        customer: { name: 'Priya Patel', phone: '+91 98765 43216', email: 'priya@email.com' },
-        driver: { name: 'Vikram Patil', phone: '+91 98765 43217', vehicleNo: 'KA 05 EF 7890' },
-        trip: { id: 'T126', from: 'Marathahalli', to: 'Majestic', date: '2025-12-07', fare: 290 },
-        issue: 'Cancellation fee',
-        description: 'Customer was charged a cancellation fee even though the driver cancelled.',
-        priority: 'low',
-        status: 'resolved',
-        createdAt: '2025-12-07T11:15:00',
-        resolvedAt: '2025-12-07T15:30:00',
-        resolution: 'Refund of ₹50 cancellation fee processed.',
-        messages: [],
-    },
-];
+// TODO: Fetch disputes from API
+// API endpoint: GET /api/v1/admin/disputes
+interface DisputeCustomer {
+    name: string;
+    phone: string;
+    email: string;
+}
+interface DisputeDriver {
+    name: string;
+    phone: string;
+    vehicleNo: string;
+}
+interface DisputeTrip {
+    id: string;
+    from: string;
+    to: string;
+    date: string;
+    fare: number;
+}
+interface DisputeMessage {
+    from: string;
+    text: string;
+    time: string;
+}
+interface Dispute {
+    id: string;
+    ticketNo: string;
+    customer: DisputeCustomer;
+    driver: DisputeDriver;
+    trip: DisputeTrip;
+    issue: string;
+    description: string;
+    priority: string;
+    status: string;
+    createdAt: string;
+    messages: DisputeMessage[];
+    assignedTo?: string;
+    resolvedAt?: string;
+    resolution?: string;
+}
+const disputes: Dispute[] = [];
 
 export function AdminDisputes() {
     const [activeTab, setActiveTab] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
     const [priorityFilter, setPriorityFilter] = useState('all');
-    const [selectedDispute, setSelectedDispute] = useState<typeof disputes[0] | null>(null);
+    const [selectedDispute, setSelectedDispute] = useState<Dispute | null>(null);
     const [responseText, setResponseText] = useState('');
 
     const filteredDisputes = disputes.filter((dispute) => {

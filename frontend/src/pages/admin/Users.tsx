@@ -22,74 +22,26 @@ import { Modal } from '../../components/ui/Modal';
 import { Avatar } from '../../components/ui/Avatar';
 import { formatDate } from '../../lib/utils';
 
-// Mock users data
-const users = [
-    {
-        id: 'u1',
-        name: 'Rahul Kumar',
-        email: 'rahul.kumar@email.com',
-        phone: '+91 98765 43210',
-        role: 'customer',
-        status: 'active',
-        location: 'Bangalore, Karnataka',
-        joinedAt: '2024-06-15',
-        totalTrips: 45,
-        totalSpent: 12500,
-    },
-    {
-        id: 'u2',
-        name: 'Priya Sharma',
-        email: 'priya.sharma@email.com',
-        phone: '+91 98765 43211',
-        role: 'customer',
-        status: 'active',
-        location: 'Mumbai, Maharashtra',
-        joinedAt: '2024-08-20',
-        totalTrips: 32,
-        totalSpent: 8900,
-    },
-    {
-        id: 'u3',
-        name: 'Amit Verma',
-        email: 'amit.verma@email.com',
-        phone: '+91 98765 43212',
-        role: 'customer',
-        status: 'suspended',
-        location: 'Delhi, NCR',
-        joinedAt: '2024-03-10',
-        totalTrips: 12,
-        totalSpent: 3200,
-    },
-    {
-        id: 'u4',
-        name: 'Sneha Patel',
-        email: 'sneha.patel@email.com',
-        phone: '+91 98765 43213',
-        role: 'customer',
-        status: 'active',
-        location: 'Chennai, Tamil Nadu',
-        joinedAt: '2024-09-05',
-        totalTrips: 28,
-        totalSpent: 7600,
-    },
-    {
-        id: 'u5',
-        name: 'Vikram Singh',
-        email: 'vikram.singh@email.com',
-        phone: '+91 98765 43214',
-        role: 'customer',
-        status: 'inactive',
-        location: 'Pune, Maharashtra',
-        joinedAt: '2024-01-22',
-        totalTrips: 8,
-        totalSpent: 2100,
-    },
-];
+// TODO: Fetch users from API
+// API endpoint: GET /api/v1/admin/users
+interface User {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+    role: string;
+    status: string;
+    location: string;
+    joinedAt: string;
+    totalTrips: number;
+    totalSpent: number;
+}
+const users: User[] = [];
 
 export function AdminUsers() {
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
-    const [selectedUser, setSelectedUser] = useState<typeof users[0] | null>(null);
+    const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [showActionMenu, setShowActionMenu] = useState<string | null>(null);
 
     const filteredUsers = users.filter((user) => {
