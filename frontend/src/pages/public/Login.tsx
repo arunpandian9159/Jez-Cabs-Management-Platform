@@ -43,9 +43,9 @@ export function Login() {
     };
 
     return (
-        <div className="min-h-screen flex">
+        <div className="min-h-screen flex bg-white dark:bg-gray-950">
             {/* Left side - Form */}
-            <div className="flex-1 flex items-center justify-center p-6 lg:p-12">
+            <div className="flex-1 flex items-center justify-center p-6 lg:p-12 bg-white dark:bg-gray-950">
                 <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -53,7 +53,7 @@ export function Login() {
                 >
                     {/* Logo */}
                     <Link to={ROUTES.HOME} className="flex items-center gap-2 mb-8">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center shadow-lg">
                             <Car className="w-6 h-6 text-white" />
                         </div>
                         <span className="text-xl font-bold text-gray-900 dark:text-white">
@@ -72,7 +72,7 @@ export function Login() {
                         <motion.div
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="bg-error-50 border border-error-200 text-error-700 px-4 py-3 rounded-lg mb-6"
+                            className="bg-error-50 dark:bg-error-900/30 border border-error-200 dark:border-error-800 text-error-700 dark:text-error-300 px-4 py-3 rounded-lg mb-6"
                         >
                             {error}
                         </motion.div>
@@ -98,7 +98,7 @@ export function Login() {
                                     <button
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
-                                        className="text-gray-400 hover:text-gray-600"
+                                        className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                                     >
                                         {showPassword ? (
                                             <EyeOff className="w-4 h-4" />
@@ -116,13 +116,13 @@ export function Login() {
                             <label className="flex items-center gap-2">
                                 <input
                                     type="checkbox"
-                                    className="w-4 h-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                                    className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-primary-600 focus:ring-primary-500 bg-white dark:bg-gray-800"
                                 />
-                                <span className="text-sm text-gray-600">Remember me</span>
+                                <span className="text-sm text-gray-600 dark:text-gray-400">Remember me</span>
                             </label>
                             <Link
                                 to="/forgot-password"
-                                className="text-sm text-primary-600 hover:text-primary-700"
+                                className="text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
                             >
                                 Forgot password?
                             </Link>
@@ -141,15 +141,15 @@ export function Login() {
 
                     <div className="relative my-8">
                         <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-gray-200" />
+                            <div className="w-full border-t border-gray-200 dark:border-gray-700" />
                         </div>
                         <div className="relative flex justify-center text-sm">
-                            <span className="px-4 bg-white text-gray-500">Or continue with</span>
+                            <span className="px-4 bg-white dark:bg-gray-950 text-gray-500 dark:text-gray-400">Or continue with</span>
                         </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
-                        <Button variant="outline" size="lg">
+                        <Button variant="outline" size="lg" className="border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800">
                             <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                                 <path
                                     fill="currentColor"
@@ -170,7 +170,7 @@ export function Login() {
                             </svg>
                             Google
                         </Button>
-                        <Button variant="outline" size="lg">
+                        <Button variant="outline" size="lg" className="border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800">
                             <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0012 2z" />
                             </svg>
@@ -178,11 +178,11 @@ export function Login() {
                         </Button>
                     </div>
 
-                    <p className="mt-8 text-center text-sm text-gray-600">
+                    <p className="mt-8 text-center text-sm text-gray-600 dark:text-gray-400">
                         Don't have an account?{' '}
                         <Link
                             to={ROUTES.REGISTER}
-                            className="text-primary-600 hover:text-primary-700 font-medium"
+                            className="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium"
                         >
                             Sign up for free
                         </Link>
@@ -198,7 +198,7 @@ export function Login() {
                     transition={{ delay: 0.3 }}
                     className="text-center text-white max-w-md"
                 >
-                    <div className="w-20 h-20 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center mx-auto mb-8">
+                    <div className="w-20 h-20 rounded-2xl bg-white/20 backdrop-blur flex items-center justify-center mx-auto mb-8 shadow-xl">
                         <Car className="w-10 h-10 text-white" />
                     </div>
                     <h2 className="text-3xl font-bold mb-4">Start Your Journey</h2>
@@ -211,7 +211,7 @@ export function Login() {
                         {['Instant Booking', 'Cab Rentals', '24/7 Support'].map((feature) => (
                             <div
                                 key={feature}
-                                className="p-4 rounded-xl bg-white/10 backdrop-blur"
+                                className="p-4 rounded-xl bg-white/10 backdrop-blur border border-white/20"
                             >
                                 <p className="text-sm font-medium">{feature}</p>
                             </div>

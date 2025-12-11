@@ -100,7 +100,7 @@ export function CustomerDashboard() {
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-gradient-to-r from-primary-600 to-accent-600 rounded-2xl p-6 text-white"
+                className="bg-gradient-to-r from-primary-600 to-accent-600 rounded-2xl p-6 text-white shadow-xl"
             >
                 <div className="flex items-center justify-between">
                     <div>
@@ -123,7 +123,7 @@ export function CustomerDashboard() {
                 {/* Quick search */}
                 <div className="mt-6">
                     <Link to={ROUTES.CUSTOMER.BOOK_LOCATION}>
-                        <div className="flex items-center gap-3 bg-white/10 hover:bg-white/20 backdrop-blur rounded-xl p-4 cursor-pointer transition-colors">
+                        <div className="flex items-center gap-3 bg-white/10 hover:bg-white/20 backdrop-blur rounded-xl p-4 cursor-pointer transition-colors border border-white/10">
                             <Navigation className="w-5 h-5" />
                             <span className="text-white/80">Where to?</span>
                             <ArrowRight className="w-5 h-5 ml-auto" />
@@ -145,17 +145,17 @@ export function CustomerDashboard() {
                             <Card
                                 interactive
                                 padding="md"
-                                className="h-full hover:border-primary-200"
+                                className="h-full bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-600 shadow-sm hover:shadow-lg transition-all"
                             >
                                 <div
-                                    className={`w-12 h-12 rounded-xl ${action.color} flex items-center justify-center mb-3`}
+                                    className={`w-12 h-12 rounded-xl ${action.color} dark:opacity-90 flex items-center justify-center mb-3`}
                                 >
                                     <action.icon className="w-6 h-6" />
                                 </div>
-                                <h3 className="font-semibold text-gray-900 mb-1">
+                                <h3 className="font-semibold text-gray-900 dark:text-white mb-1">
                                     {action.title}
                                 </h3>
-                                <p className="text-sm text-gray-500">{action.description}</p>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">{action.description}</p>
                             </Card>
                         </Link>
                     </motion.div>
@@ -170,11 +170,11 @@ export function CustomerDashboard() {
                     transition={{ delay: 0.2 }}
                     className="lg:col-span-2"
                 >
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between p-4 border-b border-gray-100">
-                            <CardTitle className="text-lg">Recent Trips</CardTitle>
+                    <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 shadow-sm">
+                        <CardHeader className="flex flex-row items-center justify-between p-4 border-b border-gray-100 dark:border-gray-700">
+                            <CardTitle className="text-lg text-gray-900 dark:text-white">Recent Trips</CardTitle>
                             <Link to={ROUTES.CUSTOMER.TRIPS}>
-                                <Button variant="ghost" size="sm" rightIcon={<ArrowRight className="w-4 h-4" />}>
+                                <Button variant="ghost" size="sm" rightIcon={<ArrowRight className="w-4 h-4" />} className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
                                     View All
                                 </Button>
                             </Link>
@@ -183,23 +183,23 @@ export function CustomerDashboard() {
                             {recentTrips.map((trip, index) => (
                                 <div
                                     key={trip.id}
-                                    className={`flex items-center gap-4 p-4 hover:bg-gray-50 transition-colors ${index !== recentTrips.length - 1 ? 'border-b border-gray-100' : ''
+                                    className={`flex items-center gap-4 p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors ${index !== recentTrips.length - 1 ? 'border-b border-gray-100 dark:border-gray-700' : ''
                                         }`}
                                 >
-                                    <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0">
-                                        <MapPin className="w-5 h-5 text-primary-600" />
+                                    <div className="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center flex-shrink-0">
+                                        <MapPin className="w-5 h-5 text-primary-600 dark:text-primary-400" />
                                     </div>
                                     <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2 mb-1">
-                                            <span className="font-medium text-gray-900 truncate">
+                                            <span className="font-medium text-gray-900 dark:text-white truncate">
                                                 {trip.pickup}
                                             </span>
                                             <ArrowRight className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                                            <span className="font-medium text-gray-900 truncate">
+                                            <span className="font-medium text-gray-900 dark:text-white truncate">
                                                 {trip.destination}
                                             </span>
                                         </div>
-                                        <div className="flex items-center gap-3 text-sm text-gray-500">
+                                        <div className="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
                                             <span>{formatRelativeTime(trip.date)}</span>
                                             <span>•</span>
                                             <span>{trip.cabType}</span>
@@ -211,7 +211,7 @@ export function CustomerDashboard() {
                                         </div>
                                     </div>
                                     <div className="text-right flex-shrink-0">
-                                        <p className="font-semibold text-gray-900">
+                                        <p className="font-semibold text-gray-900 dark:text-white">
                                             {formatCurrency(trip.fare)}
                                         </p>
                                         <Badge variant="success" size="sm">
@@ -232,24 +232,24 @@ export function CustomerDashboard() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.3 }}
                     >
-                        <Card>
-                            <CardHeader className="p-4 border-b border-gray-100">
-                                <CardTitle className="text-lg">Saved Addresses</CardTitle>
+                        <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 shadow-sm">
+                            <CardHeader className="p-4 border-b border-gray-100 dark:border-gray-700">
+                                <CardTitle className="text-lg text-gray-900 dark:text-white">Saved Addresses</CardTitle>
                             </CardHeader>
                             <CardContent className="p-0">
                                 {savedAddresses.map((address, index) => (
                                     <Link
                                         key={address.id}
                                         to={ROUTES.CUSTOMER.BOOK_LOCATION}
-                                        className={`flex items-center gap-3 p-4 hover:bg-gray-50 transition-colors ${index !== savedAddresses.length - 1 ? 'border-b border-gray-100' : ''
+                                        className={`flex items-center gap-3 p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors ${index !== savedAddresses.length - 1 ? 'border-b border-gray-100 dark:border-gray-700' : ''
                                             }`}
                                     >
-                                        <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center">
-                                            <MapPin className="w-4 h-4 text-gray-600" />
+                                        <div className="w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+                                            <MapPin className="w-4 h-4 text-gray-600 dark:text-gray-400" />
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <p className="font-medium text-gray-900">{address.label}</p>
-                                            <p className="text-sm text-gray-500 truncate">
+                                            <p className="font-medium text-gray-900 dark:text-white">{address.label}</p>
+                                            <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
                                                 {address.address}
                                             </p>
                                         </div>
@@ -265,7 +265,7 @@ export function CustomerDashboard() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.4 }}
                     >
-                        <Card className="bg-gradient-to-br from-gray-900 to-gray-800 text-white">
+                        <Card className="bg-gradient-to-br from-gray-900 to-gray-800 text-white shadow-xl border-gray-700">
                             <CardContent className="p-4">
                                 <div className="flex items-center gap-2 mb-4">
                                     <TrendingUp className="w-5 h-5 text-primary-400" />

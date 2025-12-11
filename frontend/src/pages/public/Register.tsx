@@ -90,9 +90,9 @@ export function Register() {
     };
 
     return (
-        <div className="min-h-screen flex">
+        <div className="min-h-screen flex bg-white dark:bg-gray-950">
             {/* Left side - Form */}
-            <div className="flex-1 flex items-center justify-center p-6 lg:p-12 overflow-y-auto">
+            <div className="flex-1 flex items-center justify-center p-6 lg:p-12 overflow-y-auto bg-white dark:bg-gray-950">
                 <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -100,7 +100,7 @@ export function Register() {
                 >
                     {/* Logo */}
                     <Link to={ROUTES.HOME} className="flex items-center gap-2 mb-8">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center shadow-lg">
                             <Car className="w-6 h-6 text-white" />
                         </div>
                         <span className="text-xl font-bold text-gray-900 dark:text-white">
@@ -119,7 +119,7 @@ export function Register() {
                         <motion.div
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="bg-error-50 border border-error-200 text-error-700 px-4 py-3 rounded-lg mb-6"
+                            className="bg-error-50 dark:bg-error-900/30 border border-error-200 dark:border-error-800 text-error-700 dark:text-error-300 px-4 py-3 rounded-lg mb-6"
                         >
                             {error}
                         </motion.div>
@@ -191,16 +191,16 @@ export function Register() {
                             <input
                                 type="checkbox"
                                 id="terms"
-                                className="w-4 h-4 mt-0.5 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                                className="w-4 h-4 mt-0.5 rounded border-gray-300 dark:border-gray-600 text-primary-600 focus:ring-primary-500 bg-white dark:bg-gray-800"
                                 required
                             />
-                            <label htmlFor="terms" className="text-sm text-gray-600">
+                            <label htmlFor="terms" className="text-sm text-gray-600 dark:text-gray-400">
                                 I agree to the{' '}
-                                <Link to="/terms" className="text-primary-600 hover:underline">
+                                <Link to="/terms" className="text-primary-600 dark:text-primary-400 hover:underline">
                                     Terms of Service
                                 </Link>{' '}
                                 and{' '}
-                                <Link to="/privacy" className="text-primary-600 hover:underline">
+                                <Link to="/privacy" className="text-primary-600 dark:text-primary-400 hover:underline">
                                     Privacy Policy
                                 </Link>
                             </label>
@@ -217,11 +217,11 @@ export function Register() {
                         </Button>
                     </form>
 
-                    <p className="mt-8 text-center text-sm text-gray-600">
+                    <p className="mt-8 text-center text-sm text-gray-600 dark:text-gray-400">
                         Already have an account?{' '}
                         <Link
                             to={ROUTES.LOGIN}
-                            className="text-primary-600 hover:text-primary-700 font-medium"
+                            className="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium"
                         >
                             Sign in
                         </Link>
@@ -256,7 +256,7 @@ export function Register() {
                         ))}
                     </ul>
 
-                    <div className="mt-12 p-6 rounded-2xl bg-white/10 backdrop-blur">
+                    <div className="mt-12 p-6 rounded-2xl bg-white/10 backdrop-blur border border-white/20">
                         <div className="flex items-center gap-4 mb-4">
                             <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
                                 <User className="w-6 h-6" />

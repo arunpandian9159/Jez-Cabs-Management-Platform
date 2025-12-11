@@ -4,16 +4,16 @@ import { cn } from '../../lib/utils';
 import { Eye, EyeOff, AlertCircle } from 'lucide-react';
 
 const inputVariants = cva(
-    'flex w-full rounded-lg border bg-white px-3 py-2 text-sm transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-900',
+    'flex w-full rounded-lg border bg-white px-3 py-2 text-sm transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 dark:placeholder:text-gray-500 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-800 dark:text-white',
     {
         variants: {
             variant: {
                 default:
-                    'border-gray-300 focus-visible:border-primary-500 focus-visible:ring-2 focus-visible:ring-primary-500/20 dark:border-gray-700',
+                    'border-gray-300 focus-visible:border-primary-500 focus-visible:ring-2 focus-visible:ring-primary-500/20 dark:border-gray-600 dark:focus-visible:border-primary-400',
                 error:
-                    'border-error-500 focus-visible:border-error-500 focus-visible:ring-2 focus-visible:ring-error-500/20',
+                    'border-error-500 focus-visible:border-error-500 focus-visible:ring-2 focus-visible:ring-error-500/20 dark:border-error-400',
                 success:
-                    'border-success-500 focus-visible:border-success-500 focus-visible:ring-2 focus-visible:ring-success-500/20',
+                    'border-success-500 focus-visible:border-success-500 focus-visible:ring-2 focus-visible:ring-success-500/20 dark:border-success-400',
             },
             inputSize: {
                 sm: 'h-8 px-2.5 text-xs',
@@ -118,7 +118,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                     <p
                         className={cn(
                             'flex items-center gap-1 text-xs',
-                            error ? 'text-error-600' : 'text-gray-500'
+                            error ? 'text-error-600 dark:text-error-400' : 'text-gray-500 dark:text-gray-400'
                         )}
                     >
                         {error && <AlertCircle className="h-3 w-3" />}
