@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom';
+import { DotLottiePlayer } from '@dotlottie/react-player';
+import '@dotlottie/react-player/dist/index.css';
 import {
     MapPin,
     Calendar,
@@ -268,36 +270,15 @@ export function Home() {
                             </div>
                         </div>
 
-                        {/* Right Video */}
+                        {/* Right Animation */}
                         <div className="relative hidden lg:block">
-                            <div className="aspect-square rounded-3xl overflow-hidden shadow-2xl ring-1 ring-gray-900/5">
-                                <video
-                                    autoPlay
+                            <div className="aspect-square rounded-3xl overflow-hidden">
+                                <DotLottiePlayer
+                                    src="/Man waiting car.lottie"
+                                    autoplay
                                     loop
-                                    muted
-                                    playsInline
-                                    className="w-full h-full object-cover"
-                                >
-                                    <source src="/Man waiting car.webm" type="video/webm" />
-                                    Your browser does not support the video tag.
-                                </video>
-                            </div>
-
-                            {/* Floating Stats */}
-                            <div
-                                className="absolute -bottom-6 -left-6 p-5 rounded-2xl shadow-xl backdrop-blur-sm"
-                                style={{ backgroundColor: 'rgba(255, 255, 255, 0.95)' }}
-                            >
-                                <div className="text-2xl font-bold" style={{ color: '#2563eb' }}>50K+</div>
-                                <p className="text-sm font-medium" style={{ color: '#475569' }}>Happy Customers</p>
-                            </div>
-
-                            <div
-                                className="absolute -top-6 -right-6 p-5 rounded-2xl shadow-xl backdrop-blur-sm"
-                                style={{ backgroundColor: 'rgba(255, 255, 255, 0.95)' }}
-                            >
-                                <div className="text-2xl font-bold" style={{ color: '#0d9488' }}>1000+</div>
-                                <p className="text-sm font-medium" style={{ color: '#475569' }}>Active Drivers</p>
+                                    className="w-full h-full"
+                                />
                             </div>
                         </div>
                     </div>

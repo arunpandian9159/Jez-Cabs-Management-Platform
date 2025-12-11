@@ -21,7 +21,7 @@ import { cn } from '../../lib/utils';
 import { useAuth } from '../../contexts/AuthContext';
 import { Button } from '../ui/Button';
 import { Avatar } from '../ui/Avatar';
-import { ThemeToggle } from '../ui/ThemeToggle';
+
 import { ROUTES } from '../../lib/constants';
 
 // Navigation items for customer
@@ -148,8 +148,6 @@ export function CustomerLayout() {
 
                     {/* Right section */}
                     <div className="flex items-center gap-2">
-                        {/* Theme Toggle */}
-                        <ThemeToggle size="sm" />
 
                         {/* Notifications */}
                         <motion.button

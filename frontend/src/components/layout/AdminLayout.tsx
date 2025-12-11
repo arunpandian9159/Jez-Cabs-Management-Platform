@@ -19,7 +19,6 @@ import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { Avatar } from '../ui/Avatar';
 import { Badge } from '../ui/Badge';
-import { ThemeToggle } from '../ui/ThemeToggle';
 import { cn } from '../../lib/utils';
 
 const navItems = [
@@ -194,8 +193,6 @@ export function AdminLayout() {
 
                     {/* Right section */}
                     <div className="flex items-center gap-2 lg:gap-4">
-                        {/* Theme Toggle */}
-                        <ThemeToggle size="sm" />
 
                         {/* Notifications */}
                         <button className="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
