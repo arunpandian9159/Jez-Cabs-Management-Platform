@@ -74,6 +74,19 @@
     background: linear-gradient(180deg, rgb(37, 99, 235), rgb(13, 148, 136));
 }
 
+/* Hide scrollbar completely */
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari and Opera */
+}
+
 
 /* ========================================
    SELECTION STYLING
