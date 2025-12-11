@@ -32,7 +32,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
             root.setAttribute('data-theme', 'dark');
             root.classList.add('dark');
         } else {
-            root.removeAttribute('data-theme');
+            root.setAttribute('data-theme', 'light');
             root.classList.remove('dark');
         }
 

@@ -21,6 +21,7 @@ import { cn } from '../../lib/utils';
 import { useAuth } from '../../contexts/AuthContext';
 import { Button } from '../ui/Button';
 import { Avatar } from '../ui/Avatar';
+import { ThemeToggle } from '../ui/ThemeToggle';
 import { ROUTES } from '../../lib/constants';
 
 // Navigation items for customer
@@ -147,16 +148,27 @@ export function CustomerLayout() {
 
                     {/* Right section */}
                     <div className="flex items-center gap-2">
+                        {/* Theme Toggle */}
+                        <ThemeToggle size="sm" />
+
                         {/* Notifications */}
-                        <button className="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
+                        <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                        >
                             <Bell className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-error-500 rounded-full" />
-                        </button>
+                            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-error-500 rounded-full animate-pulse" />
+                        </motion.button>
 
                         {/* Help */}
-                        <button className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
+                        <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                        >
                             <HelpCircle className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                        </button>
+                        </motion.button>
 
                         {/* User menu */}
                         <div className="relative">
@@ -229,7 +241,14 @@ export function CustomerLayout() {
 
                 {/* Page content */}
                 <main className="p-4 lg:p-6">
-                    <Outlet />
+                    <motion.div
+                        key={location.pathname}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.2 }}
+                    >
+                        <Outlet />
+                    </motion.div>
                 </main>
             </div>
         </div>
