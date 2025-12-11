@@ -1,36 +1,29 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import {
     X,
-    Mail,
-    Lock,
-    User,
-    Phone,
-    Eye,
-    EyeOff,
-    ArrowRight,
     Sparkles,
     Shield,
     Clock,
     Star,
+    AlertCircle,
+    Zap,
+    Heart,
+    Github,
 } from 'lucide-react';
-import { Button } from '../ui/Button';
-import { Input } from '../ui/Input';
-import { Select } from '../ui/Select';
 import { Logo } from '../ui/Logo';
 import { useAuth } from '../../contexts/AuthContext';
-import type { UserRole } from '../../types';
+import { LoginForm } from './LoginForm';
+import { RegisterForm } from './RegisterForm';
 
 // ============ SCHEMAS ============
-const loginSchema = z.object({
+export const loginSchema = z.object({
     email: z.string().email('Please enter a valid email address'),
     password: z.string().min(1, 'Password is required'),
 });
 
-const registerSchema = z
+export const registerSchema = z
     .object({
         firstName: z.string().min(2, 'First name must be at least 2 characters'),
         lastName: z.string().min(2, 'Last name must be at least 2 characters'),
@@ -52,12 +45,43 @@ const registerSchema = z
         path: ['confirmPassword'],
     });
 
-type LoginFormData = z.infer<typeof loginSchema>;
-type RegisterFormData = z.infer<typeof registerSchema>;
-
-// ============ TYPES ============
+export type LoginFormData = z.infer<typeof loginSchema>;
+export type RegisterFormData = z.infer<typeof registerSchema>;
 export type AuthModalType = 'login' | 'register' | null;
 
+// ============ CONSTANTS ============
+export const roleOptions = [
+    { value: 'customer', label: '🚗 Customer - Book rides & rentals' },
+    { value: 'driver', label: '🚕 Driver - Join our driver network' },
+    { value: 'cab_owner', label: '🚙 Cab Owner - List your vehicles' },
+    { value: 'trip_planner', label: '🗺️ Trip Planner - Plan group trips' },
+];
+
+const benefits = [
+    { icon: Zap, text: 'Book rides instantly with transparent pricing', color: 'text-yellow-400' },
+    { icon: Clock, text: 'Rent cabs for hours, days, or weeks', color: 'text-teal-400' },
+    { icon: Shield, text: '24/7 customer support', color: 'text-green-400' },
+    { icon: Heart, text: 'Verified drivers and vehicles', color: 'text-red-400' },
+];
+
+// ============ PASSWORD STRENGTH CHECKER ============
+export const getPasswordStrength = (password: string): { strength: number; label: string; color: string } => {
+    if (!password) return { strength: 0, label: '', color: '' };
+
+    let strength = 0;
+    if (password.length >= 8) strength += 25;
+    if (password.length >= 12) strength += 10;
+    if (/[a-z]/.test(password)) strength += 15;
+    if (/[A-Z]/.test(password)) strength += 15;
+    if (/[0-9]/.test(password)) strength += 15;
+    if (/[^a-zA-Z0-9]/.test(password)) strength += 20;
+
+    if (strength < 40) return { strength, label: 'Weak', color: 'bg-red-500' };
+    if (strength < 70) return { strength, label: 'Medium', color: 'bg-yellow-500' };
+    return { strength, label: 'Strong', color: 'bg-green-500' };
+};
+
+// ============ TYPES ============
 interface AuthModalProps {
     isOpen: boolean;
     modalType: AuthModalType;
@@ -65,593 +89,321 @@ interface AuthModalProps {
     onSwitchModal: (type: AuthModalType) => void;
 }
 
-// ============ OPTIONS ============
-const roleOptions = [
-    { value: 'customer', label: 'Customer - Book rides & rentals' },
-    { value: 'driver', label: 'Driver - Join our driver network' },
-    { value: 'cab_owner', label: 'Cab Owner - List your vehicles' },
-    { value: 'trip_planner', label: 'Trip Planner - Plan group trips' },
-];
-
-const benefits = [
-    { icon: Sparkles, text: 'Book rides instantly with transparent pricing' },
-    { icon: Clock, text: 'Rent cabs for hours, days, or weeks' },
-    { icon: Shield, text: '24/7 customer support' },
-    { icon: Star, text: 'Verified drivers and vehicles' },
-];
-
-// ============ OVERLAY BACKGROUND ============
+// ============ BACKDROP COMPONENT ============
 const Backdrop = ({ children, onClose }: { children: React.ReactNode; onClose: () => void }) => (
     <motion.div
-        className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+        className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gradient-to-br from-slate-900/90 via-teal-900/80 to-slate-900/90 backdrop-blur-md"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
     >
-        {/* Blurred backdrop */}
-        <div
-            className="absolute inset-0"
-            style={{
-                background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 41, 59, 0.9) 50%, rgba(15, 23, 42, 0.85) 100%)',
-                backdropFilter: 'blur(8px)',
-                WebkitBackdropFilter: 'blur(8px)',
-            }}
-        />
+        {/* Animated background particles */}
+        <div className="absolute inset-0 overflow-hidden">
+            {[...Array(20)].map((_, i) => (
+                <motion.div
+                    key={i}
+                    className="absolute w-2 h-2 bg-teal-400/20 rounded-full"
+                    style={{
+                        left: `${Math.random() * 100}%`,
+                        top: `${Math.random() * 100}%`,
+                    }}
+                    animate={{
+                        y: [0, -30, 0],
+                        opacity: [0.2, 0.5, 0.2],
+                    }}
+                    transition={{
+                        duration: 3 + Math.random() * 2,
+                        repeat: Infinity,
+                        delay: Math.random() * 2,
+                    }}
+                />
+            ))}
+        </div>
         {children}
     </motion.div>
 );
 
-// ============ LOGIN MODAL ============
-function LoginModal({ onClose, onSwitchModal }: { onClose: () => void; onSwitchModal: (type: AuthModalType) => void }) {
-    const [showPassword, setShowPassword] = useState(false);
+// ============ SOCIAL LOGIN BUTTONS ============
+export const SocialLoginButtons = () => (
+    <div className="space-y-3">
+        <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+                <span className="px-4 bg-white text-gray-500 font-medium">Or continue with</span>
+            </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+            <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="flex items-center justify-center gap-2 px-4 py-2.5 border-2 border-gray-200 rounded-xl hover:border-gray-300 hover:bg-gray-50 transition-all group"
+            >
+                <svg className="w-5 h-5" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                </svg>
+                <span className="text-sm font-medium text-gray-700">Google</span>
+            </motion.button>
+
+            <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="flex items-center justify-center gap-2 px-4 py-2.5 border-2 border-gray-200 rounded-xl hover:border-gray-300 hover:bg-gray-50 transition-all group"
+            >
+                <Github className="w-5 h-5 text-gray-700" />
+                <span className="text-sm font-medium text-gray-700">GitHub</span>
+            </motion.button>
+        </div>
+    </div>
+);
+
+// ============ MAIN COMPONENT ============
+export function AuthModal({ isOpen, modalType, onClose, onSwitchModal }: AuthModalProps) {
+    const { login, register: registerUser, isLoading } = useAuth();
     const [error, setError] = useState<string | null>(null);
-    const { login, isLoading } = useAuth();
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm<LoginFormData>({
-        resolver: zodResolver(loginSchema),
-    });
+    // Lock body scroll
+    useEffect(() => {
+        if (isOpen) document.body.style.overflow = 'hidden';
+        else document.body.style.overflow = 'unset';
+        return () => { document.body.style.overflow = 'unset'; };
+    }, [isOpen]);
 
-    const onSubmit = async (data: LoginFormData) => {
+    const isRegister = modalType === 'register';
+
+    const handleLogin = async (data: LoginFormData) => {
         setError(null);
         try {
             await login(data);
             onClose();
-        } catch (err: unknown) {
-            const errorMessage = err && typeof err === 'object' && 'message' in err
-                ? (err as { message: string }).message
-                : 'Invalid email or password. Please try again.';
-            setError(errorMessage);
+        } catch (err: any) {
+            setError(err?.message || 'Login failed');
         }
     };
 
-    return (
-        <motion.div
-            className="relative w-full max-w-md overflow-hidden"
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            onClick={(e) => e.stopPropagation()}
-        >
-            {/* Main Card */}
-            <div
-                className="relative rounded-3xl overflow-hidden"
-                style={{
-                    background: 'rgba(255, 255, 255, 0.98)',
-                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1)',
-                }}
-            >
-                {/* Decorative top gradient bar */}
-                <div
-                    className="h-1.5"
-                    style={{
-                        background: 'linear-gradient(90deg, #2563eb 0%, #0d9488 50%, #2563eb 100%)',
-                    }}
-                />
-
-                <div className="p-8">
-                    {/* Close button */}
-                    <button
-                        onClick={onClose}
-                        className="absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center transition-all hover:bg-gray-100"
-                        style={{ color: '#64748b' }}
-                    >
-                        <X className="w-5 h-5" />
-                    </button>
-
-                    {/* Header */}
-                    <div className="text-center mb-8">
-                        <div className="flex justify-center mb-4">
-                            <div
-                                className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg"
-                                style={{
-                                    background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)',
-                                }}
-                            >
-                                <Logo size="md" />
-                            </div>
-                        </div>
-                        <h2 className="text-2xl font-bold mb-2" style={{ color: '#0f172a' }}>
-                            Welcome Back
-                        </h2>
-                        <p style={{ color: '#64748b' }}>
-                            Sign in to continue to Jez Cabs
-                        </p>
-                    </div>
-
-                    {/* Error Message */}
-                    <AnimatePresence>
-                        {error && (
-                            <motion.div
-                                initial={{ opacity: 0, y: -10, height: 0 }}
-                                animate={{ opacity: 1, y: 0, height: 'auto' }}
-                                exit={{ opacity: 0, y: -10, height: 0 }}
-                                className="mb-6 px-4 py-3 rounded-xl bg-red-50 border border-red-200"
-                            >
-                                <p className="text-sm text-red-600">{error}</p>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-
-                    {/* Form */}
-                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-                        <Input
-                            label="Email Address"
-                            type="email"
-                            placeholder="you@example.com"
-                            prefix={<Mail className="w-4 h-4" />}
-                            error={errors.email?.message}
-                            {...register('email')}
-                        />
-
-                        <div className="relative">
-                            <Input
-                                label="Password"
-                                type={showPassword ? 'text' : 'password'}
-                                placeholder="••••••••"
-                                prefix={<Lock className="w-4 h-4" />}
-                                suffix={
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        className="text-gray-400 hover:text-gray-600 transition-colors"
-                                    >
-                                        {showPassword ? (
-                                            <EyeOff className="w-4 h-4" />
-                                        ) : (
-                                            <Eye className="w-4 h-4" />
-                                        )}
-                                    </button>
-                                }
-                                error={errors.password?.message}
-                                {...register('password')}
-                            />
-                        </div>
-
-                        <div className="flex items-center justify-between text-sm">
-                            <label className="flex items-center gap-2 cursor-pointer">
-                                <input
-                                    type="checkbox"
-                                    className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                                />
-                                <span style={{ color: '#64748b' }}>Remember me</span>
-                            </label>
-                            <button
-                                type="button"
-                                className="font-medium hover:underline"
-                                style={{ color: '#2563eb' }}
-                            >
-                                Forgot password?
-                            </button>
-                        </div>
-
-                        <Button
-                            type="submit"
-                            fullWidth
-                            size="lg"
-                            loading={isLoading}
-                            className="shadow-lg hover:shadow-xl transition-shadow"
-                            rightIcon={<ArrowRight className="w-5 h-5" />}
-                        >
-                            Sign In
-                        </Button>
-                    </form>
-
-                    {/* Divider */}
-                    <div className="relative my-8">
-                        <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t" style={{ borderColor: '#e2e8f0' }} />
-                        </div>
-                        <div className="relative flex justify-center text-sm">
-                            <span className="px-4 bg-white" style={{ color: '#94a3b8' }}>Or continue with</span>
-                        </div>
-                    </div>
-
-                    {/* Social Login */}
-                    <div className="grid grid-cols-2 gap-4">
-                        <button
-                            type="button"
-                            className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 transition-all hover:bg-gray-50 hover:border-gray-300"
-                            style={{ borderColor: '#e2e8f0' }}
-                        >
-                            <svg className="w-5 h-5" viewBox="0 0 24 24">
-                                <path
-                                    fill="#4285F4"
-                                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                                />
-                                <path
-                                    fill="#34A853"
-                                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                                />
-                                <path
-                                    fill="#FBBC05"
-                                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                                />
-                                <path
-                                    fill="#EA4335"
-                                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                                />
-                            </svg>
-                            <span className="font-medium" style={{ color: '#374151' }}>Google</span>
-                        </button>
-                        <button
-                            type="button"
-                            className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 transition-all hover:bg-gray-50 hover:border-gray-300"
-                            style={{ borderColor: '#e2e8f0' }}
-                        >
-                            <svg className="w-5 h-5" fill="#24292e" viewBox="0 0 24 24">
-                                <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0012 2z" />
-                            </svg>
-                            <span className="font-medium" style={{ color: '#374151' }}>GitHub</span>
-                        </button>
-                    </div>
-
-                    {/* Switch to Register */}
-                    <p className="mt-8 text-center text-sm" style={{ color: '#64748b' }}>
-                        Don't have an account?{' '}
-                        <button
-                            type="button"
-                            onClick={() => onSwitchModal('register')}
-                            className="font-semibold hover:underline"
-                            style={{ color: '#2563eb' }}
-                        >
-                            Sign up for free
-                        </button>
-                    </p>
-                </div>
-            </div>
-        </motion.div>
-    );
-}
-
-// ============ REGISTER MODAL ============
-function RegisterModal({ onClose, onSwitchModal }: { onClose: () => void; onSwitchModal: (type: AuthModalType) => void }) {
-    const [error, setError] = useState<string | null>(null);
-    const { register: registerUser, isLoading } = useAuth();
-
-    const {
-        register,
-        handleSubmit,
-        watch,
-        setValue,
-        formState: { errors },
-    } = useForm<RegisterFormData>({
-        resolver: zodResolver(registerSchema),
-        defaultValues: {
-            role: 'customer',
-        },
-    });
-
-    const selectedRole = watch('role');
-
-    const onSubmit = async (data: RegisterFormData) => {
+    const handleRegister = async (data: RegisterFormData) => {
         setError(null);
         try {
-            await registerUser({
-                email: data.email,
-                password: data.password,
-                firstName: data.firstName,
-                lastName: data.lastName,
-                phone: data.phone,
-                role: data.role as UserRole,
-            });
+            await registerUser(data as any);
             onClose();
-        } catch (err: unknown) {
-            const errorMessage = err && typeof err === 'object' && 'message' in err
-                ? (err as { message: string }).message
-                : 'Registration failed. Please try again.';
-            setError(errorMessage);
+        } catch (err: any) {
+            setError(err?.message || 'Registration failed');
         }
     };
 
+    if (!isOpen) return null;
+
     return (
-        <motion.div
-            className="relative w-full max-w-5xl overflow-hidden"
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            onClick={(e) => e.stopPropagation()}
-        >
-            {/* Main Card */}
-            <div
-                className="relative rounded-3xl overflow-hidden flex"
-                style={{
-                    background: 'rgba(255, 255, 255, 0.98)',
-                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1)',
-                }}
-            >
-                {/* Left Side - Benefits (Hidden on mobile) */}
-                <div
-                    className="hidden lg:flex flex-col justify-center p-10 w-[400px]"
-                    style={{
-                        background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 50%, #0d9488 100%)',
-                    }}
-                >
+        <AnimatePresence>
+            {isOpen && (
+                <Backdrop onClose={onClose}>
                     <motion.div
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.2 }}
+                        className="relative w-full max-w-6xl h-[650px] bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden flex border border-white/20"
+                        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                        transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                        onClick={(e) => e.stopPropagation()}
                     >
-                        <h3 className="text-2xl font-bold text-white mb-8">
-                            Why Choose Jez Cabs?
-                        </h3>
-
-                        <div className="space-y-5">
-                            {benefits.map((benefit, index) => (
-                                <motion.div
-                                    key={benefit.text}
-                                    initial={{ opacity: 0, x: -20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: 0.3 + index * 0.1 }}
-                                    className="flex items-center gap-4"
-                                >
-                                    <div
-                                        className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                                        style={{ background: 'rgba(255, 255, 255, 0.2)' }}
-                                    >
-                                        <benefit.icon className="w-5 h-5 text-white" />
-                                    </div>
-                                    <span className="text-white/90">{benefit.text}</span>
-                                </motion.div>
-                            ))}
-                        </div>
-
-                        {/* Testimonial */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.7 }}
-                            className="mt-10 p-5 rounded-2xl"
-                            style={{ background: 'rgba(255, 255, 255, 0.1)' }}
+                        {/* Close Button */}
+                        <motion.button
+                            whileHover={{ scale: 1.1, rotate: 90 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={onClose}
+                            className="absolute top-6 right-6 z-50 p-2.5 rounded-xl bg-white/80 hover:bg-white shadow-lg hover:shadow-xl transition-all border border-gray-200"
                         >
-                            <p className="text-white/90 italic text-sm mb-4">
-                                "Jez Cabs has made my daily commute so much easier. The drivers are
-                                professional and the app is super easy to use!"
-                            </p>
-                            <div className="flex items-center gap-3">
-                                <div
-                                    className="w-10 h-10 rounded-full flex items-center justify-center"
-                                    style={{ background: 'rgba(255, 255, 255, 0.2)' }}
+                            <X className="w-5 h-5 text-gray-600" />
+                        </motion.button>
+
+                        {/* Error Toast */}
+                        <AnimatePresence>
+                            {error && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: -20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -20 }}
+                                    className="absolute top-6 left-1/2 -translate-x-1/2 z-50 bg-red-50 text-red-600 px-6 py-3 rounded-xl shadow-lg border-2 border-red-200 text-sm font-medium flex items-center gap-2"
                                 >
-                                    <User className="w-5 h-5 text-white" />
-                                </div>
-                                <div>
-                                    <p className="text-white font-medium text-sm">Rahul Sharma</p>
-                                    <p className="text-white/60 text-xs">Verified Customer</p>
-                                </div>
+                                    <AlertCircle className="w-4 h-4" />
+                                    {error}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        {/* Info Panel (Gradient Side with Blue/Teal Theme) */}
+                        <motion.div
+                            className="absolute top-0 bottom-0 w-[42%] bg-gradient-to-br from-blue-600 via-teal-500 to-teal-600 text-white z-20 flex flex-col justify-center p-12 overflow-hidden"
+                            initial={false}
+                            animate={{
+                                left: isRegister ? '0%' : '58%',
+                                borderTopRightRadius: isRegister ? '0px' : '24px',
+                                borderBottomRightRadius: isRegister ? '0px' : '24px',
+                                borderTopLeftRadius: isRegister ? '24px' : '0px',
+                                borderBottomLeftRadius: isRegister ? '24px' : '0px',
+                            }}
+                            transition={{ type: 'spring', stiffness: 260, damping: 30 }}
+                        >
+                            {/* Animated gradient overlay */}
+                            <div className="absolute inset-0 opacity-30">
+                                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent"></div>
+                                <motion.div
+                                    className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1),transparent_50%)]"
+                                    animate={{
+                                        scale: [1, 1.2, 1],
+                                        opacity: [0.3, 0.5, 0.3],
+                                    }}
+                                    transition={{
+                                        duration: 4,
+                                        repeat: Infinity,
+                                        ease: "easeInOut"
+                                    }}
+                                />
                             </div>
+
+                            <AnimatePresence mode="wait">
+                                {isRegister ? (
+                                    <motion.div
+                                        key="register-info"
+                                        initial={{ opacity: 0, x: -30 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        exit={{ opacity: 0, x: -30 }}
+                                        transition={{ duration: 0.4 }}
+                                        className="relative z-10"
+                                    >
+                                        <motion.div
+                                            className="mb-8"
+                                            initial={{ scale: 0 }}
+                                            animate={{ scale: 1 }}
+                                            transition={{ delay: 0.2, type: 'spring' }}
+                                        >
+                                            <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm mb-6 shadow-xl">
+                                                <Sparkles className="w-10 h-10 text-white" />
+                                            </div>
+                                            <h2 className="text-4xl font-bold mb-4 leading-tight">Start Your Journey</h2>
+                                            <p className="text-teal-100 leading-relaxed text-lg">
+                                                Join thousands of satisfied users who trust Jez Cabs for their daily commute and travel needs.
+                                            </p>
+                                        </motion.div>
+                                        <div className="space-y-5">
+                                            {benefits.map((item, idx) => (
+                                                <motion.div
+                                                    key={idx}
+                                                    initial={{ opacity: 0, x: -20 }}
+                                                    animate={{ opacity: 1, x: 0 }}
+                                                    transition={{ delay: 0.3 + idx * 0.1 }}
+                                                    className="flex items-center gap-4"
+                                                >
+                                                    <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center backdrop-blur-sm shadow-lg">
+                                                        <item.icon className={`w-5 h-5 ${item.color}`} />
+                                                    </div>
+                                                    <span className="text-sm font-medium text-teal-50">{item.text}</span>
+                                                </motion.div>
+                                            ))}
+                                        </div>
+                                    </motion.div>
+                                ) : (
+                                    <motion.div
+                                        key="login-info"
+                                        initial={{ opacity: 0, x: 30 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        exit={{ opacity: 0, x: 30 }}
+                                        transition={{ duration: 0.4 }}
+                                        className="relative z-10 text-center"
+                                    >
+                                        <motion.div
+                                            className="mb-8 flex justify-center"
+                                            initial={{ scale: 0, rotate: -180 }}
+                                            animate={{ scale: 1, rotate: 0 }}
+                                            transition={{ delay: 0.2, type: 'spring' }}
+                                        >
+                                            <div className="w-24 h-24 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm shadow-xl">
+                                                <Logo size="lg" className="text-white" />
+                                            </div>
+                                        </motion.div>
+                                        <h2 className="text-4xl font-bold mb-4">Welcome Back!</h2>
+                                        <p className="text-teal-100 mb-8 text-lg">
+                                            To keep connected with us please login with your personal info.
+                                        </p>
+                                        <motion.div
+                                            className="p-6 bg-white/10 rounded-2xl backdrop-blur-md shadow-xl border border-white/20"
+                                            initial={{ opacity: 0, y: 20 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: 0.4 }}
+                                        >
+                                            <p className="italic text-base text-teal-50 mb-3">
+                                                "The best way to travel! Safe, reliable and always on time."
+                                            </p>
+                                            <div className="flex items-center justify-center gap-2">
+                                                <div className="flex text-yellow-400">
+                                                    {[...Array(5)].map((_, i) => (
+                                                        <motion.div
+                                                            key={i}
+                                                            initial={{ opacity: 0, scale: 0 }}
+                                                            animate={{ opacity: 1, scale: 1 }}
+                                                            transition={{ delay: 0.5 + i * 0.1 }}
+                                                        >
+                                                            <Star className="w-4 h-4 fill-current" />
+                                                        </motion.div>
+                                                    ))}
+                                                </div>
+                                                <span className="text-sm text-teal-200 font-medium">5.0 Customer Rating</span>
+                                            </div>
+                                        </motion.div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </motion.div>
+
+                        {/* Form Panel (White Side) */}
+                        <motion.div
+                            className="absolute top-0 bottom-0 w-[58%] bg-gradient-to-br from-white to-gray-50/50 z-10 flex flex-col justify-center p-12"
+                            initial={false}
+                            animate={{
+                                left: isRegister ? '42%' : '0%',
+                            }}
+                            transition={{ type: 'spring', stiffness: 260, damping: 30 }}
+                        >
+                            <AnimatePresence mode="wait">
+                                {isRegister ? (
+                                    <motion.div
+                                        key="register-form"
+                                        initial={{ opacity: 0, x: 30 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        exit={{ opacity: 0, x: 30 }}
+                                        transition={{ duration: 0.3 }}
+                                        className="h-full"
+                                    >
+                                        <RegisterForm
+                                            onSubmit={handleRegister}
+                                            isLoading={isLoading}
+                                            onSwitchModal={onSwitchModal}
+                                        />
+                                    </motion.div>
+                                ) : (
+                                    <motion.div
+                                        key="login-form"
+                                        initial={{ opacity: 0, x: -30 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        exit={{ opacity: 0, x: -30 }}
+                                        transition={{ duration: 0.3 }}
+                                        className="h-full flex items-center"
+                                    >
+                                        <LoginForm
+                                            onSubmit={handleLogin}
+                                            isLoading={isLoading}
+                                            onSwitchModal={onSwitchModal}
+                                        />
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </motion.div>
                     </motion.div>
-                </div>
-
-                {/* Right Side - Form */}
-                <div className="flex-1 p-8 max-h-[90vh] overflow-y-auto">
-                    {/* Close button */}
-                    <button
-                        onClick={onClose}
-                        className="absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center transition-all hover:bg-gray-100 z-10"
-                        style={{ color: '#64748b' }}
-                    >
-                        <X className="w-5 h-5" />
-                    </button>
-
-                    {/* Header */}
-                    <div className="mb-6">
-                        <div className="flex items-center gap-3 mb-4">
-                            <div
-                                className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg"
-                                style={{
-                                    background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)',
-                                }}
-                            >
-                                <Logo size="sm" />
-                            </div>
-                            <div>
-                                <h2 className="text-xl font-bold" style={{ color: '#0f172a' }}>
-                                    Create your account
-                                </h2>
-                                <p className="text-sm" style={{ color: '#64748b' }}>
-                                    Join thousands of users on Jez Cabs
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Error Message */}
-                    <AnimatePresence>
-                        {error && (
-                            <motion.div
-                                initial={{ opacity: 0, y: -10, height: 0 }}
-                                animate={{ opacity: 1, y: 0, height: 'auto' }}
-                                exit={{ opacity: 0, y: -10, height: 0 }}
-                                className="mb-6 px-4 py-3 rounded-xl bg-red-50 border border-red-200"
-                            >
-                                <p className="text-sm text-red-600">{error}</p>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-
-                    {/* Form */}
-                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                        <div className="grid grid-cols-2 gap-4">
-                            <Input
-                                label="First Name"
-                                placeholder="John"
-                                prefix={<User className="w-4 h-4" />}
-                                error={errors.firstName?.message}
-                                {...register('firstName')}
-                            />
-                            <Input
-                                label="Last Name"
-                                placeholder="Doe"
-                                error={errors.lastName?.message}
-                                {...register('lastName')}
-                            />
-                        </div>
-
-                        <Input
-                            label="Email Address"
-                            type="email"
-                            placeholder="you@example.com"
-                            prefix={<Mail className="w-4 h-4" />}
-                            error={errors.email?.message}
-                            {...register('email')}
-                        />
-
-                        <Input
-                            label="Phone Number"
-                            type="tel"
-                            placeholder="9876543210"
-                            prefix={<Phone className="w-4 h-4" />}
-                            error={errors.phone?.message}
-                            {...register('phone')}
-                        />
-
-                        <Select
-                            label="I want to"
-                            options={roleOptions}
-                            value={selectedRole}
-                            onValueChange={(value) => setValue('role', value as RegisterFormData['role'])}
-                            error={errors.role?.message}
-                        />
-
-                        <div className="grid grid-cols-2 gap-4">
-                            <Input
-                                label="Password"
-                                type="password"
-                                placeholder="••••••••"
-                                prefix={<Lock className="w-4 h-4" />}
-                                hint="Min 8 chars, upper, lower, number"
-                                error={errors.password?.message}
-                                {...register('password')}
-                            />
-
-                            <Input
-                                label="Confirm Password"
-                                type="password"
-                                placeholder="••••••••"
-                                prefix={<Lock className="w-4 h-4" />}
-                                error={errors.confirmPassword?.message}
-                                {...register('confirmPassword')}
-                            />
-                        </div>
-
-                        {/* Terms checkbox */}
-                        <div className="flex items-start gap-2 pt-2">
-                            <input
-                                type="checkbox"
-                                id="terms"
-                                className="w-4 h-4 mt-0.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                                required
-                            />
-                            <label htmlFor="terms" className="text-sm" style={{ color: '#64748b' }}>
-                                I agree to the{' '}
-                                <button type="button" className="hover:underline" style={{ color: '#2563eb' }}>
-                                    Terms of Service
-                                </button>{' '}
-                                and{' '}
-                                <button type="button" className="hover:underline" style={{ color: '#2563eb' }}>
-                                    Privacy Policy
-                                </button>
-                            </label>
-                        </div>
-
-                        <Button
-                            type="submit"
-                            fullWidth
-                            size="lg"
-                            loading={isLoading}
-                            className="shadow-lg hover:shadow-xl transition-shadow mt-2"
-                            rightIcon={<ArrowRight className="w-5 h-5" />}
-                        >
-                            Create Account
-                        </Button>
-                    </form>
-
-                    {/* Switch to Login */}
-                    <p className="mt-6 text-center text-sm" style={{ color: '#64748b' }}>
-                        Already have an account?{' '}
-                        <button
-                            type="button"
-                            onClick={() => onSwitchModal('login')}
-                            className="font-semibold hover:underline"
-                            style={{ color: '#2563eb' }}
-                        >
-                            Sign in
-                        </button>
-                    </p>
-                </div>
-            </div>
-        </motion.div>
-    );
-}
-
-// ============ MAIN AUTH MODAL ============
-export function AuthModal({ isOpen, modalType, onClose, onSwitchModal }: AuthModalProps) {
-    // Prevent body scroll when modal is open
-    useEffect(() => {
-        if (isOpen) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'unset';
-        }
-        return () => {
-            document.body.style.overflow = 'unset';
-        };
-    }, [isOpen]);
-
-    // Handle escape key
-    useEffect(() => {
-        const handleEscape = (e: KeyboardEvent) => {
-            if (e.key === 'Escape') {
-                onClose();
-            }
-        };
-
-        if (isOpen) {
-            window.addEventListener('keydown', handleEscape);
-        }
-
-        return () => {
-            window.removeEventListener('keydown', handleEscape);
-        };
-    }, [isOpen, onClose]);
-
-    return (
-        <AnimatePresence mode="wait">
-            {isOpen && modalType && (
-                <Backdrop onClose={onClose}>
-                    {modalType === 'login' ? (
-                        <LoginModal onClose={onClose} onSwitchModal={onSwitchModal} />
-                    ) : (
-                        <RegisterModal onClose={onClose} onSwitchModal={onSwitchModal} />
-                    )}
                 </Backdrop>
             )}
         </AnimatePresence>
