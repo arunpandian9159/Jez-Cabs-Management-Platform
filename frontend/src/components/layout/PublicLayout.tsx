@@ -6,6 +6,7 @@ import { cn } from '../../lib/utils';
 import { Button } from '../ui/Button';
 import { Logo } from '../ui/Logo';
 import { ROUTES } from '../../lib/constants';
+import { AuthModal, useAuthModal } from '../auth';
 
 const navLinks = [
     { path: ROUTES.HOME, label: 'Home' },
@@ -17,6 +18,7 @@ const navLinks = [
 export function PublicLayout() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const { modalType, openLogin, openRegister, closeModal, setModalType } = useAuthModal();
     const location = useLocation();
 
     // Handle scroll effect for navbar
@@ -44,6 +46,16 @@ export function PublicLayout() {
             }
             setMobileMenuOpen(false);
         }
+    };
+
+    const handleOpenLogin = () => {
+        setMobileMenuOpen(false);
+        openLogin();
+    };
+
+    const handleOpenRegister = () => {
+        setMobileMenuOpen(false);
+        openRegister();
     };
 
     return (
@@ -116,28 +128,26 @@ export function PublicLayout() {
                             <div className="flex items-center gap-3 md:gap-4">
                                 {/* Auth buttons - Desktop */}
                                 <div className="hidden md:flex items-center gap-3">
-                                    <Link to={ROUTES.LOGIN}>
-                                        <button
-                                            className="h-9 px-4 text-sm font-medium rounded-lg border-2 border-gray-300 text-gray-700 bg-white hover:bg-gray-100 hover:border-gray-400 transition-all duration-200"
-                                        >
-                                            Sign In
-                                        </button>
-                                    </Link>
-                                    <Link to={ROUTES.REGISTER}>
-                                        <motion.button
-                                            whileHover={{ scale: 1.02 }}
-                                            whileTap={{ scale: 0.98 }}
-                                            className="h-9 px-6 text-sm font-medium rounded-lg text-white flex items-center gap-2 shadow-lg hover:shadow-xl transition-all duration-200"
-                                            style={{
-                                                backgroundColor: '#0177c6',
-                                            }}
-                                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#025fa1'}
-                                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0177c6'}
-                                        >
-                                            Get Started
-                                            <ArrowRight className="w-4 h-4" />
-                                        </motion.button>
-                                    </Link>
+                                    <button
+                                        onClick={handleOpenLogin}
+                                        className="h-9 px-4 text-sm font-medium rounded-lg border-2 border-gray-300 text-gray-700 bg-white hover:bg-gray-100 hover:border-gray-400 transition-all duration-200"
+                                    >
+                                        Sign In
+                                    </button>
+                                    <motion.button
+                                        onClick={handleOpenRegister}
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        className="h-9 px-6 text-sm font-medium rounded-lg text-white flex items-center gap-2 shadow-lg hover:shadow-xl transition-all duration-200"
+                                        style={{
+                                            backgroundColor: '#0177c6',
+                                        }}
+                                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#025fa1'}
+                                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0177c6'}
+                                    >
+                                        Get Started
+                                        <ArrowRight className="w-4 h-4" />
+                                    </motion.button>
                                 </div>
 
                                 {/* Mobile menu button */}
@@ -222,23 +232,21 @@ export function PublicLayout() {
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.25 }}
                                     >
-                                        <Link to={ROUTES.LOGIN} onClick={() => setMobileMenuOpen(false)}>
-                                            <Button
-                                                variant="outline"
-                                                fullWidth
-                                                className="border-gray-200 text-gray-700 hover:bg-gray-50"
-                                            >
-                                                Sign In
-                                            </Button>
-                                        </Link>
-                                        <Link to={ROUTES.REGISTER} onClick={() => setMobileMenuOpen(false)}>
-                                            <Button
-                                                fullWidth
-                                                className="bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 shadow-lg"
-                                            >
-                                                Get Started Free
-                                            </Button>
-                                        </Link>
+                                        <Button
+                                            variant="outline"
+                                            fullWidth
+                                            className="border-gray-200 text-gray-700 hover:bg-gray-50"
+                                            onClick={handleOpenLogin}
+                                        >
+                                            Sign In
+                                        </Button>
+                                        <Button
+                                            fullWidth
+                                            className="bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 shadow-lg"
+                                            onClick={handleOpenRegister}
+                                        >
+                                            Get Started Free
+                                        </Button>
                                     </motion.div>
                                 </nav>
                             </div>
@@ -368,6 +376,14 @@ export function PublicLayout() {
                     </div>
                 </div>
             </footer>
+
+            {/* Auth Modal */}
+            <AuthModal
+                isOpen={modalType !== null}
+                modalType={modalType}
+                onClose={closeModal}
+                onSwitchModal={setModalType}
+            />
         </div>
     );
 }
