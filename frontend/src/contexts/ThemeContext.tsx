@@ -1,69 +1,25 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useEffect, ReactNode } from 'react';
 
-type Theme = 'light' | 'dark';
+type Theme = 'light';
 
 interface ThemeContextType {
     theme: Theme;
-    toggleTheme: () => void;
-    setTheme: (theme: Theme) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-    const [theme, setThemeState] = useState<Theme>(() => {
-        // Check localStorage first
-        if (typeof window !== 'undefined') {
-            const stored = localStorage.getItem('jez-cabs-theme') as Theme;
-            if (stored) return stored;
-
-            // Check system preference
-            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                return 'dark';
-            }
-        }
-        return 'light';
-    });
+    const theme: Theme = 'light';
 
     useEffect(() => {
         const root = document.documentElement;
-
-        if (theme === 'dark') {
-            root.setAttribute('data-theme', 'dark');
-            root.classList.add('dark');
-        } else {
-            root.setAttribute('data-theme', 'light');
-            root.classList.remove('dark');
-        }
-
-        localStorage.setItem('jez-cabs-theme', theme);
-    }, [theme]);
-
-    // Listen for system theme changes
-    useEffect(() => {
-        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-
-        const handleChange = (e: MediaQueryListEvent) => {
-            const stored = localStorage.getItem('jez-cabs-theme');
-            if (!stored) {
-                setThemeState(e.matches ? 'dark' : 'light');
-            }
-        };
-
-        mediaQuery.addEventListener('change', handleChange);
-        return () => mediaQuery.removeEventListener('change', handleChange);
+        root.setAttribute('data-theme', 'light');
+        root.classList.remove('dark');
+        localStorage.setItem('jez-cabs-theme', 'light');
     }, []);
 
-    const toggleTheme = () => {
-        setThemeState(prev => (prev === 'light' ? 'dark' : 'light'));
-    };
-
-    const setTheme = (newTheme: Theme) => {
-        setThemeState(newTheme);
-    };
-
     return (
-        <ThemeContext.Provider value={{ theme, toggleTheme, setTheme }}>
+        <ThemeContext.Provider value={{ theme }}>
             {children}
         </ThemeContext.Provider>
     );
