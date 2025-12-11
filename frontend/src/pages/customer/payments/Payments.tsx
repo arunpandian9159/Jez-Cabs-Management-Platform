@@ -17,91 +17,35 @@ import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../../component
 import { Modal } from '../../../components/ui/Modal';
 import { formatCurrency, formatDate, formatTime } from '../../../lib/utils';
 
-// Mock payment methods
-const paymentMethods = [
-    {
-        id: 'pm1',
-        type: 'card',
-        brand: 'Visa',
-        last4: '4242',
-        expiry: '12/26',
-        isDefault: true,
-    },
-    {
-        id: 'pm2',
-        type: 'card',
-        brand: 'Mastercard',
-        last4: '8888',
-        expiry: '08/25',
-        isDefault: false,
-    },
-    {
-        id: 'pm3',
-        type: 'upi',
-        upiId: 'user@upi',
-        isDefault: false,
-    },
-];
+// TODO: Fetch payment methods from API
+// API endpoint: GET /api/v1/payments/methods
+interface PaymentMethod {
+    id: string;
+    type: string;
+    brand?: string;
+    last4?: string;
+    expiry?: string;
+    upiId?: string;
+    isDefault: boolean;
+}
+const paymentMethods: PaymentMethod[] = [];
 
-// Mock transactions
-const transactions = [
-    {
-        id: 'tx1',
-        type: 'payment',
-        description: 'Trip to Whitefield',
-        amount: 320,
-        date: '2025-12-10T14:30:00',
-        status: 'completed',
-        paymentMethod: 'Visa •••• 4242',
-    },
-    {
-        id: 'tx2',
-        type: 'refund',
-        description: 'Cancellation refund',
-        amount: 50,
-        date: '2025-12-08T10:15:00',
-        status: 'completed',
-        paymentMethod: 'Wallet',
-    },
-    {
-        id: 'tx3',
-        type: 'payment',
-        description: 'Trip to Electronic City',
-        amount: 450,
-        date: '2025-12-08T09:00:00',
-        status: 'completed',
-        paymentMethod: 'Visa •••• 4242',
-    },
-    {
-        id: 'tx4',
-        type: 'payment',
-        description: 'Cab Rental - Hyundai Creta (7 days)',
-        amount: 8750,
-        date: '2025-12-07T10:00:00',
-        status: 'completed',
-        paymentMethod: 'Mastercard •••• 8888',
-    },
-    {
-        id: 'tx5',
-        type: 'payment',
-        description: 'Trip to Mysore',
-        amount: 2800,
-        date: '2025-12-05T06:00:00',
-        status: 'completed',
-        paymentMethod: 'UPI - user@upi',
-    },
-    {
-        id: 'tx6',
-        type: 'pending',
-        description: 'Rental payment (remaining)',
-        amount: 8750,
-        date: '2025-12-15T10:00:00',
-        status: 'pending',
-        paymentMethod: 'Visa •••• 4242',
-    },
-];
+// TODO: Fetch transactions from API
+// API endpoint: GET /api/v1/payments/transactions
+interface Transaction {
+    id: string;
+    type: string;
+    description: string;
+    amount: number;
+    date: string;
+    status: string;
+    paymentMethod: string;
+}
+const transactions: Transaction[] = [];
 
-const walletBalance = 250;
+// TODO: Fetch wallet balance from API
+// API endpoint: GET /api/v1/payments/wallet
+const walletBalance = 0;
 
 export function Payments() {
     const [activeTab, setActiveTab] = useState('transactions');

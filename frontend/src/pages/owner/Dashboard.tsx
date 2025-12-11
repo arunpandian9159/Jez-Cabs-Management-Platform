@@ -17,69 +17,45 @@ import { Badge, StatusBadge } from '../../components/ui/Badge';
 import { Avatar } from '../../components/ui/Avatar';
 import { formatCurrency } from '../../lib/utils';
 
-// Mock owner data
-const ownerStats = {
-    totalCabs: 5,
-    activeCabs: 4,
-    totalDrivers: 6,
-    activeDrivers: 4,
-    monthlyRevenue: 285000,
-    pendingPayments: 45000,
-    avgRating: 4.7,
+// TODO: Fetch owner stats from API
+// API endpoint: GET /api/v1/owner/dashboard/stats
+interface OwnerStats {
+    totalCabs: number;
+    activeCabs: number;
+    totalDrivers: number;
+    activeDrivers: number;
+    monthlyRevenue: number;
+    pendingPayments: number;
+    avgRating: number;
+}
+const ownerStats: OwnerStats = {
+    totalCabs: 0,
+    activeCabs: 0,
+    totalDrivers: 0,
+    activeDrivers: 0,
+    monthlyRevenue: 0,
+    pendingPayments: 0,
+    avgRating: 0,
 };
 
-const cabs = [
-    {
-        id: 'c1',
-        make: 'Maruti',
-        model: 'Swift Dzire',
-        registrationNumber: 'KA 01 AB 1234',
-        status: 'active',
-        driver: { name: 'Rajesh K.', rating: 4.8, trips: 156 },
-        todayEarnings: 2450,
-        rating: 4.8,
-    },
-    {
-        id: 'c2',
-        make: 'Hyundai',
-        model: 'Creta',
-        registrationNumber: 'KA 01 CD 5678',
-        status: 'active',
-        driver: { name: 'Suresh M.', rating: 4.6, trips: 89 },
-        todayEarnings: 3200,
-        rating: 4.9,
-    },
-    {
-        id: 'c3',
-        make: 'Toyota',
-        model: 'Innova Crysta',
-        registrationNumber: 'KA 05 EF 9012',
-        status: 'maintenance',
-        driver: null,
-        todayEarnings: 0,
-        rating: 4.7,
-    },
-    {
-        id: 'c4',
-        make: 'Honda',
-        model: 'City',
-        registrationNumber: 'KA 09 GH 3456',
-        status: 'active',
-        driver: { name: 'Mahesh R.', rating: 4.9, trips: 234 },
-        todayEarnings: 1850,
-        rating: 4.6,
-    },
-    {
-        id: 'c5',
-        make: 'Maruti',
-        model: 'Ertiga',
-        registrationNumber: 'KA 12 IJ 7890',
-        status: 'idle',
-        driver: null,
-        todayEarnings: 0,
-        rating: 4.5,
-    },
-];
+// TODO: Fetch cabs from API
+// API endpoint: GET /api/v1/owner/cabs
+interface CabDriver {
+    name: string;
+    rating: number;
+    trips: number;
+}
+interface Cab {
+    id: string;
+    make: string;
+    model: string;
+    registrationNumber: string;
+    status: string;
+    driver: CabDriver | null;
+    todayEarnings: number;
+    rating: number;
+}
+const cabs: Cab[] = [];
 
 export function OwnerDashboard() {
     return (

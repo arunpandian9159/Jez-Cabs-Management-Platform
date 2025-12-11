@@ -18,65 +18,58 @@ import { Badge } from '../../components/ui/Badge';
 import { Avatar } from '../../components/ui/Avatar';
 import { cn, formatCurrency } from '../../lib/utils';
 
-// Mock driver data
-const driverStats = {
-    todayEarnings: 2450,
-    weeklyEarnings: 18500,
-    monthlyEarnings: 72000,
-    totalTrips: 1248,
-    rating: 4.8,
-    acceptanceRate: 92,
-    completionRate: 98,
-    onlineHours: 8.5,
+// TODO: Fetch driver stats from API
+// API endpoint: GET /api/v1/driver/dashboard/stats
+interface DriverStats {
+    todayEarnings: number;
+    weeklyEarnings: number;
+    monthlyEarnings: number;
+    totalTrips: number;
+    rating: number;
+    acceptanceRate: number;
+    completionRate: number;
+    onlineHours: number;
+}
+const driverStats: DriverStats = {
+    todayEarnings: 0,
+    weeklyEarnings: 0,
+    monthlyEarnings: 0,
+    totalTrips: 0,
+    rating: 0,
+    acceptanceRate: 0,
+    completionRate: 0,
+    onlineHours: 0,
 };
 
-const pendingRequests = [
-    {
-        id: 'req1',
-        pickup: 'Koramangala 4th Block',
-        destination: 'Whitefield Tech Park',
-        distance: 18.5,
-        estimatedFare: 380,
-        estimatedTime: 45,
-        customerName: 'Rahul S.',
-        customerRating: 4.7,
-        tripType: 'instant',
-        expiresIn: 25,
-    },
-];
+// TODO: Fetch pending trip requests from API (WebSocket)
+// API endpoint: GET /api/v1/driver/trip-requests
+interface TripRequest {
+    id: string;
+    pickup: string;
+    destination: string;
+    distance: number;
+    estimatedFare: number;
+    estimatedTime: number;
+    customerName: string;
+    customerRating: number;
+    tripType: string;
+    expiresIn: number;
+}
+const pendingRequests: TripRequest[] = [];
 
-const recentTrips = [
-    {
-        id: 't1',
-        pickup: 'Indiranagar',
-        destination: 'Electronic City',
-        fare: 520,
-        distance: 22,
-        time: '09:30 AM',
-        rating: 5,
-        status: 'completed',
-    },
-    {
-        id: 't2',
-        pickup: 'MG Road',
-        destination: 'Hebbal',
-        fare: 280,
-        distance: 12,
-        time: '08:15 AM',
-        rating: 4,
-        status: 'completed',
-    },
-    {
-        id: 't3',
-        pickup: 'Jayanagar',
-        destination: 'Bellandur',
-        fare: 0,
-        distance: 15,
-        time: '07:00 AM',
-        rating: null,
-        status: 'cancelled',
-    },
-];
+// TODO: Fetch recent trips from API
+// API endpoint: GET /api/v1/driver/trips?limit=3
+interface RecentTrip {
+    id: string;
+    pickup: string;
+    destination: string;
+    fare: number;
+    distance: number;
+    time: string;
+    rating: number | null;
+    status: string;
+}
+const recentTrips: RecentTrip[] = [];
 
 export function DriverDashboard() {
     const [isOnline, setIsOnline] = useState(true);

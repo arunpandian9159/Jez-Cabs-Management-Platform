@@ -36,6 +36,7 @@ export const ROUTES = {
         TRIPS: '/customer/trips',
         PAYMENTS: '/customer/payments',
         DISPUTES: '/customer/disputes',
+        SAFETY: '/customer/safety',
         PROFILE: '/customer/profile',
     },
 
