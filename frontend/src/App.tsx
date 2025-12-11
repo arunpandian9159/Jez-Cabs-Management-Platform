@@ -2,11 +2,12 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute, PublicOnlyRoute } from './components/ProtectedRoute';
-import { PublicLayout, CustomerLayout, DriverLayout, CabOwnerLayout } from './components/layout';
+import { PublicLayout, CustomerLayout, DriverLayout, CabOwnerLayout, AdminLayout } from './components/layout';
 import { Home, Login, Register } from './pages/public';
 import { CustomerDashboard, LocationEntry, CabSelection, DriverSearch, LiveTracking, TripComplete, BrowseCabs, ActiveRentals, PlanTrip, TripHistory, Payments, Disputes, EmergencyContacts, SafetyCenter, TripExchange, PostTrip, ShareRide, ExchangeHistory } from './pages/customer';
 import { DriverDashboard, ActiveTrip, TripHistory as DriverTripHistory, Earnings, DriverProfile, DriverSettings } from './pages/driver';
 import { OwnerDashboard, ManageCabs, ManageDrivers, OwnerEarnings, OwnerSettings, Contracts } from './pages/owner';
+import { AdminDashboard, AdminDisputes, AdminUsers, AdminVerification } from './pages/admin';
 import { ROUTES } from './lib/constants';
 
 // Create React Query client
@@ -101,9 +102,18 @@ function App() {
                             <Route path="/planner/*" element={<PlaceholderPage title="Trip Planner" />} />
                         </Route>
 
-                        {/* Admin routes - placeholder */}
+                        {/* Admin routes */}
                         <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
-                            <Route path="/admin/*" element={<PlaceholderPage title="Admin Dashboard" />} />
+                            <Route element={<AdminLayout />}>
+                                <Route path="/admin" element={<AdminDashboard />} />
+                                <Route path="/admin/users" element={<AdminUsers />} />
+                                <Route path="/admin/disputes" element={<AdminDisputes />} />
+                                <Route path="/admin/verification" element={<AdminVerification />} />
+                                <Route path="/admin/drivers" element={<PlaceholderPage title="Driver Management" />} />
+                                <Route path="/admin/cabs" element={<PlaceholderPage title="Vehicle Management" />} />
+                                <Route path="/admin/reports" element={<PlaceholderPage title="Reports" />} />
+                                <Route path="/admin/settings" element={<PlaceholderPage title="Admin Settings" />} />
+                            </Route>
                         </Route>
 
                         {/* Support routes - placeholder */}
