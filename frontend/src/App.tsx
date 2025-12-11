@@ -4,7 +4,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { ProtectedRoute, PublicOnlyRoute } from './components/ProtectedRoute';
 import { PublicLayout, CustomerLayout, DriverLayout, CabOwnerLayout, AdminLayout } from './components/layout';
-import { Home, Login, Register } from './pages/public';
+import { Home } from './pages/public';
 import { CustomerDashboard, LocationEntry, CabSelection, DriverSearch, LiveTracking, TripComplete, BrowseCabs, ActiveRentals, PlanTrip, TripHistory, Payments, Disputes, EmergencyContacts, SafetyCenter, TripExchange, PostTrip, ShareRide, ExchangeHistory } from './pages/customer';
 import { DriverDashboard, ActiveTrip, TripHistory as DriverTripHistory, Earnings, DriverProfile, DriverSettings } from './pages/driver';
 import { OwnerDashboard, ManageCabs, ManageDrivers, OwnerEarnings, OwnerSettings, Contracts } from './pages/owner';
@@ -41,8 +41,6 @@ function App() {
                             <Route element={<PublicOnlyRoute />}>
                                 <Route element={<PublicLayout />}>
                                     <Route path={ROUTES.HOME} element={<Home />} />
-                                    <Route path={ROUTES.LOGIN} element={<Login />} />
-                                    <Route path={ROUTES.REGISTER} element={<Register />} />
                                     <Route path={ROUTES.DRIVER_REGISTER} element={<PlaceholderPage title="Driver Registration" />} />
                                     <Route path={ROUTES.OWNER_REGISTER} element={<PlaceholderPage title="Cab Owner Registration" />} />
                                 </Route>
