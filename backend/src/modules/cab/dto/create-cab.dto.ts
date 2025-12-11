@@ -6,12 +6,13 @@ import {
   IsEnum,
   IsOptional,
   IsDateString,
+  IsBoolean,
   Min,
   Max,
   MaxLength,
   IsPositive,
 } from 'class-validator';
-import { CabStatus } from '../../../common/enums';
+import { CabStatus, CabType } from '../../../common/enums';
 
 export class CreateCabDto {
   @ApiProperty({ example: 'Toyota', description: 'Vehicle manufacturer' })
@@ -27,11 +28,11 @@ export class CreateCabDto {
   model: string;
 
   @ApiProperty({ example: 2023, description: 'Manufacturing year' })
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   @Min(1900)
   @Max(new Date().getFullYear() + 1)
-  year: number;
+  year?: number;
 
   @ApiProperty({ example: 'ABC-1234', description: 'Vehicle registration number' })
   @IsNotEmpty()
@@ -39,18 +40,12 @@ export class CreateCabDto {
   @MaxLength(50)
   registration_number: string;
 
-  @ApiPropertyOptional({ example: '1HGBH41JXMN109186', description: 'Vehicle Identification Number' })
+  @ApiPropertyOptional({ enum: CabType, example: CabType.SEDAN, description: 'Type of cab' })
   @IsOptional()
-  @IsString()
-  @MaxLength(100)
-  vin?: string;
+  @IsEnum(CabType)
+  cab_type?: CabType;
 
-  @ApiPropertyOptional({
-    enum: CabStatus,
-    example: CabStatus.AVAILABLE,
-    description: 'Current vehicle status',
-    default: CabStatus.AVAILABLE,
-  })
+  @ApiPropertyOptional({ enum: CabStatus, example: CabStatus.AVAILABLE })
   @IsOptional()
   @IsEnum(CabStatus)
   status?: CabStatus;
@@ -61,61 +56,64 @@ export class CreateCabDto {
   @MaxLength(50)
   color?: string;
 
-  @ApiPropertyOptional({ example: 5, description: 'Number of seats' })
+  @ApiPropertyOptional({ example: 4, description: 'Number of seats' })
   @IsOptional()
   @IsNumber()
   @Min(1)
   @Max(50)
   seating_capacity?: number;
 
-  @ApiPropertyOptional({ example: 'Petrol', description: 'Fuel type (Petrol, Diesel, Electric, Hybrid)' })
+  @ApiPropertyOptional({ example: 'Petrol', description: 'Fuel type' })
   @IsOptional()
   @IsString()
   @MaxLength(50)
   fuel_type?: string;
 
-  @ApiPropertyOptional({ example: '2025-12-31', description: 'Insurance expiry date (YYYY-MM-DD)' })
+  @ApiPropertyOptional({ example: true, description: 'AC available' })
+  @IsOptional()
+  @IsBoolean()
+  ac_available?: boolean;
+
+  @ApiPropertyOptional({ description: 'Vehicle image URL' })
+  @IsOptional()
+  @IsString()
+  image_url?: string;
+
+  @ApiPropertyOptional({ example: '2025-12-31', description: 'Insurance expiry date' })
   @IsOptional()
   @IsDateString()
   insurance_expiry?: string;
 
-  @ApiPropertyOptional({ example: 'ABC Insurance Co.', description: 'Insurance provider name' })
-  @IsOptional()
-  @IsString()
-  @MaxLength(100)
-  insurance_provider?: string;
-
-  @ApiPropertyOptional({ example: 'POL-123456', description: 'Insurance policy number' })
-  @IsOptional()
-  @IsString()
-  @MaxLength(100)
-  insurance_policy_number?: string;
-
-  @ApiPropertyOptional({ example: '2026-06-30', description: 'Registration expiry date (YYYY-MM-DD)' })
+  @ApiPropertyOptional({ example: '2026-06-30', description: 'Registration expiry date' })
   @IsOptional()
   @IsDateString()
   registration_expiry?: string;
 
-  @ApiPropertyOptional({ example: 'GPS-12345', description: 'GPS device identifier' })
+  @ApiPropertyOptional({ example: '2025-12-31', description: 'Fitness certificate expiry' })
   @IsOptional()
-  @IsString()
-  @MaxLength(100)
-  gps_device_id?: string;
+  @IsDateString()
+  fitness_expiry?: string;
 
-  @ApiPropertyOptional({ example: 150.00, description: 'Daily rental rate in currency' })
+  @ApiPropertyOptional({ example: '2025-12-31', description: 'Permit expiry date' })
+  @IsOptional()
+  @IsDateString()
+  permit_expiry?: string;
+
+  @ApiPropertyOptional({ example: 50.00, description: 'Base fare' })
   @IsOptional()
   @IsNumber()
   @IsPositive()
-  daily_rental_rate?: number;
+  base_fare?: number;
 
-  @ApiPropertyOptional({ example: 50000, description: 'Current odometer reading in kilometers' })
+  @ApiPropertyOptional({ example: 12.00, description: 'Per kilometer rate' })
   @IsOptional()
   @IsNumber()
-  @Min(0)
-  current_mileage?: number;
+  @IsPositive()
+  per_km_rate?: number;
 
-  @ApiPropertyOptional({ example: 'Recently serviced, excellent condition', description: 'Additional notes' })
+  @ApiPropertyOptional({ example: 2.00, description: 'Per minute rate' })
   @IsOptional()
-  @IsString()
-  notes?: string;
+  @IsNumber()
+  @IsPositive()
+  per_min_rate?: number;
 }

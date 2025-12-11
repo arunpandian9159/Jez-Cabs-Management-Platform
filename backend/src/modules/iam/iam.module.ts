@@ -4,15 +4,16 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
-import { User, Company } from './entities';
-import { AuthService, UserService } from './services';
-import { AuthController, UserController } from './controllers';
+import { User } from './entities/user.entity';
+import { CabOwnerProfile } from './entities/cab-owner-profile.entity';
+import { AuthService } from './services/auth.service';
+import { AuthController } from './controllers/auth.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtAuthGuard, RolesGuard } from './guards';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Company]),
+    TypeOrmModule.forFeature([User, CabOwnerProfile]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -25,10 +26,9 @@ import { JwtAuthGuard, RolesGuard } from './guards';
       }),
     }),
   ],
-  controllers: [AuthController, UserController],
+  controllers: [AuthController],
   providers: [
     AuthService,
-    UserService,
     JwtStrategy,
     {
       provide: APP_GUARD,
@@ -39,7 +39,6 @@ import { JwtAuthGuard, RolesGuard } from './guards';
       useClass: RolesGuard,
     },
   ],
-  exports: [AuthService, UserService, JwtStrategy, PassportModule],
+  exports: [AuthService, JwtStrategy, PassportModule],
 })
-export class IamModule {}
-
+export class IamModule { }

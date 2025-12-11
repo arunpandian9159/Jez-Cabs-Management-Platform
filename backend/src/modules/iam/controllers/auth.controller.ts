@@ -1,23 +1,37 @@
-import { Controller, Post, Body, HttpCode, HttpStatus, Get, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, HttpStatus, Get, UseGuards, Request } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
-import { AuthService } from '../services';
-import { RegisterCompanyDto, LoginDto } from '../dto';
+import { AuthService } from '../services/auth.service';
 import { Public, CurrentUser } from '../../../common/decorators';
 import { JwtAuthGuard } from '../guards';
 import { User } from '../entities';
+import { UserRole } from '../../../common/enums';
+
+class RegisterDto {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  role?: UserRole;
+}
+
+class LoginDto {
+  email: string;
+  password: string;
+}
 
 @ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Public()
   @Post('register')
-  @ApiOperation({ summary: 'Register a new company with owner account' })
-  @ApiResponse({ status: 201, description: 'Company registered successfully' })
-  @ApiResponse({ status: 409, description: 'Company or user already exists' })
-  async register(@Body() registerDto: RegisterCompanyDto) {
-    return this.authService.registerCompany(registerDto);
+  @ApiOperation({ summary: 'Register a new user' })
+  @ApiResponse({ status: 201, description: 'User registered successfully' })
+  @ApiResponse({ status: 409, description: 'User already exists' })
+  async register(@Body() registerDto: RegisterDto) {
+    return this.authService.register(registerDto);
   }
 
   @Public()
@@ -34,13 +48,8 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Get current user profile' })
-  @ApiResponse({ status: 200, description: 'User profile retrieved successfully' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async getProfile(@CurrentUser() user: User) {
-    const { password_hash, ...userWithoutPassword } = user;
-    return {
-      user: userWithoutPassword,
-    };
+  @ApiResponse({ status: 200, description: 'User profile retrieved' })
+  async getProfile(@Request() req: any) {
+    return this.authService.getMe(req.user.id);
   }
 }
-

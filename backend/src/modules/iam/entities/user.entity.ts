@@ -4,57 +4,70 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToOne,
-  JoinColumn,
+  OneToOne,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { UserRole } from '../../../common/enums';
-import { Company } from './company.entity';
+
+export enum UserStatus {
+  ACTIVE = 'active',
+  SUSPENDED = 'suspended',
+  PENDING_VERIFICATION = 'pending_verification',
+  INACTIVE = 'inactive',
+}
 
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'uuid' })
-  company_id: string;
-
-  @Column({ type: 'varchar', length: 255, unique: true, nullable: true })
-  email: string | null;
+  @Column({ type: 'varchar', length: 255, unique: true })
+  email: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   @Exclude()
   password_hash: string | null;
 
+  @Column({ type: 'varchar', length: 100 })
+  first_name: string;
+
+  @Column({ type: 'varchar', length: 100 })
+  last_name: string;
+
+  @Column({ type: 'varchar', length: 20 })
+  phone: string;
+
+  @Column({ type: 'text', nullable: true })
+  avatar_url: string | null;
+
   @Column({
     type: 'enum',
     enum: UserRole,
-    default: UserRole.STAFF,
+    default: UserRole.CUSTOMER,
   })
   role: UserRole;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
-  first_name: string | null;
+  @Column({
+    type: 'enum',
+    enum: UserStatus,
+    default: UserStatus.ACTIVE,
+  })
+  status: UserStatus;
 
-  @Column({ type: 'varchar', length: 100, nullable: true })
-  last_name: string | null;
+  @Column({ type: 'boolean', default: false })
+  is_verified: boolean;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
-  phone_number: string;
+  @Column({ type: 'timestamp', nullable: true })
+  email_verified_at: Date | null;
 
-  @Column({ type: 'boolean', default: true })
-  is_active: boolean;
+  @Column({ type: 'timestamp', nullable: true })
+  phone_verified_at: Date | null;
 
   @CreateDateColumn()
   created_at: Date;
 
   @UpdateDateColumn()
   updated_at: Date;
-
-  // Relations
-  @ManyToOne(() => Company, (company) => company.users, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'company_id' })
-  company: Company;
 
   // Virtual property
   get fullName(): string {

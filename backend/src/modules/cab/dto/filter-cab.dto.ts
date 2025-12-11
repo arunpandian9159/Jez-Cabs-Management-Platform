@@ -1,7 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsEnum, IsString, IsNumber, Min } from 'class-validator';
 import { Type } from 'class-transformer';
-import { CabStatus } from '../../../common/enums';
+import { CabStatus, CabType } from '../../../common/enums';
 
 export class FilterCabDto {
   @ApiPropertyOptional({
@@ -13,6 +13,14 @@ export class FilterCabDto {
   @IsEnum(CabStatus)
   status?: CabStatus;
 
+  @ApiPropertyOptional({
+    enum: CabType,
+    description: 'Filter by cab type',
+  })
+  @IsOptional()
+  @IsEnum(CabType)
+  cab_type?: CabType;
+
   @ApiPropertyOptional({ description: 'Filter by vehicle make', example: 'Toyota' })
   @IsOptional()
   @IsString()
@@ -23,29 +31,19 @@ export class FilterCabDto {
   @IsString()
   model?: string;
 
-  @ApiPropertyOptional({ description: 'Filter by fuel type', example: 'Petrol' })
-  @IsOptional()
-  @IsString()
-  fuel_type?: string;
-
-  @ApiPropertyOptional({ description: 'Search by registration number or VIN', example: 'ABC' })
+  @ApiPropertyOptional({ description: 'Search by registration number', example: 'ABC' })
   @IsOptional()
   @IsString()
   search?: string;
 
-  @ApiPropertyOptional({ description: 'Show only vehicles with expiring documents (within 30 days)', example: true })
-  @IsOptional()
-  @Type(() => Boolean)
-  expiring_documents?: boolean;
-
-  @ApiPropertyOptional({ description: 'Page number for pagination', example: 1, default: 1 })
+  @ApiPropertyOptional({ description: 'Page number', example: 1, default: 1 })
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
   @Min(1)
   page?: number = 1;
 
-  @ApiPropertyOptional({ description: 'Number of items per page', example: 50, default: 50 })
+  @ApiPropertyOptional({ description: 'Items per page', example: 50, default: 50 })
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
@@ -57,8 +55,7 @@ export class FilterCabDto {
   @IsString()
   sort_by?: string = 'created_at';
 
-  @ApiPropertyOptional({ description: 'Sort order', example: 'DESC', enum: ['ASC', 'DESC'] })
+  @ApiPropertyOptional({ description: 'Sort order', enum: ['ASC', 'DESC'] })
   @IsOptional()
-  @IsEnum(['ASC', 'DESC'])
   sort_order?: 'ASC' | 'DESC' = 'DESC';
 }

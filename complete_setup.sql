@@ -1,191 +1,390 @@
--- Complete Jez Cabs Management Platform Database Setup
--- Run this entire script in Supabase SQL Editor
-
--- ===========================================
--- STEP 1: Create Enum Types
--- ===========================================
-
-CREATE TYPE bookings_status_enum AS ENUM ('PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED');
-CREATE TYPE cabs_status_enum AS ENUM ('AVAILABLE', 'IN_MAINTENANCE', 'OUT_OF_SERVICE');
-CREATE TYPE invoices_status_enum AS ENUM ('DRAFT', 'SENT', 'PAID', 'OVERDUE', 'CANCELLED');
-CREATE TYPE users_role_enum AS ENUM ('ADMIN', 'MANAGER', 'DRIVER', 'STAFF');
-
--- ===========================================
--- STEP 2: Create Tables with Snake_Case Columns
--- ===========================================
-
-CREATE TABLE public.companies (
-  id uuid NOT NULL DEFAULT uuid_generate_v4(),
-  name character varying NOT NULL,
-  address text,
-  contact_email character varying NOT NULL UNIQUE,
-  contact_phone character varying,
-  subscription_tier character varying NOT NULL DEFAULT 'BASIC'::character varying,
-  is_active boolean NOT NULL DEFAULT true,
-  created_at timestamp without time zone NOT NULL DEFAULT now(),
-  updated_at timestamp without time zone NOT NULL DEFAULT now(),
-  CONSTRAINT companies_pkey PRIMARY KEY (id)
+-- =====================================================
+-- JEZ CABS PLATFORM - SUPABASE SQL SCHEMA
+-- =====================================================
+-- Enable UUID extension
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+-- =====================================================
+-- ENUMS
+-- =====================================================
+CREATE TYPE user_role AS ENUM ('customer', 'driver', 'cab_owner', 'trip_planner', 'admin', 'support');
+CREATE TYPE user_status AS ENUM ('active', 'suspended', 'pending_verification', 'inactive');
+CREATE TYPE driver_status AS ENUM ('available', 'busy', 'offline', 'on_trip');
+CREATE TYPE cab_status AS ENUM ('available', 'on_trip', 'maintenance', 'inactive');
+CREATE TYPE cab_type AS ENUM ('sedan', 'suv', 'hatchback', 'premium', 'electric', 'auto');
+CREATE TYPE trip_status AS ENUM ('pending', 'accepted', 'driver_arriving', 'in_progress', 'completed', 'cancelled');
+CREATE TYPE payment_status AS ENUM ('pending', 'completed', 'failed', 'refunded');
+CREATE TYPE payment_method AS ENUM ('cash', 'upi', 'card', 'wallet');
+CREATE TYPE dispute_status AS ENUM ('open', 'in_progress', 'resolved', 'closed');
+CREATE TYPE dispute_priority AS ENUM ('low', 'medium', 'high');
+CREATE TYPE verification_status AS ENUM ('pending', 'approved', 'rejected');
+CREATE TYPE rental_status AS ENUM ('pending', 'confirmed', 'active', 'completed', 'cancelled');
+CREATE TYPE community_trip_type AS ENUM ('offering', 'requesting');
+CREATE TYPE community_trip_status AS ENUM ('active', 'full', 'completed', 'cancelled');
+-- =====================================================
+-- USERS TABLE (All user types)
+-- =====================================================
+CREATE TABLE users (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255),
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    avatar_url TEXT,
+    role user_role NOT NULL DEFAULT 'customer',
+    status user_status NOT NULL DEFAULT 'active',
+    is_verified BOOLEAN DEFAULT FALSE,
+    email_verified_at TIMESTAMP,
+    phone_verified_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
 );
-
-CREATE TABLE public.users (
-  id uuid NOT NULL DEFAULT uuid_generate_v4(),
-  company_id uuid NOT NULL,
-  email character varying NOT NULL UNIQUE,
-  password_hash character varying NOT NULL,
-  role users_role_enum NOT NULL DEFAULT 'STAFF'::users_role_enum,
-  first_name character varying NOT NULL,
-  last_name character varying NOT NULL,
-  phone_number character varying,
-  is_active boolean NOT NULL DEFAULT true,
-  created_at timestamp without time zone NOT NULL DEFAULT now(),
-  updated_at timestamp without time zone NOT NULL DEFAULT now(),
-  CONSTRAINT users_pkey PRIMARY KEY (id),
-  CONSTRAINT FK_6f9395c9037632a31107c8a9e58 FOREIGN KEY (company_id) REFERENCES public.companies(id)
+CREATE INDEX idx_users_email ON users(email);
+CREATE INDEX idx_users_role ON users(role);
+CREATE INDEX idx_users_status ON users(status);
+-- =====================================================
+-- DRIVER PROFILES
+-- =====================================================
+CREATE TABLE driver_profiles (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    license_number VARCHAR(50),
+    license_expiry DATE,
+    license_type VARCHAR(50),
+    date_of_birth DATE,
+    address TEXT,
+    status driver_status DEFAULT 'offline',
+    rating DECIMAL(3,2) DEFAULT 5.00,
+    total_trips INTEGER DEFAULT 0,
+    total_earnings DECIMAL(12,2) DEFAULT 0,
+    current_location_lat DECIMAL(10,8),
+    current_location_lng DECIMAL(11,8),
+    is_online BOOLEAN DEFAULT FALSE,
+    current_cab_id UUID,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE(user_id)
 );
-
-CREATE TABLE public.cabs (
-  id uuid NOT NULL DEFAULT uuid_generate_v4(),
-  company_id uuid NOT NULL,
-  make character varying NOT NULL,
-  model character varying NOT NULL,
-  year integer NOT NULL,
-  registration_number character varying NOT NULL,
-  vin character varying,
-  status cabs_status_enum NOT NULL DEFAULT 'AVAILABLE'::cabs_status_enum,
-  color character varying,
-  seating_capacity integer,
-  fuel_type character varying,
-  insurance_expiry date,
-  insurance_provider character varying,
-  insurance_policy_number character varying,
-  registration_expiry date,
-  gps_device_id character varying,
-  daily_rental_rate numeric,
-  current_mileage integer NOT NULL DEFAULT 0,
-  notes text,
-  created_at timestamp without time zone NOT NULL DEFAULT now(),
-  updated_at timestamp without time zone NOT NULL DEFAULT now(),
-  CONSTRAINT cabs_pkey PRIMARY KEY (id),
-  CONSTRAINT FK_eeb05dd117ebadf0d96f6a7bc94 FOREIGN KEY (company_id) REFERENCES public.companies(id)
+CREATE INDEX idx_driver_profiles_status ON driver_profiles(status);
+CREATE INDEX idx_driver_profiles_location ON driver_profiles(current_location_lat, current_location_lng);
+-- =====================================================
+-- CAB OWNER PROFILES
+-- =====================================================
+CREATE TABLE cab_owner_profiles (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    business_name VARCHAR(255),
+    gst_number VARCHAR(50),
+    pan_number VARCHAR(20),
+    bank_account_number VARCHAR(50),
+    bank_ifsc VARCHAR(20),
+    total_cabs INTEGER DEFAULT 0,
+    total_earnings DECIMAL(12,2) DEFAULT 0,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE(user_id)
 );
-
-CREATE TABLE public.drivers (
-  id uuid NOT NULL DEFAULT uuid_generate_v4(),
-  company_id uuid NOT NULL,
-  first_name character varying NOT NULL,
-  last_name character varying NOT NULL,
-  contact_number character varying NOT NULL,
-  email character varying,
-  license_number character varying NOT NULL,
-  license_expiry date NOT NULL,
-  license_type character varying,
-  date_of_birth date,
-  address text,
-  emergency_contact_name character varying,
-  emergency_contact_number character varying,
-  is_active boolean NOT NULL DEFAULT true,
-  notes text,
-  created_at timestamp without time zone NOT NULL DEFAULT now(),
-  updated_at timestamp without time zone NOT NULL DEFAULT now(),
-  CONSTRAINT drivers_pkey PRIMARY KEY (id),
-  CONSTRAINT FK_658e386266eb3045c0fc9776dd2 FOREIGN KEY (company_id) REFERENCES public.companies(id)
+-- =====================================================
+-- CABS / VEHICLES
+-- =====================================================
+CREATE TABLE cabs (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    owner_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    assigned_driver_id UUID REFERENCES users(id),
+    make VARCHAR(100) NOT NULL,
+    model VARCHAR(100) NOT NULL,
+    year INTEGER,
+    registration_number VARCHAR(50) NOT NULL,
+    cab_type cab_type NOT NULL DEFAULT 'sedan',
+    status cab_status DEFAULT 'inactive',
+    color VARCHAR(50),
+    seating_capacity INTEGER DEFAULT 4,
+    fuel_type VARCHAR(50),
+    ac_available BOOLEAN DEFAULT TRUE,
+    image_url TEXT,
+    insurance_expiry DATE,
+    registration_expiry DATE,
+    fitness_expiry DATE,
+    permit_expiry DATE,
+    base_fare DECIMAL(10,2) DEFAULT 50,
+    per_km_rate DECIMAL(10,2) DEFAULT 12,
+    per_min_rate DECIMAL(10,2) DEFAULT 2,
+    rating DECIMAL(3,2) DEFAULT 5.00,
+    total_trips INTEGER DEFAULT 0,
+    current_location_lat DECIMAL(10,8),
+    current_location_lng DECIMAL(11,8),
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
 );
-
-CREATE TABLE public.bookings (
-  id uuid NOT NULL DEFAULT uuid_generate_v4(),
-  company_id uuid NOT NULL,
-  cab_id uuid NOT NULL,
-  driver_id uuid,
-  client_name character varying NOT NULL,
-  client_contact_person character varying NOT NULL,
-  client_email character varying NOT NULL,
-  client_phone character varying NOT NULL,
-  start_date timestamp without time zone NOT NULL,
-  end_date timestamp without time zone NOT NULL,
-  pickup_location character varying,
-  dropoff_location character varying,
-  total_amount numeric NOT NULL DEFAULT '0'::numeric,
-  advance_amount numeric DEFAULT '0'::numeric,
-  status bookings_status_enum NOT NULL DEFAULT 'PENDING'::bookings_status_enum,
-  notes text,
-  created_at timestamp without time zone NOT NULL DEFAULT now(),
-  updated_at timestamp without time zone NOT NULL DEFAULT now(),
-  CONSTRAINT bookings_pkey PRIMARY KEY (id),
-  CONSTRAINT FK_c03bf1d4e751064331c41db5d65 FOREIGN KEY (company_id) REFERENCES public.companies(id),
-  CONSTRAINT FK_198f4508ca35baa8cf8f7b317f2 FOREIGN KEY (cab_id) REFERENCES public.cabs(id),
-  CONSTRAINT FK_100b344bc1e04cc839fe90c3d53 FOREIGN KEY (driver_id) REFERENCES public.drivers(id)
+CREATE INDEX idx_cabs_owner ON cabs(owner_id);
+CREATE INDEX idx_cabs_status ON cabs(status);
+CREATE INDEX idx_cabs_type ON cabs(cab_type);
+CREATE INDEX idx_cabs_location ON cabs(current_location_lat, current_location_lng);
+-- =====================================================
+-- TRIPS / RIDES
+-- =====================================================
+CREATE TABLE trips (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    customer_id UUID NOT NULL REFERENCES users(id),
+    driver_id UUID REFERENCES users(id),
+    cab_id UUID REFERENCES cabs(id),
+    pickup_address TEXT NOT NULL,
+    pickup_lat DECIMAL(10,8) NOT NULL,
+    pickup_lng DECIMAL(11,8) NOT NULL,
+    dropoff_address TEXT NOT NULL,
+    dropoff_lat DECIMAL(10,8) NOT NULL,
+    dropoff_lng DECIMAL(11,8) NOT NULL,
+    distance_km DECIMAL(10,2),
+    duration_minutes INTEGER,
+    estimated_fare DECIMAL(10,2),
+    actual_fare DECIMAL(10,2),
+    base_fare DECIMAL(10,2),
+    distance_fare DECIMAL(10,2),
+    time_fare DECIMAL(10,2),
+    surge_multiplier DECIMAL(3,2) DEFAULT 1.00,
+    tip_amount DECIMAL(10,2) DEFAULT 0,
+    status trip_status DEFAULT 'pending',
+    scheduled_at TIMESTAMP,
+    accepted_at TIMESTAMP,
+    driver_arrived_at TIMESTAMP,
+    started_at TIMESTAMP,
+    completed_at TIMESTAMP,
+    cancelled_at TIMESTAMP,
+    cancellation_reason TEXT,
+    cancelled_by UUID,
+    otp VARCHAR(6),
+    customer_rating INTEGER CHECK (customer_rating >= 1 AND customer_rating <= 5),
+    driver_rating INTEGER CHECK (driver_rating >= 1 AND driver_rating <= 5),
+    customer_feedback TEXT,
+    driver_feedback TEXT,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
 );
-
-CREATE TABLE public.invoices (
-  id uuid NOT NULL DEFAULT uuid_generate_v4(),
-  company_id uuid NOT NULL,
-  booking_id uuid NOT NULL,
-  invoice_number character varying NOT NULL UNIQUE,
-  amount numeric NOT NULL DEFAULT '0'::numeric,
-  tax_amount numeric NOT NULL DEFAULT '0'::numeric,
-  total_amount numeric NOT NULL DEFAULT '0'::numeric,
-  issue_date date NOT NULL,
-  due_date date NOT NULL,
-  status invoices_status_enum NOT NULL DEFAULT 'DRAFT'::invoices_status_enum,
-  payment_link character varying,
-  pdf_url character varying,
-  paid_date date,
-  payment_method character varying,
-  payment_reference character varying,
-  notes text,
-  created_at timestamp without time zone NOT NULL DEFAULT now(),
-  updated_at timestamp without time zone NOT NULL DEFAULT now(),
-  CONSTRAINT invoices_pkey PRIMARY KEY (id),
-  CONSTRAINT FK_0b793047e7030ef060eaae8438a FOREIGN KEY (company_id) REFERENCES public.companies(id),
-  CONSTRAINT FK_eca01fda44679cc1c342822e01b FOREIGN KEY (booking_id) REFERENCES public.bookings(id)
+CREATE INDEX idx_trips_customer ON trips(customer_id);
+CREATE INDEX idx_trips_driver ON trips(driver_id);
+CREATE INDEX idx_trips_status ON trips(status);
+CREATE INDEX idx_trips_created ON trips(created_at);
+-- =====================================================
+-- CAB RENTALS (Self-drive / Long-term)
+-- =====================================================
+CREATE TABLE rentals (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    customer_id UUID NOT NULL REFERENCES users(id),
+    cab_id UUID NOT NULL REFERENCES cabs(id),
+    start_date TIMESTAMP NOT NULL,
+    end_date TIMESTAMP NOT NULL,
+    pickup_location TEXT,
+    return_location TEXT,
+    daily_rate DECIMAL(10,2) NOT NULL,
+    total_amount DECIMAL(10,2),
+    deposit_amount DECIMAL(10,2),
+    status rental_status DEFAULT 'pending',
+    with_driver BOOLEAN DEFAULT FALSE,
+    driver_id UUID REFERENCES users(id),
+    km_limit_per_day INTEGER,
+    extra_km_rate DECIMAL(10,2),
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
 );
-
--- ===========================================
--- STEP 3: Insert Dummy Data
--- ===========================================
-
--- Insert Companies
-INSERT INTO companies (id, name, address, contact_email, contact_phone, subscription_tier, is_active, created_at, updated_at) VALUES
-('550e8400-e29b-41d4-a716-446655440001', 'Jez Cabs Ltd', '123 Main Street, City Center, Mumbai, Maharashtra 400001', 'admin@jezcabs.com', '+91-9876543210', 'PREMIUM', true, NOW(), NOW()),
-('550e8400-e29b-41d4-a716-446655440002', 'City Ride Services', '456 Business Park, Andheri West, Mumbai, Maharashtra 400058', 'contact@cityride.com', '+91-9876543211', 'BASIC', true, NOW(), NOW()),
-('550e8400-e29b-41d4-a716-446655440003', 'Metro Cab Co', '789 Industrial Area, Goregaon East, Mumbai, Maharashtra 400062', 'info@metrocab.com', '+91-9876543212', 'STANDARD', true, NOW(), NOW());
-
--- Insert Users
-INSERT INTO users (id, company_id, email, password_hash, first_name, last_name, role, phone_number, is_active, created_at, updated_at) VALUES
-('550e8400-e29b-41d4-a716-446655440004', '550e8400-e29b-41d4-a716-446655440001', 'admin@jezcabs.com', '$2b$10$dummy.hash.for.demo.purposes.only', 'Rajesh', 'Sharma', 'ADMIN', '+91-9876543210', true, NOW(), NOW()),
-('550e8400-e29b-41d4-a716-446655440005', '550e8400-e29b-41d4-a716-446655440001', 'manager@jezcabs.com', '$2b$10$dummy.hash.for.demo.purposes.only', 'Priya', 'Patel', 'MANAGER', '+91-9876543211', true, NOW(), NOW()),
-('550e8400-e29b-41d4-a716-446655440006', '550e8400-e29b-41d4-a716-446655440001', 'driver1@jezcabs.com', '$2b$10$dummy.hash.for.demo.purposes.only', 'Amit', 'Kumar', 'DRIVER', '+91-9876543212', true, NOW(), NOW()),
-('550e8400-e29b-41d4-a716-446655440007', '550e8400-e29b-41d4-a716-446655440002', 'admin@cityride.com', '$2b$10$dummy.hash.for.demo.purposes.only', 'Sunil', 'Verma', 'ADMIN', '+91-9876543213', true, NOW(), NOW()),
-('550e8400-e29b-41d4-a716-446655440008', '550e8400-e29b-41d4-a716-446655440003', 'admin@metrocab.com', '$2b$10$dummy.hash.for.demo.purposes.only', 'Kavita', 'Singh', 'ADMIN', '+91-9876543214', true, NOW(), NOW());
-
--- Insert Cabs
-INSERT INTO cabs (id, company_id, make, model, year, registration_number, vin, status, color, seating_capacity, fuel_type, insurance_expiry, insurance_provider, insurance_policy_number, registration_expiry, gps_device_id, daily_rental_rate, current_mileage, notes, created_at, updated_at) VALUES
-('550e8400-e29b-41d4-a716-446655440009', '550e8400-e29b-41d4-a716-446655440001', 'Toyota', 'Innova', 2020, 'MH01AB1234', '1HGCM82633A123456', 'AVAILABLE', 'White', 7, 'Diesel', '2025-12-31', 'Bajaj Allianz', 'POL123456789', '2026-06-30', 'GPS001', 2500.00, 45000, 'Well maintained vehicle', NOW(), NOW()),
-('550e8400-e29b-41d4-a716-446655440010', '550e8400-e29b-41d4-a716-446655440001', 'Mahindra', 'Scorpio', 2019, 'MH01CD5678', '1HGCM82633A123457', 'AVAILABLE', 'Black', 7, 'Diesel', '2025-11-30', 'ICICI Lombard', 'POL123456790', '2026-05-31', 'GPS002', 2200.00, 52000, 'Recently serviced', NOW(), NOW()),
-('550e8400-e29b-41d4-a716-446655440011', '550e8400-e29b-41d4-a716-446655440001', 'Honda', 'City', 2021, 'MH01EF9012', '1HGCM82633A123458', 'IN_MAINTENANCE', 'Silver', 5, 'Petrol', '2026-01-31', 'HDFC Ergo', 'POL123456791', '2026-07-31', 'GPS003', 1800.00, 28000, 'Under maintenance', NOW(), NOW()),
-('550e8400-e29b-41d4-a716-446655440012', '550e8400-e29b-41d4-a716-446655440002', 'Hyundai', 'Verna', 2022, 'MH02GH3456', '1HGCM82633A123459', 'AVAILABLE', 'Blue', 5, 'Petrol', '2026-03-31', 'Reliance General', 'POL123456792', '2026-09-30', 'GPS004', 2000.00, 15000, 'New vehicle', NOW(), NOW()),
-('550e8400-e29b-41d4-a716-446655440013', '550e8400-e29b-41d4-a716-446655440003', 'Tata', 'Tiago', 2023, 'MH03IJ7890', '1HGCM82633A123460', 'AVAILABLE', 'Red', 5, 'CNG', '2026-05-31', 'New India Assurance', 'POL123456793', '2026-11-30', 'GPS005', 1600.00, 8000, 'Eco-friendly CNG vehicle', NOW(), NOW());
-
--- Insert Drivers
-INSERT INTO drivers (id, company_id, first_name, last_name, contact_number, email, license_number, license_expiry, license_type, date_of_birth, address, emergency_contact_name, emergency_contact_number, is_active, notes, created_at, updated_at) VALUES
-('550e8400-e29b-41d4-a716-446655440014', '550e8400-e29b-41d4-a716-446655440001', 'Ravi', 'Shankar', '+91-9876543213', 'ravi.shankar@email.com', 'MH0123456789', '2027-08-15', 'LMV', '1985-03-20', 'Bandra West, Mumbai', 'Meera Shankar', '+91-9876543214', true, 'Experienced driver with 8+ years', NOW(), NOW()),
-('550e8400-e29b-41d4-a716-446655440015', '550e8400-e29b-41d4-a716-446655440001', 'Suresh', 'Nair', '+91-9876543215', 'suresh.nair@email.com', 'MH0123456790', '2026-12-20', 'LMV', '1988-07-10', 'Andheri East, Mumbai', 'Latha Nair', '+91-9876543216', true, 'Reliable driver', NOW(), NOW()),
-('550e8400-e29b-41d4-a716-446655440016', '550e8400-e29b-41d4-a716-446655440001', 'Vijay', 'Joshi', '+91-9876543217', 'vijay.joshi@email.com', 'MH0123456791', '2028-01-25', 'LMV', '1982-11-05', 'Goregaon West, Mumbai', 'Poonam Joshi', '+91-9876543218', true, 'Senior driver with excellent ratings', NOW(), NOW()),
-('550e8400-e29b-41d4-a716-446655440017', '550e8400-e29b-41d4-a716-446655440002', 'Arun', 'Desai', '+91-9876543219', 'arun.desai@email.com', 'MH0223456789', '2027-05-10', 'LMV', '1986-09-15', 'Powai, Mumbai', 'Kiran Desai', '+91-9876543220', true, 'Professional driver', NOW(), NOW()),
-('550e8400-e29b-41d4-a716-446655440018', '550e8400-e29b-41d4-a716-446655440003', 'Mohan', 'Reddy', '+91-9876543221', 'mohan.reddy@email.com', 'MH0323456789', '2026-10-30', 'LMV', '1984-01-22', 'Thane West, Mumbai', 'Lakshmi Reddy', '+91-9876543222', true, 'Experienced chauffeur', NOW(), NOW());
-
--- Insert Bookings
-INSERT INTO bookings (id, company_id, cab_id, driver_id, client_name, client_contact_person, client_email, client_phone, start_date, end_date, pickup_location, dropoff_location, total_amount, advance_amount, status, notes, created_at, updated_at) VALUES
-('550e8400-e29b-41d4-a716-446655440019', '550e8400-e29b-41d4-a716-446655440001', '550e8400-e29b-41d4-a716-446655440009', '550e8400-e29b-41d4-a716-446655440014', 'Tech Solutions Pvt Ltd', 'Mr. Anil Gupta', 'anil.gupta@techsolutions.com', '+91-9876543223', '2025-10-15 09:00:00', '2025-10-17 18:00:00', 'Mumbai Airport', 'Hotel Taj Mahal Palace', 7500.00, 2500.00, 'CONFIRMED', 'Airport pickup required', NOW(), NOW()),
-('550e8400-e29b-41d4-a716-446655440020', '550e8400-e29b-41d4-a716-446655440001', '550e8400-e29b-41d4-a716-446655440010', '550e8400-e29b-41d4-a716-446655440015', 'Global Industries', 'Ms. Priya Sharma', 'priya.sharma@globalind.com', '+91-9876543224', '2025-10-20 14:00:00', '2025-10-20 22:00:00', 'CST Station', 'Pune Railway Station', 4500.00, 1500.00, 'COMPLETED', 'One way trip to Pune', NOW(), NOW()),
-('550e8400-e29b-41d4-a716-446655440021', '550e8400-e29b-41d4-a716-446655440001', '550e8400-e29b-41d4-a716-446655440009', NULL, 'Wedding Planners Inc', 'Mr. Raj Malhotra', 'raj.malhotra@weddings.com', '+91-9876543225', '2025-11-05 16:00:00', '2025-11-07 02:00:00', 'Marriage Hall, Bandra', 'Airport for honeymoon trip', 12000.00, 4000.00, 'PENDING', 'Wedding transportation with decorations', NOW(), NOW()),
-('550e8400-e29b-41d4-a716-446655440022', '550e8400-e29b-41d4-a716-446655440002', '550e8400-e29b-41d4-a716-446655440012', '550e8400-e29b-41d4-a716-446655440017', 'Corporate Events Ltd', 'Ms. Sneha Kapoor', 'sneha.kapoor@corp.com', '+91-9876543226', '2025-10-25 08:00:00', '2025-10-26 20:00:00', 'Corporate Office, Lower Parel', 'Goa Airport', 8500.00, 3000.00, 'CONFIRMED', 'Business trip to Goa', NOW(), NOW()),
-('550e8400-e29b-41d4-a716-446655440023', '550e8400-e29b-41d4-a716-446655440003', '550e8400-e29b-41d4-a716-446655440013', '550e8400-e29b-41d4-a716-446655440018', 'Travel Agency Mumbai', 'Mr. Vikram Singh', 'vikram.singh@travel.com', '+91-9876543227', '2025-10-30 10:00:00', '2025-10-30 18:00:00', 'Colaba Causeway', 'Elephanta Caves', 3200.00, 1000.00, 'COMPLETED', 'Sightseeing tour', NOW(), NOW());
-
--- Insert Invoices
-INSERT INTO invoices (id, company_id, booking_id, invoice_number, amount, tax_amount, total_amount, issue_date, due_date, status, payment_link, pdf_url, paid_date, payment_method, payment_reference, notes, created_at, updated_at) VALUES
-('550e8400-e29b-41d4-a716-446655440024', '550e8400-e29b-41d4-a716-446655440001', '550e8400-e29b-41d4-a716-446655440019', 'INV-2025-001', 7500.00, 1125.00, 8625.00, '2025-10-10', '2025-10-20', 'SENT', 'https://payment.jezcabs.com/inv-2025-001', 'https://docs.jezcabs.com/invoices/INV-2025-001.pdf', NULL, NULL, NULL, 'Invoice for airport transfer service', NOW(), NOW()),
-('550e8400-e29b-41d4-a716-446655440025', '550e8400-e29b-41d4-a716-446655440001', '550e8400-e29b-41d4-a716-446655440020', 'INV-2025-002', 4500.00, 675.00, 5175.00, '2025-10-18', '2025-10-28', 'PAID', NULL, 'https://docs.jezcabs.com/invoices/INV-2025-002.pdf', '2025-10-22', 'Bank Transfer', 'TXN123456789', 'Payment received successfully', NOW(), NOW()),
-('550e8400-e29b-41d4-a716-446655440026', '550e8400-e29b-41d4-a716-446655440001', '550e8400-e29b-41d4-a716-446655440021', 'INV-2025-003', 12000.00, 1800.00, 13800.00, '2025-10-25', '2025-11-05', 'DRAFT', NULL, NULL, NULL, NULL, NULL, 'Draft invoice for wedding transportation', NOW(), NOW()),
-('550e8400-e29b-41d4-a716-446655440027', '550e8400-e29b-41d4-a716-446655440002', '550e8400-e29b-41d4-a716-446655440022', 'INV-2025-004', 8500.00, 1275.00, 9775.00, '2025-10-20', '2025-10-30', 'SENT', 'https://payment.cityride.com/inv-2025-004', 'https://docs.cityride.com/invoices/INV-2025-004.pdf', NULL, NULL, NULL, 'Business trip invoice', NOW(), NOW()),
-('550e8400-e29b-41d4-a716-446655440028', '550e8400-e29b-41d4-a716-446655440003', '550e8400-e29b-41d4-a716-446655440023', 'INV-2025-005', 3200.00, 480.00, 3680.00, '2025-10-28', '2025-11-07', 'PAID', NULL, 'https://docs.metrocab.com/invoices/INV-2025-005.pdf', '2025-10-31', 'Cash', 'CASH-001', 'Cash payment at destination', NOW(), NOW());
+CREATE INDEX idx_rentals_customer ON rentals(customer_id);
+CREATE INDEX idx_rentals_cab ON rentals(cab_id);
+CREATE INDEX idx_rentals_status ON rentals(status);
+-- =====================================================
+-- PAYMENTS
+-- =====================================================
+CREATE TABLE payments (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    trip_id UUID REFERENCES trips(id),
+    rental_id UUID REFERENCES rentals(id),
+    payer_id UUID NOT NULL REFERENCES users(id),
+    amount DECIMAL(10,2) NOT NULL,
+    payment_method payment_method NOT NULL,
+    status payment_status DEFAULT 'pending',
+    transaction_id VARCHAR(100),
+    gateway_response JSONB,
+    paid_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+CREATE INDEX idx_payments_trip ON payments(trip_id);
+CREATE INDEX idx_payments_payer ON payments(payer_id);
+CREATE INDEX idx_payments_status ON payments(status);
+-- =====================================================
+-- DRIVER EARNINGS / PAYOUTS
+-- =====================================================
+CREATE TABLE earnings (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    driver_id UUID NOT NULL REFERENCES users(id),
+    trip_id UUID REFERENCES trips(id),
+    amount DECIMAL(10,2) NOT NULL,
+    commission_rate DECIMAL(5,2) DEFAULT 20.00,
+    commission_amount DECIMAL(10,2),
+    net_amount DECIMAL(10,2),
+    type VARCHAR(50) DEFAULT 'trip', -- trip, bonus, incentive, tip
+    created_at TIMESTAMP DEFAULT NOW()
+);
+CREATE INDEX idx_earnings_driver ON earnings(driver_id);
+CREATE INDEX idx_earnings_created ON earnings(created_at);
+-- =====================================================
+-- DISPUTES
+-- =====================================================
+CREATE TABLE disputes (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    ticket_number VARCHAR(50) UNIQUE NOT NULL,
+    trip_id UUID REFERENCES trips(id),
+    rental_id UUID REFERENCES rentals(id),
+    raised_by UUID NOT NULL REFERENCES users(id),
+    against_user UUID REFERENCES users(id),
+    issue_type VARCHAR(100) NOT NULL,
+    description TEXT NOT NULL,
+    priority dispute_priority DEFAULT 'medium',
+    status dispute_status DEFAULT 'open',
+    assigned_to UUID REFERENCES users(id),
+    resolution TEXT,
+    refund_amount DECIMAL(10,2),
+    resolved_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+CREATE INDEX idx_disputes_status ON disputes(status);
+CREATE INDEX idx_disputes_raised_by ON disputes(raised_by);
+-- =====================================================
+-- DISPUTE MESSAGES
+-- =====================================================
+CREATE TABLE dispute_messages (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    dispute_id UUID NOT NULL REFERENCES disputes(id) ON DELETE CASCADE,
+    sender_id UUID NOT NULL REFERENCES users(id),
+    message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+-- =====================================================
+-- EMERGENCY CONTACTS
+-- =====================================================
+CREATE TABLE emergency_contacts (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    name VARCHAR(100) NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    relationship VARCHAR(50),
+    is_primary BOOLEAN DEFAULT FALSE,
+    notify_on_ride_start BOOLEAN DEFAULT FALSE,
+    notify_on_ride_end BOOLEAN DEFAULT FALSE,
+    notify_on_sos BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+CREATE INDEX idx_emergency_contacts_user ON emergency_contacts(user_id);
+-- =====================================================
+-- COMMUNITY TRIPS (Trip Exchange)
+-- =====================================================
+CREATE TABLE community_trips (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    poster_id UUID NOT NULL REFERENCES users(id),
+    trip_type community_trip_type NOT NULL,
+    from_location TEXT NOT NULL,
+    from_lat DECIMAL(10,8),
+    from_lng DECIMAL(11,8),
+    to_location TEXT NOT NULL,
+    to_lat DECIMAL(10,8),
+    to_lng DECIMAL(11,8),
+    departure_date DATE NOT NULL,
+    departure_time TIME NOT NULL,
+    seats_available INTEGER DEFAULT 1,
+    price_per_seat DECIMAL(10,2),
+    description TEXT,
+    status community_trip_status DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+CREATE INDEX idx_community_trips_poster ON community_trips(poster_id);
+CREATE INDEX idx_community_trips_date ON community_trips(departure_date);
+CREATE INDEX idx_community_trips_status ON community_trips(status);
+-- =====================================================
+-- COMMUNITY TRIP BOOKINGS
+-- =====================================================
+CREATE TABLE community_trip_bookings (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    community_trip_id UUID NOT NULL REFERENCES community_trips(id) ON DELETE CASCADE,
+    booker_id UUID NOT NULL REFERENCES users(id),
+    seats_booked INTEGER DEFAULT 1,
+    total_amount DECIMAL(10,2),
+    status VARCHAR(50) DEFAULT 'confirmed',
+    created_at TIMESTAMP DEFAULT NOW()
+);
+-- =====================================================
+-- DOCUMENT VERIFICATION
+-- =====================================================
+CREATE TABLE document_verifications (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    document_type VARCHAR(50) NOT NULL, -- license, rc, insurance, aadhaar, pan
+    document_number VARCHAR(100),
+    document_url TEXT,
+    status verification_status DEFAULT 'pending',
+    submitted_at TIMESTAMP DEFAULT NOW(),
+    verified_at TIMESTAMP,
+    verified_by UUID REFERENCES users(id),
+    rejection_reason TEXT,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+CREATE INDEX idx_doc_verifications_user ON document_verifications(user_id);
+CREATE INDEX idx_doc_verifications_status ON document_verifications(status);
+-- =====================================================
+-- NOTIFICATIONS
+-- =====================================================
+CREATE TABLE notifications (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    title VARCHAR(255) NOT NULL,
+    body TEXT,
+    type VARCHAR(50),
+    data JSONB,
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+CREATE INDEX idx_notifications_user ON notifications(user_id);
+CREATE INDEX idx_notifications_read ON notifications(is_read);
+-- =====================================================
+-- USER SETTINGS
+-- =====================================================
+CREATE TABLE user_settings (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    push_notifications BOOLEAN DEFAULT TRUE,
+    email_notifications BOOLEAN DEFAULT TRUE,
+    sms_notifications BOOLEAN DEFAULT TRUE,
+    ride_updates BOOLEAN DEFAULT TRUE,
+    promotions BOOLEAN DEFAULT TRUE,
+    sound_enabled BOOLEAN DEFAULT TRUE,
+    vibration_enabled BOOLEAN DEFAULT TRUE,
+    dark_mode BOOLEAN DEFAULT FALSE,
+    language VARCHAR(10) DEFAULT 'en',
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE(user_id)
+);
+-- =====================================================
+-- ROW LEVEL SECURITY (RLS) POLICIES
+-- =====================================================
+-- Enable RLS on all tables
+ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE driver_profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE cab_owner_profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE cabs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE trips ENABLE ROW LEVEL SECURITY;
+ALTER TABLE rentals ENABLE ROW LEVEL SECURITY;
+ALTER TABLE payments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE earnings ENABLE ROW LEVEL SECURITY;
+ALTER TABLE disputes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE emergency_contacts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE notifications ENABLE ROW LEVEL SECURITY;
+-- Basic policies (expand as needed)
+CREATE POLICY "Users can view own profile" ON users FOR SELECT USING (auth.uid()::text = id::text);
+CREATE POLICY "Users can update own profile" ON users FOR UPDATE USING (auth.uid()::text = id::text);
+-- =====================================================
+-- INITIAL ADMIN USER
+-- =====================================================
+INSERT INTO users (email, first_name, last_name, phone, role, status, is_verified)
+VALUES ('admin@jezcabs.com', 'Admin', 'User', '+919999999999', 'admin', 'active', true);

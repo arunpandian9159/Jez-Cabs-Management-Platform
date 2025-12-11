@@ -4,12 +4,11 @@ import { PassportStrategy } from '@nestjs/passport';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { User } from '../entities';
+import { User, UserStatus } from '../entities/user.entity';
 
 export interface JwtPayload {
   sub: string;
   email: string;
-  company_id: string;
   role: string;
 }
 
@@ -29,19 +28,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: JwtPayload): Promise<User> {
     const user = await this.userRepository.findOne({
-      where: { id: payload.sub, is_active: true },
-      relations: ['company'],
+      where: { id: payload.sub, status: UserStatus.ACTIVE },
     });
 
     if (!user) {
       throw new UnauthorizedException('User not found or inactive');
     }
 
-    if (!user.company.is_active) {
-      throw new UnauthorizedException('Company is inactive');
-    }
-
     return user;
   }
 }
-
