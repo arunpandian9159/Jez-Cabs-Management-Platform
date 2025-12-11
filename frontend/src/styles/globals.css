@@ -273,6 +273,24 @@ select {
     font-size: inherit;
 }
 
+/* Remove blue focus ring from booking form inputs */
+input:focus,
+input:focus-visible,
+select:focus,
+select:focus-visible,
+textarea:focus,
+textarea:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Only apply focus ring to specific button/link elements */
+button:focus-visible,
+a:focus-visible {
+    outline: 2px solid var(--primary-500);
+    outline-offset: 2px;
+}
+
 button {
     font-family: inherit;
     cursor: pointer;

@@ -152,101 +152,205 @@ export function Home() {
         <div className="min-h-screen bg-white">
             {/* Hero Section */}
             <section
-                className="pt-24 pb-16 px-4 sm:px-6 lg:px-8"
+                className="relative pt-12 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-[90vh] flex items-center"
                 style={{
-                    background: 'linear-gradient(to bottom right, #eff6ff, #ffffff, #f0fdfa)'
+                    background: 'linear-gradient(135deg, #f8fafc 0%, #eff6ff 25%, #ffffff 50%, #f0fdfa 75%, #f8fafc 100%)'
                 }}
             >
-                <div className="max-w-7xl mx-auto">
-                    <div className="grid lg:grid-cols-2 gap-12 items-center">
+                {/* Animated Background Orbs */}
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                    <div
+                        className="absolute -top-40 -left-40 w-80 h-80 rounded-full opacity-40 animate-float"
+                        style={{
+                            background: 'radial-gradient(circle, #bfdbfe 0%, transparent 70%)',
+                            animationDelay: '0s',
+                            animationDuration: '8s'
+                        }}
+                    />
+                    <div
+                        className="absolute top-1/4 -right-20 w-96 h-96 rounded-full opacity-30 animate-float"
+                        style={{
+                            background: 'radial-gradient(circle, #99f6e4 0%, transparent 70%)',
+                            animationDelay: '2s',
+                            animationDuration: '10s'
+                        }}
+                    />
+                    <div
+                        className="absolute -bottom-20 left-1/4 w-72 h-72 rounded-full opacity-35 animate-float"
+                        style={{
+                            background: 'radial-gradient(circle, #dbeafe 0%, transparent 70%)',
+                            animationDelay: '4s',
+                            animationDuration: '7s'
+                        }}
+                    />
+                    <div
+                        className="absolute bottom-1/3 right-1/4 w-48 h-48 rounded-full opacity-25 animate-float"
+                        style={{
+                            background: 'radial-gradient(circle, #a5f3fc 0%, transparent 70%)',
+                            animationDelay: '1s',
+                            animationDuration: '9s'
+                        }}
+                    />
+                </div>
+
+                {/* Grid Pattern Overlay */}
+                <div
+                    className="absolute inset-0 opacity-[0.02]"
+                    style={{
+                        backgroundImage: `
+                            linear-gradient(#1e293b 1px, transparent 1px),
+                            linear-gradient(90deg, #1e293b 1px, transparent 1px)
+                        `,
+                        backgroundSize: '60px 60px'
+                    }}
+                />
+
+                <div className="max-w-7xl mx-auto relative z-10">
+                    <div className="grid lg:grid-cols-2 gap-16 items-center">
                         {/* Left Content */}
                         <div className="space-y-8">
+                            {/* Badge with animation */}
                             <div
-                                className="inline-block px-4 py-2 rounded-full text-sm font-medium"
+                                className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold animate-fade-in-down shadow-md"
                                 style={{
-                                    backgroundColor: '#dbeafe',
-                                    color: '#1d4ed8'
+                                    background: 'linear-gradient(135deg, #dbeafe 0%, #e0f2fe 100%)',
+                                    color: '#1d4ed8',
+                                    border: '1px solid rgba(59, 130, 246, 0.2)',
+                                    animationDelay: '0.1s',
+                                    animationFillMode: 'both'
                                 }}
                             >
+                                <span className="relative flex h-2 w-2">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-600"></span>
+                                </span>
                                 #1 Cab Management Platform
                             </div>
 
-                            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight" style={{ color: '#0f172a' }}>
+                            {/* Main Heading with animated gradient */}
+                            <h1
+                                className="animate-fade-in-up"
+                                style={{
+                                    color: '#0f172a',
+                                    fontSize: 'clamp(2.5rem, 5vw, 4.5rem)',
+                                    fontWeight: 800,
+                                    lineHeight: 1.1,
+                                    animationDelay: '0.2s',
+                                    animationFillMode: 'both'
+                                }}
+                            >
                                 Your Journey,
                                 <span
-                                    className="block"
-                                    style={{
-                                        background: 'linear-gradient(to right, #2563eb, #0d9488)',
-                                        WebkitBackgroundClip: 'text',
-                                        WebkitTextFillColor: 'transparent',
-                                        backgroundClip: 'text'
-                                    }}
+                                    className="block mt-2"
+                                    style={{ color: '#2563eb' }}
                                 >
                                     Your Way
                                 </span>
                             </h1>
 
-                            <p className="text-lg max-w-xl" style={{ color: '#475569' }}>
+                            {/* Subheading */}
+                            <p
+                                className="max-w-xl animate-fade-in-up"
+                                style={{
+                                    color: '#475569',
+                                    fontSize: 'clamp(1rem, 2vw, 1.25rem)',
+                                    lineHeight: 1.7,
+                                    animationDelay: '0.3s',
+                                    animationFillMode: 'both'
+                                }}
+                            >
                                 Book instant rides, rent cabs for any duration, or plan trips with complete
                                 transparency and safety. For cab owners, manage your fleet and drivers effortlessly.
                             </p>
 
-                            {/* Quick Booking Form */}
+                            {/* Quick Booking Form with Glassmorphism */}
                             <div
-                                className="p-6 rounded-2xl shadow-xl"
+                                className="p-6 sm:p-8 rounded-3xl shadow-2xl animate-fade-in-up group"
                                 style={{
-                                    backgroundColor: '#ffffff',
-                                    border: '1px solid #f1f5f9'
+                                    background: 'rgba(255, 255, 255, 0.85)',
+                                    backdropFilter: 'blur(20px)',
+                                    WebkitBackdropFilter: 'blur(20px)',
+                                    border: '1px solid rgba(255, 255, 255, 0.8)',
+                                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(37, 99, 235, 0.05)',
+                                    animationDelay: '0.4s',
+                                    animationFillMode: 'both'
                                 }}
                             >
                                 <div className="space-y-4">
+                                    {/* Pickup Location */}
                                     <div
-                                        className="flex items-center gap-3 p-3 rounded-lg"
-                                        style={{ backgroundColor: '#f8fafc' }}
+                                        className="flex items-center gap-3 p-4 rounded-xl transition-all duration-300 hover:shadow-md group/input"
+                                        style={{
+                                            backgroundColor: 'rgba(248, 250, 252, 0.8)',
+                                            border: '1px solid #e2e8f0'
+                                        }}
+                                        onFocus={(e) => {
+                                            e.currentTarget.style.borderColor = '#2563eb';
+                                            e.currentTarget.style.boxShadow = '0 0 0 3px rgba(37, 99, 235, 0.1)';
+                                        }}
+                                        onBlur={(e) => {
+                                            e.currentTarget.style.borderColor = '#e2e8f0';
+                                            e.currentTarget.style.boxShadow = 'none';
+                                        }}
                                     >
-                                        <MapPin className="w-5 h-5" style={{ color: '#2563eb' }} />
+                                        <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-gradient-to-br from-blue-500 to-blue-600 shadow-sm">
+                                            <MapPin className="w-5 h-5 text-white" />
+                                        </div>
                                         <input
                                             type="text"
-                                            placeholder="Pickup Location"
-                                            className="bg-transparent flex-1 outline-none"
-                                            style={{ color: '#0f172a' }}
+                                            placeholder="Where from?"
+                                            className="bg-transparent flex-1 outline-none text-base font-medium placeholder:font-normal focus:outline-none focus:ring-0 border-none"
+                                            style={{ color: '#0f172a', boxShadow: 'none' }}
                                         />
                                     </div>
 
+                                    {/* Drop Location */}
                                     <div
-                                        className="flex items-center gap-3 p-3 rounded-lg"
-                                        style={{ backgroundColor: '#f8fafc' }}
+                                        className="flex items-center gap-3 p-4 rounded-xl transition-all duration-300 hover:shadow-md"
+                                        style={{
+                                            backgroundColor: 'rgba(248, 250, 252, 0.8)',
+                                            border: '1px solid #e2e8f0'
+                                        }}
                                     >
-                                        <MapPin className="w-5 h-5" style={{ color: '#0d9488' }} />
+                                        <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-gradient-to-br from-teal-500 to-teal-600 shadow-sm">
+                                            <MapPin className="w-5 h-5 text-white" />
+                                        </div>
                                         <input
                                             type="text"
-                                            placeholder="Drop Location"
-                                            className="bg-transparent flex-1 outline-none"
-                                            style={{ color: '#0f172a' }}
+                                            placeholder="Where to?"
+                                            className="bg-transparent flex-1 outline-none text-base font-medium placeholder:font-normal focus:outline-none focus:ring-0 border-none"
+                                            style={{ color: '#0f172a', boxShadow: 'none' }}
                                         />
                                     </div>
 
+                                    {/* Date and Passengers */}
                                     <div className="grid grid-cols-2 gap-4">
                                         <div
-                                            className="flex items-center gap-3 p-3 rounded-lg"
-                                            style={{ backgroundColor: '#f8fafc' }}
+                                            className="flex items-center gap-3 p-4 rounded-xl transition-all duration-300 hover:shadow-md"
+                                            style={{
+                                                backgroundColor: 'rgba(248, 250, 252, 0.8)',
+                                                border: '1px solid #e2e8f0'
+                                            }}
                                         >
                                             <Calendar className="w-5 h-5" style={{ color: '#2563eb' }} />
                                             <input
                                                 type="date"
-                                                className="bg-transparent flex-1 outline-none"
-                                                style={{ color: '#0f172a' }}
+                                                className="bg-transparent flex-1 outline-none text-sm font-medium focus:outline-none focus:ring-0 border-none"
+                                                style={{ color: '#0f172a', boxShadow: 'none' }}
                                             />
                                         </div>
 
                                         <div
-                                            className="flex items-center gap-3 p-3 rounded-lg"
-                                            style={{ backgroundColor: '#f8fafc' }}
+                                            className="flex items-center gap-3 p-4 rounded-xl transition-all duration-300 hover:shadow-md"
+                                            style={{
+                                                backgroundColor: 'rgba(248, 250, 252, 0.8)',
+                                                border: '1px solid #e2e8f0'
+                                            }}
                                         >
                                             <User className="w-5 h-5" style={{ color: '#2563eb' }} />
                                             <select
-                                                className="bg-transparent flex-1 outline-none"
-                                                style={{ color: '#0f172a' }}
+                                                className="bg-transparent flex-1 outline-none text-sm font-medium cursor-pointer focus:outline-none focus:ring-0 border-none"
+                                                style={{ color: '#0f172a', boxShadow: 'none' }}
                                             >
                                                 <option>1 Passenger</option>
                                                 <option>2 Passengers</option>
@@ -256,29 +360,97 @@ export function Home() {
                                         </div>
                                     </div>
 
-                                    <Link to={ROUTES.REGISTER}>
+                                    {/* Book Now Button */}
+                                    <Link to={ROUTES.REGISTER} className="block">
                                         <button
-                                            className="w-full py-3 text-white rounded-lg transition-all font-medium hover:shadow-lg"
+                                            className="w-full py-4 text-white rounded-xl transition-all font-semibold text-lg group/btn relative overflow-hidden"
                                             style={{
-                                                background: 'linear-gradient(to right, #2563eb, #0d9488)'
+                                                background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)',
+                                                boxShadow: '0 4px 15px rgba(37, 99, 235, 0.3)'
+                                            }}
+                                            onMouseEnter={(e) => {
+                                                e.currentTarget.style.transform = 'translateY(-2px)';
+                                                e.currentTarget.style.boxShadow = '0 8px 25px rgba(37, 99, 235, 0.4)';
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.currentTarget.style.transform = 'translateY(0)';
+                                                e.currentTarget.style.boxShadow = '0 4px 15px rgba(37, 99, 235, 0.3)';
                                             }}
                                         >
-                                            Book Now
+                                            <span className="relative z-10 flex items-center justify-center gap-2">
+                                                Book Now
+                                                <ArrowRight className="w-5 h-5 transition-transform group-hover/btn:translate-x-1" />
+                                            </span>
                                         </button>
                                     </Link>
                                 </div>
                             </div>
+
                         </div>
 
                         {/* Right Animation */}
-                        <div className="relative hidden lg:block">
-                            <div className="aspect-square rounded-3xl overflow-hidden">
+                        <div
+                            className="relative hidden lg:block animate-fade-in"
+                            style={{
+                                animationDelay: '0.3s',
+                                animationFillMode: 'both'
+                            }}
+                        >
+                            {/* Background glow for animation */}
+                            <div
+                                className="absolute inset-0 rounded-full opacity-30 blur-3xl animate-pulse"
+                                style={{
+                                    background: 'radial-gradient(circle, #60a5fa 0%, transparent 60%)',
+                                    transform: 'scale(0.8)'
+                                }}
+                            />
+
+                            <div className="relative aspect-square rounded-3xl overflow-visible animate-float" style={{ animationDuration: '6s' }}>
                                 <DotLottiePlayer
                                     src="/Man waiting car.lottie"
                                     autoplay
                                     loop
-                                    className="w-full h-full"
+                                    className="w-full h-full drop-shadow-2xl"
                                 />
+                            </div>
+
+                            {/* Floating cards around animation */}
+                            <div
+                                className="absolute -top-4 -right-4 p-4 rounded-2xl shadow-xl animate-float-subtle"
+                                style={{
+                                    background: 'rgba(255, 255, 255, 0.95)',
+                                    backdropFilter: 'blur(10px)',
+                                    border: '1px solid rgba(255, 255, 255, 0.8)'
+                                }}
+                            >
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
+                                        <CheckCircle className="w-5 h-5 text-white" />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-semibold" style={{ color: '#0f172a' }}>Ride Confirmed!</p>
+                                        <p className="text-xs" style={{ color: '#64748b' }}>Driver arriving in 10 mins</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div
+                                className="absolute bottom-10 -left-8 p-4 rounded-2xl shadow-xl animate-float-subtle-delayed"
+                                style={{
+                                    background: 'rgba(255, 255, 255, 0.95)',
+                                    backdropFilter: 'blur(10px)',
+                                    border: '1px solid rgba(255, 255, 255, 0.8)'
+                                }}
+                            >
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+                                        <Car className="w-5 h-5 text-white" />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-semibold" style={{ color: '#0f172a' }}>10+ Cabs</p>
+                                        <p className="text-xs" style={{ color: '#64748b' }}>Available nearby</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
