@@ -6,13 +6,13 @@ import {
     Sparkles,
     Shield,
     Clock,
-    Star,
     AlertCircle,
     Zap,
     Heart,
     Github,
 } from 'lucide-react';
-import { Logo } from '../ui/Logo';
+import { DotLottiePlayer } from '@dotlottie/react-player';
+import '@dotlottie/react-player/dist/index.css';
 import { useAuth } from '../../contexts/AuthContext';
 import { LoginForm } from './LoginForm';
 import { RegisterForm } from './RegisterForm';
@@ -314,46 +314,20 @@ export function AuthModal({ isOpen, modalType, onClose, onSwitchModal }: AuthMod
                                         animate={{ opacity: 1, x: 0 }}
                                         exit={{ opacity: 0, x: 30 }}
                                         transition={{ duration: 0.4 }}
-                                        className="relative z-10 text-center"
+                                        className="relative z-10 flex items-center justify-center h-full"
                                     >
                                         <motion.div
-                                            className="mb-8 flex justify-center"
-                                            initial={{ scale: 0, rotate: -180 }}
-                                            animate={{ scale: 1, rotate: 0 }}
-                                            transition={{ delay: 0.2, type: 'spring' }}
+                                            className="w-full h-full flex items-center justify-center"
+                                            initial={{ scale: 0.8, opacity: 0 }}
+                                            animate={{ scale: 1, opacity: 1 }}
+                                            transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
                                         >
-                                            <div className="w-24 h-24 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm shadow-xl">
-                                                <Logo size="lg" className="text-white" />
-                                            </div>
-                                        </motion.div>
-                                        <h2 className="text-4xl font-bold mb-4">Welcome Back!</h2>
-                                        <p className="text-teal-100 mb-8 text-lg">
-                                            To keep connected with us please login with your personal info.
-                                        </p>
-                                        <motion.div
-                                            className="p-6 bg-white/10 rounded-2xl backdrop-blur-md shadow-xl border border-white/20"
-                                            initial={{ opacity: 0, y: 20 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{ delay: 0.4 }}
-                                        >
-                                            <p className="italic text-base text-teal-50 mb-3">
-                                                "The best way to travel! Safe, reliable and always on time."
-                                            </p>
-                                            <div className="flex items-center justify-center gap-2">
-                                                <div className="flex text-yellow-400">
-                                                    {[...Array(5)].map((_, i) => (
-                                                        <motion.div
-                                                            key={i}
-                                                            initial={{ opacity: 0, scale: 0 }}
-                                                            animate={{ opacity: 1, scale: 1 }}
-                                                            transition={{ delay: 0.5 + i * 0.1 }}
-                                                        >
-                                                            <Star className="w-4 h-4 fill-current" />
-                                                        </motion.div>
-                                                    ))}
-                                                </div>
-                                                <span className="text-sm text-teal-200 font-medium">5.0 Customer Rating</span>
-                                            </div>
+                                            <DotLottiePlayer
+                                                src="/Login.lottie"
+                                                autoplay
+                                                loop
+                                                style={{ width: '100%', height: '100%', maxWidth: '500px', maxHeight: '500px' }}
+                                            />
                                         </motion.div>
                                     </motion.div>
                                 )}
