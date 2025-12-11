@@ -44,13 +44,21 @@ function SettingToggle({ label, description, enabled, onToggle }: SettingToggleP
     );
 }
 
-// Mock business data
-const businessInfo = {
-    name: 'Kumar Fleet Services',
-    registrationNumber: 'GST12345678',
-    address: '456 Commercial Street, Bangalore - 560001',
-    phone: '+91 98765 43210',
-    email: 'kumar.fleet@email.com',
+// TODO: Fetch business info from API
+// API endpoint: GET /api/v1/owner/business
+interface BusinessInfo {
+    name: string;
+    registrationNumber: string;
+    address: string;
+    phone: string;
+    email: string;
+}
+const businessInfo: BusinessInfo = {
+    name: '',
+    registrationNumber: '',
+    address: '',
+    phone: '',
+    email: '',
 };
 
 export function OwnerSettings() {

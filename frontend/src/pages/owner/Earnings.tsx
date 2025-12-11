@@ -19,111 +19,60 @@ import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/u
 import { Select } from '../../components/ui/Select';
 import { formatCurrency, formatDate } from '../../lib/utils';
 
-// Mock earnings data
-const earningsSummary = {
-    today: 7500,
-    week: 52000,
-    month: 215000,
-    totalRevenue: 2850000,
-    pendingSettlements: 45000,
-    platformFee: 32250,
-    netEarnings: 182750,
+// TODO: Fetch earnings summary from API
+// API endpoint: GET /api/v1/owner/earnings/summary
+interface EarningsSummary {
+    today: number;
+    week: number;
+    month: number;
+    totalRevenue: number;
+    pendingSettlements: number;
+    platformFee: number;
+    netEarnings: number;
+}
+const earningsSummary: EarningsSummary = {
+    today: 0,
+    week: 0,
+    month: 0,
+    totalRevenue: 0,
+    pendingSettlements: 0,
+    platformFee: 0,
+    netEarnings: 0,
 };
 
-const cabEarnings = [
-    {
-        id: 'c1',
-        vehicle: 'Maruti Swift Dzire',
-        registration: 'KA 01 AB 1234',
-        driver: 'Rajesh K.',
-        thisMonth: 42500,
-        lastMonth: 38000,
-        trips: 156,
-        growth: 12,
-    },
-    {
-        id: 'c2',
-        vehicle: 'Hyundai Creta',
-        registration: 'KA 01 CD 5678',
-        driver: 'Suresh M.',
-        thisMonth: 58000,
-        lastMonth: 52000,
-        trips: 89,
-        growth: 11,
-    },
-    {
-        id: 'c3',
-        vehicle: 'Toyota Innova Crysta',
-        registration: 'KA 05 EF 9012',
-        driver: 'Under Maintenance',
-        thisMonth: 0,
-        lastMonth: 45000,
-        trips: 0,
-        growth: -100,
-    },
-    {
-        id: 'c4',
-        vehicle: 'Honda City',
-        registration: 'KA 09 GH 3456',
-        driver: 'Mahesh R.',
-        thisMonth: 38500,
-        lastMonth: 35000,
-        trips: 112,
-        growth: 10,
-    },
-];
+// TODO: Fetch cab earnings from API
+// API endpoint: GET /api/v1/owner/earnings/by-cab
+interface CabEarning {
+    id: string;
+    vehicle: string;
+    registration: string;
+    driver: string;
+    thisMonth: number;
+    lastMonth: number;
+    trips: number;
+    growth: number;
+}
+const cabEarnings: CabEarning[] = [];
 
-const transactions = [
-    {
-        id: 'tx1',
-        type: 'earning',
-        description: 'Daily earnings - 4 cabs',
-        amount: 7500,
-        date: '2025-12-10',
-        status: 'completed',
-    },
-    {
-        id: 'tx2',
-        type: 'payout',
-        description: 'Weekly payout - Bank Transfer',
-        amount: 45000,
-        date: '2025-12-05',
-        status: 'completed',
-    },
-    {
-        id: 'tx3',
-        type: 'deduction',
-        description: 'Platform Fee (15%)',
-        amount: 6750,
-        date: '2025-12-05',
-        status: 'completed',
-    },
-    {
-        id: 'tx4',
-        type: 'settlement',
-        description: 'Driver settlement - Rajesh K.',
-        amount: 12500,
-        date: '2025-12-05',
-        status: 'completed',
-    },
-    {
-        id: 'tx5',
-        type: 'earning',
-        description: 'Daily earnings - 4 cabs',
-        amount: 8200,
-        date: '2025-12-09',
-        status: 'completed',
-    },
-];
+// TODO: Fetch transactions from API
+// API endpoint: GET /api/v1/owner/transactions
+interface Transaction {
+    id: string;
+    type: string;
+    description: string;
+    amount: number;
+    date: string;
+    status: string;
+}
+const transactions: Transaction[] = [];
 
-const monthlyData = [
-    { month: 'Jul', earnings: 180000 },
-    { month: 'Aug', earnings: 195000 },
-    { month: 'Sep', earnings: 188000 },
-    { month: 'Oct', earnings: 210000 },
-    { month: 'Nov', earnings: 225000 },
-    { month: 'Dec', earnings: 215000 },
-];
+// TODO: Fetch monthly data from API
+// API endpoint: GET /api/v1/owner/earnings/monthly
+interface MonthlyData {
+    month: string;
+    earnings: number;
+}
+const monthlyData: MonthlyData[] = [];
 
 export function OwnerEarnings() {
     const [activeTab, setActiveTab] = useState('overview');

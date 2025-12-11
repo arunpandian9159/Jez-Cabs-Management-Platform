@@ -17,93 +17,46 @@ import { Modal } from '../../components/ui/Modal';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
 import { formatCurrency, formatDate } from '../../lib/utils';
 
-// Mock cabs data
-const cabs = [
-    {
-        id: 'c1',
-        make: 'Maruti',
-        model: 'Swift Dzire',
-        year: 2023,
-        color: 'White',
-        registrationNumber: 'KA 01 AB 1234',
-        fuelType: 'Petrol',
-        status: 'active',
-        driver: {
-            id: 'd1',
-            name: 'Rajesh Kumar',
-            phone: '+91 98765 43210',
-            rating: 4.8,
-            trips: 156,
-        },
-        metrics: {
-            totalTrips: 1248,
-            totalEarnings: 385000,
-            thisMonthEarnings: 42500,
-            rating: 4.8,
-        },
-        documents: {
-            registration: { status: 'valid', expiry: '2026-03-15' },
-            insurance: { status: 'valid', expiry: '2025-06-20' },
-            permit: { status: 'expiring', expiry: '2025-01-10' },
-        },
-        lastService: '2025-11-15',
-        nextService: '2025-12-15',
-    },
-    {
-        id: 'c2',
-        make: 'Hyundai',
-        model: 'Creta',
-        year: 2022,
-        color: 'Black',
-        registrationNumber: 'KA 01 CD 5678',
-        fuelType: 'Diesel',
-        status: 'active',
-        driver: {
-            id: 'd2',
-            name: 'Suresh M.',
-            phone: '+91 87654 32109',
-            rating: 4.6,
-            trips: 89,
-        },
-        metrics: {
-            totalTrips: 892,
-            totalEarnings: 425000,
-            thisMonthEarnings: 58000,
-            rating: 4.9,
-        },
-        documents: {
-            registration: { status: 'valid', expiry: '2025-08-20' },
-            insurance: { status: 'valid', expiry: '2025-09-15' },
-            permit: { status: 'valid', expiry: '2026-02-28' },
-        },
-        lastService: '2025-10-20',
-        nextService: '2025-12-20',
-    },
-    {
-        id: 'c3',
-        make: 'Toyota',
-        model: 'Innova Crysta',
-        year: 2023,
-        color: 'Silver',
-        registrationNumber: 'KA 05 EF 9012',
-        fuelType: 'Diesel',
-        status: 'maintenance',
-        driver: null,
-        metrics: {
-            totalTrips: 567,
-            totalEarnings: 280000,
-            thisMonthEarnings: 0,
-            rating: 4.7,
-        },
-        documents: {
-            registration: { status: 'valid', expiry: '2026-05-10' },
-            insurance: { status: 'valid', expiry: '2025-12-01' },
-            permit: { status: 'valid', expiry: '2026-04-15' },
-        },
-        lastService: '2025-12-05',
-        nextService: '2026-01-05',
-    },
-];
+// TODO: Fetch cabs from API
+// API endpoint: GET /api/v1/owner/cabs
+interface CabDriver {
+    id: string;
+    name: string;
+    phone: string;
+    rating: number;
+    trips: number;
+}
+interface CabMetrics {
+    totalTrips: number;
+    totalEarnings: number;
+    thisMonthEarnings: number;
+    rating: number;
+}
+interface DocumentStatus {
+    status: string;
+    expiry: string;
+}
+interface CabDocuments {
+    registration: DocumentStatus;
+    insurance: DocumentStatus;
+    permit: DocumentStatus;
+}
+interface Cab {
+    id: string;
+    make: string;
+    model: string;
+    year: number;
+    color: string;
+    registrationNumber: string;
+    fuelType: string;
+    status: string;
+    driver: CabDriver | null;
+    metrics: CabMetrics;
+    documents: CabDocuments;
+    lastService: string;
+    nextService: string;
+}
+const cabs: Cab[] = [];
 
 export function ManageCabs() {
     const [searchQuery, setSearchQuery] = useState('');

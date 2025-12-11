@@ -19,93 +19,34 @@ import { Avatar } from '../../components/ui/Avatar';
 import { Modal } from '../../components/ui/Modal';
 import { formatCurrency } from '../../lib/utils';
 
-// Mock drivers data
-const drivers = [
-    {
-        id: 'd1',
-        name: 'Rajesh Kumar',
-        phone: '+91 98765 43210',
-        email: 'rajesh.k@email.com',
-        avatar: null,
-        status: 'active',
-        cab: {
-            make: 'Maruti',
-            model: 'Swift Dzire',
-            registrationNumber: 'KA 01 AB 1234',
-        },
-        metrics: {
-            totalTrips: 156,
-            rating: 4.8,
-            acceptanceRate: 95,
-            completionRate: 98,
-            thisMonthEarnings: 42500,
-            totalEarnings: 385000,
-        },
-        joinedDate: '2024-06-15',
-        lastActive: '2025-12-10T14:30:00',
-    },
-    {
-        id: 'd2',
-        name: 'Suresh M.',
-        phone: '+91 87654 32109',
-        email: 'suresh.m@email.com',
-        avatar: null,
-        status: 'active',
-        cab: {
-            make: 'Hyundai',
-            model: 'Creta',
-            registrationNumber: 'KA 01 CD 5678',
-        },
-        metrics: {
-            totalTrips: 89,
-            rating: 4.6,
-            acceptanceRate: 88,
-            completionRate: 96,
-            thisMonthEarnings: 58000,
-            totalEarnings: 425000,
-        },
-        joinedDate: '2024-08-20',
-        lastActive: '2025-12-10T12:15:00',
-    },
-    {
-        id: 'd3',
-        name: 'Mahesh R.',
-        phone: '+91 76543 21098',
-        email: 'mahesh.r@email.com',
-        avatar: null,
-        status: 'inactive',
-        cab: null,
-        metrics: {
-            totalTrips: 234,
-            rating: 4.9,
-            acceptanceRate: 92,
-            completionRate: 99,
-            thisMonthEarnings: 0,
-            totalEarnings: 520000,
-        },
-        joinedDate: '2024-03-10',
-        lastActive: '2025-12-08T18:00:00',
-    },
-    {
-        id: 'd4',
-        name: 'Venkat S.',
-        phone: '+91 65432 10987',
-        email: 'venkat.s@email.com',
-        avatar: null,
-        status: 'pending',
-        cab: null,
-        metrics: {
-            totalTrips: 0,
-            rating: 0,
-            acceptanceRate: 0,
-            completionRate: 0,
-            thisMonthEarnings: 0,
-            totalEarnings: 0,
-        },
-        joinedDate: '2025-12-08',
-        lastActive: null,
-    },
-];
+// TODO: Fetch drivers from API
+// API endpoint: GET /api/v1/owner/drivers
+interface DriverCab {
+    make: string;
+    model: string;
+    registrationNumber: string;
+}
+interface DriverMetrics {
+    totalTrips: number;
+    rating: number;
+    acceptanceRate: number;
+    completionRate: number;
+    thisMonthEarnings: number;
+    totalEarnings: number;
+}
+interface Driver {
+    id: string;
+    name: string;
+    phone: string;
+    email: string;
+    avatar: string | null;
+    status: string;
+    cab: DriverCab | null;
+    metrics: DriverMetrics;
+    joinedDate: string;
+    lastActive: string | null;
+}
+const drivers: Driver[] = [];
 
 export function ManageDrivers() {
     const [searchQuery, setSearchQuery] = useState('');

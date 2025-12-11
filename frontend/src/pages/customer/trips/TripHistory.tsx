@@ -15,87 +15,34 @@ import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../../component
 import { Select } from '../../../components/ui/Select';
 import { formatCurrency, formatDate, formatTime, formatDuration } from '../../../lib/utils';
 
-// Mock trip history
-const trips = [
-    {
-        id: 't1',
-        type: 'instant',
-        pickup: 'Koramangala, Bangalore',
-        destination: 'Whitefield, Bangalore',
-        date: '2025-12-10T14:30:00',
-        driver: {
-            name: 'Rajesh Kumar',
-            rating: 4.8,
-        },
-        cab: {
-            make: 'Maruti',
-            model: 'Swift Dzire',
-            registrationNumber: 'KA 01 AB 1234',
-        },
-        status: 'completed',
-        fare: 320,
-        distance: 15.2,
-        duration: 45,
-        rating: 5,
-    },
-    {
-        id: 't2',
-        type: 'instant',
-        pickup: 'Indiranagar, Bangalore',
-        destination: 'Electronic City, Bangalore',
-        date: '2025-12-08T09:00:00',
-        driver: {
-            name: 'Suresh R',
-            rating: 4.5,
-        },
-        cab: {
-            make: 'Hyundai',
-            model: 'Xcent',
-            registrationNumber: 'KA 05 CD 5678',
-        },
-        status: 'completed',
-        fare: 450,
-        distance: 22.5,
-        duration: 62,
-        rating: 4,
-    },
-    {
-        id: 't3',
-        type: 'planned',
-        pickup: 'Bangalore',
-        destination: 'Mysore',
-        date: '2025-12-05T06:00:00',
-        driver: {
-            name: 'Mahesh K',
-            rating: 4.9,
-        },
-        cab: {
-            make: 'Toyota',
-            model: 'Innova',
-            registrationNumber: 'KA 09 EF 9012',
-        },
-        status: 'completed',
-        fare: 2800,
-        distance: 145,
-        duration: 180,
-        rating: 5,
-    },
-    {
-        id: 't4',
-        type: 'instant',
-        pickup: 'MG Road, Bangalore',
-        destination: 'Airport',
-        date: '2025-12-01T04:30:00',
-        driver: null,
-        cab: null,
-        status: 'cancelled',
-        fare: 0,
-        distance: 0,
-        duration: 0,
-        cancellationReason: 'No drivers available',
-        refundAmount: 50,
-    },
-];
+// TODO: Fetch trip history from API
+// API endpoint: GET /api/v1/trips
+interface TripDriver {
+    name: string;
+    rating: number;
+}
+interface TripCab {
+    make: string;
+    model: string;
+    registrationNumber: string;
+}
+interface Trip {
+    id: string;
+    type: string;
+    pickup: string;
+    destination: string;
+    date: string;
+    driver: TripDriver | null;
+    cab: TripCab | null;
+    status: string;
+    fare: number;
+    distance: number;
+    duration: number;
+    rating?: number;
+    cancellationReason?: string;
+    refundAmount?: number;
+}
+const trips: Trip[] = [];
 
 export function TripHistory() {
     const [activeTab, setActiveTab] = useState('all');

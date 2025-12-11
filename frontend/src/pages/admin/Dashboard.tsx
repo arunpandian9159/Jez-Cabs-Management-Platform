@@ -1,9 +1,6 @@
 import { motion } from 'framer-motion';
 import {
     Users,
-    Car,
-    DollarSign,
-    AlertTriangle,
     Clock,
     ArrowUpRight,
     ArrowDownRight,
@@ -13,61 +10,51 @@ import { Badge } from '../../components/ui/Badge';
 import { Avatar } from '../../components/ui/Avatar';
 import { formatCurrency } from '../../lib/utils';
 
-// Mock dashboard data
-const stats = [
-    {
-        label: 'Total Users',
-        value: '12,543',
-        change: '+12.5%',
-        trending: 'up',
-        icon: Users,
-        color: 'primary',
-    },
-    {
-        label: 'Active Drivers',
-        value: '1,234',
-        change: '+8.2%',
-        trending: 'up',
-        icon: Car,
-        color: 'success',
-    },
-    {
-        label: 'Revenue (MTD)',
-        value: formatCurrency(2450000),
-        change: '+15.3%',
-        trending: 'up',
-        icon: DollarSign,
-        color: 'accent',
-    },
-    {
-        label: 'Open Disputes',
-        value: '23',
-        change: '-5.2%',
-        trending: 'down',
-        icon: AlertTriangle,
-        color: 'error',
-    },
-];
+// TODO: Fetch dashboard stats from API
+// API endpoint: GET /api/v1/admin/dashboard/stats
+interface DashboardStat {
+    label: string;
+    value: string;
+    change: string;
+    trending: 'up' | 'down';
+    icon: typeof Users;
+    color: string;
+}
+const stats: DashboardStat[] = [];
 
-const recentTrips = [
-    { id: 't1', customer: 'Rahul Kumar', driver: 'Ramesh S.', fare: 450, status: 'completed', time: '10 min ago' },
-    { id: 't2', customer: 'Priya Sharma', driver: 'Suresh M.', fare: 320, status: 'completed', time: '15 min ago' },
-    { id: 't3', customer: 'Amit Verma', driver: 'Vikram P.', fare: 580, status: 'in_progress', time: '20 min ago' },
-    { id: 't4', customer: 'Sneha Patel', driver: 'Rajesh K.', fare: 290, status: 'completed', time: '25 min ago' },
-    { id: 't5', customer: 'Vivek Singh', driver: 'Mahesh R.', fare: 410, status: 'cancelled', time: '30 min ago' },
-];
+// TODO: Fetch recent trips from API
+// API endpoint: GET /api/v1/admin/trips?limit=5
+interface RecentTrip {
+    id: string;
+    customer: string;
+    driver: string;
+    fare: number;
+    status: string;
+    time: string;
+}
+const recentTrips: RecentTrip[] = [];
 
-const pendingVerifications = [
-    { id: 'v1', name: 'Ganesh Kumar', type: 'Driver', document: 'License', submitted: '2 hours ago' },
-    { id: 'v2', name: 'Lakshmi Devi', type: 'Driver', document: 'Vehicle RC', submitted: '3 hours ago' },
-    { id: 'v3', name: 'Ravi Motors', type: 'Cab Owner', document: 'Insurance', submitted: '5 hours ago' },
-];
+// TODO: Fetch pending verifications from API
+// API endpoint: GET /api/v1/admin/verifications?status=pending
+interface PendingVerification {
+    id: string;
+    name: string;
+    type: string;
+    document: string;
+    submitted: string;
+}
+const pendingVerifications: PendingVerification[] = [];
 
-const recentDisputes = [
-    { id: 'd1', customer: 'Rahul M.', issue: 'Fare dispute', priority: 'high', status: 'open' },
-    { id: 'd2', customer: 'Anita S.', issue: 'Driver behavior', priority: 'medium', status: 'in_progress' },
-    { id: 'd3', customer: 'Vijay K.', issue: 'Route deviation', priority: 'low', status: 'open' },
-];
+// TODO: Fetch recent disputes from API
+// API endpoint: GET /api/v1/admin/disputes?limit=3
+interface RecentDispute {
+    id: string;
+    customer: string;
+    issue: string;
+    priority: string;
+    status: string;
+}
+const recentDisputes: RecentDispute[] = [];
 
 export function AdminDashboard() {
     const getStatusBadge = (status: string) => {

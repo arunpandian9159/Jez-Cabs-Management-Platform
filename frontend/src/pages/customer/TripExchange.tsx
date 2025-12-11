@@ -22,81 +22,28 @@ import { Avatar } from '../../components/ui/Avatar';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
 import { formatCurrency, formatDate, formatTime } from '../../lib/utils';
 
-// Mock community trips data
-const communityTrips = [
-    {
-        id: 't1',
-        type: 'share',
-        poster: {
-            name: 'Amit Sharma',
-            rating: 4.8,
-            trips: 45,
-        },
-        from: 'Koramangala',
-        to: 'Whitefield',
-        date: '2025-12-11',
-        time: '09:00',
-        seats: 2,
-        pricePerSeat: 150,
-        status: 'open',
-        vehicleType: 'Sedan',
-        description: 'Daily office commute. Pickup from Sony Signal.',
-    },
-    {
-        id: 't2',
-        type: 'share',
-        poster: {
-            name: 'Priya Patel',
-            rating: 4.9,
-            trips: 32,
-        },
-        from: 'Indiranagar',
-        to: 'Electronic City',
-        date: '2025-12-11',
-        time: '08:30',
-        seats: 3,
-        pricePerSeat: 120,
-        status: 'open',
-        vehicleType: 'SUV',
-        description: 'Morning commute with AC. Can pick up from 100ft Road area.',
-    },
-    {
-        id: 't3',
-        type: 'request',
-        poster: {
-            name: 'Rahul Verma',
-            rating: 4.7,
-            trips: 18,
-        },
-        from: 'HSR Layout',
-        to: 'MG Road',
-        date: '2025-12-11',
-        time: '10:00',
-        seats: 1,
-        pricePerSeat: 100,
-        status: 'open',
-        vehicleType: 'Any',
-        description: 'Looking for a ride for a meeting. Flexible on time.',
-    },
-    {
-        id: 't4',
-        type: 'share',
-        poster: {
-            name: 'Sneha Kumar',
-            rating: 5.0,
-            trips: 67,
-        },
-        from: 'Marathahalli',
-        to: 'Majestic',
-        date: '2025-12-12',
-        time: '07:30',
-        seats: 4,
-        pricePerSeat: 80,
-        status: 'open',
-        vehicleType: 'Innova',
-        description: 'Weekend trip to city center. Comfortable ride.',
-    },
-];
+// TODO: Fetch community trips from API
+// API endpoint: GET /api/v1/community-trips
+interface TripPoster {
+    name: string;
+    rating: number;
+    trips: number;
+}
+interface CommunityTrip {
+    id: string;
+    type: string;
+    poster: TripPoster;
+    from: string;
+    to: string;
+    date: string;
+    time: string;
+    seats: number;
+    pricePerSeat: number;
+    status: string;
+    vehicleType: string;
+    description: string;
+}
+const communityTrips: CommunityTrip[] = [];
 
 export function TripExchange() {
     const [activeTab, setActiveTab] = useState('all');

@@ -22,73 +22,23 @@ import { Modal } from '../../components/ui/Modal';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
 import { formatCurrency, formatDate } from '../../lib/utils';
 
-// Mock contracts data
-const contracts = [
-    {
-        id: 'c1',
-        type: 'driver',
-        title: 'Driver Employment Contract',
-        partyName: 'Rajesh Kumar',
-        vehicleAssigned: 'KA 01 AB 1234',
-        startDate: '2024-03-15',
-        endDate: '2025-03-14',
-        status: 'active',
-        commission: 75,
-        monthlyTarget: 50000,
-        documents: ['agreement.pdf', 'id_proof.pdf'],
-    },
-    {
-        id: 'c2',
-        type: 'driver',
-        title: 'Driver Employment Contract',
-        partyName: 'Suresh Menon',
-        vehicleAssigned: 'KA 01 CD 5678',
-        startDate: '2024-06-01',
-        endDate: '2025-05-31',
-        status: 'active',
-        commission: 70,
-        monthlyTarget: 45000,
-        documents: ['agreement.pdf'],
-    },
-    {
-        id: 'c3',
-        type: 'driver',
-        title: 'Driver Employment Contract',
-        partyName: 'Mahesh Rao',
-        vehicleAssigned: 'KA 09 GH 3456',
-        startDate: '2024-08-01',
-        endDate: '2025-07-31',
-        status: 'expiring',
-        commission: 72,
-        monthlyTarget: 48000,
-        documents: ['agreement.pdf', 'id_proof.pdf', 'license.pdf'],
-    },
-    {
-        id: 'c4',
-        type: 'platform',
-        title: 'Platform Partnership Agreement',
-        partyName: 'Jez Cabs Platform',
-        vehicleAssigned: 'All Vehicles',
-        startDate: '2024-01-01',
-        endDate: '2024-12-31',
-        status: 'expired',
-        commission: 15,
-        monthlyTarget: 0,
-        documents: ['platform_agreement.pdf'],
-    },
-    {
-        id: 'c5',
-        type: 'insurance',
-        title: 'Fleet Insurance Policy',
-        partyName: 'National Insurance Co.',
-        vehicleAssigned: 'All Vehicles',
-        startDate: '2024-06-01',
-        endDate: '2025-05-31',
-        status: 'active',
-        premium: 120000,
-        documents: ['insurance_policy.pdf', 'coverage_details.pdf'],
-    },
-];
+// TODO: Fetch contracts from API
+// API endpoint: GET /api/v1/owner/contracts
+interface Contract {
+    id: string;
+    type: string;
+    title: string;
+    partyName: string;
+    vehicleAssigned: string;
+    startDate: string;
+    endDate: string;
+    status: string;
+    commission?: number;
+    monthlyTarget?: number;
+    premium?: number;
+    documents: string[];
+}
+const contracts: Contract[] = [];
 
 export function Contracts() {
     const [activeTab, setActiveTab] = useState('all');
