@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -18,10 +18,10 @@ import { Select } from '../../../components/ui/Select';
 import { Badge } from '../../../components/ui/Badge';
 import { cn, formatCurrency } from '../../../lib/utils';
 import { ROUTES } from '../../../lib/constants';
+import { rentalsService } from '../../../services';
 
-// TODO: API Integration - Fetch available cabs for rental
-// API endpoint: GET /api/v1/cabs/available?rentalType={rentalType}&duration={duration}
-interface AvailableCab {
+// Types for available cabs display
+interface AvailableCabDisplay {
     id: string;
     make: string;
     model: string;
@@ -39,7 +39,6 @@ interface AvailableCab {
     features: string[];
     available: boolean;
 }
-const availableCabs: AvailableCab[] = [];
 
 const rentalTypes = [
     { value: 'self_drive', label: 'Self Drive' },
@@ -59,6 +58,43 @@ export function BrowseCabs() {
     const [duration, setDuration] = useState('daily');
     const [showFilters, setShowFilters] = useState(false);
     const [favorites, setFavorites] = useState<string[]>([]);
+    const [availableCabs, setAvailableCabs] = useState<AvailableCabDisplay[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    // Fetch available cabs on mount
+    useEffect(() => {
+        const fetchCabs = async () => {
+            try {
+                setIsLoading(true);
+                const cabs = await rentalsService.getAvailableCabs();
+                const formatted: AvailableCabDisplay[] = cabs.map(cab => ({
+                    id: cab.id,
+                    make: cab.make,
+                    model: cab.model,
+                    year: 2023, // Default year if not provided
+                    color: 'Black', // Default color
+                    seats: 5, // Default seats
+                    fuel: 'Petrol', // Default fuel type
+                    transmission: 'Automatic', // Default transmission
+                    pricePerDay: cab.daily_rate || 2000,
+                    pricePerKm: 15, // Default per km rate
+                    rating: cab.rating || 4.5,
+                    reviews: cab.total_rentals || 0,
+                    ownerName: cab.owner ? `${cab.owner.first_name} ${cab.owner.last_name}` : 'Owner',
+                    image: cab.images?.[0] || null,
+                    features: cab.features || [],
+                    available: true,
+                }));
+                setAvailableCabs(formatted);
+            } catch (error) {
+                console.error('Error fetching available cabs:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchCabs();
+    }, []);
 
     const toggleFavorite = (id: string) => {
         setFavorites((prev) =>

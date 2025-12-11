@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Phone,
@@ -18,10 +18,10 @@ import { Badge } from '../../components/ui/Badge';
 import { Input } from '../../components/ui/Input';
 import { Modal } from '../../components/ui/Modal';
 import { Avatar } from '../../components/ui/Avatar';
+import { safetyService } from '../../services';
 
-// TODO: Fetch emergency contacts from API
-// API endpoint: GET /api/v1/users/emergency-contacts
-interface EmergencyContact {
+// Type for emergency contacts display
+interface EmergencyContactDisplay {
     id: string;
     name: string;
     phone: string;
@@ -31,10 +31,10 @@ interface EmergencyContact {
 }
 
 export function EmergencyContacts() {
-    // TODO: Fetch contacts from API on component mount
-    const [contacts, setContacts] = useState<EmergencyContact[]>([]);
+    const [contacts, setContacts] = useState<EmergencyContactDisplay[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [showAddModal, setShowAddModal] = useState(false);
-    const [editingContact, setEditingContact] = useState<EmergencyContact | null>(null);
+    const [editingContact, setEditingContact] = useState<EmergencyContactDisplay | null>(null);
     const [newContact, setNewContact] = useState({
         name: '',
         phone: '',
@@ -42,35 +42,93 @@ export function EmergencyContacts() {
         notifyOnRide: false,
     });
 
-    const handleAddContact = () => {
-        const contact: EmergencyContact = {
-            id: `e${Date.now()}`,
-            name: newContact.name,
-            phone: newContact.phone,
-            relationship: newContact.relationship,
-            isPrimary: contacts.length === 0,
-            notifyOnRide: newContact.notifyOnRide,
+    // Fetch contacts from API on component mount
+    useEffect(() => {
+        const fetchContacts = async () => {
+            try {
+                setIsLoading(true);
+                const data = await safetyService.getEmergencyContacts();
+                const formatted: EmergencyContactDisplay[] = data.map(contact => ({
+                    id: contact.id,
+                    name: contact.name,
+                    phone: contact.phone,
+                    relationship: contact.relationship,
+                    isPrimary: contact.is_primary,
+                    notifyOnRide: contact.notify_on_trip_start,
+                }));
+                setContacts(formatted);
+            } catch (error) {
+                console.error('Error fetching emergency contacts:', error);
+            } finally {
+                setIsLoading(false);
+            }
         };
-        setContacts([...contacts, contact]);
-        setNewContact({ name: '', phone: '', relationship: '', notifyOnRide: false });
-        setShowAddModal(false);
+
+        fetchContacts();
+    }, []);
+
+    const handleAddContact = async () => {
+        try {
+            const created = await safetyService.createEmergencyContact({
+                name: newContact.name,
+                phone: newContact.phone,
+                relationship: newContact.relationship,
+                is_primary: contacts.length === 0,
+                notify_on_trip_start: newContact.notifyOnRide,
+            });
+
+            const newContactDisplay: EmergencyContactDisplay = {
+                id: created.id,
+                name: created.name,
+                phone: created.phone,
+                relationship: created.relationship,
+                isPrimary: created.is_primary,
+                notifyOnRide: created.notify_on_trip_start,
+            };
+
+            setContacts([...contacts, newContactDisplay]);
+            setNewContact({ name: '', phone: '', relationship: '', notifyOnRide: false });
+            setShowAddModal(false);
+        } catch (error) {
+            console.error('Error adding contact:', error);
+        }
     };
 
-    const handleDeleteContact = (id: string) => {
-        setContacts(contacts.filter(c => c.id !== id));
+    const handleDeleteContact = async (id: string) => {
+        try {
+            await safetyService.deleteEmergencyContact(id);
+            setContacts(contacts.filter(c => c.id !== id));
+        } catch (error) {
+            console.error('Error deleting contact:', error);
+        }
     };
 
-    const handleSetPrimary = (id: string) => {
-        setContacts(contacts.map(c => ({
-            ...c,
-            isPrimary: c.id === id,
-        })));
+    const handleSetPrimary = async (id: string) => {
+        try {
+            await safetyService.setPrimaryContact(id);
+            setContacts(contacts.map(c => ({
+                ...c,
+                isPrimary: c.id === id,
+            })));
+        } catch (error) {
+            console.error('Error setting primary contact:', error);
+        }
     };
 
-    const handleToggleNotify = (id: string) => {
-        setContacts(contacts.map(c =>
-            c.id === id ? { ...c, notifyOnRide: !c.notifyOnRide } : c
-        ));
+    const handleToggleNotify = async (id: string) => {
+        const contact = contacts.find(c => c.id === id);
+        if (!contact) return;
+
+        try {
+            await safetyService.updateEmergencyContact(id, {
+                notify_on_trip_start: !contact.notifyOnRide,
+            });
+            setContacts(contacts.map(c =>
+                c.id === id ? { ...c, notifyOnRide: !c.notifyOnRide } : c
+            ));
+        } catch (error) {
+            console.error('Error updating contact:', error);
+        }
     };
 
     return (

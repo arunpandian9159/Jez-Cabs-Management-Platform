@@ -26,6 +26,7 @@ import { Badge } from '../../components/ui/Badge';
 import { useAuth } from '../../contexts/AuthContext';
 import { ROUTES } from '../../lib/constants';
 import { formatCurrency, formatRelativeTime, cn } from '../../lib/utils';
+import { tripsService, usersService } from '../../services';
 
 // Mock data - In a real app, this would come from API
 const quickActions = [
@@ -62,9 +63,8 @@ const quickActions = [
     },
 ];
 
-// TODO: Fetch recent trips from API
-// API endpoint: GET /api/v1/trips?limit=3&status=completed
-interface RecentTrip {
+// Types for dashboard data
+interface RecentTripDisplay {
     id: string;
     pickup: string;
     destination: string;
@@ -77,18 +77,14 @@ interface RecentTrip {
     distance: string;
     duration?: string;
 }
-const recentTrips: RecentTrip[] = [];
 
-// TODO: Fetch saved addresses from API
-// API endpoint: GET /api/v1/users/addresses
-interface SavedAddress {
+interface SavedAddressDisplay {
     id: string;
     label: string;
     address: string;
     icon: string;
     color: string;
 }
-const savedAddresses: SavedAddress[] = [];
 
 // Animated counter hook
 function useAnimatedCounter(end: number, duration: number = 2000) {
@@ -168,7 +164,52 @@ function StatCard({
 export function CustomerDashboard() {
     const { user } = useAuth();
     const [hoveredAction, setHoveredAction] = useState<string | null>(null);
+    const [recentTrips, setRecentTrips] = useState<RecentTripDisplay[]>([]);
+    const [savedAddresses, setSavedAddresses] = useState<SavedAddressDisplay[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
     const currentHour = new Date().getHours();
+
+    // Fetch dashboard data
+    useEffect(() => {
+        const fetchDashboardData = async () => {
+            try {
+                setIsLoading(true);
+
+                // Fetch recent trips
+                const trips = await tripsService.getRecent(3);
+                const formattedTrips: RecentTripDisplay[] = trips.map(trip => ({
+                    id: trip.id,
+                    pickup: trip.pickup_address,
+                    destination: trip.destination_address,
+                    date: trip.created_at,
+                    fare: trip.actual_fare || trip.estimated_fare,
+                    status: trip.status,
+                    driverName: trip.driver ? `${trip.driver.first_name} ${trip.driver.last_name}` : 'Driver',
+                    driverRating: trip.driver?.rating || 4.5,
+                    cabType: trip.cab?.cab_type || 'Sedan',
+                    distance: `${trip.distance_km} km`,
+                }));
+                setRecentTrips(formattedTrips);
+
+                // Fetch saved addresses
+                const addresses = await usersService.getSavedAddresses();
+                const formattedAddresses: SavedAddressDisplay[] = addresses.map(addr => ({
+                    id: addr.id,
+                    label: addr.label,
+                    address: addr.address,
+                    icon: addr.icon || '📍',
+                    color: 'bg-gray-100',
+                }));
+                setSavedAddresses(formattedAddresses);
+            } catch (error) {
+                console.error('Error fetching dashboard data:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchDashboardData();
+    }, []);
 
     const getGreeting = () => {
         if (currentHour < 12) return 'Good morning';
