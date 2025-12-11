@@ -17,80 +17,35 @@ import { Avatar } from '../../components/ui/Avatar';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
 import { formatCurrency, formatDate, formatTime } from '../../lib/utils';
 
-// Mock exchange history data
-const exchangeHistory = [
-    {
-        id: 'ex1',
-        type: 'booked',
-        status: 'completed',
-        trip: {
-            from: 'Koramangala',
-            to: 'Whitefield',
-            date: '2025-12-08',
-            time: '09:00',
-        },
-        host: {
-            name: 'Amit Sharma',
-            rating: 4.8,
-        },
-        price: 150,
-        seatsBooked: 1,
-        rating: 5,
-    },
-    {
-        id: 'ex2',
-        type: 'hosted',
-        status: 'completed',
-        trip: {
-            from: 'HSR Layout',
-            to: 'MG Road',
-            date: '2025-12-07',
-            time: '10:30',
-        },
-        passengers: [
-            { name: 'Priya Patel', rating: 4.9 },
-            { name: 'Rahul Verma', rating: 4.7 },
-        ],
-        earnings: 300,
-        seatsOffered: 3,
-        seatsFilled: 2,
-    },
-    {
-        id: 'ex3',
-        type: 'booked',
-        status: 'cancelled',
-        trip: {
-            from: 'Indiranagar',
-            to: 'Electronic City',
-            date: '2025-12-05',
-            time: '08:00',
-        },
-        host: {
-            name: 'Sneha Kumar',
-            rating: 5.0,
-        },
-        price: 120,
-        seatsBooked: 1,
-        cancelReason: 'Host cancelled the trip',
-    },
-    {
-        id: 'ex4',
-        type: 'hosted',
-        status: 'upcoming',
-        trip: {
-            from: 'Marathahalli',
-            to: 'Majestic',
-            date: '2025-12-15',
-            time: '07:30',
-        },
-        passengers: [
-            { name: 'Vikram Singh', rating: 4.6 },
-        ],
-        price: 80,
-        seatsOffered: 4,
-        seatsFilled: 1,
-    },
-];
+// TODO: API Integration - Fetch exchange history (ridesharing history)
+// API endpoint: GET /api/v1/exchanges
+interface ExchangeHistoryItem {
+    id: string;
+    type: 'booked' | 'hosted';
+    status: 'completed' | 'cancelled' | 'upcoming';
+    trip: {
+        from: string;
+        to: string;
+        date: string;
+        time: string;
+    };
+    host?: {
+        name: string;
+        rating: number;
+    };
+    passengers?: Array<{
+        name: string;
+        rating: number;
+    }>;
+    price?: number;
+    earnings?: number;
+    seatsBooked?: number;
+    seatsOffered?: number;
+    seatsFilled?: number;
+    rating?: number;
+    cancelReason?: string;
+}
+const exchangeHistory: ExchangeHistoryItem[] = [];
 
 export function ExchangeHistory() {
     const [activeTab, setActiveTab] = useState('all');

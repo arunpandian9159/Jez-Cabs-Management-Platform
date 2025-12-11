@@ -47,35 +47,37 @@ const driverIcon = new L.Icon({
     shadowSize: [41, 41],
 });
 
-// Mock trip data
-const currentTrip = {
-    id: 'trip1',
-    status: 'heading_to_pickup', // heading_to_pickup, at_pickup, in_progress, arriving
+// TODO: API Integration - Fetch current active trip for driver
+// API endpoint: GET /api/v1/drivers/trips/current
+interface CurrentTrip {
+    id: string;
+    status: 'heading_to_pickup' | 'at_pickup' | 'in_progress' | 'arriving';
     customer: {
-        name: 'Rahul Sharma',
-        phone: '+91 98765 43210',
-        rating: 4.7,
-        totalTrips: 45,
-    },
+        name: string;
+        phone: string;
+        rating: number;
+        totalTrips: number;
+    };
     pickup: {
-        address: 'Koramangala 4th Block, Bangalore',
-        lat: 12.9352,
-        lng: 77.6245,
-    },
+        address: string;
+        lat: number;
+        lng: number;
+    };
     destination: {
-        address: 'Whitefield Tech Park, Bangalore',
-        lat: 12.9698,
-        lng: 77.7500,
-    },
-    fare: 380,
-    distance: 18.5,
-    estimatedTime: 45,
-    paymentMethod: 'Cash',
+        address: string;
+        lat: number;
+        lng: number;
+    };
+    fare: number;
+    distance: number;
+    estimatedTime: number;
+    paymentMethod: string;
     driverLocation: {
-        lat: 12.9300,
-        lng: 77.6200,
-    },
-};
+        lat: number;
+        lng: number;
+    };
+}
+const currentTrip: CurrentTrip | null = null;
 
 const tripStatuses = {
     heading_to_pickup: { label: 'Heading to Pickup', color: 'primary', action: 'Arrived at Pickup' },
@@ -86,8 +88,28 @@ const tripStatuses = {
 
 export function ActiveTrip() {
     const navigate = useNavigate();
-    const [trip, setTrip] = useState(currentTrip);
+    const [trip, setTrip] = useState<CurrentTrip | null>(currentTrip);
     const [showCancelModal, setShowCancelModal] = useState(false);
+
+    // Show empty state when no active trip
+    if (!trip) {
+        return (
+            <div className="h-[calc(100vh-4rem)] flex flex-col items-center justify-center p-6">
+                <div className="text-center max-w-md">
+                    <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-6">
+                        <AlertTriangle className="w-10 h-10 text-gray-400" />
+                    </div>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2">No Active Trip</h2>
+                    <p className="text-gray-500 mb-6">
+                        You don't have an active trip right now. Wait for a new booking or go online to receive trip requests.
+                    </p>
+                    <Button onClick={() => navigate('/driver')}>
+                        Go to Dashboard
+                    </Button>
+                </div>
+            </div>
+        );
+    }
 
     const routeCoords: [number, number][] = [
         [trip.driverLocation.lat, trip.driverLocation.lng],
@@ -95,10 +117,10 @@ export function ActiveTrip() {
         [trip.destination.lat, trip.destination.lng],
     ];
 
-    const statusConfig = tripStatuses[trip.status as keyof typeof tripStatuses];
+    const statusConfig = tripStatuses[trip.status];
 
     const advanceStatus = () => {
-        const statusOrder = ['heading_to_pickup', 'at_pickup', 'in_progress', 'arriving'];
+        const statusOrder: CurrentTrip['status'][] = ['heading_to_pickup', 'at_pickup', 'in_progress', 'arriving'];
         const currentIndex = statusOrder.indexOf(trip.status);
         if (currentIndex < statusOrder.length - 1) {
             setTrip({ ...trip, status: statusOrder[currentIndex + 1] });

@@ -61,7 +61,8 @@ export function LiveTracking() {
 
     const { pickup, destination, cabType, fare, driver } = location.state || {};
 
-    // Mock driver position - in real app this would come from WebSocket
+    // TODO: API Integration - Driver position should come from WebSocket
+    // WebSocket endpoint: ws://{host}/api/v1/trips/{tripId}/location
     const [driverPosition, setDriverPosition] = useState({
         lat: pickup?.lat || 12.9352,
         lng: pickup?.lng || 77.6245,

@@ -203,8 +203,13 @@ export function CustomerDashboard() {
                 variants={itemVariants}
                 className="relative overflow-hidden rounded-3xl"
             >
-                {/* Animated background gradient */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary-600 via-primary-700 to-accent-600" />
+                {/* Animated background gradient - using inline style for proper color rendering */}
+                <div
+                    className="absolute inset-0"
+                    style={{
+                        background: 'linear-gradient(135deg, #0288d1 0%, #0177c6 50%, #ff6b35 100%)'
+                    }}
+                />
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMtOS45NDEgMC0xOCA4LjA1OS0xOCAxOHM4LjA1OSAxOCAxOCAxOCAxOC04LjA1OSAxOC0xOC04LjA1OS0xOC0xOC0xOHoiIHN0cm9rZT0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIi8+PC9nPjwvc3ZnPg==')] opacity-30" />
 
                 {/* Floating orbs */}

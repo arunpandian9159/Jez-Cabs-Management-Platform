@@ -8,7 +8,6 @@ import {
     Search,
     Clock,
     Home,
-    Briefcase,
     Plus,
     X,
     ArrowRight,
@@ -47,18 +46,27 @@ const destinationIcon = new L.Icon({
     shadowSize: [41, 41],
 });
 
-// Mock saved addresses
-const savedAddresses = [
-    { id: '1', label: 'Home', icon: Home, address: '123, 4th Cross, Koramangala, Bangalore', lat: 12.9352, lng: 77.6245 },
-    { id: '2', label: 'Work', icon: Briefcase, address: 'Tech Park, Outer Ring Road, Marathahalli', lat: 12.9591, lng: 77.6974 },
-];
+// TODO: API Integration - Fetch user's saved addresses
+// API endpoint: GET /api/v1/users/addresses
+interface SavedAddress {
+    id: string;
+    label: string;
+    icon: typeof Home;
+    address: string;
+    lat: number;
+    lng: number;
+}
+const savedAddresses: SavedAddress[] = [];
 
-// Mock recent destinations
-const recentDestinations = [
-    { id: '1', address: 'Kempegowda International Airport', lat: 13.1989, lng: 77.7069 },
-    { id: '2', address: 'MG Road Metro Station', lat: 12.9756, lng: 77.6061 },
-    { id: '3', address: 'Indiranagar 100 Feet Road', lat: 12.9784, lng: 77.6408 },
-];
+// TODO: API Integration - Fetch recent destinations
+// API endpoint: GET /api/v1/users/recent-destinations
+interface RecentDestination {
+    id: string;
+    address: string;
+    lat: number;
+    lng: number;
+}
+const recentDestinations: RecentDestination[] = [];
 
 interface LocationState {
     address: string;
