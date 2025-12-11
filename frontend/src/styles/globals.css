@@ -3,6 +3,26 @@
 @import './animations.css';
 
 /* ========================================
+   TAILWIND V4 THEME CONFIGURATION
+   ======================================== */
+@theme {
+    /* Container settings */
+    --container-center: true;
+    --container-padding: 1rem;
+
+    /* Breakpoints */
+    --breakpoint-sm: 640px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 1024px;
+    --breakpoint-xl: 1280px;
+    --breakpoint-2xl: 1536px;
+
+    /* Font families */
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* ========================================
    GLOBAL RESET & BASE STYLES
    ======================================== */
 
@@ -10,8 +30,6 @@
 *::before,
 *::after {
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
 }
 
 html {
@@ -31,11 +49,6 @@ body {
     min-height: 100vh;
 }
 
-[data-theme="dark"] body {
-    background-color: #09090b;
-    color: #fafafa;
-}
-
 /* ========================================
    TYPOGRAPHY UTILITIES
    ======================================== */
@@ -49,15 +62,6 @@ h6 {
     font-weight: var(--font-semibold);
     line-height: var(--leading-tight);
     color: var(--gray-900);
-}
-
-[data-theme="dark"] h1,
-[data-theme="dark"] h2,
-[data-theme="dark"] h3,
-[data-theme="dark"] h4,
-[data-theme="dark"] h5,
-[data-theme="dark"] h6 {
-    color: var(--gray-50);
 }
 
 h1 {
@@ -87,10 +91,6 @@ h6 {
 p {
     margin-bottom: var(--space-4);
     color: var(--gray-600);
-}
-
-[data-theme="dark"] p {
-    color: var(--gray-400);
 }
 
 a {
@@ -136,14 +136,6 @@ a:hover {
     background: var(--gray-400);
 }
 
-[data-theme="dark"] ::-webkit-scrollbar-track {
-    background: var(--gray-800);
-}
-
-[data-theme="dark"] ::-webkit-scrollbar-thumb {
-    background: var(--gray-600);
-}
-
 /* ========================================
    SELECTION STYLING
    ======================================== */
@@ -151,11 +143,6 @@ a:hover {
 ::selection {
     background-color: var(--primary-200);
     color: var(--primary-900);
-}
-
-[data-theme="dark"] ::selection {
-    background-color: var(--primary-800);
-    color: var(--primary-100);
 }
 
 /* ========================================
@@ -194,62 +181,16 @@ a:hover {
     overflow: hidden;
 }
 
-/* ========================================
-   CONTAINER
-   ======================================== */
-
-.container {
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: var(--space-4);
-    padding-right: var(--space-4);
-}
-
-@media (min-width: 640px) {
-    .container {
-        max-width: var(--container-sm);
-    }
-}
-
-@media (min-width: 768px) {
-    .container {
-        max-width: var(--container-md);
-    }
-}
-
-@media (min-width: 1024px) {
-    .container {
-        max-width: var(--container-lg);
-    }
-}
-
-@media (min-width: 1280px) {
-    .container {
-        max-width: var(--container-xl);
-    }
-}
-
-@media (min-width: 1536px) {
-    .container {
-        max-width: var(--container-2xl);
-    }
-}
 
 /* ========================================
    GLASS MORPHISM
    ======================================== */
 
 .glass {
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-[data-theme="dark"] .glass {
-    background: rgba(24, 24, 27, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* ========================================
@@ -291,11 +232,6 @@ a:hover {
 
 .card:hover {
     box-shadow: var(--shadow-md);
-}
-
-[data-theme="dark"] .card {
-    background: var(--gray-800);
-    border-color: var(--gray-700);
 }
 
 .card-interactive {
@@ -364,14 +300,6 @@ button {
     100% {
         background-position: -200% 0;
     }
-}
-
-[data-theme="dark"] .skeleton {
-    background: linear-gradient(90deg,
-            var(--gray-700) 0%,
-            var(--gray-600) 50%,
-            var(--gray-700) 100%);
-    background-size: 200% 100%;
 }
 
 /* ========================================

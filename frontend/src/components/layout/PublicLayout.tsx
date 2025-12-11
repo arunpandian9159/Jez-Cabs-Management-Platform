@@ -1,17 +1,17 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Car, Menu, X, Sparkles, ChevronRight, Phone, Mail, MapPin } from 'lucide-react';
+import { Menu, X, ChevronRight, Phone, Mail, MapPin, ArrowRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { cn } from '../../lib/utils';
 import { Button } from '../ui/Button';
-import { ThemeToggle } from '../ui/ThemeToggle';
+import { Logo } from '../ui/Logo';
 import { ROUTES } from '../../lib/constants';
 
 const navLinks = [
     { path: ROUTES.HOME, label: 'Home' },
-    { path: '/#features', label: 'Features' },
-    { path: '/#pricing', label: 'Pricing' },
-    { path: '/#contact', label: 'Contact' },
+    { path: '/#services', label: 'Services' },
+    { path: '/#how-it-works', label: 'How It Works' },
+    { path: '/#for-owners', label: 'For Owners' },
 ];
 
 export function PublicLayout() {
@@ -29,8 +29,25 @@ export function PublicLayout() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    // Close mobile menu on route change
+    useEffect(() => {
+        setMobileMenuOpen(false);
+    }, [location]);
+
+    const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
+        if (path.startsWith('/#')) {
+            e.preventDefault();
+            const elementId = path.replace('/#', '');
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            setMobileMenuOpen(false);
+        }
+    };
+
     return (
-        <div className="min-h-screen bg-white dark:bg-gray-950">
+        <div className="min-h-screen bg-white">
             {/* Header */}
             <motion.header
                 className="fixed top-0 left-0 right-0 z-50"
@@ -40,86 +57,72 @@ export function PublicLayout() {
             >
                 <div
                     className={cn(
-                        'transition-all duration-300',
+                        'transition-all duration-500',
                         scrolled
-                            ? 'glass shadow-lg border-b border-white/10'
+                            ? 'bg-white/95 backdrop-blur-xl shadow-lg shadow-gray-900/5 border-b border-gray-100'
                             : 'bg-transparent'
                     )}
                 >
-                    <div className="container mx-auto px-4">
+                    <div className="container mx-auto px-4 lg:px-8">
                         <div className="flex items-center justify-between h-16 md:h-20">
                             {/* Logo */}
                             <Link to={ROUTES.HOME} className="flex items-center gap-3 group">
                                 <motion.div
-                                    whileHover={{ scale: 1.05, rotate: 5 }}
+                                    whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
                                     className="relative"
                                 >
-                                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-primary-500 via-primary-600 to-accent-500 flex items-center justify-center shadow-lg group-hover:shadow-xl group-hover:shadow-primary-500/30 transition-all duration-300">
-                                        <Car className="w-5 h-5 md:w-6 md:h-6 text-white" />
-                                    </div>
-                                    {/* Animated sparkle */}
-                                    <motion.div
-                                        className="absolute -top-1 -right-1"
-                                        animate={{
-                                            scale: [1, 1.2, 1],
-                                            opacity: [0.7, 1, 0.7],
-                                        }}
-                                        transition={{ duration: 2, repeat: Infinity }}
-                                    >
-                                        <Sparkles className="w-3 h-3 text-accent-400" />
-                                    </motion.div>
+                                    <Logo size="lg" className="drop-shadow-md group-hover:drop-shadow-lg transition-all duration-300" />
                                 </motion.div>
                                 <div className="flex flex-col">
-                                    <span className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary-600 via-primary-500 to-accent-500 bg-clip-text text-transparent">
+                                    <span className="text-xl md:text-2xl font-bold text-gray-900">
                                         Jez Cabs
                                     </span>
-                                    <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium tracking-wider uppercase hidden md:block">
+                                    <span className="text-[10px] text-gray-500 font-medium tracking-wider uppercase hidden md:block">
                                         Your Trusted Ride
                                     </span>
                                 </div>
                             </Link>
 
                             {/* Desktop Navigation */}
-                            <nav className="hidden lg:flex items-center gap-1">
-                                {navLinks.map((link) => (
-                                    <Link
-                                        key={link.path}
-                                        to={link.path}
-                                        className={cn(
-                                            'relative px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg',
-                                            'hover:bg-gray-100 dark:hover:bg-gray-800',
-                                            location.pathname === link.path
-                                                ? 'text-primary-600 dark:text-primary-400'
-                                                : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
-                                        )}
-                                    >
-                                        {link.label}
-                                        {location.pathname === link.path && (
-                                            <motion.div
-                                                layoutId="activeNav"
-                                                className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary-500 to-accent-500 rounded-full"
-                                                transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                                            />
-                                        )}
-                                    </Link>
-                                ))}
+                            <nav className="hidden lg:flex items-center">
+                                <div className="flex items-center bg-gray-100/80 rounded-full p-1.5">
+                                    {navLinks.map((link) => (
+                                        <Link
+                                            key={link.path}
+                                            to={link.path}
+                                            onClick={(e) => handleNavClick(e, link.path)}
+                                            className={cn(
+                                                'relative px-5 py-2.5 text-sm font-medium transition-all duration-300 rounded-full',
+                                                location.pathname === link.path || (location.pathname === '/' && link.path.startsWith('/#'))
+                                                    ? 'text-primary-700'
+                                                    : 'text-gray-600 hover:text-gray-900'
+                                            )}
+                                        >
+                                            {link.label}
+                                            {location.pathname === link.path && (
+                                                <motion.div
+                                                    layoutId="activeNavPill"
+                                                    className="absolute inset-0 bg-white rounded-full shadow-sm -z-10"
+                                                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                                                />
+                                            )}
+                                        </Link>
+                                    ))}
+                                </div>
                             </nav>
 
                             {/* Right side actions */}
-                            <div className="flex items-center gap-2 md:gap-4">
-                                {/* Theme Toggle */}
-                                <ThemeToggle size="md" />
-
+                            <div className="flex items-center gap-3 md:gap-4">
                                 {/* Auth buttons - Desktop */}
                                 <div className="hidden md:flex items-center gap-3">
                                     <Link to={ROUTES.LOGIN}>
                                         <Button
-                                            variant="ghost"
+                                            variant="outline"
                                             size="sm"
-                                            className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                                            className="border-gray-300 text-gray-700 hover:text-gray-900 hover:bg-gray-50 hover:border-gray-400 font-medium"
                                         >
-                                            Login
+                                            Sign In
                                         </Button>
                                     </Link>
                                     <Link to={ROUTES.REGISTER}>
@@ -129,8 +132,8 @@ export function PublicLayout() {
                                         >
                                             <Button
                                                 size="sm"
-                                                rightIcon={<ChevronRight className="w-4 h-4" />}
-                                                className="bg-gradient-to-r from-primary-500 to-accent-500 hover:from-primary-600 hover:to-accent-600 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30"
+                                                rightIcon={<ArrowRight className="w-4 h-4 text-white" />}
+                                                className="bg-primary-600 hover:bg-primary-700 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30 text-white font-medium px-6"
                                             >
                                                 Get Started
                                             </Button>
@@ -141,7 +144,12 @@ export function PublicLayout() {
                                 {/* Mobile menu button */}
                                 <motion.button
                                     onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                                    className="lg:hidden p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition-colors"
+                                    className={cn(
+                                        "lg:hidden p-2.5 rounded-xl transition-all duration-300",
+                                        mobileMenuOpen
+                                            ? "bg-primary-50 text-primary-600"
+                                            : "hover:bg-gray-100 text-gray-700"
+                                    )}
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
                                 >
@@ -184,23 +192,23 @@ export function PublicLayout() {
                             transition={{ duration: 0.3, ease: 'easeInOut' }}
                             className="lg:hidden overflow-hidden"
                         >
-                            <div className="glass border-t border-white/10 shadow-xl">
+                            <div className="bg-white/98 backdrop-blur-xl border-t border-gray-100 shadow-2xl">
                                 <nav className="container mx-auto px-4 py-6 space-y-2">
                                     {navLinks.map((link, index) => (
                                         <motion.div
                                             key={link.path}
                                             initial={{ opacity: 0, x: -20 }}
                                             animate={{ opacity: 1, x: 0 }}
-                                            transition={{ delay: index * 0.1 }}
+                                            transition={{ delay: index * 0.08 }}
                                         >
                                             <Link
                                                 to={link.path}
-                                                onClick={() => setMobileMenuOpen(false)}
+                                                onClick={(e) => handleNavClick(e, link.path)}
                                                 className={cn(
-                                                    'flex items-center justify-between py-3 px-4 rounded-xl transition-all',
+                                                    'flex items-center justify-between py-3.5 px-4 rounded-xl transition-all',
                                                     location.pathname === link.path
-                                                        ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400'
-                                                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                                                        ? 'bg-primary-50 text-primary-600'
+                                                        : 'text-gray-700 hover:bg-gray-50'
                                                 )}
                                             >
                                                 <span className="font-medium">{link.label}</span>
@@ -210,24 +218,24 @@ export function PublicLayout() {
                                     ))}
 
                                     <motion.div
-                                        className="pt-4 mt-4 border-t border-gray-200 dark:border-gray-700 space-y-3"
+                                        className="pt-4 mt-4 border-t border-gray-100 space-y-3"
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: 0.3 }}
+                                        transition={{ delay: 0.25 }}
                                     >
                                         <Link to={ROUTES.LOGIN} onClick={() => setMobileMenuOpen(false)}>
                                             <Button
                                                 variant="outline"
                                                 fullWidth
-                                                className="border-gray-300 dark:border-gray-600"
+                                                className="border-gray-200 text-gray-700 hover:bg-gray-50"
                                             >
-                                                Login
+                                                Sign In
                                             </Button>
                                         </Link>
                                         <Link to={ROUTES.REGISTER} onClick={() => setMobileMenuOpen(false)}>
                                             <Button
                                                 fullWidth
-                                                className="bg-gradient-to-r from-primary-500 to-accent-500"
+                                                className="bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 shadow-lg"
                                             >
                                                 Get Started Free
                                             </Button>
@@ -265,9 +273,7 @@ export function PublicLayout() {
                         {/* Company */}
                         <div className="lg:col-span-2">
                             <div className="flex items-center gap-3 mb-6">
-                                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center shadow-lg">
-                                    <Car className="w-5 h-5 text-white" />
-                                </div>
+                                <Logo size="md" />
                                 <span className="text-xl font-bold text-white">Jez Cabs</span>
                             </div>
                             <p className="text-gray-400 mb-6 max-w-sm leading-relaxed">

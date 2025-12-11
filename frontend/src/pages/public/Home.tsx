@@ -268,31 +268,36 @@ export function Home() {
                             </div>
                         </div>
 
-                        {/* Right Image */}
+                        {/* Right Video */}
                         <div className="relative hidden lg:block">
-                            <div className="aspect-square rounded-2xl overflow-hidden shadow-2xl">
-                                <img
-                                    src="https://images.unsplash.com/photo-1622996965805-985d0f66d671?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjB0YXhpJTIwY2FifGVufDF8fHx8MTc2NTQyOTU5NHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-                                    alt="Modern taxi cab"
+                            <div className="aspect-square rounded-3xl overflow-hidden shadow-2xl ring-1 ring-gray-900/5">
+                                <video
+                                    autoPlay
+                                    loop
+                                    muted
+                                    playsInline
                                     className="w-full h-full object-cover"
-                                />
+                                >
+                                    <source src="/Man waiting car.webm" type="video/webm" />
+                                    Your browser does not support the video tag.
+                                </video>
                             </div>
 
                             {/* Floating Stats */}
                             <div
-                                className="absolute -bottom-6 -left-6 p-4 rounded-xl shadow-lg"
-                                style={{ backgroundColor: '#ffffff' }}
+                                className="absolute -bottom-6 -left-6 p-5 rounded-2xl shadow-xl backdrop-blur-sm"
+                                style={{ backgroundColor: 'rgba(255, 255, 255, 0.95)' }}
                             >
                                 <div className="text-2xl font-bold" style={{ color: '#2563eb' }}>50K+</div>
-                                <p className="text-sm" style={{ color: '#475569' }}>Happy Customers</p>
+                                <p className="text-sm font-medium" style={{ color: '#475569' }}>Happy Customers</p>
                             </div>
 
                             <div
-                                className="absolute -top-6 -right-6 p-4 rounded-xl shadow-lg"
-                                style={{ backgroundColor: '#ffffff' }}
+                                className="absolute -top-6 -right-6 p-5 rounded-2xl shadow-xl backdrop-blur-sm"
+                                style={{ backgroundColor: 'rgba(255, 255, 255, 0.95)' }}
                             >
                                 <div className="text-2xl font-bold" style={{ color: '#0d9488' }}>1000+</div>
-                                <p className="text-sm" style={{ color: '#475569' }}>Active Drivers</p>
+                                <p className="text-sm font-medium" style={{ color: '#475569' }}>Active Drivers</p>
                             </div>
                         </div>
                     </div>

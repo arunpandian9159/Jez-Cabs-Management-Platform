@@ -4,10 +4,11 @@ import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Car, User, Mail, Lock, Phone, ArrowRight, CheckCircle } from 'lucide-react';
+import { User, Mail, Lock, Phone, ArrowRight, CheckCircle } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Select } from '../../components/ui/Select';
+import { Logo } from '../../components/ui/Logo';
 import { useAuth } from '../../contexts/AuthContext';
 import { ROUTES } from '../../lib/constants';
 import type { UserRole } from '../../types';
@@ -90,9 +91,9 @@ export function Register() {
     };
 
     return (
-        <div className="min-h-screen flex bg-white dark:bg-gray-950">
+        <div className="min-h-screen flex bg-white">
             {/* Left side - Form */}
-            <div className="flex-1 flex items-center justify-center p-6 lg:p-12 overflow-y-auto bg-white dark:bg-gray-950">
+            <div className="flex-1 flex items-center justify-center p-6 lg:p-12 overflow-y-auto bg-white">
                 <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -100,18 +101,16 @@ export function Register() {
                 >
                     {/* Logo */}
                     <Link to={ROUTES.HOME} className="flex items-center gap-2 mb-8">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center shadow-lg">
-                            <Car className="w-6 h-6 text-white" />
-                        </div>
-                        <span className="text-xl font-bold text-gray-900 dark:text-white">
+                        <Logo size="md" />
+                        <span className="text-xl font-bold text-gray-900">
                             Jez Cabs
                         </span>
                     </Link>
 
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                    <h1 className="text-2xl font-bold text-gray-900 mb-2">
                         Create your account
                     </h1>
-                    <p className="text-gray-600 dark:text-gray-400 mb-8">
+                    <p className="text-gray-600 mb-8">
                         Join thousands of users on Jez Cabs
                     </p>
 
@@ -119,7 +118,7 @@ export function Register() {
                         <motion.div
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="bg-error-50 dark:bg-error-900/30 border border-error-200 dark:border-error-800 text-error-700 dark:text-error-300 px-4 py-3 rounded-lg mb-6"
+                            className="bg-error-50 border border-error-200 text-error-700 px-4 py-3 rounded-lg mb-6"
                         >
                             {error}
                         </motion.div>
@@ -191,16 +190,16 @@ export function Register() {
                             <input
                                 type="checkbox"
                                 id="terms"
-                                className="w-4 h-4 mt-0.5 rounded border-gray-300 dark:border-gray-600 text-primary-600 focus:ring-primary-500 bg-white dark:bg-gray-800"
+                                className="w-4 h-4 mt-0.5 rounded border-gray-300 text-primary-600 focus:ring-primary-500 bg-white"
                                 required
                             />
-                            <label htmlFor="terms" className="text-sm text-gray-600 dark:text-gray-400">
+                            <label htmlFor="terms" className="text-sm text-gray-600">
                                 I agree to the{' '}
-                                <Link to="/terms" className="text-primary-600 dark:text-primary-400 hover:underline">
+                                <Link to="/terms" className="text-primary-600 hover:underline">
                                     Terms of Service
                                 </Link>{' '}
                                 and{' '}
-                                <Link to="/privacy" className="text-primary-600 dark:text-primary-400 hover:underline">
+                                <Link to="/privacy" className="text-primary-600 hover:underline">
                                     Privacy Policy
                                 </Link>
                             </label>
@@ -217,11 +216,11 @@ export function Register() {
                         </Button>
                     </form>
 
-                    <p className="mt-8 text-center text-sm text-gray-600 dark:text-gray-400">
+                    <p className="mt-8 text-center text-sm text-gray-600">
                         Already have an account?{' '}
                         <Link
                             to={ROUTES.LOGIN}
-                            className="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium"
+                            className="text-primary-600 hover:text-primary-700 font-medium"
                         >
                             Sign in
                         </Link>
