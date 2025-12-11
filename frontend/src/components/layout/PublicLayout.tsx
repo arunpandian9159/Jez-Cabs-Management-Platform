@@ -7,6 +7,7 @@ import { Button } from '../ui/Button';
 import { Logo } from '../ui/Logo';
 import { ROUTES } from '../../lib/constants';
 import { AuthModal, useAuthModal } from '../auth';
+import { useAuth } from '../../contexts/AuthContext';
 
 const navLinks = [
     { path: ROUTES.HOME, label: 'Home' },
@@ -19,6 +20,7 @@ export function PublicLayout() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const { modalType, openLogin, openRegister, closeModal, setModalType } = useAuthModal();
+    const { isAuthenticated } = useAuth();
     const location = useLocation();
 
     // Handle scroll effect for navbar
@@ -35,6 +37,13 @@ export function PublicLayout() {
     useEffect(() => {
         setMobileMenuOpen(false);
     }, [location]);
+
+    // Close auth modal when user becomes authenticated
+    useEffect(() => {
+        if (isAuthenticated && modalType !== null) {
+            closeModal();
+        }
+    }, [isAuthenticated, modalType, closeModal]);
 
     const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
         if (path.startsWith('/#')) {
