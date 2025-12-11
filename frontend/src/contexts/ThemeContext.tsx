@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, ReactNode } from 'react';
+import { createContext, useContext, ReactNode } from 'react';
 
 type Theme = 'light';
 
@@ -10,13 +10,6 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
     const theme: Theme = 'light';
-
-    useEffect(() => {
-        const root = document.documentElement;
-        root.setAttribute('data-theme', 'light');
-        root.classList.remove('dark');
-        localStorage.setItem('jez-cabs-theme', 'light');
-    }, []);
 
     return (
         <ThemeContext.Provider value={{ theme }}>

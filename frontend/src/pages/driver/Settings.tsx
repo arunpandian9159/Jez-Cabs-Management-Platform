@@ -49,7 +49,6 @@ export function DriverSettings() {
         promotionalAlerts: false,
         soundEnabled: true,
         vibrationEnabled: true,
-        darkMode: false,
         autoAcceptTrips: false,
         shareLocation: true,
         language: 'en',
@@ -204,12 +203,6 @@ export function DriverSettings() {
                                 onValueChange={(value) => setSettings({ ...settings, language: value })}
                             />
                         </div>
-                        <SettingToggle
-                            label="Dark Mode"
-                            description="Use dark theme"
-                            enabled={settings.darkMode}
-                            onToggle={() => toggleSetting('darkMode')}
-                        />
                     </div>
                 </Card>
             </motion.div>

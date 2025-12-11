@@ -33,10 +33,10 @@ export interface LoadingOverlayProps {
 
 export function LoadingOverlay({ message = 'Loading...' }: LoadingOverlayProps) {
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm dark:bg-gray-900/80">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm">
             <div className="flex flex-col items-center gap-4">
                 <Spinner size="xl" />
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                <p className="text-sm font-medium text-gray-600">
                     {message}
                 </p>
             </div>
@@ -61,7 +61,7 @@ export function Skeleton({
     style,
     ...props
 }: SkeletonProps) {
-    const baseClasses = 'bg-gray-200 dark:bg-gray-700';
+    const baseClasses = 'bg-gray-200';
 
     const variantClasses = {
         text: 'rounded h-4',
@@ -97,7 +97,7 @@ export function Skeleton({
 // Pre-built skeleton patterns
 export function CardSkeleton() {
     return (
-        <div className="rounded-xl border border-gray-200 p-4 dark:border-gray-800">
+        <div className="rounded-xl border border-gray-200 p-4">
             <div className="flex items-center gap-3 mb-4">
                 <Skeleton variant="circular" width={40} height={40} />
                 <div className="flex-1">

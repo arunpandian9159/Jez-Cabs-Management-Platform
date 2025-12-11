@@ -5,16 +5,16 @@ import { cn } from '../../lib/utils';
 import { Eye, EyeOff, AlertCircle, CheckCircle } from 'lucide-react';
 
 const inputVariants = cva(
-    'peer flex w-full rounded-xl border-2 bg-white px-3 py-3 text-sm transition-all duration-300 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 dark:placeholder:text-gray-500 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-800 dark:text-white',
+    'peer flex w-full rounded-xl border-2 bg-white px-3 py-3 text-sm transition-all duration-300 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
     {
         variants: {
             variant: {
                 default:
-                    'border-gray-200 hover:border-gray-300 focus-visible:border-teal-500 focus-visible:shadow-[0_0_0_3px_rgba(20,184,166,0.1)] focus-visible:scale-[1.01] dark:border-gray-600 dark:focus-visible:border-primary-400',
+                    'border-gray-200 hover:border-gray-300 focus-visible:border-teal-500 focus-visible:shadow-[0_0_0_3px_rgba(20,184,166,0.1)] focus-visible:scale-[1.01]',
                 error:
-                    'border-red-300 hover:border-red-400 focus-visible:border-red-500 focus-visible:shadow-[0_0_0_3px_rgba(239,68,68,0.1)] dark:border-error-400',
+                    'border-red-300 hover:border-red-400 focus-visible:border-red-500 focus-visible:shadow-[0_0_0_3px_rgba(239,68,68,0.1)]',
                 success:
-                    'border-green-300 hover:border-green-400 focus-visible:border-green-500 focus-visible:shadow-[0_0_0_3px_rgba(34,197,94,0.1)] dark:border-success-400',
+                    'border-green-300 hover:border-green-400 focus-visible:border-green-500 focus-visible:shadow-[0_0_0_3px_rgba(34,197,94,0.1)]',
             },
             inputSize: {
                 sm: 'h-9 px-2.5 text-xs',
