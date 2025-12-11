@@ -150,9 +150,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 isLoading: false,
             });
 
-            // Navigate to role-specific dashboard
+            // Navigate to role-specific dashboard (delayed to ensure state updates complete)
             const homePath = roleHomePaths[response.user.role] || ROUTES.HOME;
-            navigate(homePath);
+            setTimeout(() => navigate(homePath), 0);
         } catch {
             // If API fails, try mock login for development
             const mockUser = mockUsers[credentials.email];
@@ -195,15 +195,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 isLoading: false,
             });
 
-            // Navigate to role-specific dashboard or onboarding
-            if (data.role === 'driver') {
-                navigate(ROUTES.DRIVER.ONBOARDING);
-            } else if (data.role === 'cab_owner') {
-                navigate(ROUTES.OWNER.CABS_REGISTER);
-            } else {
-                const homePath = roleHomePaths[response.user.role] || ROUTES.HOME;
-                navigate(homePath);
-            }
+            // Navigate to role-specific dashboard or onboarding (delayed to ensure state updates complete)
+            setTimeout(() => {
+                if (data.role === 'driver') {
+                    navigate(ROUTES.DRIVER.ONBOARDING);
+                } else if (data.role === 'cab_owner') {
+                    navigate(ROUTES.OWNER.CABS_REGISTER);
+                } else {
+                    const homePath = roleHomePaths[response.user.role] || ROUTES.HOME;
+                    navigate(homePath);
+                }
+            }, 0);
         } catch (error) {
             setState((prev) => ({ ...prev, isLoading: false }));
             throw error;

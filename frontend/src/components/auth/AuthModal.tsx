@@ -181,7 +181,7 @@ export function AuthModal({ isOpen, modalType, onClose, onSwitchModal }: AuthMod
         setError(null);
         try {
             await login(data);
-            onClose();
+            // Don't call onClose() - navigation will handle modal state
         } catch (err: any) {
             setError(err?.message || 'Login failed');
         }
@@ -190,8 +190,11 @@ export function AuthModal({ isOpen, modalType, onClose, onSwitchModal }: AuthMod
     const handleRegister = async (data: RegisterFormData) => {
         setError(null);
         try {
-            await registerUser(data as any);
-            onClose();
+            // Remove confirmPassword as it's not part of the backend DTO
+            // and causes 400 Bad Request due to forbidNonWhitelisted: true
+            const { confirmPassword, ...registerData } = data;
+            await registerUser(registerData as any);
+            // Don't call onClose() - navigation will handle modal state
         } catch (err: any) {
             setError(err?.message || 'Registration failed');
         }

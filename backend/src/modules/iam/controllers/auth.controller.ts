@@ -6,17 +6,40 @@ import { JwtAuthGuard } from '../guards';
 import { User } from '../entities';
 import { UserRole } from '../../../common/enums';
 
+import { IsEmail, IsString, MinLength, IsEnum, IsOptional, Matches } from 'class-validator';
+
 class RegisterDto {
+  @IsEmail({}, { message: 'Please enter a valid email address' })
   email: string;
+
+  @IsString()
+  @MinLength(8, { message: 'Password must be at least 8 characters' })
+  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, { message: 'Password is too weak' })
   password: string;
+
+  @IsString()
+  @MinLength(2, { message: 'First name must be at least 2 characters' })
   firstName: string;
+
+  @IsString()
+  @MinLength(1, { message: 'Last name must be at least 1 character' })
   lastName: string;
+
+  @IsString()
+  @Matches(/^[6-9]\d{9}$/, { message: 'Please enter a valid 10-digit phone number' })
   phone: string;
+
+  @IsOptional()
+  @IsEnum(UserRole)
   role?: UserRole;
 }
 
 class LoginDto {
+  @IsEmail({}, { message: 'Please enter a valid email address' })
   email: string;
+
+  @IsString()
+  @MinLength(1, { message: 'Password is required' })
   password: string;
 }
 
