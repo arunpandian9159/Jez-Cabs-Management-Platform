@@ -4,13 +4,9 @@ import {
     Column,
     CreateDateColumn,
     UpdateDateColumn,
-    ManyToOne,
-    JoinColumn,
     Index,
 } from 'typeorm';
-import { RentalStatus } from '../../common/enums';
-import { User } from '../iam/entities/user.entity';
-import { Cab } from '../cab/entities/cab.entity';
+import { RentalStatus } from '../../../common/enums';
 
 @Entity('rentals')
 export class Rental {
@@ -71,17 +67,4 @@ export class Rental {
 
     @UpdateDateColumn()
     updated_at: Date;
-
-    // Relations
-    @ManyToOne(() => User)
-    @JoinColumn({ name: 'customer_id' })
-    customer: User;
-
-    @ManyToOne(() => Cab)
-    @JoinColumn({ name: 'cab_id' })
-    cab: Cab;
-
-    @ManyToOne(() => User, { nullable: true })
-    @JoinColumn({ name: 'driver_id' })
-    driver: User | null;
 }

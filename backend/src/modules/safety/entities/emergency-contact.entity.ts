@@ -4,11 +4,8 @@ import {
     Column,
     CreateDateColumn,
     UpdateDateColumn,
-    ManyToOne,
-    JoinColumn,
     Index,
 } from 'typeorm';
-import { User } from '../iam/entities/user.entity';
 
 @Entity('emergency_contacts')
 export class EmergencyContact {
@@ -45,9 +42,4 @@ export class EmergencyContact {
 
     @UpdateDateColumn()
     updated_at: Date;
-
-    // Relations
-    @ManyToOne(() => User, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'user_id' })
-    user: User;
 }
