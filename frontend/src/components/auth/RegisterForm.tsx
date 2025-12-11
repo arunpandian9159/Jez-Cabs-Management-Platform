@@ -179,7 +179,7 @@ export const RegisterForm = ({ onSubmit, isLoading, onSwitchModal }: RegisterFor
                 </div>
             </motion.div>
 
-            <div className="flex-1 overflow-y-auto px-1 custom-scrollbar">
+            <div className="flex-1 overflow-y-auto px-1 scrollbar-hide">
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                     <AnimatePresence mode="wait">
                         {step === 1 && (
@@ -319,8 +319,8 @@ export const RegisterForm = ({ onSubmit, isLoading, onSwitchModal }: RegisterFor
                                                     <span className="text-gray-600 font-medium">Password strength</span>
                                                     <motion.span
                                                         className={`font-bold ${passwordStrength.label === 'Weak' ? 'text-red-500' :
-                                                                passwordStrength.label === 'Medium' ? 'text-yellow-500' :
-                                                                    'text-green-500'
+                                                            passwordStrength.label === 'Medium' ? 'text-yellow-500' :
+                                                                'text-green-500'
                                                             }`}
                                                         initial={{ scale: 0 }}
                                                         animate={{ scale: 1 }}

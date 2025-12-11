@@ -314,10 +314,36 @@ export function AuthModal({ isOpen, modalType, onClose, onSwitchModal }: AuthMod
                                         animate={{ opacity: 1, x: 0 }}
                                         exit={{ opacity: 0, x: 30 }}
                                         transition={{ duration: 0.4 }}
-                                        className="relative z-10 flex items-center justify-center h-full"
+                                        className="relative z-10 flex flex-col items-center justify-center h-full px-8"
                                     >
+                                        {/* Welcome Text */}
                                         <motion.div
-                                            className="w-full h-full flex items-center justify-center"
+                                            className="text-center mb-6"
+                                            initial={{ opacity: 0, y: -20 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: 0.3, duration: 0.5 }}
+                                        >
+                                            <motion.h3
+                                                className="text-3xl font-bold text-white mb-3 leading-tight"
+                                                initial={{ opacity: 0, scale: 0.9 }}
+                                                animate={{ opacity: 1, scale: 1 }}
+                                                transition={{ delay: 0.4, type: 'spring', stiffness: 200 }}
+                                            >
+                                                Welcome to Jez Cabs
+                                            </motion.h3>
+                                            <motion.p
+                                                className="text-teal-100 text-base leading-relaxed"
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                transition={{ delay: 0.5 }}
+                                            >
+                                                Your journey starts here
+                                            </motion.p>
+                                        </motion.div>
+
+                                        {/* Lottie Animation */}
+                                        <motion.div
+                                            className="w-full flex items-center justify-center my-4"
                                             initial={{ scale: 0.8, opacity: 0 }}
                                             animate={{ scale: 1, opacity: 1 }}
                                             transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
@@ -326,8 +352,37 @@ export function AuthModal({ isOpen, modalType, onClose, onSwitchModal }: AuthMod
                                                 src="/Login.lottie"
                                                 autoplay
                                                 loop
-                                                style={{ width: '100%', height: '100%', maxWidth: '500px', maxHeight: '500px' }}
+                                                style={{ width: '100%', height: 'auto'}}
                                             />
+                                        </motion.div>
+
+                                        {/* Feature Highlights */}
+                                        <motion.div
+                                            className="space-y-3 mt-6"
+                                            initial={{ opacity: 0, y: 20 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: 0.6, duration: 0.5 }}
+                                        >
+                                            {[
+                                                { icon: Zap, text: 'Instant booking & real-time tracking' },
+                                                { icon: Shield, text: 'Safe & secure rides guaranteed' },
+                                                { icon: Clock, text: '24/7 customer support' },
+                                            ].map((feature, idx) => (
+                                                <motion.div
+                                                    key={idx}
+                                                    className="flex items-center gap-3"
+                                                    initial={{ opacity: 0, x: -20 }}
+                                                    animate={{ opacity: 1, x: 0 }}
+                                                    transition={{ delay: 0.7 + idx * 0.1 }}
+                                                >
+                                                    <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center backdrop-blur-sm">
+                                                        <feature.icon className="w-4 h-4 text-white" />
+                                                    </div>
+                                                    <span className="text-sm font-medium text-teal-50">
+                                                        {feature.text}
+                                                    </span>
+                                                </motion.div>
+                                            ))}
                                         </motion.div>
                                     </motion.div>
                                 )}
