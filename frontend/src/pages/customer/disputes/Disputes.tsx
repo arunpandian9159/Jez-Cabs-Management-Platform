@@ -20,61 +20,28 @@ import { TextArea } from '../../../components/ui/TextArea';
 import { Select } from '../../../components/ui/Select';
 import { formatCurrency, formatRelativeTime } from '../../../lib/utils';
 
-// Mock disputes
-const disputes = [
-    {
-        id: 'd1',
-        tripId: 't1',
-        type: 'overcharge',
-        subject: 'Overcharged for the trip',
-        description: 'The fare shown was ₹280 but I was charged ₹320',
-        status: 'open',
-        createdAt: '2025-12-10T15:00:00',
-        amount: 40,
-        trip: {
-            pickup: 'Koramangala',
-            destination: 'Whitefield',
-            date: '2025-12-10T14:30:00',
-        },
-        messages: 2,
-    },
-    {
-        id: 'd2',
-        tripId: 't3',
-        type: 'driver_behavior',
-        subject: 'Driver took longer route',
-        description: 'The driver intentionally took a longer route increasing the fare',
-        status: 'resolved',
-        createdAt: '2025-12-05T18:00:00',
-        resolvedAt: '2025-12-07T10:00:00',
-        resolution: 'Partial refund of ₹150 credited to wallet',
-        amount: 150,
-        trip: {
-            pickup: 'Bangalore',
-            destination: 'Mysore',
-            date: '2025-12-05T06:00:00',
-        },
-        messages: 5,
-    },
-    {
-        id: 'd3',
-        tripId: 't2',
-        type: 'cancellation',
-        subject: 'Unfair cancellation charge',
-        description: 'Driver cancelled after 5 minutes but I was charged',
-        status: 'closed',
-        createdAt: '2025-12-08T10:00:00',
-        closedAt: '2025-12-08T12:00:00',
-        resolution: 'Claim rejected - Cancellation was initiated by customer',
-        amount: 50,
-        trip: {
-            pickup: 'Indiranagar',
-            destination: 'Electronic City',
-            date: '2025-12-08T09:00:00',
-        },
-        messages: 3,
-    },
-];
+// TODO: API Integration - Fetch user disputes
+// API endpoint: GET /api/v1/disputes
+interface Dispute {
+    id: string;
+    tripId: string;
+    type: string;
+    subject: string;
+    description: string;
+    status: 'open' | 'resolved' | 'closed';
+    createdAt: string;
+    resolvedAt?: string;
+    closedAt?: string;
+    resolution?: string;
+    amount?: number;
+    trip: {
+        pickup: string;
+        destination: string;
+        date: string;
+    };
+    messages: number;
+}
+const disputes: Dispute[] = [];
 
 const disputeTypes = [
     { value: 'overcharge', label: 'Overcharged' },

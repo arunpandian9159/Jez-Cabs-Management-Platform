@@ -16,71 +16,36 @@ import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../../component
 import { formatCurrency, formatDate } from '../../../lib/utils';
 import { ROUTES } from '../../../lib/constants';
 
-// Mock rental data
-const activeRentals = [
-    {
-        id: 'r1',
-        cab: {
-            make: 'Hyundai',
-            model: 'Creta',
-            registrationNumber: 'KA 01 CD 5678',
-            color: 'Black',
-        },
-        owner: {
-            name: 'Elite Cabs',
-            phone: '+91 98765 43210',
-        },
-        startDate: '2025-12-08T10:00:00',
-        endDate: '2025-12-15T10:00:00',
-        status: 'active',
-        totalAmount: 17500,
-        paidAmount: 8750,
-        daysRemaining: 5,
-        startOdometer: 45230,
-        currentOdometer: 45680,
-    },
-];
+// TODO: API Integration - Fetch active rentals
+// API endpoint: GET /api/v1/rentals?status=active
+interface Rental {
+    id: string;
+    cab: {
+        make: string;
+        model: string;
+        registrationNumber: string;
+        color: string;
+    };
+    owner: {
+        name: string;
+        phone: string;
+    };
+    startDate: string;
+    endDate: string;
+    status: string;
+    totalAmount: number;
+    paidAmount: number;
+    daysRemaining?: number;
+    startOdometer?: number;
+    currentOdometer?: number;
+    rating?: number;
+    refundAmount?: number;
+}
+const activeRentals: Rental[] = [];
 
-const pastRentals = [
-    {
-        id: 'r2',
-        cab: {
-            make: 'Maruti',
-            model: 'Swift Dzire',
-            registrationNumber: 'KA 01 AB 1234',
-            color: 'White',
-        },
-        owner: {
-            name: 'Ram Motors',
-            phone: '+91 87654 32109',
-        },
-        startDate: '2025-11-20T10:00:00',
-        endDate: '2025-11-25T10:00:00',
-        status: 'completed',
-        totalAmount: 7500,
-        paidAmount: 7500,
-        rating: 4,
-    },
-    {
-        id: 'r3',
-        cab: {
-            make: 'Toyota',
-            model: 'Innova',
-            registrationNumber: 'KA 05 EF 9012',
-            color: 'Silver',
-        },
-        owner: {
-            name: 'Premium Travels',
-            phone: '+91 76543 21098',
-        },
-        startDate: '2025-11-01T10:00:00',
-        endDate: '2025-11-03T10:00:00',
-        status: 'cancelled',
-        totalAmount: 7000,
-        paidAmount: 3500,
-        refundAmount: 3500,
-    },
-];
+// TODO: API Integration - Fetch past rentals
+// API endpoint: GET /api/v1/rentals?status=completed,cancelled
+const pastRentals: Rental[] = [];
 
 export function ActiveRentals() {
     const [activeTab, setActiveTab] = useState('active');

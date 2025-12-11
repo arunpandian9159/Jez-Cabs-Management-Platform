@@ -15,44 +15,80 @@ import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Avatar } from '../../components/ui/Avatar';
 
-// Mock active trip data for sharing
-const activeTrip = {
-    id: 'trip123',
+// TODO: API Integration - Fetch active trip data
+// API endpoint: GET /api/v1/trips/active
+interface ActiveTrip {
+    id: string;
     driver: {
-        name: 'Ramesh Kumar',
-        phone: '+91 98765 43210',
-        rating: 4.8,
-        vehicleNumber: 'KA 01 AB 1234',
-        vehicleModel: 'Maruti Suzuki Dzire',
-    },
-    from: 'Koramangala, Bangalore',
-    to: 'Electronic City, Bangalore',
-    estimatedArrival: '09:45',
-    status: 'in_progress',
-    shareLink: 'https://jezcabs.com/track/trip123',
-};
+        name: string;
+        phone: string;
+        rating: number;
+        vehicleNumber: string;
+        vehicleModel: string;
+    };
+    from: string;
+    to: string;
+    estimatedArrival: string;
+    status: string;
+    shareLink: string;
+}
+const activeTrip: ActiveTrip | null = null;
 
-// Mock shared contacts
-const sharedWith = [
-    { id: 's1', name: 'Priya Kumar', timestamp: '09:15 AM', via: 'WhatsApp' },
-    { id: 's2', name: 'Rahul', timestamp: '09:16 AM', via: 'SMS' },
-];
+// TODO: API Integration - Fetch shared contacts for current trip
+// API endpoint: GET /api/v1/trips/{tripId}/shares
+interface SharedContact {
+    id: string;
+    name: string;
+    timestamp: string;
+    via: string;
+}
+const sharedWith: SharedContact[] = [];
 
 export function ShareRide() {
     const [copied, setCopied] = useState(false);
     const [showShareSuccess, setShowShareSuccess] = useState(false);
 
     const handleCopyLink = () => {
+        if (!activeTrip) return;
         navigator.clipboard.writeText(activeTrip.shareLink);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
 
     const handleShare = (_method: string) => {
-        // In real app, would open share dialog
+        // TODO: API Integration - Share trip via selected method
         setShowShareSuccess(true);
         setTimeout(() => setShowShareSuccess(false), 3000);
     };
+
+    // Show empty state when no active trip
+    if (!activeTrip) {
+        return (
+            <div className="space-y-6">
+                <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                >
+                    <h1 className="text-2xl font-bold text-gray-900 mb-1">Share Your Ride</h1>
+                    <p className="text-gray-500">Let friends and family track your trip in real-time</p>
+                </motion.div>
+
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                >
+                    <Card padding="lg" className="text-center">
+                        <Share2 className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                        <h3 className="font-semibold text-gray-900 mb-2">No Active Trip</h3>
+                        <p className="text-gray-500">
+                            You don't have an active trip to share right now. Start a trip to share your ride details with friends and family.
+                        </p>
+                    </Card>
+                </motion.div>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-6">

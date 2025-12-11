@@ -19,81 +19,27 @@ import { Badge } from '../../../components/ui/Badge';
 import { cn, formatCurrency } from '../../../lib/utils';
 import { ROUTES } from '../../../lib/constants';
 
-// Mock cab data
-const availableCabs = [
-    {
-        id: '1',
-        make: 'Maruti',
-        model: 'Swift Dzire',
-        year: 2023,
-        color: 'White',
-        seats: 4,
-        fuel: 'Petrol',
-        transmission: 'Manual',
-        pricePerDay: 1500,
-        pricePerKm: 12,
-        rating: 4.8,
-        reviews: 124,
-        ownerName: 'Ram Motors',
-        image: null,
-        features: ['AC', 'Music System', 'GPS'],
-        available: true,
-    },
-    {
-        id: '2',
-        make: 'Hyundai',
-        model: 'Creta',
-        year: 2022,
-        color: 'Black',
-        seats: 5,
-        fuel: 'Diesel',
-        transmission: 'Automatic',
-        pricePerDay: 2500,
-        pricePerKm: 15,
-        rating: 4.9,
-        reviews: 89,
-        ownerName: 'Elite Cabs',
-        image: null,
-        features: ['AC', 'Music System', 'GPS', 'Sunroof'],
-        available: true,
-    },
-    {
-        id: '3',
-        make: 'Toyota',
-        model: 'Innova Crysta',
-        year: 2023,
-        color: 'Silver',
-        seats: 7,
-        fuel: 'Diesel',
-        transmission: 'Manual',
-        pricePerDay: 3500,
-        pricePerKm: 18,
-        rating: 4.7,
-        reviews: 156,
-        ownerName: 'Premium Travels',
-        image: null,
-        features: ['AC', 'Music System', 'GPS', 'Captain Seats'],
-        available: true,
-    },
-    {
-        id: '4',
-        make: 'MG',
-        model: 'Hector',
-        year: 2024,
-        color: 'Red',
-        seats: 5,
-        fuel: 'Petrol',
-        transmission: 'Automatic',
-        pricePerDay: 3000,
-        pricePerKm: 16,
-        rating: 4.6,
-        reviews: 45,
-        ownerName: 'City Cars',
-        image: null,
-        features: ['AC', 'Music System', 'GPS', 'Panoramic Roof', 'ADAS'],
-        available: false,
-    },
-];
+// TODO: API Integration - Fetch available cabs for rental
+// API endpoint: GET /api/v1/cabs/available?rentalType={rentalType}&duration={duration}
+interface AvailableCab {
+    id: string;
+    make: string;
+    model: string;
+    year: number;
+    color: string;
+    seats: number;
+    fuel: string;
+    transmission: string;
+    pricePerDay: number;
+    pricePerKm: number;
+    rating: number;
+    reviews: number;
+    ownerName: string;
+    image: string | null;
+    features: string[];
+    available: boolean;
+}
+const availableCabs: AvailableCab[] = [];
 
 const rentalTypes = [
     { value: 'self_drive', label: 'Self Drive' },

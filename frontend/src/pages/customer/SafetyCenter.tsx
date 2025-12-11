@@ -18,13 +18,21 @@ import { Badge } from '../../components/ui/Badge';
 import { Modal } from '../../components/ui/Modal';
 import { useNavigate } from 'react-router-dom';
 
-// Mock safety settings
-const safetySettings = {
-    shareRideEnabled: true,
-    trustedContactsCount: 3,
-    sosEnabled: true,
+// TODO: API Integration - Fetch user safety settings
+// API endpoint: GET /api/v1/users/safety-settings
+interface SafetySettings {
+    shareRideEnabled: boolean;
+    trustedContactsCount: number;
+    sosEnabled: boolean;
+    audioRecordingEnabled: boolean;
+    pinVerificationEnabled: boolean;
+}
+const safetySettings: SafetySettings = {
+    shareRideEnabled: false,
+    trustedContactsCount: 0,
+    sosEnabled: false,
     audioRecordingEnabled: false,
-    pinVerificationEnabled: true,
+    pinVerificationEnabled: false,
 };
 
 export function SafetyCenter() {

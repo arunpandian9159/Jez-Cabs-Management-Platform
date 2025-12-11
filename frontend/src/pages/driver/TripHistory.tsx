@@ -16,64 +16,24 @@ import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/u
 import { Select } from '../../components/ui/Select';
 import { formatCurrency, formatDate, formatTime, formatDuration } from '../../lib/utils';
 
-// Mock trips data
-const trips = [
-    {
-        id: 't1',
-        date: '2025-12-10T14:30:00',
-        pickup: 'Koramangala',
-        destination: 'Whitefield',
-        customer: { name: 'Rahul S.', rating: 4.7 },
-        fare: 520,
-        distance: 22,
-        duration: 55,
-        status: 'completed',
-        rating: 5,
-        tip: 50,
-        paymentMethod: 'UPI',
-    },
-    {
-        id: 't2',
-        date: '2025-12-10T11:15:00',
-        pickup: 'Indiranagar',
-        destination: 'Electronic City',
-        customer: { name: 'Priya M.', rating: 4.9 },
-        fare: 680,
-        distance: 28,
-        duration: 70,
-        status: 'completed',
-        rating: 4,
-        tip: 0,
-        paymentMethod: 'Cash',
-    },
-    {
-        id: 't3',
-        date: '2025-12-10T08:00:00',
-        pickup: 'MG Road',
-        destination: 'Airport',
-        customer: { name: 'Amit K.', rating: 4.5 },
-        fare: 0,
-        distance: 35,
-        duration: 0,
-        status: 'cancelled',
-        cancellationReason: 'Customer cancelled',
-        paymentMethod: 'Card',
-    },
-    {
-        id: 't4',
-        date: '2025-12-09T18:45:00',
-        pickup: 'Jayanagar',
-        destination: 'Marathahalli',
-        customer: { name: 'Sneha R.', rating: 4.8 },
-        fare: 380,
-        distance: 15,
-        duration: 42,
-        status: 'completed',
-        rating: 5,
-        tip: 30,
-        paymentMethod: 'UPI',
-    },
-];
+// TODO: API Integration - Fetch driver's trip history
+// API endpoint: GET /api/v1/drivers/trips?filter={dateFilter}
+interface Trip {
+    id: string;
+    date: string;
+    pickup: string;
+    destination: string;
+    customer: { name: string; rating: number };
+    fare: number;
+    distance: number;
+    duration: number;
+    status: 'completed' | 'cancelled';
+    rating?: number;
+    tip?: number;
+    paymentMethod: string;
+    cancellationReason?: string;
+}
+const trips: Trip[] = [];
 
 export function TripHistory() {
     const [activeTab, setActiveTab] = useState('all');
