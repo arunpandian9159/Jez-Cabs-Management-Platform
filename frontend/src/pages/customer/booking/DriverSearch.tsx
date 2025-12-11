@@ -13,22 +13,24 @@ import { Avatar } from '../../../components/ui/Avatar';
 import { cn, formatCurrency } from '../../../lib/utils';
 import { ROUTES } from '../../../lib/constants';
 
-// Mock driver data
-const mockDriver = {
-    id: 'd1',
-    name: 'Rajesh Kumar',
-    photo: null,
-    rating: 4.8,
-    totalTrips: 1243,
-    cab: {
-        make: 'Maruti',
-        model: 'Swift Dzire',
-        color: 'White',
-        registrationNumber: 'KA 01 AB 1234',
-    },
-    eta: 4,
-    phone: '+91 98765 43210',
-};
+// TODO: Driver data will be received via WebSocket when a driver accepts the trip request
+// API endpoint: WebSocket /ws/trips/:tripId
+interface DriverCab {
+    make: string;
+    model: string;
+    color: string;
+    registrationNumber: string;
+}
+interface Driver {
+    id: string;
+    name: string;
+    photo: string | null;
+    rating: number;
+    totalTrips: number;
+    cab: DriverCab;
+    eta: number;
+    phone: string;
+}
 
 type SearchState = 'searching' | 'found' | 'arriving' | 'arrived';
 
@@ -37,7 +39,7 @@ export function DriverSearch() {
     const location = useLocation();
     const [searchState, setSearchState] = useState<SearchState>('searching');
     const [searchProgress, setSearchProgress] = useState(0);
-    const [driver, setDriver] = useState<typeof mockDriver | null>(null);
+    const [driver] = useState<Driver | null>(null);
 
     const { pickup, destination, cabType, fare } = location.state || {};
 
@@ -54,10 +56,13 @@ export function DriverSearch() {
                 });
             }, 100);
 
-            // Simulate finding a driver after 3 seconds
+            // TODO: Replace with WebSocket connection to receive driver assignment
+            // For now, this simulates the driver search - in production, driver data
+            // will be received via WebSocket when a driver accepts the trip
             const findTimer = setTimeout(() => {
                 setSearchState('found');
-                setDriver(mockDriver);
+                // TODO: Driver will be set from WebSocket response
+                // setDriver(receivedDriverData);
             }, 3000);
 
             return () => {
@@ -77,10 +82,10 @@ export function DriverSearch() {
             const timer = setTimeout(() => setSearchState('arrived'), 3000);
             return () => clearTimeout(timer);
         }
-        if (searchState === 'arrived') {
+        if (searchState === 'arrived' && driver) {
             const timer = setTimeout(() => {
                 navigate(ROUTES.CUSTOMER.BOOK_TRACKING, {
-                    state: { pickup, destination, cabType, fare, driver: mockDriver },
+                    state: { pickup, destination, cabType, fare, driver },
                 });
             }, 2000);
             return () => clearTimeout(timer);

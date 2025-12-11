@@ -21,74 +21,35 @@ import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/u
 import { TextArea } from '../../components/ui/TextArea';
 import { formatDate } from '../../lib/utils';
 
-// Mock verification requests
-const verifications = [
-    {
-        id: 'v1',
-        applicant: { name: 'Ganesh Kumar', email: 'ganesh@email.com', phone: '+91 98765 43210' },
-        type: 'driver',
-        documentType: 'Driving License',
-        documentNumber: 'KA1234567890',
-        submittedAt: '2025-12-10T09:30:00',
-        status: 'pending',
-        documentUrl: '/documents/license-1.pdf',
-        notes: '',
-    },
-    {
-        id: 'v2',
-        applicant: { name: 'Lakshmi Devi', email: 'lakshmi@email.com', phone: '+91 98765 43211' },
-        type: 'driver',
-        documentType: 'Vehicle RC',
-        documentNumber: 'KA01AB1234',
-        submittedAt: '2025-12-10T11:15:00',
-        status: 'pending',
-        documentUrl: '/documents/rc-1.pdf',
-        notes: '',
-    },
-    {
-        id: 'v3',
-        applicant: { name: 'Ravi Motors Pvt Ltd', email: 'ravi@ravimotors.com', phone: '+91 98765 43212' },
-        type: 'cab_owner',
-        documentType: 'Insurance Certificate',
-        documentNumber: 'INS2024123456',
-        submittedAt: '2025-12-09T14:20:00',
-        status: 'pending',
-        documentUrl: '/documents/insurance-1.pdf',
-        notes: '',
-    },
-    {
-        id: 'v4',
-        applicant: { name: 'Suresh Menon', email: 'suresh@email.com', phone: '+91 98765 43213' },
-        type: 'driver',
-        documentType: 'Aadhaar Card',
-        documentNumber: 'XXXX XXXX 1234',
-        submittedAt: '2025-12-09T10:00:00',
-        status: 'approved',
-        documentUrl: '/documents/aadhaar-1.pdf',
-        approvedAt: '2025-12-09T16:30:00',
-        approvedBy: 'Admin User',
-        notes: 'Verified successfully',
-    },
-    {
-        id: 'v5',
-        applicant: { name: 'Rajesh Patel', email: 'rajesh@email.com', phone: '+91 98765 43214' },
-        type: 'driver',
-        documentType: 'Driving License',
-        documentNumber: 'MH9876543210',
-        submittedAt: '2025-12-08T09:00:00',
-        status: 'rejected',
-        documentUrl: '/documents/license-2.pdf',
-        rejectedAt: '2025-12-08T15:00:00',
-        rejectedBy: 'Admin User',
-        notes: 'Document expired. Please upload a valid license.',
-    },
-];
+// TODO: Fetch verification requests from API
+// API endpoint: GET /api/v1/admin/verifications
+interface Applicant {
+    name: string;
+    email: string;
+    phone: string;
+}
+interface Verification {
+    id: string;
+    applicant: Applicant;
+    type: string;
+    documentType: string;
+    documentNumber: string;
+    submittedAt: string;
+    status: string;
+    documentUrl: string;
+    notes: string;
+    approvedAt?: string;
+    approvedBy?: string;
+    rejectedAt?: string;
+    rejectedBy?: string;
+}
+const verifications: Verification[] = [];
 
 export function AdminVerification() {
     const [activeTab, setActiveTab] = useState('pending');
     const [searchQuery, setSearchQuery] = useState('');
     const [typeFilter, setTypeFilter] = useState('all');
-    const [selectedVerification, setSelectedVerification] = useState<typeof verifications[0] | null>(null);
+    const [selectedVerification, setSelectedVerification] = useState<Verification | null>(null);
     const [rejectionReason, setRejectionReason] = useState('');
 
     const filteredVerifications = verifications.filter((v) => {

@@ -19,34 +19,8 @@ import { Input } from '../../components/ui/Input';
 import { Modal } from '../../components/ui/Modal';
 import { Avatar } from '../../components/ui/Avatar';
 
-// Mock emergency contacts data
-const mockContacts = [
-    {
-        id: 'e1',
-        name: 'Priya Kumar',
-        phone: '+91 98765 43211',
-        relationship: 'Spouse',
-        isPrimary: true,
-        notifyOnRide: true,
-    },
-    {
-        id: 'e2',
-        name: 'Rahul Kumar',
-        phone: '+91 98765 43212',
-        relationship: 'Brother',
-        isPrimary: false,
-        notifyOnRide: false,
-    },
-    {
-        id: 'e3',
-        name: 'Dad',
-        phone: '+91 98765 43213',
-        relationship: 'Father',
-        isPrimary: false,
-        notifyOnRide: true,
-    },
-];
-
+// TODO: Fetch emergency contacts from API
+// API endpoint: GET /api/v1/users/emergency-contacts
 interface EmergencyContact {
     id: string;
     name: string;
@@ -57,7 +31,8 @@ interface EmergencyContact {
 }
 
 export function EmergencyContacts() {
-    const [contacts, setContacts] = useState<EmergencyContact[]>(mockContacts);
+    // TODO: Fetch contacts from API on component mount
+    const [contacts, setContacts] = useState<EmergencyContact[]>([]);
     const [showAddModal, setShowAddModal] = useState(false);
     const [editingContact, setEditingContact] = useState<EmergencyContact | null>(null);
     const [newContact, setNewContact] = useState({
@@ -186,8 +161,8 @@ export function EmergencyContacts() {
                                                 <button
                                                     onClick={() => handleToggleNotify(contact.id)}
                                                     className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm transition-colors ${contact.notifyOnRide
-                                                            ? 'bg-success-100 text-success-700'
-                                                            : 'bg-gray-100 text-gray-500'
+                                                        ? 'bg-success-100 text-success-700'
+                                                        : 'bg-gray-100 text-gray-500'
                                                         }`}
                                                 >
                                                     {contact.notifyOnRide ? (

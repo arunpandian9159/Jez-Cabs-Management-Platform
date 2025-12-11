@@ -20,86 +20,10 @@ import { cn, formatCurrency } from '../../../lib/utils';
 import { ROUTES, CAB_TYPES } from '../../../lib/constants';
 import type { CabType, PriceEstimate } from '../../../types';
 
-// Mock price estimates
-const mockEstimates: PriceEstimate[] = [
-    {
-        cabType: 'economy',
-        cabTypeName: 'Economy',
-        cabTypeIcon: '🚗',
-        fareBreakdown: {
-            baseFare: 50,
-            distanceCharge: 120,
-            timeCharge: 30,
-            taxes: 20,
-            total: 220,
-            currency: 'INR',
-        },
-        estimatedPickupTime: 3,
-        available: true,
-    },
-    {
-        cabType: 'comfort',
-        cabTypeName: 'Comfort',
-        cabTypeIcon: '🚙',
-        fareBreakdown: {
-            baseFare: 70,
-            distanceCharge: 150,
-            timeCharge: 40,
-            taxes: 26,
-            total: 286,
-            currency: 'INR',
-        },
-        estimatedPickupTime: 5,
-        available: true,
-    },
-    {
-        cabType: 'premium',
-        cabTypeName: 'Premium',
-        cabTypeIcon: '🚕',
-        fareBreakdown: {
-            baseFare: 100,
-            distanceCharge: 200,
-            timeCharge: 50,
-            surgeFactor: 1.2,
-            surgeAmount: 50,
-            taxes: 40,
-            total: 440,
-            currency: 'INR',
-        },
-        estimatedPickupTime: 8,
-        available: true,
-    },
-    {
-        cabType: 'suv',
-        cabTypeName: 'SUV',
-        cabTypeIcon: '🚐',
-        fareBreakdown: {
-            baseFare: 120,
-            distanceCharge: 220,
-            timeCharge: 60,
-            taxes: 40,
-            total: 440,
-            currency: 'INR',
-        },
-        estimatedPickupTime: 10,
-        available: true,
-    },
-    {
-        cabType: 'luxury',
-        cabTypeName: 'Luxury',
-        cabTypeIcon: '🏎️',
-        fareBreakdown: {
-            baseFare: 200,
-            distanceCharge: 350,
-            timeCharge: 100,
-            taxes: 65,
-            total: 715,
-            currency: 'INR',
-        },
-        estimatedPickupTime: 15,
-        available: false,
-    },
-];
+// TODO: Fetch price estimates from API based on pickup/destination
+// API endpoint: POST /api/v1/trips/estimate
+// This should be populated after receiving estimates from the backend
+const mockEstimates: PriceEstimate[] = [];
 
 export function CabSelection() {
     const navigate = useNavigate();

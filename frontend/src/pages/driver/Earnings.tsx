@@ -17,68 +17,45 @@ import { Badge } from '../../components/ui/Badge';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
 import { formatCurrency, formatDate, formatTime } from '../../lib/utils';
 
-// Mock earnings data
-const earningsSummary = {
-    today: 2450,
-    week: 18500,
-    month: 72000,
-    pendingPayout: 8500,
-    lastPayout: 15000,
-    lastPayoutDate: '2025-12-05',
+// TODO: Fetch driver earnings from API
+// API endpoint: GET /api/v1/driver/earnings
+interface EarningsSummary {
+    today: number;
+    week: number;
+    month: number;
+    pendingPayout: number;
+    lastPayout: number;
+    lastPayoutDate: string;
+}
+const earningsSummary: EarningsSummary = {
+    today: 0,
+    week: 0,
+    month: 0,
+    pendingPayout: 0,
+    lastPayout: 0,
+    lastPayoutDate: '',
 };
 
-const transactions = [
-    {
-        id: 'tx1',
-        type: 'earning',
-        description: 'Trip: Koramangala → Whitefield',
-        amount: 520,
-        date: '2025-12-10T14:30:00',
-        status: 'completed',
-    },
-    {
-        id: 'tx2',
-        type: 'tip',
-        description: 'Tip from Rahul S.',
-        amount: 50,
-        date: '2025-12-10T14:35:00',
-        status: 'completed',
-    },
-    {
-        id: 'tx3',
-        type: 'earning',
-        description: 'Trip: Indiranagar → Electronic City',
-        amount: 680,
-        date: '2025-12-10T11:20:00',
-        status: 'completed',
-    },
-    {
-        id: 'tx4',
-        type: 'payout',
-        description: 'Weekly Payout - Bank Transfer',
-        amount: 15000,
-        date: '2025-12-05T10:00:00',
-        status: 'completed',
-    },
-    {
-        id: 'tx5',
-        type: 'deduction',
-        description: 'Platform Fee (15%)',
-        amount: 2250,
-        date: '2025-12-05T10:00:00',
-        status: 'completed',
-    },
-];
+// TODO: Fetch transactions from API
+// API endpoint: GET /api/v1/driver/transactions
+interface Transaction {
+    id: string;
+    type: string;
+    description: string;
+    amount: number;
+    date: string;
+    status: string;
+}
+const transactions: Transaction[] = [];
 
-const weeklyBreakdown = [
-    { day: 'Mon', earnings: 2800, trips: 8 },
-    { day: 'Tue', earnings: 3200, trips: 10 },
-    { day: 'Wed', earnings: 2500, trips: 7 },
-    { day: 'Thu', earnings: 3800, trips: 12 },
-    { day: 'Fri', earnings: 4100, trips: 14 },
-    { day: 'Sat', earnings: 1500, trips: 5 },
-    { day: 'Sun', earnings: 600, trips: 2 },
-];
+// TODO: Fetch weekly breakdown from API
+// API endpoint: GET /api/v1/driver/earnings/weekly
+interface DayBreakdown {
+    day: string;
+    earnings: number;
+    trips: number;
+}
+const weeklyBreakdown: DayBreakdown[] = [];
 
 export function Earnings() {
     const [activeTab, setActiveTab] = useState('overview');
