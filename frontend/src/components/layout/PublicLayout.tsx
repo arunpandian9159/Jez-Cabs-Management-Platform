@@ -117,27 +117,26 @@ export function PublicLayout() {
                                 {/* Auth buttons - Desktop */}
                                 <div className="hidden md:flex items-center gap-3">
                                     <Link to={ROUTES.LOGIN}>
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            className="border-gray-300 text-gray-700 hover:text-gray-900 hover:bg-gray-50 hover:border-gray-400 font-medium"
+                                        <button
+                                            className="h-9 px-4 text-sm font-medium rounded-lg border-2 border-gray-300 text-gray-700 bg-white hover:bg-gray-100 hover:border-gray-400 transition-all duration-200"
                                         >
                                             Sign In
-                                        </Button>
+                                        </button>
                                     </Link>
                                     <Link to={ROUTES.REGISTER}>
-                                        <motion.div
+                                        <motion.button
                                             whileHover={{ scale: 1.02 }}
                                             whileTap={{ scale: 0.98 }}
+                                            className="h-9 px-6 text-sm font-medium rounded-lg text-white flex items-center gap-2 shadow-lg hover:shadow-xl transition-all duration-200"
+                                            style={{
+                                                backgroundColor: '#0177c6',
+                                            }}
+                                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#025fa1'}
+                                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0177c6'}
                                         >
-                                            <Button
-                                                size="sm"
-                                                rightIcon={<ArrowRight className="w-4 h-4 text-white" />}
-                                                className="bg-primary-600 hover:bg-primary-700 shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30 text-white font-medium px-6"
-                                            >
-                                                Get Started
-                                            </Button>
-                                        </motion.div>
+                                            Get Started
+                                            <ArrowRight className="w-4 h-4" />
+                                        </motion.button>
                                     </Link>
                                 </div>
 
