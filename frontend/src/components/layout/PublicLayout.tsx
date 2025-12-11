@@ -242,7 +242,14 @@ export function PublicLayout() {
 
             {/* Main content */}
             <main className="pt-16 md:pt-20">
-                <Outlet />
+                <motion.div
+                    key={location.pathname}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, ease: 'easeOut' }}
+                >
+                    <Outlet />
+                </motion.div>
             </main>
 
             {/* Footer */}

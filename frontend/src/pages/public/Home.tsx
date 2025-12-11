@@ -1,670 +1,660 @@
 import { Link } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
 import {
-    ArrowRight,
     MapPin,
-    Car,
-    Clock,
-    Shield,
-    Star,
-    Users,
-    CreditCard,
-    Smartphone,
-    CheckCircle,
+    Calendar,
+    User,
     Zap,
-    Globe,
-    HeartHandshake,
-    Play,
-    Sparkles,
+    Clock,
+    Map,
+    Shield,
+    Search,
+    CreditCard,
+    Car,
+    Star,
+    Smartphone,
+    Headphones,
+    DollarSign,
+    Users,
+    BarChart3,
+    Settings,
+    CheckCircle,
+    ArrowRight,
 } from 'lucide-react';
-import { Button } from '../../components/ui/Button';
-import { Card } from '../../components/ui/Card';
 import { ROUTES } from '../../lib/constants';
-import { useRef } from 'react';
 
-const features = [
+// Services data
+const services = [
     {
-        icon: MapPin,
-        title: 'Instant Booking',
-        description: 'Book a cab instantly with real-time tracking and transparent pricing.',
-        gradient: 'from-blue-500 to-cyan-500',
-    },
-    {
-        icon: Car,
-        title: 'Cab Rentals',
-        description: 'Rent cabs for hours, days, or weeks with flexible options.',
-        gradient: 'from-purple-500 to-pink-500',
+        icon: Zap,
+        title: 'Instant Rides',
+        description: 'Book a cab in seconds and get picked up within minutes. Perfect for your immediate travel needs.',
+        color: 'from-[#2563eb] to-[#1d4ed8]',
     },
     {
         icon: Clock,
-        title: 'Trip Planning',
-        description: 'Plan outstation trips with multiple stops and get competitive offers.',
-        gradient: 'from-orange-500 to-red-500',
+        title: 'Flexible Rentals',
+        description: 'Rent cabs for hours, days, or weeks. Choose your duration and enjoy the freedom of hassle-free travel.',
+        color: 'from-[#0d9488] to-[#0f766e]',
+    },
+    {
+        icon: Map,
+        title: 'Plan Your Trips',
+        description: 'Schedule rides in advance, plan multi-city tours, and customize your journey with complete flexibility.',
+        color: 'from-[#3b82f6] to-[#0d9488]',
     },
     {
         icon: Shield,
         title: 'Safety First',
-        description: 'SOS button, live tracking, and verified drivers for your safety.',
-        gradient: 'from-green-500 to-emerald-500',
+        description: 'Complete transparency with verified drivers, real-time tracking, and 24/7 support for your peace of mind.',
+        color: 'from-[#14b8a6] to-[#2563eb]',
     },
+];
+
+// How it works steps
+const steps = [
     {
-        icon: Users,
-        title: 'Driver Community',
-        description: 'Join our driver network and earn on your own schedule.',
-        gradient: 'from-indigo-500 to-purple-500',
+        icon: Search,
+        title: 'Choose Your Service',
+        description: 'Select from instant rides, cab rentals, or trip planning based on your needs',
+        number: '01',
     },
     {
         icon: CreditCard,
-        title: 'Easy Payments',
-        description: 'Pay with cards, UPI, wallets, or cash. Your choice.',
-        gradient: 'from-pink-500 to-rose-500',
+        title: 'Book & Pay Securely',
+        description: 'Complete your booking with transparent pricing and secure payment options',
+        number: '02',
+    },
+    {
+        icon: Car,
+        title: 'Get Picked Up',
+        description: 'Track your driver in real-time and enjoy a comfortable, safe journey',
+        number: '03',
+    },
+    {
+        icon: Star,
+        title: 'Rate Your Experience',
+        description: 'Share your feedback to help us maintain the highest service standards',
+        number: '04',
     },
 ];
 
-const stats = [
-    { value: '10M+', label: 'Rides Completed', icon: Car },
-    { value: '50K+', label: 'Active Drivers', icon: Users },
-    { value: '100+', label: 'Cities Covered', icon: Globe },
-    { value: '4.8', label: 'Average Rating', icon: Star },
+// Features data
+const features = [
+    {
+        icon: Shield,
+        title: 'Complete Safety',
+        description: 'All drivers verified with background checks and real-time tracking',
+    },
+    {
+        icon: Clock,
+        title: '24/7 Availability',
+        description: 'Book rides anytime, anywhere with round-the-clock service',
+    },
+    {
+        icon: DollarSign,
+        title: 'Transparent Pricing',
+        description: 'No hidden charges. Know the exact fare before you book',
+    },
+    {
+        icon: Smartphone,
+        title: 'Easy Booking',
+        description: 'User-friendly interface for quick and hassle-free bookings',
+    },
+    {
+        icon: Headphones,
+        title: '24/7 Support',
+        description: 'Our support team is always ready to assist you',
+    },
+    {
+        icon: Star,
+        title: 'Quality Assurance',
+        description: 'Highly rated drivers and well-maintained vehicles',
+    },
 ];
 
-const testimonials = [
+// For Owners features
+const ownerFeatures = [
     {
-        name: 'Priya Sharma',
-        role: 'Regular Customer',
-        content: 'Jez Cabs has completely transformed my daily commute. The drivers are professional and the app is super easy to use!',
-        rating: 5,
-        avatar: 'PS',
+        icon: Car,
+        title: 'Fleet Management',
+        description: 'Add, manage, and track all your cabs from a single dashboard',
     },
     {
-        name: 'Rahul Kumar',
-        role: 'Business Traveler',
-        content: 'I use Jez Cabs for all my airport transfers. Reliable, punctual, and the premium cabs are fantastic.',
-        rating: 5,
-        avatar: 'RK',
+        icon: Users,
+        title: 'Driver Management',
+        description: 'Hire, assign, and monitor drivers with ease',
     },
     {
-        name: 'Anita Patel',
-        role: 'Frequent Traveler',
-        content: 'The outstation trip feature is a game-changer. Planned my entire family trip with multiple stops seamlessly.',
-        rating: 5,
-        avatar: 'AP',
+        icon: BarChart3,
+        title: 'Analytics & Reports',
+        description: 'Get detailed insights on earnings, trips, and performance',
     },
+    {
+        icon: Settings,
+        title: 'Complete Control',
+        description: 'Set pricing, availability, and manage bookings in real-time',
+    },
+];
+
+const ownerBenefits = [
+    'Maximize your fleet utilization',
+    'Real-time driver tracking',
+    'Automated payment processing',
+    '24/7 booking management',
+    'Verified driver network',
+    'Instant notifications',
 ];
 
 export function Home() {
-    const heroRef = useRef<HTMLDivElement>(null);
-    const { scrollYProgress } = useScroll({
-        target: heroRef,
-        offset: ['start start', 'end start'],
-    });
-
-    const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
-    const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.8]);
-
     return (
-        <div className="overflow-hidden bg-white dark:bg-gray-950">
+        <div className="min-h-screen bg-white">
             {/* Hero Section */}
             <section
-                ref={heroRef}
-                className="relative min-h-[100vh] flex items-center bg-gradient-to-br from-gray-50 via-white to-primary-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950"
+                className="pt-24 pb-16 px-4 sm:px-6 lg:px-8"
+                style={{
+                    background: 'linear-gradient(to bottom right, #eff6ff, #ffffff, #f0fdfa)'
+                }}
             >
-                {/* Animated background elements */}
-                <div className="absolute inset-0 overflow-hidden">
-                    {/* Gradient orbs */}
-                    <motion.div
-                        className="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full bg-gradient-to-br from-primary-400/30 to-accent-400/20 dark:from-primary-500/20 dark:to-accent-500/10 blur-3xl"
-                        animate={{
-                            x: [0, 50, 0],
-                            y: [0, -50, 0],
-                            scale: [1, 1.1, 1],
-                        }}
-                        transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-                    />
-                    <motion.div
-                        className="absolute -bottom-40 -left-40 w-[400px] h-[400px] rounded-full bg-gradient-to-tr from-accent-400/30 to-primary-400/20 dark:from-accent-500/15 dark:to-primary-500/10 blur-3xl"
-                        animate={{
-                            x: [0, -40, 0],
-                            y: [0, 40, 0],
-                            scale: [1, 1.15, 1],
-                        }}
-                        transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }}
-                    />
-                    <motion.div
-                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-gradient-to-r from-primary-300/10 to-accent-300/10 dark:from-primary-500/5 dark:to-accent-500/5 blur-3xl"
-                        animate={{
-                            rotate: [0, 360],
-                        }}
-                        transition={{ duration: 60, repeat: Infinity, ease: 'linear' }}
-                    />
-
-                    {/* Floating particles */}
-                    {[...Array(6)].map((_, i) => (
-                        <motion.div
-                            key={i}
-                            className="absolute w-2 h-2 rounded-full bg-primary-400/40 dark:bg-primary-400/30"
-                            style={{
-                                left: `${20 + i * 15}%`,
-                                top: `${30 + (i % 3) * 20}%`,
-                            }}
-                            animate={{
-                                y: [0, -30, 0],
-                                opacity: [0.3, 0.8, 0.3],
-                            }}
-                            transition={{
-                                duration: 3 + i * 0.5,
-                                repeat: Infinity,
-                                delay: i * 0.3,
-                            }}
-                        />
-                    ))}
-                </div>
-
-                <motion.div
-                    style={{ opacity: heroOpacity, scale: heroScale }}
-                    className="container mx-auto px-4 relative z-10"
-                >
-                    <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center min-h-[80vh]">
-                        {/* Left content */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8 }}
-                            className="text-center lg:text-left"
-                        >
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                transition={{ delay: 0.2 }}
-                                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary-100 to-accent-100 dark:from-primary-900/50 dark:to-accent-900/50 text-primary-700 dark:text-primary-300 text-sm font-medium mb-6 shadow-sm"
+                <div className="max-w-7xl mx-auto">
+                    <div className="grid lg:grid-cols-2 gap-12 items-center">
+                        {/* Left Content */}
+                        <div className="space-y-8">
+                            <div
+                                className="inline-block px-4 py-2 rounded-full text-sm font-medium"
+                                style={{
+                                    backgroundColor: '#dbeafe',
+                                    color: '#1d4ed8'
+                                }}
                             >
-                                <motion.div
-                                    animate={{ rotate: [0, 15, -15, 0] }}
-                                    transition={{ duration: 2, repeat: Infinity }}
-                                >
-                                    <Smartphone className="w-4 h-4" />
-                                </motion.div>
-                                Now available on iOS & Android
-                                <Sparkles className="w-4 h-4 text-accent-500" />
-                            </motion.div>
+                                #1 Cab Management Platform
+                            </div>
 
-                            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-white mb-6 leading-[1.1]">
-                                Your Ride,{' '}
-                                <br className="hidden sm:block" />
-                                Your Way,{' '}
-                                <span className="relative inline-block">
-                                    <span className="bg-gradient-to-r from-primary-600 via-accent-500 to-primary-600 bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient">
-                                        Every Day
-                                    </span>
-                                    <motion.svg
-                                        className="absolute -bottom-2 left-0 w-full"
-                                        viewBox="0 0 200 12"
-                                        fill="none"
-                                        initial={{ pathLength: 0, opacity: 0 }}
-                                        animate={{ pathLength: 1, opacity: 1 }}
-                                        transition={{ delay: 0.8, duration: 1 }}
-                                    >
-                                        <motion.path
-                                            d="M2 7C50 2 150 2 198 7"
-                                            stroke="url(#gradient)"
-                                            strokeWidth="4"
-                                            strokeLinecap="round"
-                                        />
-                                        <defs>
-                                            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                                <stop offset="0%" stopColor="#0d95e8" />
-                                                <stop offset="100%" stopColor="#d946ef" />
-                                            </linearGradient>
-                                        </defs>
-                                    </motion.svg>
+                            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight" style={{ color: '#0f172a' }}>
+                                Your Journey,
+                                <span
+                                    className="block"
+                                    style={{
+                                        background: 'linear-gradient(to right, #2563eb, #0d9488)',
+                                        WebkitBackgroundClip: 'text',
+                                        WebkitTextFillColor: 'transparent',
+                                        backgroundClip: 'text'
+                                    }}
+                                >
+                                    Your Way
                                 </span>
                             </h1>
 
-                            <motion.p
-                                className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed"
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.4 }}
-                            >
+                            <p className="text-lg max-w-xl" style={{ color: '#475569' }}>
                                 Book instant rides, rent cabs for any duration, or plan trips with complete
-                                transparency and safety. Join millions who trust Jez Cabs.
-                            </motion.p>
+                                transparency and safety. For cab owners, manage your fleet and drivers effortlessly.
+                            </p>
 
-                            <motion.div
-                                className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.5 }}
+                            {/* Quick Booking Form */}
+                            <div
+                                className="p-6 rounded-2xl shadow-xl"
+                                style={{
+                                    backgroundColor: '#ffffff',
+                                    border: '1px solid #f1f5f9'
+                                }}
                             >
-                                <Link to={ROUTES.REGISTER}>
-                                    <motion.div
-                                        whileHover={{ scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
+                                <div className="space-y-4">
+                                    <div
+                                        className="flex items-center gap-3 p-3 rounded-lg"
+                                        style={{ backgroundColor: '#f8fafc' }}
                                     >
-                                        <Button
-                                            size="lg"
-                                            rightIcon={<ArrowRight className="w-5 h-5" />}
-                                            className="w-full sm:w-auto bg-gradient-to-r from-primary-500 via-primary-600 to-accent-500 hover:from-primary-600 hover:via-primary-700 hover:to-accent-600 shadow-xl shadow-primary-500/30 hover:shadow-2xl hover:shadow-primary-500/40 text-lg px-8 py-6"
-                                        >
-                                            Get Started Free
-                                        </Button>
-                                    </motion.div>
-                                </Link>
-                                <Link to={ROUTES.DRIVER_REGISTER}>
-                                    <motion.div
-                                        whileHover={{ scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
-                                    >
-                                        <Button
-                                            variant="outline"
-                                            size="lg"
-                                            leftIcon={<Play className="w-5 h-5" />}
-                                            className="w-full sm:w-auto border-2 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 text-lg px-8 py-6"
-                                        >
-                                            Watch Demo
-                                        </Button>
-                                    </motion.div>
-                                </Link>
-                            </motion.div>
-
-                            {/* Trust indicators */}
-                            <motion.div
-                                className="flex flex-col sm:flex-row items-center gap-6 mt-10 pt-10 border-t border-gray-200 dark:border-gray-700 justify-center lg:justify-start"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 0.7 }}
-                            >
-                                <div className="flex -space-x-3">
-                                    {['A', 'B', 'C', 'D', 'E'].map((letter, i) => (
-                                        <motion.div
-                                            key={i}
-                                            initial={{ scale: 0, x: -20 }}
-                                            animate={{ scale: 1, x: 0 }}
-                                            transition={{ delay: 0.8 + i * 0.1 }}
-                                            className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-400 to-accent-400 border-3 border-white dark:border-gray-900 flex items-center justify-center text-white text-sm font-semibold shadow-lg"
-                                        >
-                                            {letter}
-                                        </motion.div>
-                                    ))}
-                                </div>
-                                <div className="text-center sm:text-left">
-                                    <div className="flex items-center gap-1 text-warning-500 justify-center sm:justify-start">
-                                        {[...Array(5)].map((_, i) => (
-                                            <motion.div
-                                                key={i}
-                                                initial={{ scale: 0, rotate: -180 }}
-                                                animate={{ scale: 1, rotate: 0 }}
-                                                transition={{ delay: 1 + i * 0.1 }}
-                                            >
-                                                <Star className="w-5 h-5 fill-current" />
-                                            </motion.div>
-                                        ))}
+                                        <MapPin className="w-5 h-5" style={{ color: '#2563eb' }} />
+                                        <input
+                                            type="text"
+                                            placeholder="Pickup Location"
+                                            className="bg-transparent flex-1 outline-none"
+                                            style={{ color: '#0f172a' }}
+                                        />
                                     </div>
-                                    <p className="text-gray-600 dark:text-gray-400 mt-1">
-                                        <span className="font-bold text-gray-900 dark:text-white">4.8/5</span> from 50,000+ reviews
-                                    </p>
-                                </div>
-                            </motion.div>
-                        </motion.div>
 
-                        {/* Right content - Hero visualization */}
-                        <motion.div
-                            initial={{ opacity: 0, x: 50 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.8, delay: 0.3 }}
-                            className="relative hidden lg:block"
-                        >
-                            <div className="relative w-full aspect-square max-w-lg mx-auto">
-                                {/* Main illustration circle */}
-                                <motion.div
-                                    className="absolute inset-0 flex items-center justify-center"
-                                    animate={{ rotate: [0, 360] }}
-                                    transition={{ duration: 120, repeat: Infinity, ease: 'linear' }}
-                                >
-                                    <div className="w-80 h-80 rounded-full border-2 border-dashed border-primary-200 dark:border-primary-800/50" />
-                                </motion.div>
-
-                                {/* Central car icon */}
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <motion.div
-                                        className="w-72 h-72 rounded-3xl bg-gradient-to-br from-primary-100 via-white to-accent-100 dark:from-primary-900/40 dark:via-gray-800 dark:to-accent-900/40 flex items-center justify-center shadow-2xl"
-                                        animate={{
-                                            boxShadow: [
-                                                '0 25px 50px -12px rgba(13, 149, 232, 0.25)',
-                                                '0 25px 50px -12px rgba(217, 70, 239, 0.25)',
-                                                '0 25px 50px -12px rgba(13, 149, 232, 0.25)',
-                                            ],
-                                        }}
-                                        transition={{ duration: 4, repeat: Infinity }}
+                                    <div
+                                        className="flex items-center gap-3 p-3 rounded-lg"
+                                        style={{ backgroundColor: '#f8fafc' }}
                                     >
-                                        <motion.div
-                                            animate={{ y: [0, -10, 0] }}
-                                            transition={{ duration: 3, repeat: Infinity }}
+                                        <MapPin className="w-5 h-5" style={{ color: '#0d9488' }} />
+                                        <input
+                                            type="text"
+                                            placeholder="Drop Location"
+                                            className="bg-transparent flex-1 outline-none"
+                                            style={{ color: '#0f172a' }}
+                                        />
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div
+                                            className="flex items-center gap-3 p-3 rounded-lg"
+                                            style={{ backgroundColor: '#f8fafc' }}
                                         >
-                                            <Car className="w-28 h-28 text-primary-600 dark:text-primary-400" />
-                                        </motion.div>
-                                    </motion.div>
+                                            <Calendar className="w-5 h-5" style={{ color: '#2563eb' }} />
+                                            <input
+                                                type="date"
+                                                className="bg-transparent flex-1 outline-none"
+                                                style={{ color: '#0f172a' }}
+                                            />
+                                        </div>
+
+                                        <div
+                                            className="flex items-center gap-3 p-3 rounded-lg"
+                                            style={{ backgroundColor: '#f8fafc' }}
+                                        >
+                                            <User className="w-5 h-5" style={{ color: '#2563eb' }} />
+                                            <select
+                                                className="bg-transparent flex-1 outline-none"
+                                                style={{ color: '#0f172a' }}
+                                            >
+                                                <option>1 Passenger</option>
+                                                <option>2 Passengers</option>
+                                                <option>3 Passengers</option>
+                                                <option>4+ Passengers</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <Link to={ROUTES.REGISTER}>
+                                        <button
+                                            className="w-full py-3 text-white rounded-lg transition-all font-medium hover:shadow-lg"
+                                            style={{
+                                                background: 'linear-gradient(to right, #2563eb, #0d9488)'
+                                            }}
+                                        >
+                                            Book Now
+                                        </button>
+                                    </Link>
                                 </div>
-
-                                {/* Floating cards */}
-                                <motion.div
-                                    className="absolute top-0 left-0 z-10"
-                                    animate={{ y: [0, -15, 0] }}
-                                    transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                                >
-                                    <Card padding="md" variant="elevated" className="w-52 bg-white dark:bg-gray-800 shadow-xl border-0">
-                                        <div className="flex items-center gap-3">
-                                            <motion.div
-                                                className="w-12 h-12 rounded-xl bg-gradient-to-br from-success-400 to-success-500 flex items-center justify-center shadow-lg shadow-success-500/30"
-                                                animate={{ scale: [1, 1.1, 1] }}
-                                                transition={{ duration: 2, repeat: Infinity }}
-                                            >
-                                                <CheckCircle className="w-6 h-6 text-white" />
-                                            </motion.div>
-                                            <div>
-                                                <p className="font-semibold text-gray-900 dark:text-white">Driver Found</p>
-                                                <p className="text-sm text-gray-500 dark:text-gray-400">Arriving in 4 mins</p>
-                                            </div>
-                                        </div>
-                                    </Card>
-                                </motion.div>
-
-                                <motion.div
-                                    className="absolute bottom-10 right-0 z-10"
-                                    animate={{ y: [0, 15, 0] }}
-                                    transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-                                >
-                                    <Card padding="md" variant="elevated" className="w-52 bg-white dark:bg-gray-800 shadow-xl border-0">
-                                        <div className="flex items-center gap-3">
-                                            <motion.div
-                                                className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-400 to-primary-500 flex items-center justify-center shadow-lg shadow-primary-500/30"
-                                            >
-                                                <MapPin className="w-6 h-6 text-white" />
-                                            </motion.div>
-                                            <div>
-                                                <p className="font-semibold text-gray-900 dark:text-white">₹249</p>
-                                                <p className="text-sm text-gray-500 dark:text-gray-400">MG Road → Airport</p>
-                                            </div>
-                                        </div>
-                                    </Card>
-                                </motion.div>
-
-                                <motion.div
-                                    className="absolute top-1/2 -right-8 z-10"
-                                    animate={{ x: [0, 10, 0] }}
-                                    transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
-                                >
-                                    <Card padding="sm" variant="elevated" className="bg-white dark:bg-gray-800 shadow-xl border-0">
-                                        <div className="flex items-center gap-2 px-2">
-                                            <Zap className="w-5 h-5 text-warning-500" />
-                                            <span className="text-sm font-medium text-gray-900 dark:text-white">Fast ETA</span>
-                                        </div>
-                                    </Card>
-                                </motion.div>
                             </div>
-                        </motion.div>
-                    </div>
-                </motion.div>
+                        </div>
 
-                {/* Scroll indicator */}
-                <motion.div
-                    className="absolute bottom-8 left-1/2 -translate-x-1/2"
-                    animate={{ y: [0, 10, 0] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                >
-                    <div className="w-6 h-10 rounded-full border-2 border-gray-300 dark:border-gray-600 flex justify-center pt-2">
-                        <motion.div
-                            className="w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-gray-500"
-                            animate={{ y: [0, 12, 0], opacity: [1, 0.3, 1] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                        />
+                        {/* Right Image */}
+                        <div className="relative hidden lg:block">
+                            <div className="aspect-square rounded-2xl overflow-hidden shadow-2xl">
+                                <img
+                                    src="https://images.unsplash.com/photo-1622996965805-985d0f66d671?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjB0YXhpJTIwY2FifGVufDF8fHx8MTc2NTQyOTU5NHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+                                    alt="Modern taxi cab"
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
+
+                            {/* Floating Stats */}
+                            <div
+                                className="absolute -bottom-6 -left-6 p-4 rounded-xl shadow-lg"
+                                style={{ backgroundColor: '#ffffff' }}
+                            >
+                                <div className="text-2xl font-bold" style={{ color: '#2563eb' }}>50K+</div>
+                                <p className="text-sm" style={{ color: '#475569' }}>Happy Customers</p>
+                            </div>
+
+                            <div
+                                className="absolute -top-6 -right-6 p-4 rounded-xl shadow-lg"
+                                style={{ backgroundColor: '#ffffff' }}
+                            >
+                                <div className="text-2xl font-bold" style={{ color: '#0d9488' }}>1000+</div>
+                                <p className="text-sm" style={{ color: '#475569' }}>Active Drivers</p>
+                            </div>
+                        </div>
                     </div>
-                </motion.div>
+                </div>
             </section>
 
-            {/* Stats Section */}
-            <section className="py-20 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white relative overflow-hidden">
-                {/* Background pattern */}
-                <div className="absolute inset-0 opacity-10">
-                    <div className="absolute inset-0" style={{
-                        backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)',
-                        backgroundSize: '40px 40px',
-                    }} />
-                </div>
+            {/* Services Section */}
+            <section id="services" className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+                <div className="max-w-7xl mx-auto">
+                    <div className="text-center mb-16">
+                        <h2 className="text-3xl sm:text-4xl font-bold mb-4" style={{ color: '#0f172a' }}>
+                            Our Services
+                        </h2>
+                        <p className="text-lg max-w-2xl mx-auto" style={{ color: '#475569' }}>
+                            Whether you need a quick ride or want to rent a cab for days, we've got you covered
+                        </p>
+                    </div>
 
-                <div className="container mx-auto px-4 relative z-10">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                        {stats.map((stat, index) => (
-                            <motion.div
-                                key={stat.label}
-                                initial={{ opacity: 0, y: 30 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: index * 0.1 }}
-                                className="text-center group"
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        {services.map((service, index) => {
+                            const Icon = service.icon;
+                            return (
+                                <div
+                                    key={index}
+                                    className="group p-6 rounded-2xl border transition-all duration-300 bg-white hover:shadow-xl"
+                                    style={{
+                                        borderColor: '#e2e8f0'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        e.currentTarget.style.borderColor = 'transparent';
+                                        e.currentTarget.style.background = 'linear-gradient(to bottom right, #eff6ff, #f0fdfa)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.currentTarget.style.borderColor = '#e2e8f0';
+                                        e.currentTarget.style.background = '#ffffff';
+                                    }}
+                                >
+                                    <div
+                                        className={`w-14 h-14 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform bg-gradient-to-br ${service.color}`}
+                                    >
+                                        <Icon className="w-7 h-7 text-white" />
+                                    </div>
+
+                                    <h3 className="text-xl font-semibold mb-3" style={{ color: '#0f172a' }}>
+                                        {service.title}
+                                    </h3>
+                                    <p style={{ color: '#475569' }}>{service.description}</p>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            </section>
+
+            {/* How It Works Section */}
+            <section
+                id="how-it-works"
+                className="py-20 px-4 sm:px-6 lg:px-8"
+                style={{
+                    background: 'linear-gradient(to bottom right, #eff6ff, #ffffff, #f0fdfa)'
+                }}
+            >
+                <div className="max-w-7xl mx-auto">
+                    <div className="text-center mb-16">
+                        <h2 className="text-3xl sm:text-4xl font-bold mb-4" style={{ color: '#0f172a' }}>
+                            How It Works
+                        </h2>
+                        <p className="text-lg max-w-2xl mx-auto" style={{ color: '#475569' }}>
+                            Getting started is simple. Follow these easy steps to book your ride
+                        </p>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        {steps.map((step, index) => {
+                            const Icon = step.icon;
+                            return (
+                                <div key={index} className="relative">
+                                    {/* Connector Line */}
+                                    {index < steps.length - 1 && (
+                                        <div
+                                            className="hidden lg:block absolute top-20 left-full w-full h-0.5 z-0"
+                                            style={{
+                                                background: 'linear-gradient(to right, #bfdbfe, #99f6e4)'
+                                            }}
+                                        />
+                                    )}
+
+                                    <div
+                                        className="relative p-6 rounded-2xl border hover:shadow-xl transition-all duration-300 z-10"
+                                        style={{
+                                            backgroundColor: '#ffffff',
+                                            borderColor: '#e2e8f0'
+                                        }}
+                                    >
+                                        <div
+                                            className="absolute -top-4 -right-4 w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm"
+                                            style={{
+                                                background: 'linear-gradient(to bottom right, #2563eb, #0d9488)'
+                                            }}
+                                        >
+                                            {step.number}
+                                        </div>
+
+                                        <div
+                                            className="w-14 h-14 rounded-xl flex items-center justify-center mb-4"
+                                            style={{
+                                                background: 'linear-gradient(to bottom right, #dbeafe, #ccfbf1)'
+                                            }}
+                                        >
+                                            <Icon className="w-7 h-7" style={{ color: '#1d4ed8' }} />
+                                        </div>
+
+                                        <h3 className="text-xl font-semibold mb-3" style={{ color: '#0f172a' }}>
+                                            {step.title}
+                                        </h3>
+                                        <p style={{ color: '#475569' }}>{step.description}</p>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                    <div className="mt-16 text-center">
+                        <Link to={ROUTES.REGISTER}>
+                            <button
+                                className="px-8 py-3 text-white rounded-lg hover:shadow-lg transition-all font-medium"
+                                style={{
+                                    background: 'linear-gradient(to right, #2563eb, #0d9488)'
+                                }}
                             >
-                                <motion.div
-                                    className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-primary-500/20 to-accent-500/20 flex items-center justify-center group-hover:from-primary-500/30 group-hover:to-accent-500/30 transition-colors"
-                                    whileHover={{ scale: 1.1, rotate: 5 }}
-                                >
-                                    <stat.icon className="w-8 h-8 text-primary-400" />
-                                </motion.div>
-                                <motion.p
-                                    className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-400 via-accent-400 to-primary-400 bg-clip-text text-transparent"
-                                    initial={{ scale: 0.5 }}
-                                    whileInView={{ scale: 1 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: index * 0.1 + 0.2, type: 'spring' }}
-                                >
-                                    {stat.value}
-                                </motion.p>
-                                <p className="text-gray-400 mt-2 font-medium">{stat.label}</p>
-                            </motion.div>
-                        ))}
+                                Get Started Now
+                            </button>
+                        </Link>
                     </div>
                 </div>
             </section>
 
             {/* Features Section */}
-            <section id="features" className="py-24 bg-white dark:bg-gray-950 relative">
-                <div className="container mx-auto px-4">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="text-center mb-16"
-                    >
-                        <motion.div
-                            initial={{ scale: 0 }}
-                            whileInView={{ scale: 1 }}
-                            viewport={{ once: true }}
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 text-sm font-medium mb-6"
-                        >
-                            <Zap className="w-4 h-4" />
-                            Powerful Features
-                        </motion.div>
-                        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-                            Everything You Need for{' '}
-                            <span className="bg-gradient-to-r from-primary-600 to-accent-600 bg-clip-text text-transparent">
-                                Seamless Travel
-                            </span>
+            <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+                <div className="max-w-7xl mx-auto">
+                    <div className="text-center mb-16">
+                        <h2 className="text-3xl sm:text-4xl font-bold mb-4" style={{ color: '#0f172a' }}>
+                            Why Choose Jez Cabs?
                         </h2>
-                        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-lg">
-                            From instant bookings to long-term rentals, we've got you covered with
-                            features designed for your convenience and safety.
+                        <p className="text-lg max-w-2xl mx-auto" style={{ color: '#475569' }}>
+                            We're committed to providing the best cab management experience
                         </p>
-                    </motion.div>
+                    </div>
 
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-                        {features.map((feature, index) => (
-                            <motion.div
-                                key={feature.title}
-                                initial={{ opacity: 0, y: 30 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: index * 0.1 }}
-                            >
-                                <Card
-                                    padding="lg"
-                                    className="h-full bg-white dark:bg-gray-900 border-gray-100 dark:border-gray-800 hover:border-primary-200 dark:hover:border-primary-700 group shadow-sm hover:shadow-xl transition-all duration-300"
-                                    interactive
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {features.map((feature, index) => {
+                            const Icon = feature.icon;
+                            return (
+                                <div
+                                    key={index}
+                                    className="flex gap-4 p-6 rounded-xl transition-all duration-300"
+                                    onMouseEnter={(e) => {
+                                        e.currentTarget.style.background = 'linear-gradient(to bottom right, #eff6ff, #f0fdfa)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.currentTarget.style.background = 'transparent';
+                                    }}
                                 >
-                                    <motion.div
-                                        className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300`}
-                                        whileHover={{ rotate: 5 }}
+                                    <div
+                                        className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
+                                        style={{
+                                            background: 'linear-gradient(to bottom right, #2563eb, #0d9488)'
+                                        }}
                                     >
-                                        <feature.icon className="w-7 h-7 text-white" />
-                                    </motion.div>
-                                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                                        {feature.title}
-                                    </h3>
-                                    <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                                        {feature.description}
-                                    </p>
-                                </Card>
-                            </motion.div>
-                        ))}
+                                        <Icon className="w-6 h-6 text-white" />
+                                    </div>
+                                    <div>
+                                        <h4 className="text-lg font-semibold mb-2" style={{ color: '#0f172a' }}>
+                                            {feature.title}
+                                        </h4>
+                                        <p style={{ color: '#475569' }}>{feature.description}</p>
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
             </section>
 
-            {/* Testimonials Section */}
-            <section className="py-24 bg-gray-50 dark:bg-gray-900">
-                <div className="container mx-auto px-4">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="text-center mb-16"
-                    >
-                        <motion.div
-                            initial={{ scale: 0 }}
-                            whileInView={{ scale: 1 }}
-                            viewport={{ once: true }}
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent-100 dark:bg-accent-900/30 text-accent-600 dark:text-accent-400 text-sm font-medium mb-6"
-                        >
-                            <HeartHandshake className="w-4 h-4" />
-                            Customer Love
-                        </motion.div>
-                        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-                            What Our Customers{' '}
-                            <span className="bg-gradient-to-r from-accent-600 to-primary-600 bg-clip-text text-transparent">
-                                Say About Us
-                            </span>
-                        </h2>
-                    </motion.div>
-
-                    <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
-                        {testimonials.map((testimonial, index) => (
-                            <motion.div
-                                key={testimonial.name}
-                                initial={{ opacity: 0, y: 30 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: index * 0.15 }}
+            {/* For Owners Section */}
+            <section
+                id="for-owners"
+                className="py-20 px-4 sm:px-6 lg:px-8 text-white"
+                style={{
+                    background: 'linear-gradient(to bottom right, #0f172a, #1e293b)'
+                }}
+            >
+                <div className="max-w-7xl mx-auto">
+                    <div className="grid lg:grid-cols-2 gap-12 items-center">
+                        {/* Left Content */}
+                        <div className="space-y-8">
+                            <div
+                                className="inline-block px-4 py-2 rounded-full text-sm font-medium"
+                                style={{
+                                    backgroundColor: 'rgba(37, 99, 235, 0.2)',
+                                    color: '#93c5fd'
+                                }}
                             >
-                                <Card padding="lg" className="h-full bg-white dark:bg-gray-800 border-0 shadow-lg hover:shadow-xl transition-shadow">
-                                    <div className="flex items-center gap-1 text-warning-500 mb-4">
-                                        {[...Array(testimonial.rating)].map((_, i) => (
-                                            <Star key={i} className="w-5 h-5 fill-current" />
-                                        ))}
-                                    </div>
-                                    <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed italic">
-                                        "{testimonial.content}"
-                                    </p>
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary-400 to-accent-400 flex items-center justify-center text-white font-semibold">
-                                            {testimonial.avatar}
+                                For Cab Owners
+                            </div>
+
+                            <h2 className="text-3xl sm:text-4xl font-bold text-white">
+                                Manage Your Fleet
+                                <span
+                                    className="block"
+                                    style={{
+                                        background: 'linear-gradient(to right, #60a5fa, #2dd4bf)',
+                                        WebkitBackgroundClip: 'text',
+                                        WebkitTextFillColor: 'transparent',
+                                        backgroundClip: 'text'
+                                    }}
+                                >
+                                    Like Never Before
+                                </span>
+                            </h2>
+
+                            <p style={{ color: '#cbd5e1' }} className="text-lg">
+                                Take control of your cab business with our comprehensive management platform.
+                                Track vehicles, manage drivers, and grow your revenue effortlessly.
+                            </p>
+
+                            <div className="grid sm:grid-cols-2 gap-4">
+                                {ownerFeatures.map((feature, index) => {
+                                    const Icon = feature.icon;
+                                    return (
+                                        <div key={index} className="flex gap-3">
+                                            <div
+                                                className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                                                style={{
+                                                    background: 'linear-gradient(to bottom right, #2563eb, #0d9488)'
+                                                }}
+                                            >
+                                                <Icon className="w-5 h-5 text-white" />
+                                            </div>
+                                            <div>
+                                                <h4 className="text-white font-semibold mb-1">{feature.title}</h4>
+                                                <p className="text-sm" style={{ color: '#94a3b8' }}>{feature.description}</p>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <p className="font-semibold text-gray-900 dark:text-white">{testimonial.name}</p>
-                                            <p className="text-sm text-gray-500 dark:text-gray-400">{testimonial.role}</p>
+                                    );
+                                })}
+                            </div>
+
+                            <Link to={ROUTES.REGISTER}>
+                                <button
+                                    className="px-8 py-3 text-white rounded-lg transition-all font-medium hover:shadow-lg"
+                                    style={{
+                                        background: 'linear-gradient(to right, #2563eb, #0d9488)',
+                                        boxShadow: '0 0 20px rgba(37, 99, 235, 0.3)'
+                                    }}
+                                >
+                                    Start Managing Your Fleet
+                                </button>
+                            </Link>
+                        </div>
+
+                        {/* Right Content */}
+                        <div className="space-y-6">
+                            <div
+                                className="backdrop-blur-sm p-8 rounded-2xl"
+                                style={{
+                                    backgroundColor: 'rgba(30, 41, 59, 0.5)',
+                                    border: '1px solid #334155'
+                                }}
+                            >
+                                <h3 className="text-xl font-bold text-white mb-6">Key Benefits</h3>
+                                <div className="space-y-4">
+                                    {ownerBenefits.map((benefit, index) => (
+                                        <div key={index} className="flex items-center gap-3">
+                                            <CheckCircle className="w-5 h-5 flex-shrink-0" style={{ color: '#2dd4bf' }} />
+                                            <span style={{ color: '#cbd5e1' }}>{benefit}</span>
                                         </div>
-                                    </div>
-                                </Card>
-                            </motion.div>
-                        ))}
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div
+                                className="p-8 rounded-2xl"
+                                style={{
+                                    background: 'linear-gradient(to bottom right, #2563eb, #0d9488)'
+                                }}
+                            >
+                                <h4 className="text-xl font-bold text-white mb-2">Book Drivers Separately</h4>
+                                <p className="text-white/90 mb-4">
+                                    Need professional drivers for your fleet? Browse our network of verified,
+                                    experienced drivers and hire them directly.
+                                </p>
+                                <Link to={ROUTES.REGISTER}>
+                                    <button
+                                        className="px-6 py-2 rounded-lg font-medium transition-colors hover:bg-gray-100"
+                                        style={{
+                                            backgroundColor: '#ffffff',
+                                            color: '#1d4ed8'
+                                        }}
+                                    >
+                                        Browse Drivers
+                                    </button>
+                                </Link>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
 
             {/* CTA Section */}
-            <section className="py-24 relative overflow-hidden">
-                {/* Gradient background */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary-600 via-primary-700 to-accent-600" />
-
-                {/* Animated shapes */}
-                <motion.div
-                    className="absolute top-0 left-0 w-96 h-96 rounded-full bg-white/10 blur-3xl"
-                    animate={{
-                        x: [0, 100, 0],
-                        y: [0, 50, 0],
-                    }}
-                    transition={{ duration: 10, repeat: Infinity }}
-                />
-                <motion.div
-                    className="absolute bottom-0 right-0 w-80 h-80 rounded-full bg-accent-400/20 blur-3xl"
-                    animate={{
-                        x: [0, -80, 0],
-                        y: [0, -40, 0],
-                    }}
-                    transition={{ duration: 12, repeat: Infinity }}
-                />
-
-                <div className="container mx-auto px-4 text-center relative z-10">
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
+            <section className="py-20 px-4 sm:px-6 lg:px-8">
+                <div className="max-w-7xl mx-auto">
+                    <div
+                        className="relative rounded-3xl overflow-hidden"
+                        style={{
+                            background: 'linear-gradient(to bottom right, #2563eb, #1d4ed8, #0d9488)'
+                        }}
                     >
-                        <motion.div
-                            initial={{ scale: 0 }}
-                            whileInView={{ scale: 1 }}
-                            viewport={{ once: true }}
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 text-white text-sm font-medium mb-8 backdrop-blur-sm"
-                        >
-                            <Sparkles className="w-4 h-4" />
-                            Start Your Journey Today
-                        </motion.div>
-                        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
-                            Ready to Experience the Future
-                            <br />
-                            of Transportation?
-                        </h2>
-                        <p className="text-white/80 mb-10 max-w-lg mx-auto text-lg">
-                            Join millions of satisfied customers and experience seamless travel like never before.
-                        </p>
-                        <div className="flex flex-col sm:flex-row justify-center gap-4">
-                            <Link to={ROUTES.REGISTER}>
-                                <motion.div
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
-                                >
-                                    <Button
-                                        size="lg"
-                                        className="w-full sm:w-auto bg-white text-primary-600 hover:bg-gray-100 shadow-xl hover:shadow-2xl text-lg px-8 py-6"
-                                        rightIcon={<ArrowRight className="w-5 h-5" />}
-                                    >
-                                        Create Free Account
-                                    </Button>
-                                </motion.div>
-                            </Link>
-                            <Link to={ROUTES.LOGIN}>
-                                <motion.div
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
-                                >
-                                    <Button
-                                        size="lg"
-                                        variant="outline"
-                                        className="w-full sm:w-auto border-2 border-white text-white hover:bg-white/10 text-lg px-8 py-6"
-                                    >
-                                        Sign In
-                                    </Button>
-                                </motion.div>
-                            </Link>
+                        {/* Background Pattern */}
+                        <div className="absolute inset-0 opacity-10">
+                            <div
+                                className="absolute top-0 left-0 w-96 h-96 rounded-full blur-3xl"
+                                style={{ backgroundColor: '#ffffff' }}
+                            />
+                            <div
+                                className="absolute bottom-0 right-0 w-96 h-96 rounded-full blur-3xl"
+                                style={{ backgroundColor: '#ffffff' }}
+                            />
                         </div>
-                    </motion.div>
+
+                        <div className="relative px-8 py-16 md:px-16 md:py-20 text-center">
+                            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+                                Ready to Get Started?
+                            </h2>
+                            <p className="text-white/90 text-lg max-w-2xl mx-auto mb-8">
+                                Join thousands of satisfied customers and cab owners who trust Jez Cabs
+                                for their transportation needs
+                            </p>
+
+                            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                                <Link to={ROUTES.REGISTER}>
+                                    <button
+                                        className="px-8 py-3 rounded-lg transition-all inline-flex items-center justify-center gap-2 group font-medium hover:bg-gray-100"
+                                        style={{
+                                            backgroundColor: '#ffffff',
+                                            color: '#1d4ed8'
+                                        }}
+                                    >
+                                        Book Your First Ride
+                                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                    </button>
+                                </Link>
+                                <Link to={ROUTES.REGISTER}>
+                                    <button
+                                        className="px-8 py-3 bg-transparent border-2 border-white text-white rounded-lg hover:bg-white/10 transition-all font-medium"
+                                    >
+                                        Register as Owner
+                                    </button>
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
         </div>
