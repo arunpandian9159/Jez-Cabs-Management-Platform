@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
@@ -18,6 +18,7 @@ import { Input } from '../../../components/ui/Input';
 import { Card } from '../../../components/ui/Card';
 import { cn } from '../../../lib/utils';
 import { ROUTES, MAP_CONFIG } from '../../../lib/constants';
+import { usersService } from '../../../services';
 
 // Fix for default marker icon in Leaflet with React
 delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: unknown })._getIconUrl;
@@ -46,9 +47,8 @@ const destinationIcon = new L.Icon({
     shadowSize: [41, 41],
 });
 
-// TODO: API Integration - Fetch user's saved addresses
-// API endpoint: GET /api/v1/users/addresses
-interface SavedAddress {
+// Types for location data
+interface SavedAddressDisplay {
     id: string;
     label: string;
     icon: typeof Home;
@@ -56,17 +56,13 @@ interface SavedAddress {
     lat: number;
     lng: number;
 }
-const savedAddresses: SavedAddress[] = [];
 
-// TODO: API Integration - Fetch recent destinations
-// API endpoint: GET /api/v1/users/recent-destinations
-interface RecentDestination {
+interface RecentDestinationDisplay {
     id: string;
     address: string;
     lat: number;
     lng: number;
 }
-const recentDestinations: RecentDestination[] = [];
 
 interface LocationState {
     address: string;
@@ -97,6 +93,8 @@ export function LocationEntry() {
     const [activeField, setActiveField] = useState<'pickup' | 'destination' | null>('pickup');
     const [searchQuery, setSearchQuery] = useState('');
     const [showSuggestions, setShowSuggestions] = useState(false);
+    const [savedAddresses, setSavedAddresses] = useState<SavedAddressDisplay[]>([]);
+    const [recentDestinations, setRecentDestinations] = useState<RecentDestinationDisplay[]>([]);
 
     const [pickup, setPickup] = useState<LocationState>({
         address: '',
@@ -109,6 +107,39 @@ export function LocationEntry() {
         lat: null,
         lng: null,
     });
+
+    // Fetch saved addresses and recent destinations
+    useEffect(() => {
+        const fetchLocationData = async () => {
+            try {
+                // Fetch saved addresses
+                const addresses = await usersService.getSavedAddresses();
+                const formattedAddresses: SavedAddressDisplay[] = addresses.map(addr => ({
+                    id: addr.id,
+                    label: addr.label,
+                    icon: Home,
+                    address: addr.address,
+                    lat: addr.lat,
+                    lng: addr.lng,
+                }));
+                setSavedAddresses(formattedAddresses);
+
+                // Fetch recent destinations
+                const recent = await usersService.getRecentDestinations(5);
+                const formattedRecent: RecentDestinationDisplay[] = recent.map(dest => ({
+                    id: dest.id,
+                    address: dest.address,
+                    lat: dest.lat,
+                    lng: dest.lng,
+                }));
+                setRecentDestinations(formattedRecent);
+            } catch (error) {
+                console.error('Error fetching location data:', error);
+            }
+        };
+
+        fetchLocationData();
+    }, []);
 
     // Get user's current location
     const getCurrentLocation = () => {

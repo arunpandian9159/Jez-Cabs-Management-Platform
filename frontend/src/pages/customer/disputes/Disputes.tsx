@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
     AlertTriangle,
@@ -19,10 +19,10 @@ import { Modal } from '../../../components/ui/Modal';
 import { TextArea } from '../../../components/ui/TextArea';
 import { Select } from '../../../components/ui/Select';
 import { formatCurrency, formatRelativeTime } from '../../../lib/utils';
+import { disputesService, tripsService } from '../../../services';
 
-// TODO: API Integration - Fetch user disputes
-// API endpoint: GET /api/v1/disputes
-interface Dispute {
+// Types for disputes display
+interface DisputeDisplay {
     id: string;
     tripId: string;
     type: string;
@@ -41,7 +41,11 @@ interface Dispute {
     };
     messages: number;
 }
-const disputes: Dispute[] = [];
+
+interface TripOption {
+    value: string;
+    label: string;
+}
 
 const disputeTypes = [
     { value: 'overcharge', label: 'Overcharged' },
@@ -57,6 +61,96 @@ export function Disputes() {
     const [showNewDispute, setShowNewDispute] = useState(false);
     const [disputeType, setDisputeType] = useState('');
     const [disputeDescription, setDisputeDescription] = useState('');
+    const [selectedTripId, setSelectedTripId] = useState('');
+    const [disputes, setDisputes] = useState<DisputeDisplay[]>([]);
+    const [tripOptions, setTripOptions] = useState<TripOption[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    // Fetch disputes and trips on mount
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setIsLoading(true);
+
+                // Fetch disputes
+                const disputesData = await disputesService.findAll();
+                const formattedDisputes: DisputeDisplay[] = disputesData.map(d => ({
+                    id: d.id,
+                    tripId: d.trip_id,
+                    type: d.type,
+                    subject: `${d.type.charAt(0).toUpperCase() + d.type.slice(1)} Issue`,
+                    description: d.description,
+                    status: d.status === 'pending' || d.status === 'in_progress' ? 'open' : d.status as 'resolved' | 'closed',
+                    createdAt: d.created_at,
+                    resolvedAt: d.resolved_at,
+                    resolution: d.resolution,
+                    amount: d.refund_amount,
+                    trip: {
+                        pickup: d.trip?.pickup_address || 'Unknown',
+                        destination: d.trip?.destination_address || 'Unknown',
+                        date: d.trip?.created_at || '',
+                    },
+                    messages: 0,
+                }));
+                setDisputes(formattedDisputes);
+
+                // Fetch recent trips for the dropdown
+                const trips = await tripsService.findAll({ limit: 10 });
+                const options: TripOption[] = trips.map(t => ({
+                    value: t.id,
+                    label: `${t.pickup_address} → ${t.destination_address} (${new Date(t.created_at).toLocaleDateString()})`,
+                }));
+                setTripOptions(options);
+            } catch (error) {
+                console.error('Error fetching disputes:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    const handleSubmitDispute = async () => {
+        if (!selectedTripId || !disputeType || !disputeDescription) return;
+
+        try {
+            await disputesService.create({
+                trip_id: selectedTripId,
+                type: disputeType as 'fare' | 'behavior' | 'safety' | 'service' | 'other',
+                description: disputeDescription,
+            });
+
+            // Refetch disputes
+            const disputesData = await disputesService.findAll();
+            const formattedDisputes: DisputeDisplay[] = disputesData.map(d => ({
+                id: d.id,
+                tripId: d.trip_id,
+                type: d.type,
+                subject: `${d.type.charAt(0).toUpperCase() + d.type.slice(1)} Issue`,
+                description: d.description,
+                status: d.status === 'pending' || d.status === 'in_progress' ? 'open' : d.status as 'resolved' | 'closed',
+                createdAt: d.created_at,
+                resolvedAt: d.resolved_at,
+                resolution: d.resolution,
+                amount: d.refund_amount,
+                trip: {
+                    pickup: d.trip?.pickup_address || 'Unknown',
+                    destination: d.trip?.destination_address || 'Unknown',
+                    date: d.trip?.created_at || '',
+                },
+                messages: 0,
+            }));
+            setDisputes(formattedDisputes);
+
+            setShowNewDispute(false);
+            setDisputeType('');
+            setDisputeDescription('');
+            setSelectedTripId('');
+        } catch (error) {
+            console.error('Error creating dispute:', error);
+        }
+    };
 
     const filteredDisputes = disputes.filter((d) => {
         if (activeTab === 'all') return true;
@@ -248,11 +342,9 @@ export function Disputes() {
 
                     <Select
                         label="Select Trip"
-                        options={[
-                            { value: 't1', label: 'Koramangala → Whitefield (Dec 10)' },
-                            { value: 't2', label: 'Indiranagar → Electronic City (Dec 8)' },
-                            { value: 't3', label: 'Bangalore → Mysore (Dec 5)' },
-                        ]}
+                        options={tripOptions}
+                        value={selectedTripId}
+                        onValueChange={setSelectedTripId}
                         placeholder="Select the trip"
                     />
 
@@ -275,7 +367,11 @@ export function Disputes() {
                         <Button variant="outline" fullWidth onClick={() => setShowNewDispute(false)}>
                             Cancel
                         </Button>
-                        <Button fullWidth onClick={() => setShowNewDispute(false)}>
+                        <Button
+                            fullWidth
+                            onClick={handleSubmitDispute}
+                            disabled={!selectedTripId || !disputeType || !disputeDescription}
+                        >
                             Submit Dispute
                         </Button>
                     </div>

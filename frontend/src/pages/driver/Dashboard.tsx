@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -17,10 +17,10 @@ import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Avatar } from '../../components/ui/Avatar';
 import { cn, formatCurrency } from '../../lib/utils';
+import { driverService, tripsService } from '../../services';
 
-// TODO: Fetch driver stats from API
-// API endpoint: GET /api/v1/driver/dashboard/stats
-interface DriverStats {
+// Types for driver dashboard
+interface DriverStatsDisplay {
     todayEarnings: number;
     weeklyEarnings: number;
     monthlyEarnings: number;
@@ -30,20 +30,8 @@ interface DriverStats {
     completionRate: number;
     onlineHours: number;
 }
-const driverStats: DriverStats = {
-    todayEarnings: 0,
-    weeklyEarnings: 0,
-    monthlyEarnings: 0,
-    totalTrips: 0,
-    rating: 0,
-    acceptanceRate: 0,
-    completionRate: 0,
-    onlineHours: 0,
-};
 
-// TODO: Fetch pending trip requests from API (WebSocket)
-// API endpoint: GET /api/v1/driver/trip-requests
-interface TripRequest {
+interface TripRequestDisplay {
     id: string;
     pickup: string;
     destination: string;
@@ -55,11 +43,8 @@ interface TripRequest {
     tripType: string;
     expiresIn: number;
 }
-const pendingRequests: TripRequest[] = [];
 
-// TODO: Fetch recent trips from API
-// API endpoint: GET /api/v1/driver/trips?limit=3
-interface RecentTrip {
+interface RecentTripDisplay {
     id: string;
     pickup: string;
     destination: string;
@@ -69,11 +54,75 @@ interface RecentTrip {
     rating: number | null;
     status: string;
 }
-const recentTrips: RecentTrip[] = [];
 
 export function DriverDashboard() {
     const [isOnline, setIsOnline] = useState(true);
-    const [showTripRequest, setShowTripRequest] = useState(pendingRequests.length > 0);
+    const [driverStats, setDriverStats] = useState<DriverStatsDisplay>({
+        todayEarnings: 0,
+        weeklyEarnings: 0,
+        monthlyEarnings: 0,
+        totalTrips: 0,
+        rating: 0,
+        acceptanceRate: 0,
+        completionRate: 0,
+        onlineHours: 0,
+    });
+    const [pendingRequests, setPendingRequests] = useState<TripRequestDisplay[]>([]);
+    const [recentTrips, setRecentTrips] = useState<RecentTripDisplay[]>([]);
+    const [showTripRequest, setShowTripRequest] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+
+    // Fetch dashboard data
+    useEffect(() => {
+        const fetchDashboardData = async () => {
+            try {
+                setIsLoading(true);
+
+                // Fetch driver stats
+                const stats = await driverService.getDashboardStats();
+                setDriverStats(stats);
+
+                // Fetch recent trips
+                const trips = await tripsService.findAll({ limit: 3 });
+                const formattedTrips: RecentTripDisplay[] = trips.map(trip => ({
+                    id: trip.id,
+                    pickup: trip.pickup_address,
+                    destination: trip.destination_address,
+                    fare: trip.actual_fare || trip.estimated_fare,
+                    distance: trip.distance_km,
+                    time: new Date(trip.created_at).toLocaleString(),
+                    rating: trip.customer_rating || null,
+                    status: trip.status,
+                }));
+                setRecentTrips(formattedTrips);
+
+                // Fetch pending trip requests
+                const requests = await driverService.getTripRequests();
+                setPendingRequests(requests);
+                setShowTripRequest(requests.length > 0);
+            } catch (error) {
+                console.error('Error fetching driver dashboard data:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchDashboardData();
+    }, []);
+
+    // Handle going online/offline
+    const handleToggleOnline = async () => {
+        try {
+            if (isOnline) {
+                await driverService.goOffline();
+            } else {
+                await driverService.goOnline();
+            }
+            setIsOnline(!isOnline);
+        } catch (error) {
+            console.error('Error toggling online status:', error);
+        }
+    };
 
     const currentRequest = pendingRequests[0];
 
@@ -97,7 +146,7 @@ export function DriverDashboard() {
                     variant={isOnline ? 'primary' : 'outline'}
                     size="lg"
                     leftIcon={<Power className="w-5 h-5" />}
-                    onClick={() => setIsOnline(!isOnline)}
+                    onClick={handleToggleOnline}
                     className={cn(
                         isOnline && 'bg-success-500 hover:bg-success-600'
                     )}
