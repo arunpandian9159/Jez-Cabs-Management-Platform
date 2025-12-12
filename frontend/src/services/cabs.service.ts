@@ -86,14 +86,33 @@ export interface CabFilters {
     offset?: number;
 }
 
+// Paginated response type
+export interface PaginatedCabsResponse {
+    data: Cab[];
+    meta: {
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+    };
+}
+
+// Statistics response type
+export interface CabStatistics {
+    total: number;
+    available: number;
+    onTrip: number;
+    maintenance: number;
+}
+
 export const cabsService = {
     // Create a new cab
     async create(data: CreateCabDto): Promise<Cab> {
         return apiClient.post<Cab>('/cabs', data);
     },
 
-    // Get all cabs (with filters)
-    async findAll(filters?: CabFilters): Promise<Cab[]> {
+    // Get all cabs (with filters) - returns paginated response
+    async findAll(filters?: CabFilters): Promise<PaginatedCabsResponse> {
         const params = new URLSearchParams();
         if (filters?.type) params.append('type', filters.type);
         if (filters?.status) params.append('status', filters.status);
@@ -102,7 +121,7 @@ export const cabsService = {
         if (filters?.offset) params.append('offset', filters.offset.toString());
 
         const query = params.toString();
-        return apiClient.get<Cab[]>(`/cabs${query ? `?${query}` : ''}`);
+        return apiClient.get<PaginatedCabsResponse>(`/cabs${query ? `?${query}` : ''}`);
     },
 
     // Get a specific cab by ID
@@ -142,14 +161,8 @@ export const cabsService = {
     },
 
     // Get cab statistics (for cab owners)
-    async getStatistics(): Promise<{
-        totalCabs: number;
-        activeCabs: number;
-        maintenanceCabs: number;
-        totalTrips: number;
-        totalEarnings: number;
-    }> {
-        return apiClient.get('/cabs/statistics');
+    async getStatistics(): Promise<CabStatistics> {
+        return apiClient.get<CabStatistics>('/cabs/statistics');
     },
 
     // Get price estimates for a route

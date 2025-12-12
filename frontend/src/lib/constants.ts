@@ -57,7 +57,7 @@ export const ROUTES = {
 
     // Cab Owner
     OWNER: {
-        DASHBOARD: '/owner/dashboard',
+        DASHBOARD: '/owner',
         CABS: '/owner/cabs',
         CABS_REGISTER: '/owner/cabs/register',
         DRIVERS: '/owner/drivers',
