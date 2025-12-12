@@ -6,59 +6,16 @@ import {
     Phone,
     Star,
     CheckCircle,
+    Wifi,
+    WifiOff,
 } from 'lucide-react';
 import { Button } from '../../../components/ui/Button';
 import { Card } from '../../../components/ui/Card';
 import { Avatar } from '../../../components/ui/Avatar';
 import { cn, formatCurrency } from '../../../lib/utils';
 import { ROUTES } from '../../../lib/constants';
+import { useTripStatusSocket } from '../../../hooks';
 
-/**
- * WebSocket Integration for Driver Assignment
- * 
- * When WebSocket is implemented, the flow will be:
- * 1. Create trip via REST API (POST /api/v1/trips)
- * 2. Connect to WebSocket: ws://{host}/api/v1/trips/{tripId}/status
- * 3. Receive driver assignment when a driver accepts
- * 
- * Expected WebSocket message format:
- * {
- *   type: 'driver_assigned' | 'driver_arriving' | 'driver_arrived',
- *   driver?: {
- *     id: string,
- *     name: string,
- *     photo: string | null,
- *     rating: number,
- *     totalTrips: number,
- *     phone: string,
- *     cab: {
- *       make: string,
- *       model: string,
- *       color: string,
- *       registrationNumber: string,
- *     },
- *     eta: number,
- *   },
- *   eta?: number,
- * }
- * 
- * Implementation example:
- * useEffect(() => {
- *   const ws = new WebSocket(`${WS_HOST}/api/v1/trips/${tripId}/status`);
- *   ws.onmessage = (event) => {
- *     const data = JSON.parse(event.data);
- *     if (data.type === 'driver_assigned') {
- *       setDriver(data.driver);
- *       setSearchState('found');
- *     } else if (data.type === 'driver_arriving') {
- *       setSearchState('arriving');
- *     } else if (data.type === 'driver_arrived') {
- *       setSearchState('arrived');
- *     }
- *   };
- *   return () => ws.close();
- * }, [tripId]);
- */
 interface DriverCab {
     make: string;
     model: string;
@@ -83,12 +40,47 @@ export function DriverSearch() {
     const location = useLocation();
     const [searchState, setSearchState] = useState<SearchState>('searching');
     const [searchProgress, setSearchProgress] = useState(0);
-    const [driver] = useState<Driver | null>(null);
+    const [driver, setDriver] = useState<Driver | null>(null);
 
-    const { pickup, destination, cabType, fare } = location.state || {};
+    const { pickup, destination, cabType, fare, tripId } = location.state || {};
 
-    // Simulate driver search
-    // In production, driver data will be received via WebSocket when a driver accepts the trip
+    // WebSocket connection for trip status updates
+    const {
+        tripStatus: wsTripStatus,
+        driver: wsDriver,
+        eta: wsEta,
+        isConnected: wsConnected,
+    } = useTripStatusSocket(tripId);
+
+    // Handle WebSocket driver assignment
+    useEffect(() => {
+        if (wsTripStatus?.type === 'driver_assigned' && wsDriver) {
+            // Map WebSocket driver data to local Driver format
+            const assignedDriver: Driver = {
+                id: wsDriver.id,
+                name: wsDriver.name,
+                photo: wsDriver.photo,
+                rating: wsDriver.rating,
+                totalTrips: wsDriver.totalTrips,
+                cab: {
+                    make: wsDriver.cab.make,
+                    model: wsDriver.cab.model,
+                    color: wsDriver.cab.color,
+                    registrationNumber: wsDriver.cab.registrationNumber,
+                },
+                eta: wsEta || 5,
+                phone: wsDriver.phone,
+            };
+            setDriver(assignedDriver);
+            setSearchState('found');
+        } else if (wsTripStatus?.type === 'driver_en_route') {
+            setSearchState('arriving');
+        } else if (wsTripStatus?.type === 'driver_arrived') {
+            setSearchState('arrived');
+        }
+    }, [wsTripStatus, wsDriver, wsEta]);
+
+    // Simulate driver search progress (visual feedback)
     useEffect(() => {
         if (searchState === 'searching') {
             const progressInterval = setInterval(() => {
@@ -101,19 +93,38 @@ export function DriverSearch() {
                 });
             }, 100);
 
-            // For demo purposes, transition to 'found' state after 3 seconds
-            // In production, this will be triggered by WebSocket message
-            const findTimer = setTimeout(() => {
-                setSearchState('found');
-                // Driver data will be set from WebSocket response
-            }, 3000);
+            // Fallback: If WebSocket is not connected, simulate finding a driver
+            // This allows demo mode to work without a backend
+            let findTimer: ReturnType<typeof setTimeout> | null = null;
+            if (!wsConnected) {
+                findTimer = setTimeout(() => {
+                    // Create a demo driver for simulation
+                    const demoDriver: Driver = {
+                        id: 'demo-driver-1',
+                        name: 'Rajesh Kumar',
+                        photo: null,
+                        rating: 4.8,
+                        totalTrips: 1250,
+                        cab: {
+                            make: 'Maruti',
+                            model: 'Swift Dzire',
+                            color: 'White',
+                            registrationNumber: 'KA 01 AB 1234',
+                        },
+                        eta: 5,
+                        phone: '+91 98765 43210',
+                    };
+                    setDriver(demoDriver);
+                    setSearchState('found');
+                }, 3000);
+            }
 
             return () => {
                 clearInterval(progressInterval);
-                clearTimeout(findTimer);
+                if (findTimer) clearTimeout(findTimer);
             };
         }
-    }, [searchState]);
+    }, [searchState, wsConnected]);
 
     // Progress through states
     useEffect(() => {
@@ -186,6 +197,19 @@ export function DriverSearch() {
                         <h2 className="text-xl font-bold text-gray-900 mb-2">
                             Finding your driver
                         </h2>
+                        <div className="flex items-center justify-center gap-2 mb-2">
+                            {wsConnected ? (
+                                <Wifi className="w-4 h-4 text-success-500" />
+                            ) : (
+                                <WifiOff className="w-4 h-4 text-gray-400" />
+                            )}
+                            <span className={cn(
+                                "text-xs",
+                                wsConnected ? "text-success-600" : "text-gray-400"
+                            )}>
+                                {wsConnected ? 'Live Connection' : 'Demo Mode'}
+                            </span>
+                        </div>
                         <p className="text-gray-500 mb-6">
                             Please wait while we connect you with a nearby driver
                         </p>
