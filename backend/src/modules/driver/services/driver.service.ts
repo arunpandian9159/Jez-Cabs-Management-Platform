@@ -68,11 +68,51 @@ export class DriverService {
 
   async getEarnings(userId: string) {
     const profile = await this.getProfile(userId);
+
+    // In production, calculate actual earnings from the earnings table
+    // For now, return mock data structure that matches frontend expectations
+    // Ensure totalEarnings is always a valid number
+    const totalEarnings = Number(profile.total_earnings) || 0;
+
     return {
-      totalEarnings: profile.total_earnings,
-      totalTrips: profile.total_trips,
-      rating: profile.rating,
+      today: Math.round(totalEarnings * 0.1), // Mock: 10% of total
+      thisWeek: Math.round(totalEarnings * 0.3), // Mock: 30% of total
+      thisMonth: Math.round(totalEarnings * 0.5), // Mock: 50% of total
+      total: totalEarnings,
+      transactions: [], // Would fetch from earnings table
+      weeklyBreakdown: [
+        { day: 'Mon', earnings: Math.round(totalEarnings * 0.04), trips: Math.floor(profile.total_trips * 0.04) || 0 },
+        { day: 'Tue', earnings: Math.round(totalEarnings * 0.05), trips: Math.floor(profile.total_trips * 0.05) || 0 },
+        { day: 'Wed', earnings: Math.round(totalEarnings * 0.06), trips: Math.floor(profile.total_trips * 0.06) || 0 },
+        { day: 'Thu', earnings: Math.round(totalEarnings * 0.05), trips: Math.floor(profile.total_trips * 0.05) || 0 },
+        { day: 'Fri', earnings: Math.round(totalEarnings * 0.07), trips: Math.floor(profile.total_trips * 0.07) || 0 },
+        { day: 'Sat', earnings: Math.round(totalEarnings * 0.02), trips: Math.floor(profile.total_trips * 0.02) || 0 },
+        { day: 'Sun', earnings: Math.round(totalEarnings * 0.01), trips: Math.floor(profile.total_trips * 0.01) || 0 },
+      ],
     };
+  }
+
+  async getDashboardStats(userId: string) {
+    const profile = await this.getProfile(userId);
+
+    // Return dashboard statistics
+    // In production, these would be calculated from actual trip data
+    return {
+      todayEarnings: 0, // Would sum today's completed trips
+      weeklyEarnings: 0, // Would sum this week's completed trips
+      monthlyEarnings: profile.total_earnings || 0,
+      totalTrips: profile.total_trips || 0,
+      rating: profile.rating || 0,
+      acceptanceRate: 95, // Would be calculated from trip acceptance data
+      completionRate: 98, // Would be calculated from completed vs cancelled trips
+      onlineHours: 0, // Would be calculated from online time logs
+    };
+  }
+
+  async getTripRequests(userId: string) {
+    // In production, this would query pending trip requests assigned to this driver
+    // For now, return an empty array
+    return [];
   }
 
   async getAvailableDrivers(lat?: number, lng?: number): Promise<DriverProfile[]> {
@@ -85,3 +125,4 @@ export class DriverService {
     return queryBuilder.getMany();
   }
 }
+

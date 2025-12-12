@@ -33,6 +33,22 @@ export class DriverController {
     return this.driverService.getProfile(currentUser.id);
   }
 
+  @Get('stats')
+  @Roles(UserRole.DRIVER)
+  @ApiOperation({ summary: 'Get driver dashboard statistics' })
+  @ApiResponse({ status: 200, description: 'Stats retrieved successfully' })
+  async getStats(@CurrentUser() currentUser: User) {
+    return this.driverService.getDashboardStats(currentUser.id);
+  }
+
+  @Get('trip-requests')
+  @Roles(UserRole.DRIVER)
+  @ApiOperation({ summary: 'Get pending trip requests for driver' })
+  @ApiResponse({ status: 200, description: 'Trip requests retrieved successfully' })
+  async getTripRequests(@CurrentUser() currentUser: User) {
+    return this.driverService.getTripRequests(currentUser.id);
+  }
+
   @Patch('profile')
   @Roles(UserRole.DRIVER)
   @ApiOperation({ summary: 'Update driver profile' })
@@ -80,3 +96,4 @@ export class DriverController {
     return this.driverService.goOffline(currentUser.id);
   }
 }
+
