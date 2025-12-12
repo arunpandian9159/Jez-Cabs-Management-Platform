@@ -282,6 +282,21 @@
 .leaflet-container {
     font-family: var(--font-sans);
     border-radius: var(--radius-xl);
+    /* Constrain Leaflet's z-index to prevent it from blocking mobile sidebar */
+    z-index: 0 !important;
+    position: relative;
+    /* Create isolated stacking context so Leaflet's internal z-indices don't escape */
+    isolation: isolate;
+}
+
+/* Ensure Leaflet control elements don't escape the container */
+.leaflet-top,
+.leaflet-bottom {
+    z-index: 400 !important;
+}
+
+.leaflet-pane {
+    z-index: auto !important;
 }
 
 .leaflet-popup-content-wrapper {
