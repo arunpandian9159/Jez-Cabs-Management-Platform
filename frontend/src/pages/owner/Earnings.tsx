@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
     DollarSign,
@@ -11,6 +11,8 @@ import {
     ArrowUpRight,
     ArrowDownLeft,
     Clock,
+    Loader2,
+    AlertTriangle,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
@@ -18,67 +20,89 @@ import { Badge } from '../../components/ui/Badge';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
 import { Select } from '../../components/ui/Select';
 import { formatCurrency, formatDate } from '../../lib/utils';
-
-// TODO: Fetch earnings summary from API
-// API endpoint: GET /api/v1/owner/earnings/summary
-interface EarningsSummary {
-    today: number;
-    week: number;
-    month: number;
-    totalRevenue: number;
-    pendingSettlements: number;
-    platformFee: number;
-    netEarnings: number;
-}
-const earningsSummary: EarningsSummary = {
-    today: 0,
-    week: 0,
-    month: 0,
-    totalRevenue: 0,
-    pendingSettlements: 0,
-    platformFee: 0,
-    netEarnings: 0,
-};
-
-// TODO: Fetch cab earnings from API
-// API endpoint: GET /api/v1/owner/earnings/by-cab
-interface CabEarning {
-    id: string;
-    vehicle: string;
-    registration: string;
-    driver: string;
-    thisMonth: number;
-    lastMonth: number;
-    trips: number;
-    growth: number;
-}
-const cabEarnings: CabEarning[] = [];
-
-// TODO: Fetch transactions from API
-// API endpoint: GET /api/v1/owner/transactions
-interface Transaction {
-    id: string;
-    type: string;
-    description: string;
-    amount: number;
-    date: string;
-    status: string;
-}
-const transactions: Transaction[] = [];
-
-// TODO: Fetch monthly data from API
-// API endpoint: GET /api/v1/owner/earnings/monthly
-interface MonthlyData {
-    month: string;
-    earnings: number;
-}
-const monthlyData: MonthlyData[] = [];
+import {
+    ownerService,
+    type EarningsSummary,
+    type CabEarning,
+    type OwnerTransaction,
+    type MonthlyEarning,
+} from '../../services/owner.service';
 
 export function OwnerEarnings() {
     const [activeTab, setActiveTab] = useState('overview');
     const [dateFilter, setDateFilter] = useState('month');
 
-    const maxEarning = Math.max(...monthlyData.map((d) => d.earnings));
+    // API state
+    const [earningsSummary, setEarningsSummary] = useState<EarningsSummary>({
+        today: 0,
+        week: 0,
+        month: 0,
+        totalRevenue: 0,
+        pendingSettlements: 0,
+        platformFee: 0,
+        netEarnings: 0,
+    });
+    const [cabEarnings, setCabEarnings] = useState<CabEarning[]>([]);
+    const [transactions, setTransactions] = useState<OwnerTransaction[]>([]);
+    const [monthlyData, setMonthlyData] = useState<MonthlyEarning[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    // Fetch earnings data on mount and when date filter changes
+    useEffect(() => {
+        const fetchEarningsData = async () => {
+            try {
+                setIsLoading(true);
+                setError(null);
+                const period = dateFilter as 'week' | 'month' | 'quarter' | 'year';
+                const [summary, byCab, txns, monthly] = await Promise.all([
+                    ownerService.getEarningsSummary(period),
+                    ownerService.getEarningsByCab(),
+                    ownerService.getTransactions(),
+                    ownerService.getMonthlyEarnings(6),
+                ]);
+                setEarningsSummary(summary);
+                setCabEarnings(byCab);
+                setTransactions(txns);
+                setMonthlyData(monthly);
+            } catch (err) {
+                console.error('Error fetching earnings data:', err);
+                setError('Failed to load earnings data. Please try again.');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchEarningsData();
+    }, [dateFilter]);
+
+    const maxEarning = monthlyData.length > 0 ? Math.max(...monthlyData.map((d) => d.earnings)) : 0;
+
+    // Loading state
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh]">
+                <div className="text-center">
+                    <Loader2 className="w-10 h-10 text-primary-600 animate-spin mx-auto mb-4" />
+                    <p className="text-gray-500">Loading earnings data...</p>
+                </div>
+            </div>
+        );
+    }
+
+    // Error state
+    if (error) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh]">
+                <div className="text-center max-w-md">
+                    <AlertTriangle className="w-12 h-12 text-error-500 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Error Loading Data</h3>
+                    <p className="text-gray-500 mb-4">{error}</p>
+                    <Button onClick={() => window.location.reload()}>Try Again</Button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-6">

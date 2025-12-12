@@ -9,6 +9,8 @@ import {
     Mail,
     MoreVertical,
     Car,
+    Loader2,
+    AlertTriangle,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
@@ -18,51 +20,27 @@ import { Select } from '../../components/ui/Select';
 import { Avatar } from '../../components/ui/Avatar';
 import { Modal } from '../../components/ui/Modal';
 import { formatCurrency } from '../../lib/utils';
-
-// Types for driver display
-interface DriverCabDisplay {
-    make: string;
-    model: string;
-    registrationNumber: string;
-}
-interface DriverMetricsDisplay {
-    totalTrips: number;
-    rating: number;
-    acceptanceRate: number;
-    completionRate: number;
-    thisMonthEarnings: number;
-    totalEarnings: number;
-}
-interface DriverDisplay {
-    id: string;
-    name: string;
-    phone: string;
-    email: string;
-    avatar: string | null;
-    status: string;
-    cab: DriverCabDisplay | null;
-    metrics: DriverMetricsDisplay;
-    joinedDate: string;
-    lastActive: string | null;
-}
+import { ownerService, type OwnerDriver } from '../../services/owner.service';
 
 export function ManageDrivers() {
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
-    const [selectedDriver, setSelectedDriver] = useState<DriverDisplay | null>(null);
-    const [drivers, setDrivers] = useState<DriverDisplay[]>([]);
-    const [_isLoading, setIsLoading] = useState(true);
+    const [selectedDriver, setSelectedDriver] = useState<OwnerDriver | null>(null);
+    const [drivers, setDrivers] = useState<OwnerDriver[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-    // Fetch drivers on mount - placeholder for when owner drivers API is available
+    // Fetch drivers on mount
     useEffect(() => {
         const fetchDrivers = async () => {
             try {
                 setIsLoading(true);
-                // TODO: Replace with actual API call when owner drivers endpoint is available
-                // const driversData = await ownerService.getDrivers();
-                setDrivers([]);
-            } catch (error) {
-                console.error('Error fetching drivers:', error);
+                setError(null);
+                const driversData = await ownerService.getDrivers();
+                setDrivers(driversData);
+            } catch (err) {
+                console.error('Error fetching drivers:', err);
+                setError('Failed to load drivers. Please try again.');
             } finally {
                 setIsLoading(false);
             }
@@ -77,6 +55,32 @@ export function ManageDrivers() {
         const matchesStatus = statusFilter === 'all' || driver.status === statusFilter;
         return matchesSearch && matchesStatus;
     });
+
+    // Loading state
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh]">
+                <div className="text-center">
+                    <Loader2 className="w-10 h-10 text-primary-600 animate-spin mx-auto mb-4" />
+                    <p className="text-gray-500">Loading drivers...</p>
+                </div>
+            </div>
+        );
+    }
+
+    // Error state
+    if (error) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh]">
+                <div className="text-center max-w-md">
+                    <AlertTriangle className="w-12 h-12 text-error-500 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Error Loading Data</h3>
+                    <p className="text-gray-500 mb-4">{error}</p>
+                    <Button onClick={() => window.location.reload()}>Try Again</Button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-6">

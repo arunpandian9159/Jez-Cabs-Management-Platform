@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
     Search,
@@ -9,6 +9,8 @@ import {
     Eye,
     Download,
     Calendar,
+    Loader2,
+    AlertTriangle,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
@@ -20,30 +22,7 @@ import { Avatar } from '../../components/ui/Avatar';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
 import { TextArea } from '../../components/ui/TextArea';
 import { formatDate } from '../../lib/utils';
-
-// TODO: Fetch verification requests from API
-// API endpoint: GET /api/v1/admin/verifications
-interface Applicant {
-    name: string;
-    email: string;
-    phone: string;
-}
-interface Verification {
-    id: string;
-    applicant: Applicant;
-    type: string;
-    documentType: string;
-    documentNumber: string;
-    submittedAt: string;
-    status: string;
-    documentUrl: string;
-    notes: string;
-    approvedAt?: string;
-    approvedBy?: string;
-    rejectedAt?: string;
-    rejectedBy?: string;
-}
-const verifications: Verification[] = [];
+import { adminService, type Verification, type VerificationStats } from '../../services/admin.service';
 
 export function AdminVerification() {
     const [activeTab, setActiveTab] = useState('pending');
@@ -51,6 +30,36 @@ export function AdminVerification() {
     const [typeFilter, setTypeFilter] = useState('all');
     const [selectedVerification, setSelectedVerification] = useState<Verification | null>(null);
     const [rejectionReason, setRejectionReason] = useState('');
+
+    // API state
+    const [verifications, setVerifications] = useState<Verification[]>([]);
+    const [stats, setStats] = useState<VerificationStats>({ total: 0, pending: 0, approved: 0, rejected: 0 });
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [isProcessing, setIsProcessing] = useState(false);
+
+    // Fetch verifications on mount
+    useEffect(() => {
+        const fetchVerifications = async () => {
+            try {
+                setIsLoading(true);
+                setError(null);
+                const [verificationsData, statsData] = await Promise.all([
+                    adminService.getVerifications(),
+                    adminService.getVerificationStats(),
+                ]);
+                setVerifications(verificationsData);
+                setStats(statsData);
+            } catch (err) {
+                console.error('Error fetching verifications:', err);
+                setError('Failed to load verification requests. Please try again.');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchVerifications();
+    }, []);
 
     const filteredVerifications = verifications.filter((v) => {
         const matchesSearch =
@@ -61,6 +70,48 @@ export function AdminVerification() {
         const matchesTab = activeTab === 'all' || v.status === activeTab;
         return matchesSearch && matchesType && matchesTab;
     });
+
+    const handleApprove = async (id: string) => {
+        try {
+            setIsProcessing(true);
+            const updated = await adminService.approveVerification(id);
+            setVerifications((prev) =>
+                prev.map((v) => (v.id === id ? updated : v))
+            );
+            setStats((prev) => ({
+                ...prev,
+                pending: prev.pending - 1,
+                approved: prev.approved + 1,
+            }));
+            setSelectedVerification(null);
+        } catch (err) {
+            console.error('Error approving verification:', err);
+        } finally {
+            setIsProcessing(false);
+        }
+    };
+
+    const handleReject = async (id: string) => {
+        if (!rejectionReason.trim()) return;
+        try {
+            setIsProcessing(true);
+            const updated = await adminService.rejectVerification(id, rejectionReason);
+            setVerifications((prev) =>
+                prev.map((v) => (v.id === id ? updated : v))
+            );
+            setStats((prev) => ({
+                ...prev,
+                pending: prev.pending - 1,
+                rejected: prev.rejected + 1,
+            }));
+            setSelectedVerification(null);
+            setRejectionReason('');
+        } catch (err) {
+            console.error('Error rejecting verification:', err);
+        } finally {
+            setIsProcessing(false);
+        }
+    };
 
     const getStatusBadge = (status: string) => {
         switch (status) {
@@ -88,9 +139,35 @@ export function AdminVerification() {
         }
     };
 
-    const pendingCount = verifications.filter(v => v.status === 'pending').length;
-    const approvedCount = verifications.filter(v => v.status === 'approved').length;
-    const rejectedCount = verifications.filter(v => v.status === 'rejected').length;
+    const pendingCount = stats.pending;
+    const approvedCount = stats.approved;
+    const rejectedCount = stats.rejected;
+
+    // Loading state
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh]">
+                <div className="text-center">
+                    <Loader2 className="w-10 h-10 text-primary-600 animate-spin mx-auto mb-4" />
+                    <p className="text-gray-500">Loading verification requests...</p>
+                </div>
+            </div>
+        );
+    }
+
+    // Error state
+    if (error) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh]">
+                <div className="text-center max-w-md">
+                    <AlertTriangle className="w-12 h-12 text-error-500 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Error Loading Data</h3>
+                    <p className="text-gray-500 mb-4">{error}</p>
+                    <Button onClick={() => window.location.reload()}>Try Again</Button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-6">
@@ -303,12 +380,18 @@ export function AdminVerification() {
                                         variant="danger"
                                         fullWidth
                                         leftIcon={<XCircle className="w-5 h-5" />}
+                                        onClick={() => handleReject(selectedVerification.id)}
+                                        disabled={isProcessing || !rejectionReason.trim()}
+                                        loading={isProcessing}
                                     >
                                         Reject
                                     </Button>
                                     <Button
                                         fullWidth
                                         leftIcon={<CheckCircle className="w-5 h-5" />}
+                                        onClick={() => handleApprove(selectedVerification.id)}
+                                        disabled={isProcessing}
+                                        loading={isProcessing}
                                     >
                                         Approve
                                     </Button>

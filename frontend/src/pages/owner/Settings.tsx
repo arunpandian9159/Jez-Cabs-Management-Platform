@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
     Bell,
@@ -10,21 +10,25 @@ import {
     ToggleLeft,
     ToggleRight,
     Car,
+    Loader2,
+    AlertTriangle,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Input } from '../../components/ui/Input';
 import { Select } from '../../components/ui/Select';
 import { Modal } from '../../components/ui/Modal';
+import { ownerService, type BusinessInfo, type OwnerSettings } from '../../services/owner.service';
 
 interface SettingToggleProps {
     label: string;
     description?: string;
     enabled: boolean;
     onToggle: () => void;
+    disabled?: boolean;
 }
 
-function SettingToggle({ label, description, enabled, onToggle }: SettingToggleProps) {
+function SettingToggle({ label, description, enabled, onToggle, disabled }: SettingToggleProps) {
     return (
         <div className="flex items-center justify-between py-3">
             <div className="flex-1">
@@ -33,7 +37,7 @@ function SettingToggle({ label, description, enabled, onToggle }: SettingToggleP
                     <p className="text-sm text-gray-500">{description}</p>
                 )}
             </div>
-            <button onClick={onToggle} className="text-primary-600">
+            <button onClick={onToggle} className="text-primary-600" disabled={disabled}>
                 {enabled ? (
                     <ToggleRight className="w-10 h-6" />
                 ) : (
@@ -44,25 +48,8 @@ function SettingToggle({ label, description, enabled, onToggle }: SettingToggleP
     );
 }
 
-// TODO: Fetch business info from API
-// API endpoint: GET /api/v1/owner/business
-interface BusinessInfo {
-    name: string;
-    registrationNumber: string;
-    address: string;
-    phone: string;
-    email: string;
-}
-const businessInfo: BusinessInfo = {
-    name: '',
-    registrationNumber: '',
-    address: '',
-    phone: '',
-    email: '',
-};
-
 export function OwnerSettings() {
-    const [settings, setSettings] = useState({
+    const [settings, setSettings] = useState<OwnerSettings>({
         emailNotifications: true,
         smsNotifications: true,
         driverAlerts: true,
@@ -72,13 +59,97 @@ export function OwnerSettings() {
         language: 'en',
     });
     const [showBusinessModal, setShowBusinessModal] = useState(false);
-    const [businessForm, setBusinessForm] = useState(businessInfo);
+    const [businessInfo, setBusinessInfo] = useState<BusinessInfo>({
+        name: '',
+        registrationNumber: '',
+        address: '',
+        phone: '',
+        email: '',
+    });
+    const [businessForm, setBusinessForm] = useState<BusinessInfo>(businessInfo);
 
-    const toggleSetting = (key: keyof typeof settings) => {
+    // API state
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [isSaving, setIsSaving] = useState(false);
+
+    // Fetch settings and business info on mount
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setIsLoading(true);
+                setError(null);
+                const [businessData, settingsData] = await Promise.all([
+                    ownerService.getBusinessInfo(),
+                    ownerService.getSettings(),
+                ]);
+                setBusinessInfo(businessData);
+                setBusinessForm(businessData);
+                setSettings(settingsData);
+            } catch (err) {
+                console.error('Error fetching settings:', err);
+                setError('Failed to load settings. Please try again.');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    const toggleSetting = async (key: keyof OwnerSettings) => {
         if (typeof settings[key] === 'boolean') {
-            setSettings({ ...settings, [key]: !settings[key] });
+            const newSettings = { ...settings, [key]: !settings[key] };
+            setSettings(newSettings);
+
+            try {
+                await ownerService.updateSettings({ [key]: newSettings[key] });
+            } catch (err) {
+                // Revert on error
+                setSettings(settings);
+                console.error('Error updating setting:', err);
+            }
         }
     };
+
+    const handleSaveBusinessInfo = async () => {
+        try {
+            setIsSaving(true);
+            const updated = await ownerService.updateBusinessInfo(businessForm);
+            setBusinessInfo(updated);
+            setShowBusinessModal(false);
+        } catch (err) {
+            console.error('Error saving business info:', err);
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    // Loading state
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh]">
+                <div className="text-center">
+                    <Loader2 className="w-10 h-10 text-primary-600 animate-spin mx-auto mb-4" />
+                    <p className="text-gray-500">Loading settings...</p>
+                </div>
+            </div>
+        );
+    }
+
+    // Error state
+    if (error) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh]">
+                <div className="text-center max-w-md">
+                    <AlertTriangle className="w-12 h-12 text-error-500 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Error Loading Data</h3>
+                    <p className="text-gray-500 mb-4">{error}</p>
+                    <Button onClick={() => window.location.reload()}>Try Again</Button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-6">
@@ -349,10 +420,10 @@ export function OwnerSettings() {
                         onChange={(e) => setBusinessForm({ ...businessForm, address: e.target.value })}
                     />
                     <div className="flex gap-3 pt-4">
-                        <Button variant="outline" fullWidth onClick={() => setShowBusinessModal(false)}>
+                        <Button variant="outline" fullWidth onClick={() => setShowBusinessModal(false)} disabled={isSaving}>
                             Cancel
                         </Button>
-                        <Button fullWidth onClick={() => setShowBusinessModal(false)}>
+                        <Button fullWidth onClick={handleSaveBusinessInfo} loading={isSaving} disabled={isSaving}>
                             Save Changes
                         </Button>
                     </div>
