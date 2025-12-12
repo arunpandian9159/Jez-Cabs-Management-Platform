@@ -10,6 +10,8 @@ import {
     Star,
     AlertTriangle,
     Share2,
+    Wifi,
+    WifiOff,
 } from 'lucide-react';
 import { Button } from '../../../components/ui/Button';
 import { Card } from '../../../components/ui/Card';
@@ -18,6 +20,7 @@ import { Badge } from '../../../components/ui/Badge';
 import { Modal } from '../../../components/ui/Modal';
 import { cn, formatCurrency, formatDuration } from '../../../lib/utils';
 import { ROUTES, MAP_CONFIG } from '../../../lib/constants';
+import { useDriverLocationSocket } from '../../../hooks';
 
 // Fix for default marker icon
 delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: unknown })._getIconUrl;
@@ -59,40 +62,35 @@ export function LiveTracking() {
     const [eta, setEta] = useState(25);
     const [distance, setDistance] = useState(10.2);
 
-    const { pickup, destination, cabType, fare, driver } = location.state || {};
+    const { pickup, destination, cabType, fare, driver, tripId } = location.state || {};
 
-    /**
-     * WebSocket Integration for Real-time Driver Location
-     * 
-     * When WebSocket is implemented, connect to:
-     * WebSocket endpoint: ws://{host}/api/v1/trips/{tripId}/location
-     * 
-     * Expected message format:
-     * {
-     *   lat: number,
-     *   lng: number,
-     *   heading: number,
-     *   speed: number,
-     *   timestamp: string
-     * }
-     * 
-     * Implementation example:
-     * useEffect(() => {
-     *   const ws = new WebSocket(`${WS_HOST}/api/v1/trips/${tripId}/location`);
-     *   ws.onmessage = (event) => {
-     *     const data = JSON.parse(event.data);
-     *     setDriverPosition({ lat: data.lat, lng: data.lng });
-     *   };
-     *   return () => ws.close();
-     * }, [tripId]);
-     */
+    // WebSocket connection for real-time driver location
+    const {
+        driverLocation: wsDriverLocation,
+        isConnected: wsConnected,
+    } = useDriverLocationSocket(tripId);
+
+    // Local state for driver position (updated by WebSocket or simulation)
     const [driverPosition, setDriverPosition] = useState({
         lat: pickup?.lat || 12.9352,
         lng: pickup?.lng || 77.6245,
     });
 
-    // Simulate driver movement
+    // Update driver position when WebSocket receives location
     useEffect(() => {
+        if (wsDriverLocation) {
+            setDriverPosition({
+                lat: wsDriverLocation.lat,
+                lng: wsDriverLocation.lng,
+            });
+        }
+    }, [wsDriverLocation]);
+
+    // Fallback: Simulate driver movement when WebSocket is not connected
+    useEffect(() => {
+        // Only simulate if WebSocket is not connected
+        if (wsConnected) return;
+
         const interval = setInterval(() => {
             setDriverPosition((prev) => ({
                 lat: prev.lat + (Math.random() - 0.5) * 0.001,
@@ -105,7 +103,7 @@ export function LiveTracking() {
         }, 2000);
 
         return () => clearInterval(interval);
-    }, []);
+    }, [wsConnected]);
 
     // Simulate trip progression
     useEffect(() => {
@@ -214,6 +212,20 @@ export function LiveTracking() {
                                 {tripStatus === 'in_progress' && 'En Route'}
                                 {tripStatus === 'arriving' && 'Almost There'}
                             </Badge>
+                            {/* WebSocket connection indicator */}
+                            <div className="flex items-center gap-1">
+                                {wsConnected ? (
+                                    <Wifi className="w-4 h-4 text-success-500" />
+                                ) : (
+                                    <WifiOff className="w-4 h-4 text-gray-400" />
+                                )}
+                                <span className={cn(
+                                    "text-xs",
+                                    wsConnected ? "text-success-600" : "text-gray-400"
+                                )}>
+                                    {wsConnected ? 'Live' : 'Demo'}
+                                </span>
+                            </div>
                         </div>
                     </Card>
                 </motion.div>
