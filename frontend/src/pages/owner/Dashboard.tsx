@@ -18,7 +18,7 @@ import { Badge, StatusBadge } from '../../components/ui/Badge';
 import { Avatar } from '../../components/ui/Avatar';
 import { PageLoader } from '../../components/ui/Loading';
 import { formatCurrency } from '../../lib/utils';
-import { cabsService } from '../../services';
+import { cabsService, type Cab } from '../../services';
 
 // Types for owner dashboard display
 interface OwnerStatsDisplay {
@@ -69,18 +69,19 @@ export function OwnerDashboard() {
                 // Fetch cabs statistics
                 const stats = await cabsService.getStatistics();
                 setOwnerStats({
-                    totalCabs: stats.totalCabs || 0,
-                    activeCabs: stats.activeCabs || 0,
+                    totalCabs: stats.total || 0,
+                    activeCabs: (stats.available || 0) + (stats.onTrip || 0),
                     totalDrivers: 0,
                     activeDrivers: 0,
-                    monthlyRevenue: stats.totalEarnings || 0,
+                    monthlyRevenue: 0,
                     pendingPayments: 0,
                     avgRating: 0,
                 });
 
-                // Fetch cabs list
-                const cabsData = await cabsService.findAll();
-                const formattedCabs: CabDisplay[] = cabsData.map(c => ({
+                // Fetch cabs list - backend returns { data: cabs[], meta: {...} }
+                const cabsResponse = await cabsService.findAll();
+                const cabsArray = Array.isArray(cabsResponse) ? cabsResponse : cabsResponse.data || [];
+                const formattedCabs: CabDisplay[] = cabsArray.map((c: Cab) => ({
                     id: c.id,
                     make: c.make,
                     model: c.model,

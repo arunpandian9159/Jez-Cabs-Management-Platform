@@ -17,7 +17,7 @@ import { Modal } from '../../components/ui/Modal';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
 import { PageLoader } from '../../components/ui/Loading';
 import { formatCurrency, formatDate } from '../../lib/utils';
-import { cabsService } from '../../services';
+import { cabsService, type Cab } from '../../services';
 
 // Types for cab display
 interface CabDriverDisplay {
@@ -70,15 +70,17 @@ export function ManageCabs() {
         const fetchCabs = async () => {
             try {
                 setIsLoading(true);
-                const cabsData = await cabsService.findAll();
-                const formattedCabs: CabDisplay[] = cabsData.map(c => ({
+                // Backend returns { data: cabs[], meta: {...} }
+                const cabsResponse = await cabsService.findAll();
+                const cabsArray = Array.isArray(cabsResponse) ? cabsResponse : cabsResponse.data || [];
+                const formattedCabs: CabDisplay[] = cabsArray.map((c: Cab) => ({
                     id: c.id,
                     make: c.make,
                     model: c.model,
-                    year: 2023,
+                    year: c.year || 2023,
                     color: c.color,
                     registrationNumber: c.registration_number,
-                    fuelType: 'Petrol',
+                    fuelType: c.fuel_type || 'petrol',
                     status: c.status,
                     driver: c.driver ? {
                         id: c.driver.id,
@@ -88,7 +90,7 @@ export function ManageCabs() {
                         trips: 0,
                     } : null,
                     metrics: {
-                        totalTrips: 0,
+                        totalTrips: c.total_trips || 0,
                         totalEarnings: 0,
                         thisMonthEarnings: 0,
                         rating: c.rating || 4.5,
