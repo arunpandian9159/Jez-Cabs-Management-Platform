@@ -9,3 +9,4 @@ export * from './safety.service';
 export * from './disputes.service';
 export * from './users.service';
 export * from './cabs.service';
+export * from './rideshare.service';
