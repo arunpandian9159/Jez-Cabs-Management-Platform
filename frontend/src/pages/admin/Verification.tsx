@@ -9,7 +9,6 @@ import {
     Eye,
     Download,
     Calendar,
-    Loader2,
     AlertTriangle,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
@@ -19,6 +18,7 @@ import { Input } from '../../components/ui/Input';
 import { Select } from '../../components/ui/Select';
 import { Modal } from '../../components/ui/Modal';
 import { Avatar } from '../../components/ui/Avatar';
+import { PageLoader } from '../../components/ui/Loading';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
 import { TextArea } from '../../components/ui/TextArea';
 import { formatDate } from '../../lib/utils';
@@ -145,14 +145,7 @@ export function AdminVerification() {
 
     // Loading state
     if (isLoading) {
-        return (
-            <div className="flex items-center justify-center min-h-[60vh]">
-                <div className="text-center">
-                    <Loader2 className="w-10 h-10 text-primary-600 animate-spin mx-auto mb-4" />
-                    <p className="text-gray-500">Loading verification requests...</p>
-                </div>
-            </div>
-        );
+        return <PageLoader message="Loading verification requests..." />;
     }
 
     // Error state

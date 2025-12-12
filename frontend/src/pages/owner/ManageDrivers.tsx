@@ -9,7 +9,6 @@ import {
     Mail,
     MoreVertical,
     Car,
-    Loader2,
     AlertTriangle,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
@@ -19,6 +18,7 @@ import { Input } from '../../components/ui/Input';
 import { Select } from '../../components/ui/Select';
 import { Avatar } from '../../components/ui/Avatar';
 import { Modal } from '../../components/ui/Modal';
+import { PageLoader } from '../../components/ui/Loading';
 import { formatCurrency } from '../../lib/utils';
 import { ownerService, type OwnerDriver } from '../../services/owner.service';
 
@@ -58,14 +58,7 @@ export function ManageDrivers() {
 
     // Loading state
     if (isLoading) {
-        return (
-            <div className="flex items-center justify-center min-h-[60vh]">
-                <div className="text-center">
-                    <Loader2 className="w-10 h-10 text-primary-600 animate-spin mx-auto mb-4" />
-                    <p className="text-gray-500">Loading drivers...</p>
-                </div>
-            </div>
-        );
+        return <PageLoader message="Loading drivers..." />;
     }
 
     // Error state

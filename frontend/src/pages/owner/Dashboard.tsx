@@ -16,6 +16,7 @@ import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Badge, StatusBadge } from '../../components/ui/Badge';
 import { Avatar } from '../../components/ui/Avatar';
+import { PageLoader } from '../../components/ui/Loading';
 import { formatCurrency } from '../../lib/utils';
 import { cabsService } from '../../services';
 
@@ -57,7 +58,7 @@ export function OwnerDashboard() {
         avgRating: 0,
     });
     const [cabs, setCabs] = useState<CabDisplay[]>([]);
-    const [_isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
 
     // Fetch dashboard data on mount
     useEffect(() => {
@@ -103,6 +104,11 @@ export function OwnerDashboard() {
 
         fetchDashboardData();
     }, []);
+    // Loading state
+    if (isLoading) {
+        return <PageLoader message="Loading dashboard..." />;
+    }
+
     return (
         <div className="space-y-6">
             {/* Header */}

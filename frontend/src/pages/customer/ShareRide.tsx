@@ -9,12 +9,12 @@ import {
     Users,
     Clock,
     Phone,
-    Loader2,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Avatar } from '../../components/ui/Avatar';
+import { PageLoader } from '../../components/ui/Loading';
 import { rideshareService, SharedContact as APISharedContact } from '../../services';
 
 // Display types
@@ -138,12 +138,7 @@ export function ShareRide() {
 
     // Loading state
     if (isLoading) {
-        return (
-            <div className="flex flex-col items-center justify-center py-20">
-                <Loader2 className="w-10 h-10 text-primary-600 animate-spin mb-4" />
-                <p className="text-gray-500">Loading trip data...</p>
-            </div>
-        );
+        return <PageLoader message="Loading trip data..." />;
     }
 
     // Show empty state when no active trip

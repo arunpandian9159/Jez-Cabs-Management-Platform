@@ -9,13 +9,13 @@ import {
     DollarSign,
     Star,
     MessageCircle,
-    Loader2,
     AlertCircle,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Avatar } from '../../components/ui/Avatar';
+import { PageLoader } from '../../components/ui/Loading';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
 import { formatCurrency, formatDate, formatTime } from '../../lib/utils';
 import { rideshareService, ExchangeHistoryItem as APIExchangeHistoryItem } from '../../services';
@@ -140,12 +140,7 @@ export function ExchangeHistory() {
 
     // Loading state
     if (isLoading) {
-        return (
-            <div className="flex flex-col items-center justify-center py-20">
-                <Loader2 className="w-10 h-10 text-primary-600 animate-spin mb-4" />
-                <p className="text-gray-500">Loading exchange history...</p>
-            </div>
-        );
+        return <PageLoader message="Loading exchange history..." />;
     }
 
     // Error state

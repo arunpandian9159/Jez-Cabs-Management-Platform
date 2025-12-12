@@ -14,6 +14,7 @@ import { Card } from '../../components/ui/Card';
 import { StatusBadge } from '../../components/ui/Badge';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
 import { Select } from '../../components/ui/Select';
+import { PageLoader } from '../../components/ui/Loading';
 import { formatCurrency, formatDate, formatTime, formatDuration } from '../../lib/utils';
 import { tripsService } from '../../services';
 
@@ -38,7 +39,7 @@ export function TripHistory() {
     const [activeTab, setActiveTab] = useState('all');
     const [dateFilter, setDateFilter] = useState('today');
     const [trips, setTrips] = useState<TripDisplay[]>([]);
-    const [_isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
 
     // Fetch trips on mount
     useEffect(() => {
@@ -46,24 +47,31 @@ export function TripHistory() {
             try {
                 setIsLoading(true);
                 const data = await tripsService.findAll({ limit: 50 });
-                const formatted: TripDisplay[] = data.map(trip => ({
-                    id: trip.id,
-                    date: trip.created_at,
-                    pickup: trip.pickup_address,
-                    destination: trip.destination_address,
-                    customer: {
-                        name: trip.customer ? `${trip.customer.first_name} ${trip.customer.last_name}` : 'Customer',
-                        rating: trip.customer_rating || 0,
-                    },
-                    fare: trip.actual_fare || trip.estimated_fare,
-                    distance: Number(trip.distance_km) || 0,
-                    duration: trip.estimated_duration_minutes,
-                    status: trip.status === 'cancelled' ? 'cancelled' : 'completed',
-                    rating: trip.driver_rating,
-                    tip: 0,
-                    paymentMethod: 'Cash', // Payment method not available in Trip type
-                    cancellationReason: trip.cancellation_reason,
-                }));
+                const formatted: TripDisplay[] = data.map(trip => {
+                    // Parse fare values properly to handle potential string/null values
+                    const actualFare = trip.actual_fare ? parseFloat(String(trip.actual_fare)) : 0;
+                    const estimatedFare = trip.estimated_fare ? parseFloat(String(trip.estimated_fare)) : 0;
+                    const fare = actualFare || estimatedFare || 0;
+
+                    return {
+                        id: trip.id,
+                        date: trip.created_at,
+                        pickup: trip.pickup_address,
+                        destination: trip.destination_address,
+                        customer: {
+                            name: trip.customer ? `${trip.customer.first_name} ${trip.customer.last_name}` : 'Customer',
+                            rating: trip.customer_rating || 0,
+                        },
+                        fare: fare,
+                        distance: parseFloat(String(trip.distance_km)) || 0,
+                        duration: parseInt(String(trip.estimated_duration_minutes)) || 0,
+                        status: trip.status === 'cancelled' ? 'cancelled' : 'completed',
+                        rating: trip.driver_rating,
+                        tip: 0,
+                        paymentMethod: 'Cash', // Payment method not available in Trip type
+                        cancellationReason: trip.cancellation_reason,
+                    };
+                });
                 setTrips(formatted);
             } catch (error) {
                 console.error('Error fetching trips:', error);
@@ -85,6 +93,10 @@ export function TripHistory() {
     const totalEarnings = completedTrips.reduce((acc, t) => acc + t.fare + (t.tip || 0), 0);
     const totalDistance = completedTrips.reduce((acc, t) => acc + t.distance, 0);
     const avgRating = completedTrips.length > 0 ? completedTrips.reduce((acc, t) => acc + (t.rating || 0), 0) / completedTrips.length : 0;
+
+    if (isLoading) {
+        return <PageLoader message="Loading trip history..." />;
+    }
 
     return (
         <div className="space-y-6">
@@ -119,7 +131,7 @@ export function TripHistory() {
                     <p className="text-sm text-gray-500">Earnings</p>
                 </Card>
                 <Card padding="md" className="text-center">
-                    <p className="text-2xl font-bold text-gray-900">{totalDistance} km</p>
+                    <p className="text-2xl font-bold text-gray-900">{totalDistance.toFixed(1)} km</p>
                     <p className="text-sm text-gray-500">Distance</p>
                 </Card>
                 <Card padding="md" className="text-center">

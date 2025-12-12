@@ -22,6 +22,7 @@ import { Avatar } from '../../components/ui/Avatar';
 import { Input } from '../../components/ui/Input';
 import { Modal } from '../../components/ui/Modal';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
+import { PageLoader } from '../../components/ui/Loading';
 import { driverService } from '../../services';
 
 // Types for driver profile display
@@ -64,7 +65,7 @@ interface DriverProfileDisplay {
 export function DriverProfile() {
     const [activeTab, setActiveTab] = useState('profile');
     const [showEditModal, setShowEditModal] = useState(false);
-    const [_isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
     const [driverProfile, setDriverProfile] = useState<DriverProfileDisplay>({
         id: '',
         name: '',
@@ -185,6 +186,12 @@ export function DriverProfile() {
                 return null;
         }
     };
+
+
+
+    if (isLoading) {
+        return <PageLoader message="Loading profile..." />;
+    }
 
     return (
         <div className="space-y-6">

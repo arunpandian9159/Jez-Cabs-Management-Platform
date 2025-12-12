@@ -11,7 +11,6 @@ import {
     ArrowUpRight,
     ArrowDownLeft,
     Clock,
-    Loader2,
     AlertTriangle,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
@@ -19,6 +18,7 @@ import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
 import { Select } from '../../components/ui/Select';
+import { PageLoader } from '../../components/ui/Loading';
 import { formatCurrency, formatDate } from '../../lib/utils';
 import {
     ownerService,
@@ -80,14 +80,7 @@ export function OwnerEarnings() {
 
     // Loading state
     if (isLoading) {
-        return (
-            <div className="flex items-center justify-center min-h-[60vh]">
-                <div className="text-center">
-                    <Loader2 className="w-10 h-10 text-primary-600 animate-spin mx-auto mb-4" />
-                    <p className="text-gray-500">Loading earnings data...</p>
-                </div>
-            </div>
-        );
+        return <PageLoader message="Loading earnings data..." />;
     }
 
     // Error state
