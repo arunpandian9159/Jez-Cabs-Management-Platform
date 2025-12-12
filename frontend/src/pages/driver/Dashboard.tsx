@@ -70,7 +70,7 @@ export function DriverDashboard() {
     const [pendingRequests, setPendingRequests] = useState<TripRequestDisplay[]>([]);
     const [recentTrips, setRecentTrips] = useState<RecentTripDisplay[]>([]);
     const [showTripRequest, setShowTripRequest] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
+    const [_isLoading, setIsLoading] = useState(true);
 
     // Fetch dashboard data
     useEffect(() => {

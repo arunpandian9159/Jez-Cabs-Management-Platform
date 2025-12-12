@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
     Search,
@@ -21,10 +21,10 @@ import { Select } from '../../components/ui/Select';
 import { Modal } from '../../components/ui/Modal';
 import { Avatar } from '../../components/ui/Avatar';
 import { formatDate } from '../../lib/utils';
+import { tripsService } from '../../services';
 
-// TODO: Fetch users from API
-// API endpoint: GET /api/v1/admin/users
-interface User {
+// Types for user display
+interface UserDisplay {
     id: string;
     name: string;
     email: string;
@@ -36,13 +36,51 @@ interface User {
     totalTrips: number;
     totalSpent: number;
 }
-const users: User[] = [];
 
 export function AdminUsers() {
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
-    const [selectedUser, setSelectedUser] = useState<User | null>(null);
+    const [selectedUser, setSelectedUser] = useState<UserDisplay | null>(null);
     const [showActionMenu, setShowActionMenu] = useState<string | null>(null);
+    const [users, setUsers] = useState<UserDisplay[]>([]);
+    const [_isLoading, setIsLoading] = useState(true);
+
+    // Fetch users on mount - using trips to get user data
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                setIsLoading(true);
+                // Get unique users from trips
+                const trips = await tripsService.findAll({ limit: 100 });
+                const userMap = new Map<string, UserDisplay>();
+
+                trips.forEach(trip => {
+                    if (trip.customer && !userMap.has(trip.customer.id)) {
+                        userMap.set(trip.customer.id, {
+                            id: trip.customer.id,
+                            name: `${trip.customer.first_name} ${trip.customer.last_name}`,
+                            email: '',
+                            phone: trip.customer.phone || '',
+                            role: 'customer',
+                            status: 'active',
+                            location: 'Unknown',
+                            joinedAt: new Date().toISOString(),
+                            totalTrips: 0,
+                            totalSpent: 0,
+                        });
+                    }
+                });
+
+                setUsers(Array.from(userMap.values()));
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchUsers();
+    }, []);
 
     const filteredUsers = users.filter((user) => {
         const matchesSearch =

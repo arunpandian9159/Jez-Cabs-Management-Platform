@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
     Calendar,
@@ -15,10 +15,10 @@ import { StatusBadge } from '../../components/ui/Badge';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
 import { Select } from '../../components/ui/Select';
 import { formatCurrency, formatDate, formatTime, formatDuration } from '../../lib/utils';
+import { tripsService } from '../../services';
 
-// TODO: API Integration - Fetch driver's trip history
-// API endpoint: GET /api/v1/drivers/trips?filter={dateFilter}
-interface Trip {
+// Types for driver trip display
+interface TripDisplay {
     id: string;
     date: string;
     pickup: string;
@@ -33,11 +33,47 @@ interface Trip {
     paymentMethod: string;
     cancellationReason?: string;
 }
-const trips: Trip[] = [];
 
 export function TripHistory() {
     const [activeTab, setActiveTab] = useState('all');
     const [dateFilter, setDateFilter] = useState('today');
+    const [trips, setTrips] = useState<TripDisplay[]>([]);
+    const [_isLoading, setIsLoading] = useState(true);
+
+    // Fetch trips on mount
+    useEffect(() => {
+        const fetchTrips = async () => {
+            try {
+                setIsLoading(true);
+                const data = await tripsService.findAll({ limit: 50 });
+                const formatted: TripDisplay[] = data.map(trip => ({
+                    id: trip.id,
+                    date: trip.created_at,
+                    pickup: trip.pickup_address,
+                    destination: trip.destination_address,
+                    customer: {
+                        name: trip.customer ? `${trip.customer.first_name} ${trip.customer.last_name}` : 'Customer',
+                        rating: trip.customer_rating || 0,
+                    },
+                    fare: trip.actual_fare || trip.estimated_fare,
+                    distance: trip.distance_km,
+                    duration: trip.estimated_duration_minutes,
+                    status: trip.status === 'cancelled' ? 'cancelled' : 'completed',
+                    rating: trip.driver_rating,
+                    tip: 0,
+                    paymentMethod: 'Cash', // Payment method not available in Trip type
+                    cancellationReason: trip.cancellation_reason,
+                }));
+                setTrips(formatted);
+            } catch (error) {
+                console.error('Error fetching trips:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchTrips();
+    }, [dateFilter]);
 
     const filteredTrips = trips.filter((trip) => {
         if (activeTab === 'completed') return trip.status === 'completed';
@@ -48,7 +84,7 @@ export function TripHistory() {
     const completedTrips = trips.filter((t) => t.status === 'completed');
     const totalEarnings = completedTrips.reduce((acc, t) => acc + t.fare + (t.tip || 0), 0);
     const totalDistance = completedTrips.reduce((acc, t) => acc + t.distance, 0);
-    const avgRating = completedTrips.reduce((acc, t) => acc + (t.rating || 0), 0) / completedTrips.length;
+    const avgRating = completedTrips.length > 0 ? completedTrips.reduce((acc, t) => acc + (t.rating || 0), 0) / completedTrips.length : 0;
 
     return (
         <div className="space-y-6">

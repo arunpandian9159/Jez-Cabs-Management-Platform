@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
     DollarSign,
@@ -16,10 +16,10 @@ import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
 import { formatCurrency, formatDate, formatTime } from '../../lib/utils';
+import { driverService } from '../../services';
 
-// TODO: Fetch driver earnings from API
-// API endpoint: GET /api/v1/driver/earnings
-interface EarningsSummary {
+// Types for earnings display
+interface EarningsSummaryDisplay {
     today: number;
     week: number;
     month: number;
@@ -27,18 +27,8 @@ interface EarningsSummary {
     lastPayout: number;
     lastPayoutDate: string;
 }
-const earningsSummary: EarningsSummary = {
-    today: 0,
-    week: 0,
-    month: 0,
-    pendingPayout: 0,
-    lastPayout: 0,
-    lastPayoutDate: '',
-};
 
-// TODO: Fetch transactions from API
-// API endpoint: GET /api/v1/driver/transactions
-interface Transaction {
+interface TransactionDisplay {
     id: string;
     type: string;
     description: string;
@@ -46,21 +36,74 @@ interface Transaction {
     date: string;
     status: string;
 }
-const transactions: Transaction[] = [];
 
-// TODO: Fetch weekly breakdown from API
-// API endpoint: GET /api/v1/driver/earnings/weekly
-interface DayBreakdown {
+interface DayBreakdownDisplay {
     day: string;
     earnings: number;
     trips: number;
 }
-const weeklyBreakdown: DayBreakdown[] = [];
 
 export function Earnings() {
     const [activeTab, setActiveTab] = useState('overview');
+    const [earningsSummary, setEarningsSummary] = useState<EarningsSummaryDisplay>({
+        today: 0,
+        week: 0,
+        month: 0,
+        pendingPayout: 0,
+        lastPayout: 0,
+        lastPayoutDate: '',
+    });
+    const [transactions, setTransactions] = useState<TransactionDisplay[]>([]);
+    const [weeklyBreakdown, setWeeklyBreakdown] = useState<DayBreakdownDisplay[]>([]);
+    const [_isLoading, setIsLoading] = useState(true);
 
-    const maxEarning = Math.max(...weeklyBreakdown.map((d) => d.earnings));
+    // Fetch earnings data on mount
+    useEffect(() => {
+        const fetchEarningsData = async () => {
+            try {
+                setIsLoading(true);
+
+                const earnings = await driverService.getEarnings();
+
+                // Set summary
+                setEarningsSummary({
+                    today: earnings.today,
+                    week: earnings.thisWeek,
+                    month: earnings.thisMonth,
+                    pendingPayout: 0, // This should come from a payout endpoint
+                    lastPayout: 0,
+                    lastPayoutDate: '',
+                });
+
+                // Set transactions
+                const formattedTxns: TransactionDisplay[] = earnings.transactions.map(t => ({
+                    id: t.id,
+                    type: t.type,
+                    description: t.description,
+                    amount: t.amount,
+                    date: t.created_at,
+                    status: 'completed',
+                }));
+                setTransactions(formattedTxns);
+
+                // Set weekly breakdown
+                const formattedBreakdown: DayBreakdownDisplay[] = earnings.weeklyBreakdown.map(d => ({
+                    day: d.day,
+                    earnings: d.earnings,
+                    trips: d.trips,
+                }));
+                setWeeklyBreakdown(formattedBreakdown);
+            } catch (error) {
+                console.error('Error fetching earnings:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchEarningsData();
+    }, []);
+
+    const maxEarning = Math.max(...weeklyBreakdown.map((d) => d.earnings), 1);
 
     return (
         <div className="space-y-6">
