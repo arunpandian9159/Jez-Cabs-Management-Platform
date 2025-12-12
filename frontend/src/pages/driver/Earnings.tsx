@@ -66,11 +66,11 @@ export function Earnings() {
 
                 const earnings = await driverService.getEarnings();
 
-                // Set summary
+                // Set summary with proper number parsing
                 setEarningsSummary({
-                    today: earnings.today,
-                    week: earnings.thisWeek,
-                    month: earnings.thisMonth,
+                    today: Number(earnings.today) || 0,
+                    week: Number(earnings.thisWeek) || 0,
+                    month: Number(earnings.thisMonth) || 0,
                     pendingPayout: 0, // This should come from a payout endpoint
                     lastPayout: 0,
                     lastPayoutDate: '',
@@ -87,11 +87,11 @@ export function Earnings() {
                 }));
                 setTransactions(formattedTxns);
 
-                // Set weekly breakdown with null check
+                // Set weekly breakdown with null check and number parsing
                 const formattedBreakdown: DayBreakdownDisplay[] = (earnings.weeklyBreakdown || []).map(d => ({
                     day: d.day,
-                    earnings: d.earnings,
-                    trips: d.trips,
+                    earnings: Number(d.earnings) || 0,
+                    trips: Number(d.trips) || 0,
                 }));
                 setWeeklyBreakdown(formattedBreakdown);
             } catch (error) {
