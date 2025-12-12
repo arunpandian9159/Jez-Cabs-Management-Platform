@@ -89,10 +89,10 @@ const portalColors = {
     },
     admin: {
         primary: 'from-primary-500 to-primary-600',
-        activeBg: 'bg-primary-500/10',
-        activeText: 'text-white',
-        activeIcon: 'text-white',
-        hoverBg: 'hover:bg-gray-800',
+        activeBg: 'bg-primary-50',
+        activeText: 'text-primary-700',
+        activeIcon: 'text-primary-600',
+        hoverBg: 'hover:bg-gray-100',
     },
 };
 
@@ -164,7 +164,6 @@ export function Sidebar({
 }: SidebarProps) {
     const location = useLocation();
     const colors = portalColors[portalType];
-    const isAdmin = portalType === 'admin';
     const showExpanded = isExpanded || isOpen;
 
     // Get user display name
@@ -202,9 +201,7 @@ export function Sidebar({
                 className={cn(
                     'fixed top-0 left-0 z-50 h-full flex flex-col transition-transform duration-300',
                     // Light/Dark theme based on portal type
-                    isAdmin
-                        ? 'bg-gradient-to-b from-gray-900 via-gray-900 to-gray-950 text-white'
-                        : 'bg-white/95 backdrop-blur-xl border-r border-gray-200/80',
+                    'bg-white/95 backdrop-blur-xl border-r border-gray-200/80',
                     // Mobile behavior
                     isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
                     // Shadow
@@ -213,10 +210,7 @@ export function Sidebar({
                 style={{ width: showExpanded ? 288 : 80 }}
             >
                 {/* Logo Section */}
-                <div className={cn(
-                    'flex items-center justify-between h-16 px-4',
-                    isAdmin ? 'border-b border-gray-800' : 'border-b border-gray-200/80'
-                )}>
+                <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200/80">
                     <Link to={dashboardPath} className="flex items-center gap-3">
                         {/* Logo Image */}
                         <div className="relative group">
@@ -246,16 +240,10 @@ export function Sidebar({
                                     exit="hidden"
                                     transition={{ duration: 0.2 }}
                                 >
-                                    <h1 className={cn(
-                                        'font-bold text-lg',
-                                        isAdmin ? 'text-white' : 'text-gray-900'
-                                    )}>
+                                    <h1 className="font-bold text-lg text-gray-900">
                                         Jez Cabs
                                     </h1>
-                                    <p className={cn(
-                                        'text-xs',
-                                        isAdmin ? 'text-gray-400' : 'text-gray-500'
-                                    )}>
+                                    <p className="text-xs text-gray-500">
                                         {portalLabel}
                                     </p>
                                 </motion.div>
@@ -268,12 +256,7 @@ export function Sidebar({
                         {/* Mobile close button */}
                         <button
                             onClick={onClose}
-                            className={cn(
-                                'lg:hidden p-2 rounded-lg transition-colors',
-                                isAdmin
-                                    ? 'hover:bg-gray-800 text-gray-400'
-                                    : 'hover:bg-gray-100 text-gray-500'
-                            )}
+                            className="lg:hidden p-2 rounded-lg transition-colors hover:bg-gray-100 text-gray-500"
                         >
                             <X className="w-5 h-5" />
                         </button>
@@ -282,12 +265,7 @@ export function Sidebar({
                         {onToggleExpand && (
                             <button
                                 onClick={onToggleExpand}
-                                className={cn(
-                                    'hidden lg:flex p-2 rounded-lg transition-colors',
-                                    isAdmin
-                                        ? 'hover:bg-gray-800 text-gray-400'
-                                        : 'hover:bg-gray-100 text-gray-500'
-                                )}
+                                className="hidden lg:flex p-2 rounded-lg transition-colors hover:bg-gray-100 text-gray-500"
                             >
                                 {isExpanded ? (
                                     <ChevronLeft className="w-5 h-5" />
@@ -301,10 +279,7 @@ export function Sidebar({
 
                 {/* Online Status Toggle - Driver Portal */}
                 {showOnlineToggle && onToggleOnline && (
-                    <div className={cn(
-                        'p-4',
-                        isAdmin ? 'border-b border-gray-800' : 'border-b border-gray-200/80'
-                    )}>
+                    <div className="p-4 border-b border-gray-200/80">
                         <motion.button
                             onClick={onToggleOnline}
                             className={cn(
@@ -342,10 +317,7 @@ export function Sidebar({
 
                 {/* Quick Stats - Owner Portal */}
                 {quickStats && quickStats.length > 0 && showExpanded && (
-                    <div className={cn(
-                        'p-4',
-                        isAdmin ? 'border-b border-gray-800' : 'border-b border-gray-200/80'
-                    )}>
+                    <div className="p-4 border-b border-gray-200/80">
                         <div className="grid grid-cols-2 gap-3">
                             {quickStats.map((stat, index) => {
                                 const statColor = statColors[stat.color];
@@ -400,17 +372,13 @@ export function Sidebar({
                                     className={cn(
                                         'group relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
                                         isActive
-                                            ? isAdmin
-                                                ? 'bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/30'
-                                                : cn(colors.activeBg, colors.activeText, 'shadow-sm')
-                                            : isAdmin
-                                                ? 'text-gray-400 hover:text-white hover:bg-gray-800'
-                                                : cn('text-gray-600', colors.hoverBg),
+                                            ? cn(colors.activeBg, colors.activeText, 'shadow-sm')
+                                            : cn('text-gray-600', colors.hoverBg),
                                         !showExpanded && 'justify-center'
                                     )}
                                 >
                                     {/* Active indicator line */}
-                                    {isActive && !isAdmin && (
+                                    {isActive && (
                                         <motion.div
                                             layoutId="activeIndicator"
                                             className={cn(
@@ -423,7 +391,7 @@ export function Sidebar({
 
                                     <Icon className={cn(
                                         'w-5 h-5 flex-shrink-0 transition-transform duration-200 group-hover:scale-110',
-                                        isActive && !isAdmin && colors.activeIcon
+                                        isActive && colors.activeIcon
                                     )} />
 
                                     <AnimatePresence>
@@ -465,19 +433,13 @@ export function Sidebar({
 
                 {/* Footer Content (e.g., Emergency SOS) */}
                 {footerContent && showExpanded && (
-                    <div className={cn(
-                        'px-3 py-4',
-                        isAdmin ? 'border-t border-gray-800' : 'border-t border-gray-200/80'
-                    )}>
+                    <div className="px-3 py-4 border-t border-gray-200/80">
                         {footerContent}
                     </div>
                 )}
 
                 {/* User Section */}
-                <div className={cn(
-                    'p-4',
-                    isAdmin ? 'border-t border-gray-800' : 'border-t border-gray-200/80'
-                )}>
+                <div className="p-4 border-t border-gray-200/80">
                     <div className={cn(
                         'flex items-center gap-3',
                         showExpanded ? 'mb-4' : 'flex-col'
@@ -503,16 +465,10 @@ export function Sidebar({
                                     exit="hidden"
                                     className="flex-1 min-w-0"
                                 >
-                                    <p className={cn(
-                                        'font-medium truncate',
-                                        isAdmin ? 'text-white' : 'text-gray-900'
-                                    )}>
+                                    <p className="font-medium truncate text-gray-900">
                                         {getUserDisplayName()}
                                     </p>
-                                    <p className={cn(
-                                        'text-xs truncate',
-                                        isAdmin ? 'text-gray-400' : 'text-gray-500'
-                                    )}>
+                                    <p className="text-xs truncate text-gray-500">
                                         {user?.email}
                                     </p>
                                 </motion.div>
@@ -523,10 +479,7 @@ export function Sidebar({
                     <motion.button
                         onClick={onLogout}
                         className={cn(
-                            'flex items-center gap-3 px-3 py-2 w-full rounded-lg text-sm font-medium transition-all duration-200',
-                            isAdmin
-                                ? 'text-gray-400 hover:text-white hover:bg-gray-800'
-                                : 'text-error-600 hover:bg-error-50',
+                            'flex items-center gap-3 px-3 py-2 w-full rounded-lg text-sm font-medium transition-all duration-200 text-error-600 hover:bg-error-50',
                             !showExpanded && 'justify-center'
                         )}
                         whileHover={{ scale: 1.02 }}
@@ -546,8 +499,8 @@ export function Sidebar({
                             )}
                         </AnimatePresence>
                     </motion.button>
-                </div>
-            </motion.aside>
+                </div >
+            </motion.aside >
         </>
     );
 }
