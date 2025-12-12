@@ -3,7 +3,6 @@ import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Menu,
-    X,
     ChevronRight,
     Bell,
     Search,
@@ -11,10 +10,14 @@ import {
     Settings,
     User as UserIcon,
     HelpCircle,
-    ChevronDown
+    ChevronDown,
+    Home,
+    Briefcase,
+    Building,
+    Zap,
+    LucideIcon
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
-import { Button } from '../ui/Button';
 import { Logo } from '../ui/Logo';
 import { Avatar } from '../ui/Avatar';
 import { ROUTES } from '../../lib/constants';
@@ -24,6 +27,7 @@ import { useAuth } from '../../contexts/AuthContext';
 interface NavLink {
     path: string;
     label: string;
+    icon?: LucideIcon;
 }
 
 interface NavbarProps {
@@ -46,28 +50,50 @@ export function Navbar({
     publicLinks = []
 }: NavbarProps) {
     const [scrolled, setScrolled] = useState(false);
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
+    const [activeSection, setActiveSection] = useState<string>('home');
 
     const { openLogin, openRegister } = useAuthModal();
     const { user, logout } = useAuth();
     const location = useLocation();
 
-    // Handle scroll effect for public navbar
+    // Handle scroll effect for public navbar and track active section
     useEffect(() => {
         if (variant !== 'public') return;
 
         const handleScroll = () => {
             setScrolled(window.scrollY > 20);
+
+            // Track which section is currently in view
+            const sections = ['services', 'how-it-works', 'for-owners'];
+            const scrollPosition = window.scrollY + 150; // Offset for header
+
+            // Check if we're at the top (Home section)
+            if (window.scrollY < 100) {
+                setActiveSection('home');
+                return;
+            }
+
+            // Check each section to see which one is in view
+            for (const sectionId of sections) {
+                const element = document.getElementById(sectionId);
+                if (element) {
+                    const { offsetTop, offsetHeight } = element;
+                    if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+                        setActiveSection(sectionId);
+                        return;
+                    }
+                }
+            }
         };
 
         window.addEventListener('scroll', handleScroll);
+        handleScroll(); // Initial check
         return () => window.removeEventListener('scroll', handleScroll);
     }, [variant]);
 
-    // Close mobile menu on route change
+    // Close user menu on route change
     useEffect(() => {
-        setMobileMenuOpen(false);
         setUserMenuOpen(false);
     }, [location]);
 
@@ -82,216 +108,252 @@ export function Navbar({
             if (element) {
                 element.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
-            setMobileMenuOpen(false);
         }
     };
 
     const handleOpenLogin = () => {
-        setMobileMenuOpen(false);
         openLogin();
     };
 
     const handleOpenRegister = () => {
-        setMobileMenuOpen(false);
         openRegister();
+    };
+
+    // Define icons for public nav links
+    const getNavIcon = (label: string): LucideIcon => {
+        switch (label.toLowerCase()) {
+            case 'home':
+                return Home;
+            case 'services':
+                return Briefcase;
+            case 'how it works':
+                return Zap;
+            case 'for owners':
+                return Building;
+            default:
+                return Home;
+        }
     };
 
     // Public Navbar Content
     if (variant === 'public') {
         return (
-            <motion.header
-                className="fixed top-0 left-0 right-0 z-50"
-                initial={{ y: -100 }}
-                animate={{ y: 0 }}
-                transition={{ duration: 0.5, ease: 'easeOut' }}
-            >
-                <div
-                    className={cn(
-                        'transition-all duration-500',
-                        scrolled
-                            ? 'bg-white/95 backdrop-blur-xl shadow-lg shadow-gray-900/5 border-b border-gray-100'
-                            : 'bg-transparent'
-                    )}
+            <>
+                {/* Top Header */}
+                <motion.header
+                    className="fixed top-0 left-0 right-0 z-50"
+                    initial={{ y: -100 }}
+                    animate={{ y: 0 }}
+                    transition={{ duration: 0.5, ease: 'easeOut' }}
                 >
-                    <div className="container mx-auto px-4 lg:px-8">
-                        <div className="flex items-center justify-between h-16 md:h-20">
-                            {/* Logo */}
-                            <Link to={ROUTES.HOME} className="flex items-center gap-3 group">
-                                <motion.div
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    className="relative"
-                                >
-                                    <Logo size="lg" className="drop-shadow-md group-hover:drop-shadow-lg transition-all duration-300" />
-                                </motion.div>
-                                <div className="flex flex-col">
-                                    <span className="text-xl md:text-2xl font-bold text-gray-900">
-                                        Jez Cabs
-                                    </span>
-                                    <span className="text-[10px] text-gray-500 font-medium tracking-wider uppercase hidden md:block">
-                                        Your Trusted Ride
-                                    </span>
-                                </div>
-                            </Link>
-
-                            {/* Desktop Navigation */}
-                            <nav className="hidden lg:flex items-center">
-                                <div className="flex items-center bg-gray-100/80 rounded-full p-1.5">
-                                    {publicLinks.map((link) => (
-                                        <Link
-                                            key={link.path}
-                                            to={link.path}
-                                            onClick={(e) => handleNavClick(e, link.path)}
-                                            className={cn(
-                                                'relative px-5 py-2.5 text-sm font-medium transition-all duration-300 rounded-full no-underline hover:no-underline hover:bg-[#0177c6] hover:text-white',
-                                                location.pathname === link.path || (location.pathname === '/' && link.path.startsWith('/#'))
-                                                    ? 'text-primary-700'
-                                                    : 'text-gray-600'
-                                            )}
-                                        >
-                                            {link.label}
-                                            {location.pathname === link.path && (
-                                                <motion.div
-                                                    layoutId="activeNavPill"
-                                                    className="absolute inset-0 bg-white rounded-full shadow-sm -z-10"
-                                                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                                                />
-                                            )}
-                                        </Link>
-                                    ))}
-                                </div>
-                            </nav>
-
-                            {/* Right side actions */}
-                            <div className="flex items-center gap-3 md:gap-4">
-                                {/* Auth buttons - Desktop */}
-                                <div className="hidden md:flex items-center gap-3">
-                                    <button
-                                        onClick={handleOpenLogin}
-                                        className="h-9 px-4 text-sm font-medium rounded-lg border-2 border-gray-300 text-gray-700 bg-white hover:bg-gray-100 hover:border-gray-400 transition-all duration-200"
+                    <div
+                        className={cn(
+                            'transition-all duration-500',
+                            scrolled
+                                ? 'bg-white/95 backdrop-blur-xl shadow-lg shadow-gray-900/5 border-b border-gray-100'
+                                : 'bg-transparent'
+                        )}
+                    >
+                        <div className="container mx-auto px-4 lg:px-8">
+                            <div className="flex items-center justify-between h-16 md:h-20">
+                                {/* Logo */}
+                                <Link to={ROUTES.HOME} className="flex items-center gap-3 group">
+                                    <motion.div
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        className="relative"
                                     >
-                                        Sign In
-                                    </button>
+                                        <Logo size="lg" className="drop-shadow-md group-hover:drop-shadow-lg transition-all duration-300" />
+                                    </motion.div>
+                                    <div className="flex flex-col">
+                                        <span className="text-xl md:text-2xl font-bold text-gray-900">
+                                            Jez Cabs
+                                        </span>
+                                        <span className="text-[10px] text-gray-500 font-medium tracking-wider uppercase hidden md:block">
+                                            Your Trusted Ride
+                                        </span>
+                                    </div>
+                                </Link>
+
+                                {/* Desktop Navigation */}
+                                <nav className="hidden lg:flex items-center">
+                                    <div className="flex items-center bg-gray-100/80 rounded-full p-1.5">
+                                        {publicLinks.map((link) => {
+                                            // Determine active state based on scroll position
+                                            const getSectionId = (path: string) => {
+                                                if (path === ROUTES.HOME || path === '/') return 'home';
+                                                if (path.startsWith('/#')) return path.replace('/#', '');
+                                                return path.replace('/', '');
+                                            };
+                                            const sectionId = getSectionId(link.path);
+                                            const isActive = activeSection === sectionId;
+
+                                            return (
+                                                <Link
+                                                    key={link.path}
+                                                    to={link.path}
+                                                    onClick={(e) => handleNavClick(e, link.path)}
+                                                    className={cn(
+                                                        'relative px-5 py-2.5 text-sm font-medium transition-all duration-300 rounded-full no-underline hover:no-underline hover:bg-[#0177c6] hover:text-white',
+                                                        isActive
+                                                            ? 'text-primary-700'
+                                                            : 'text-gray-600'
+                                                    )}
+                                                >
+                                                    {link.label}
+                                                    {isActive && (
+                                                        <motion.div
+                                                            layoutId="activeNavPill"
+                                                            className="absolute inset-0 bg-white rounded-full shadow-sm -z-10"
+                                                            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                                                        />
+                                                    )}
+                                                </Link>
+                                            );
+                                        })}
+                                    </div>
+                                </nav>
+
+                                {/* Right side actions */}
+                                <div className="flex items-center gap-3 md:gap-4">
+                                    {/* Auth buttons - Desktop */}
+                                    <div className="hidden md:flex items-center gap-3">
+                                        <button
+                                            onClick={handleOpenLogin}
+                                            className="h-9 px-4 text-sm font-medium rounded-lg border-2 border-gray-300 text-gray-700 bg-white hover:bg-gray-100 hover:border-gray-400 transition-all duration-200"
+                                        >
+                                            Sign In
+                                        </button>
+                                        <motion.button
+                                            onClick={handleOpenRegister}
+                                            whileHover={{ scale: 1.02 }}
+                                            whileTap={{ scale: 0.98 }}
+                                            className="h-9 px-6 text-sm font-medium rounded-lg text-white flex items-center gap-2 shadow-lg hover:shadow-xl transition-all duration-200"
+                                            style={{
+                                                backgroundColor: '#0177c6',
+                                            }}
+                                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#025fa1'}
+                                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0177c6'}
+                                        >
+                                            Get Started
+                                            <ChevronRight className="w-4 h-4" />
+                                        </motion.button>
+                                    </div>
+
+                                    {/* Mobile Get Started Button - Only on mobile */}
                                     <motion.button
                                         onClick={handleOpenRegister}
                                         whileHover={{ scale: 1.02 }}
                                         whileTap={{ scale: 0.98 }}
-                                        className="h-9 px-6 text-sm font-medium rounded-lg text-white flex items-center gap-2 shadow-lg hover:shadow-xl transition-all duration-200"
+                                        className="md:hidden h-9 px-4 text-sm font-medium rounded-lg text-white flex items-center gap-1.5 shadow-lg transition-all duration-200"
                                         style={{
                                             backgroundColor: '#0177c6',
                                         }}
-                                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#025fa1'}
-                                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0177c6'}
                                     >
                                         Get Started
                                         <ChevronRight className="w-4 h-4" />
                                     </motion.button>
                                 </div>
-
-                                {/* Mobile menu button */}
-                                <motion.button
-                                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                                    className={cn(
-                                        "lg:hidden p-2.5 rounded-xl transition-all duration-300",
-                                        mobileMenuOpen
-                                            ? "bg-primary-50 text-primary-600"
-                                            : "hover:bg-gray-100 text-gray-700"
-                                    )}
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                >
-                                    <AnimatePresence mode="wait" initial={false}>
-                                        {mobileMenuOpen ? (
-                                            <motion.div
-                                                key="close"
-                                                initial={{ rotate: -90, opacity: 0 }}
-                                                animate={{ rotate: 0, opacity: 1 }}
-                                                exit={{ rotate: 90, opacity: 0 }}
-                                                transition={{ duration: 0.2 }}
-                                            >
-                                                <X className="w-6 h-6" />
-                                            </motion.div>
-                                        ) : (
-                                            <motion.div
-                                                key="menu"
-                                                initial={{ rotate: 90, opacity: 0 }}
-                                                animate={{ rotate: 0, opacity: 1 }}
-                                                exit={{ rotate: -90, opacity: 0 }}
-                                                transition={{ duration: 0.2 }}
-                                            >
-                                                <Menu className="w-6 h-6" />
-                                            </motion.div>
-                                        )}
-                                    </AnimatePresence>
-                                </motion.button>
                             </div>
                         </div>
                     </div>
-                </div>
+                </motion.header>
 
-                {/* Mobile menu */}
-                <AnimatePresence>
-                    {mobileMenuOpen && (
-                        <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: 'auto' }}
-                            exit={{ opacity: 0, height: 0 }}
-                            transition={{ duration: 0.3, ease: 'easeInOut' }}
-                            className="lg:hidden overflow-hidden"
-                        >
-                            <div className="bg-white/98 backdrop-blur-xl border-t border-gray-100 shadow-2xl">
-                                <nav className="container mx-auto px-4 py-6 space-y-2">
-                                    {publicLinks.map((link, index) => (
+                {/* Mobile Bottom Navigation Bar */}
+                <motion.nav
+                    initial={{ y: 100 }}
+                    animate={{ y: 0 }}
+                    transition={{ duration: 0.5, ease: 'easeOut', delay: 0.2 }}
+                    className="lg:hidden fixed bottom-0 left-0 right-0 z-50"
+                >
+                    {/* Glassmorphism background */}
+                    <div className="absolute inset-0 bg-white/90 backdrop-blur-xl border-t border-gray-200/80 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]" />
+
+                    {/* Navigation items */}
+                    <div className="relative flex items-center justify-around py-2 px-2 safe-area-pb">
+                        {publicLinks.map((link) => {
+                            const Icon = link.icon || getNavIcon(link.label);
+                            // Determine active state based on scroll position
+                            const getSectionId = (path: string) => {
+                                if (path === ROUTES.HOME || path === '/') return 'home';
+                                if (path.startsWith('/#')) return path.replace('/#', '');
+                                return path.replace('/', '');
+                            };
+                            const sectionId = getSectionId(link.path);
+                            const isActive = activeSection === sectionId;
+
+                            return (
+                                <Link
+                                    key={link.path}
+                                    to={link.path}
+                                    onClick={(e) => handleNavClick(e, link.path)}
+                                    className="relative flex flex-col items-center justify-center px-3 py-1.5 min-w-[60px] group"
+                                >
+                                    {/* Active indicator */}
+                                    {isActive && (
                                         <motion.div
-                                            key={link.path}
-                                            initial={{ opacity: 0, x: -20 }}
-                                            animate={{ opacity: 1, x: 0 }}
-                                            transition={{ delay: index * 0.08 }}
-                                        >
-                                            <Link
-                                                to={link.path}
-                                                onClick={(e) => handleNavClick(e, link.path)}
-                                                className={cn(
-                                                    'flex items-center justify-between py-3.5 px-4 rounded-xl transition-all no-underline hover:no-underline',
-                                                    location.pathname === link.path
-                                                        ? 'bg-primary-50 text-primary-600'
-                                                        : 'text-gray-700 hover:bg-gray-50'
-                                                )}
-                                            >
-                                                <span className="font-medium">{link.label}</span>
-                                                <ChevronRight className="w-4 h-4 opacity-50" />
-                                            </Link>
-                                        </motion.div>
-                                    ))}
+                                            layoutId="mobileNavIndicator"
+                                            className="absolute inset-0 bg-gradient-to-br from-primary-50 to-primary-100/80 rounded-2xl"
+                                            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                                        />
+                                    )}
 
+                                    {/* Icon */}
                                     <motion.div
-                                        className="pt-4 mt-4 border-t border-gray-100 space-y-3"
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: 0.25 }}
+                                        className="relative z-10"
+                                        whileTap={{ scale: 0.9 }}
                                     >
-                                        <Button
-                                            variant="outline"
-                                            fullWidth
-                                            className="border-gray-200 text-gray-700 hover:bg-gray-50"
-                                            onClick={handleOpenLogin}
-                                        >
-                                            Sign In
-                                        </Button>
-                                        <Button
-                                            fullWidth
-                                            className="bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 shadow-lg"
-                                            onClick={handleOpenRegister}
-                                        >
-                                            Get Started Free
-                                        </Button>
+                                        <Icon
+                                            className={cn(
+                                                "w-5 h-5 transition-all duration-300",
+                                                isActive
+                                                    ? "text-primary-600"
+                                                    : "text-gray-500 group-hover:text-gray-700"
+                                            )}
+                                        />
+                                        {/* Active dot */}
+                                        {isActive && (
+                                            <motion.div
+                                                initial={{ scale: 0 }}
+                                                animate={{ scale: 1 }}
+                                                className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-primary-600 rounded-full"
+                                            />
+                                        )}
                                     </motion.div>
-                                </nav>
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-            </motion.header>
+
+                                    {/* Label */}
+                                    <span
+                                        className={cn(
+                                            "relative z-10 text-[10px] font-medium mt-1 transition-colors duration-300 truncate max-w-[60px]",
+                                            isActive
+                                                ? "text-primary-700"
+                                                : "text-gray-500 group-hover:text-gray-700"
+                                        )}
+                                    >
+                                        {link.label}
+                                    </span>
+                                </Link>
+                            );
+                        })}
+
+                        {/* Sign In button in bottom nav */}
+                        <button
+                            onClick={handleOpenLogin}
+                            className="relative flex flex-col items-center justify-center px-3 py-1.5 min-w-[60px] group"
+                        >
+                            <motion.div
+                                className="relative z-10"
+                                whileTap={{ scale: 0.9 }}
+                            >
+                                <UserIcon className="w-5 h-5 text-gray-500 group-hover:text-gray-700 transition-colors duration-300" />
+                            </motion.div>
+                            <span className="relative z-10 text-[10px] font-medium mt-1 text-gray-500 group-hover:text-gray-700 transition-colors duration-300">
+                                Sign In
+                            </span>
+                        </button>
+                    </div>
+                </motion.nav>
+            </>
         );
     }
 

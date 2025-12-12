@@ -152,15 +152,15 @@ export function Home() {
         <div className="min-h-screen bg-white">
             {/* Hero Section */}
             <section
-                className="relative pt-12 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-[90vh] flex items-center"
+                className="relative pt-8 pb-12 sm:pt-12 sm:pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-[85vh] sm:min-h-[90vh] flex items-center"
                 style={{
                     background: 'linear-gradient(135deg, #f8fafc 0%, #eff6ff 25%, #ffffff 50%, #f0fdfa 75%, #f8fafc 100%)'
                 }}
             >
-                {/* Animated Background Orbs */}
+                {/* Animated Background Orbs - smaller on mobile */}
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                     <div
-                        className="absolute -top-40 -left-40 w-80 h-80 rounded-full opacity-40 animate-float"
+                        className="absolute -top-20 -left-20 sm:-top-40 sm:-left-40 w-40 h-40 sm:w-80 sm:h-80 rounded-full opacity-40 animate-float"
                         style={{
                             background: 'radial-gradient(circle, #bfdbfe 0%, transparent 70%)',
                             animationDelay: '0s',
@@ -168,7 +168,7 @@ export function Home() {
                         }}
                     />
                     <div
-                        className="absolute top-1/4 -right-20 w-96 h-96 rounded-full opacity-30 animate-float"
+                        className="absolute top-1/4 -right-10 sm:-right-20 w-48 h-48 sm:w-96 sm:h-96 rounded-full opacity-30 animate-float"
                         style={{
                             background: 'radial-gradient(circle, #99f6e4 0%, transparent 70%)',
                             animationDelay: '2s',
@@ -176,7 +176,7 @@ export function Home() {
                         }}
                     />
                     <div
-                        className="absolute -bottom-20 left-1/4 w-72 h-72 rounded-full opacity-35 animate-float"
+                        className="absolute -bottom-10 sm:-bottom-20 left-1/4 w-36 h-36 sm:w-72 sm:h-72 rounded-full opacity-35 animate-float"
                         style={{
                             background: 'radial-gradient(circle, #dbeafe 0%, transparent 70%)',
                             animationDelay: '4s',
@@ -184,7 +184,7 @@ export function Home() {
                         }}
                     />
                     <div
-                        className="absolute bottom-1/3 right-1/4 w-48 h-48 rounded-full opacity-25 animate-float"
+                        className="absolute bottom-1/3 right-1/4 w-24 h-24 sm:w-48 sm:h-48 rounded-full opacity-25 animate-float"
                         style={{
                             background: 'radial-gradient(circle, #a5f3fc 0%, transparent 70%)',
                             animationDelay: '1s',
@@ -201,15 +201,15 @@ export function Home() {
                             linear-gradient(#1e293b 1px, transparent 1px),
                             linear-gradient(90deg, #1e293b 1px, transparent 1px)
                         `,
-                        backgroundSize: '60px 60px'
+                        backgroundSize: '40px 40px sm:60px sm:60px'
                     }}
                 />
 
                 <div className="max-w-7xl mx-auto relative z-10">
-                    <div className="grid lg:grid-cols-2 gap-16 items-center">
+                    <div className="grid lg:grid-cols-2 gap-8 sm:gap-16 items-center">
                         {/* Left Content */}
-                        <div className="space-y-8">
-                            {/* Badge with animation */}
+                        <div className="space-y-4 sm:space-y-8">
+                            {/* Badge with animation - KEPT FULL SIZE */}
                             <div
                                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold animate-fade-in-down shadow-md"
                                 style={{
@@ -227,7 +227,7 @@ export function Home() {
                                 #1 Cab Management Platform
                             </div>
 
-                            {/* Main Heading with animated gradient */}
+                            {/* Main Heading - KEPT FULL SIZE */}
                             <h1
                                 className="animate-fade-in-up"
                                 style={{
@@ -248,13 +248,12 @@ export function Home() {
                                 </span>
                             </h1>
 
-                            {/* Subheading */}
+                            {/* Subheading - REDUCED SIZE ON MOBILE */}
                             <p
-                                className="max-w-xl animate-fade-in-up"
+                                className="max-w-xl animate-fade-in-up text-sm sm:text-base lg:text-lg"
                                 style={{
                                     color: '#475569',
-                                    fontSize: 'clamp(1rem, 2vw, 1.25rem)',
-                                    lineHeight: 1.7,
+                                    lineHeight: 1.6,
                                     animationDelay: '0.3s',
                                     animationFillMode: 'both'
                                 }}
@@ -263,23 +262,23 @@ export function Home() {
                                 transparency and safety. For cab owners, manage your fleet and drivers effortlessly.
                             </p>
 
-                            {/* Quick Booking Form with Glassmorphism */}
+                            {/* Quick Booking Form - COMPACT ON MOBILE */}
                             <div
-                                className="p-6 sm:p-8 rounded-3xl shadow-2xl animate-fade-in-up group"
+                                className="p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl animate-fade-in-up group"
                                 style={{
                                     background: 'rgba(255, 255, 255, 0.85)',
                                     backdropFilter: 'blur(20px)',
                                     WebkitBackdropFilter: 'blur(20px)',
                                     border: '1px solid rgba(255, 255, 255, 0.8)',
-                                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(37, 99, 235, 0.05)',
+                                    boxShadow: '0 15px 30px -8px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(37, 99, 235, 0.05)',
                                     animationDelay: '0.4s',
                                     animationFillMode: 'both'
                                 }}
                             >
-                                <div className="space-y-4">
-                                    {/* Pickup Location */}
+                                <div className="space-y-3 sm:space-y-4">
+                                    {/* Pickup Location - COMPACT ON MOBILE */}
                                     <div
-                                        className="flex items-center gap-3 p-4 rounded-xl transition-all duration-300 hover:shadow-md group/input"
+                                        className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-lg sm:rounded-xl transition-all duration-300 hover:shadow-md group/input"
                                         style={{
                                             backgroundColor: 'rgba(248, 250, 252, 0.8)',
                                             border: '1px solid #e2e8f0'
@@ -293,63 +292,63 @@ export function Home() {
                                             e.currentTarget.style.boxShadow = 'none';
                                         }}
                                     >
-                                        <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-gradient-to-br from-blue-500 to-blue-600 shadow-sm">
-                                            <MapPin className="w-5 h-5 text-white" />
+                                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-md sm:rounded-lg flex items-center justify-center bg-gradient-to-br from-blue-500 to-blue-600 shadow-sm flex-shrink-0">
+                                            <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                                         </div>
                                         <input
                                             type="text"
                                             placeholder="Where from?"
-                                            className="bg-transparent flex-1 outline-none text-base font-medium placeholder:font-normal focus:outline-none focus:ring-0 border-none"
+                                            className="bg-transparent flex-1 outline-none text-sm sm:text-base font-medium placeholder:font-normal focus:outline-none focus:ring-0 border-none min-w-0"
                                             style={{ color: '#0f172a', boxShadow: 'none' }}
                                         />
                                     </div>
 
-                                    {/* Drop Location */}
+                                    {/* Drop Location - COMPACT ON MOBILE */}
                                     <div
-                                        className="flex items-center gap-3 p-4 rounded-xl transition-all duration-300 hover:shadow-md"
+                                        className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-lg sm:rounded-xl transition-all duration-300 hover:shadow-md"
                                         style={{
                                             backgroundColor: 'rgba(248, 250, 252, 0.8)',
                                             border: '1px solid #e2e8f0'
                                         }}
                                     >
-                                        <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-gradient-to-br from-teal-500 to-teal-600 shadow-sm">
-                                            <MapPin className="w-5 h-5 text-white" />
+                                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-md sm:rounded-lg flex items-center justify-center bg-gradient-to-br from-teal-500 to-teal-600 shadow-sm flex-shrink-0">
+                                            <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                                         </div>
                                         <input
                                             type="text"
                                             placeholder="Where to?"
-                                            className="bg-transparent flex-1 outline-none text-base font-medium placeholder:font-normal focus:outline-none focus:ring-0 border-none"
+                                            className="bg-transparent flex-1 outline-none text-sm sm:text-base font-medium placeholder:font-normal focus:outline-none focus:ring-0 border-none min-w-0"
                                             style={{ color: '#0f172a', boxShadow: 'none' }}
                                         />
                                     </div>
 
-                                    {/* Date and Passengers */}
-                                    <div className="grid grid-cols-2 gap-4">
+                                    {/* Date and Passengers - COMPACT ON MOBILE */}
+                                    <div className="grid grid-cols-2 gap-2 sm:gap-4">
                                         <div
-                                            className="flex items-center gap-3 p-4 rounded-xl transition-all duration-300 hover:shadow-md"
+                                            className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-lg sm:rounded-xl transition-all duration-300 hover:shadow-md"
                                             style={{
                                                 backgroundColor: 'rgba(248, 250, 252, 0.8)',
                                                 border: '1px solid #e2e8f0'
                                             }}
                                         >
-                                            <Calendar className="w-5 h-5" style={{ color: '#2563eb' }} />
+                                            <Calendar className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" style={{ color: '#2563eb' }} />
                                             <input
                                                 type="date"
-                                                className="bg-transparent flex-1 outline-none text-sm font-medium focus:outline-none focus:ring-0 border-none"
+                                                className="bg-transparent flex-1 outline-none text-xs sm:text-sm font-medium focus:outline-none focus:ring-0 border-none min-w-0"
                                                 style={{ color: '#0f172a', boxShadow: 'none' }}
                                             />
                                         </div>
 
                                         <div
-                                            className="flex items-center gap-3 p-4 rounded-xl transition-all duration-300 hover:shadow-md"
+                                            className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-lg sm:rounded-xl transition-all duration-300 hover:shadow-md"
                                             style={{
                                                 backgroundColor: 'rgba(248, 250, 252, 0.8)',
                                                 border: '1px solid #e2e8f0'
                                             }}
                                         >
-                                            <User className="w-5 h-5" style={{ color: '#2563eb' }} />
+                                            <User className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" style={{ color: '#2563eb' }} />
                                             <select
-                                                className="bg-transparent flex-1 outline-none text-sm font-medium cursor-pointer focus:outline-none focus:ring-0 border-none"
+                                                className="bg-transparent flex-1 outline-none text-xs sm:text-sm font-medium cursor-pointer focus:outline-none focus:ring-0 border-none min-w-0"
                                                 style={{ color: '#0f172a', boxShadow: 'none' }}
                                             >
                                                 <option>1 Passenger</option>
@@ -360,26 +359,28 @@ export function Home() {
                                         </div>
                                     </div>
 
-                                    {/* Book Now Button */}
+                                    {/* Book Now Button - COMPACT ON MOBILE */}
                                     <Link to={ROUTES.REGISTER} className="block">
                                         <button
-                                            className="w-full py-4 text-white rounded-xl transition-all font-semibold text-lg group/btn relative overflow-hidden"
+                                            className="w-full py-3 sm:py-4 text-white rounded-lg sm:rounded-xl transition-all font-semibold text-sm sm:text-lg group/btn relative overflow-hidden"
                                             style={{
-                                                background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)',
-                                                boxShadow: '0 4px 15px rgba(37, 99, 235, 0.3)'
+                                                backgroundColor: '#0177c6',
+                                                boxShadow: '0 4px 15px rgba(1, 119, 198, 0.3)'
                                             }}
                                             onMouseEnter={(e) => {
                                                 e.currentTarget.style.transform = 'translateY(-2px)';
-                                                e.currentTarget.style.boxShadow = '0 8px 25px rgba(37, 99, 235, 0.4)';
+                                                e.currentTarget.style.backgroundColor = '#025fa1';
+                                                e.currentTarget.style.boxShadow = '0 8px 25px rgba(1, 119, 198, 0.4)';
                                             }}
                                             onMouseLeave={(e) => {
                                                 e.currentTarget.style.transform = 'translateY(0)';
-                                                e.currentTarget.style.boxShadow = '0 4px 15px rgba(37, 99, 235, 0.3)';
+                                                e.currentTarget.style.backgroundColor = '#0177c6';
+                                                e.currentTarget.style.boxShadow = '0 4px 15px rgba(1, 119, 198, 0.3)';
                                             }}
                                         >
                                             <span className="relative z-10 flex items-center justify-center gap-2">
                                                 Book Now
-                                                <ArrowRight className="w-5 h-5 transition-transform group-hover/btn:translate-x-1" />
+                                                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover/btn:translate-x-1" />
                                             </span>
                                         </button>
                                     </Link>
@@ -458,7 +459,7 @@ export function Home() {
             </section>
 
             {/* Services Section */}
-            <section id="services" className="py-24 px-4 sm:px-6 lg:px-8 bg-white relative overflow-hidden">
+            <section id="services" className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8 bg-white relative overflow-hidden">
                 {/* Subtle Background Pattern */}
                 <div
                     className="absolute inset-0 opacity-[0.015]"
@@ -466,26 +467,26 @@ export function Home() {
                         backgroundImage: `
                             radial-gradient(circle at 2px 2px, #2563eb 1px, transparent 0)
                         `,
-                        backgroundSize: '40px 40px'
+                        backgroundSize: '30px 30px sm:40px sm:40px'
                     }}
                 />
 
                 <div className="max-w-7xl mx-auto relative z-10">
-                    {/* Section Header with Animation */}
-                    <div className="text-center mb-20">
+                    {/* Section Header with Animation - COMPACT ON MOBILE */}
+                    <div className="text-center mb-10 sm:mb-16 lg:mb-20">
                         <div
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold mb-6 animate-fade-in-down"
+                            className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-semibold mb-4 sm:mb-6 animate-fade-in-down"
                             style={{
                                 background: 'linear-gradient(135deg, #dbeafe 0%, #ccfbf1 100%)',
                                 color: '#1d4ed8',
                                 border: '1px solid rgba(59, 130, 246, 0.2)',
                             }}
                         >
-                            <Zap className="w-4 h-4" />
+                            <Zap className="w-3 h-3 sm:w-4 sm:h-4" />
                             What We Offer
                         </div>
                         <h2
-                            className="text-4xl sm:text-5xl font-bold mb-6 animate-fade-in-up"
+                            className="text-2xl sm:text-3xl lg:text-5xl font-bold mb-3 sm:mb-6 animate-fade-in-up"
                             style={{
                                 color: '#0f172a',
                                 animationDelay: '0.1s',
@@ -495,7 +496,7 @@ export function Home() {
                             Our Services
                         </h2>
                         <p
-                            className="text-lg sm:text-xl max-w-3xl mx-auto leading-relaxed animate-fade-in-up"
+                            className="text-sm sm:text-base lg:text-xl max-w-3xl mx-auto leading-relaxed animate-fade-in-up"
                             style={{
                                 color: '#475569',
                                 animationDelay: '0.2s',
@@ -506,8 +507,8 @@ export function Home() {
                         </p>
                     </div>
 
-                    {/* Services Grid with Staggered Animation */}
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+                    {/* Services Grid with Staggered Animation - COMPACT ON MOBILE */}
+                    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
                         {services.map((service, index) => {
                             const Icon = service.icon;
                             return (
@@ -521,7 +522,7 @@ export function Home() {
                                 >
                                     {/* Card */}
                                     <div
-                                        className="relative p-8 rounded-3xl border transition-all duration-500 bg-white cursor-pointer h-full"
+                                        className="relative p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl lg:rounded-3xl border transition-all duration-500 bg-white cursor-pointer h-full"
                                         style={{
                                             borderColor: '#e2e8f0',
                                             boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)'
@@ -541,32 +542,33 @@ export function Home() {
                                     >
                                         {/* Gradient Overlay on Hover */}
                                         <div
-                                            className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                                            className="absolute inset-0 rounded-xl sm:rounded-2xl lg:rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                                             style={{
                                                 background: `linear-gradient(135deg, ${service.color.includes('2563eb') ? 'rgba(37, 99, 235, 0.03)' : 'rgba(13, 148, 136, 0.03)'} 0%, transparent 100%)`
                                             }}
                                         />
 
-                                        {/* Icon Container */}
-                                        <div className="relative mb-6">
-                                            <div
-                                                className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500 bg-gradient-to-br ${service.color} group-hover:scale-110 group-hover:rotate-3`}
-                                                style={{
-                                                    boxShadow: '0 4px 15px rgba(37, 99, 235, 0.2)'
-                                                }}
-                                            >
-                                                <Icon className="w-8 h-8 text-white group-hover:scale-110 transition-transform duration-300" />
+                                        {/* Icon and Title Row - Horizontal Layout */}
+                                        <div className="flex items-center gap-3 sm:gap-4 lg:gap-5 mb-3 sm:mb-4 lg:mb-5">
+                                            {/* Icon Container */}
+                                            <div className="relative flex-shrink-0">
+                                                <div
+                                                    className={`w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-lg sm:rounded-xl lg:rounded-2xl flex items-center justify-center transition-all duration-500 bg-gradient-to-br ${service.color} group-hover:scale-110 group-hover:rotate-3`}
+                                                    style={{
+                                                        boxShadow: '0 4px 15px rgba(37, 99, 235, 0.2)'
+                                                    }}
+                                                >
+                                                    <Icon className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 text-white group-hover:scale-110 transition-transform duration-300" />
+                                                </div>
+                                                {/* Glow Effect */}
+                                                <div
+                                                    className={`absolute inset-0 w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-lg sm:rounded-xl lg:rounded-2xl bg-gradient-to-br ${service.color} opacity-0 group-hover:opacity-30 blur-xl transition-opacity duration-500`}
+                                                />
                                             </div>
-                                            {/* Glow Effect */}
-                                            <div
-                                                className={`absolute inset-0 w-16 h-16 rounded-2xl bg-gradient-to-br ${service.color} opacity-0 group-hover:opacity-30 blur-xl transition-opacity duration-500`}
-                                            />
-                                        </div>
 
-                                        {/* Content */}
-                                        <div className="relative">
+                                            {/* Title - Right of Icon */}
                                             <h3
-                                                className="text-xl font-bold mb-3 transition-all duration-300"
+                                                className="text-sm sm:text-base lg:text-lg font-bold transition-all duration-300"
                                                 style={{
                                                     color: '#0f172a',
                                                 }}
@@ -585,18 +587,22 @@ export function Home() {
                                             >
                                                 {service.title}
                                             </h3>
+                                        </div>
+
+                                        {/* Description - Below Icon and Title */}
+                                        <div className="relative">
                                             <p
-                                                className="leading-relaxed transition-colors duration-300"
+                                                className="text-xs sm:text-sm lg:text-base leading-relaxed transition-colors duration-300 line-clamp-3 sm:line-clamp-none"
                                                 style={{ color: '#475569' }}
                                             >
                                                 {service.description}
                                             </p>
                                         </div>
 
-                                        {/* Hover Arrow Indicator */}
-                                        <div className="mt-6 flex items-center gap-2 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                                        {/* Hover Arrow Indicator - HIDDEN ON MOBILE */}
+                                        <div className="hidden sm:flex mt-4 lg:mt-6 items-center gap-2 text-xs sm:text-sm font-semibold opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
                                             <span style={{ color: '#2563eb' }}>Learn more</span>
-                                            <ArrowRight className="w-4 h-4" style={{ color: '#2563eb' }} />
+                                            <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4" style={{ color: '#2563eb' }} />
                                         </div>
                                     </div>
                                 </div>
@@ -609,22 +615,22 @@ export function Home() {
             {/* How It Works Section */}
             <section
                 id="how-it-works"
-                className="py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden"
+                className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden"
                 style={{
                     background: 'linear-gradient(135deg, #eff6ff 0%, #ffffff 50%, #f0fdfa 100%)'
                 }}
             >
-                {/* Animated Background Orbs */}
+                {/* Animated Background Orbs - SMALLER ON MOBILE */}
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                     <div
-                        className="absolute top-20 left-10 w-96 h-96 rounded-full opacity-20 animate-float"
+                        className="absolute top-10 left-5 sm:top-20 sm:left-10 w-48 h-48 sm:w-72 sm:h-72 lg:w-96 lg:h-96 rounded-full opacity-20 animate-float"
                         style={{
                             background: 'radial-gradient(circle, #bfdbfe 0%, transparent 70%)',
                             animationDuration: '12s'
                         }}
                     />
                     <div
-                        className="absolute bottom-20 right-10 w-80 h-80 rounded-full opacity-15 animate-float"
+                        className="absolute bottom-10 right-5 sm:bottom-20 sm:right-10 w-40 h-40 sm:w-60 sm:h-60 lg:w-80 lg:h-80 rounded-full opacity-15 animate-float"
                         style={{
                             background: 'radial-gradient(circle, #99f6e4 0%, transparent 70%)',
                             animationDuration: '10s',
@@ -634,21 +640,21 @@ export function Home() {
                 </div>
 
                 <div className="max-w-7xl mx-auto relative z-10">
-                    {/* Section Header */}
-                    <div className="text-center mb-20">
+                    {/* Section Header - COMPACT ON MOBILE */}
+                    <div className="text-center mb-10 sm:mb-16 lg:mb-20">
                         <div
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold mb-6 animate-fade-in-down"
+                            className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-semibold mb-4 sm:mb-6 animate-fade-in-down"
                             style={{
                                 background: 'linear-gradient(135deg, #dbeafe 0%, #ccfbf1 100%)',
                                 color: '#1d4ed8',
                                 border: '1px solid rgba(59, 130, 246, 0.2)',
                             }}
                         >
-                            <Map className="w-4 h-4" />
+                            <Map className="w-3 h-3 sm:w-4 sm:h-4" />
                             Simple Process
                         </div>
                         <h2
-                            className="text-4xl sm:text-5xl font-bold mb-6 animate-fade-in-up"
+                            className="text-2xl sm:text-3xl lg:text-5xl font-bold mb-3 sm:mb-6 animate-fade-in-up"
                             style={{
                                 color: '#0f172a',
                                 animationDelay: '0.1s',
@@ -658,7 +664,7 @@ export function Home() {
                             How It Works
                         </h2>
                         <p
-                            className="text-lg sm:text-xl max-w-3xl mx-auto leading-relaxed animate-fade-in-up"
+                            className="text-sm sm:text-base lg:text-xl max-w-3xl mx-auto leading-relaxed animate-fade-in-up"
                             style={{
                                 color: '#475569',
                                 animationDelay: '0.2s',
@@ -669,8 +675,8 @@ export function Home() {
                         </p>
                     </div>
 
-                    {/* Steps Grid */}
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6 mb-16">
+                    {/* Steps Grid - COMPACT ON MOBILE */}
+                    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-6 mb-8 sm:mb-12 lg:mb-16">
                         {steps.map((step, index) => {
                             const Icon = step.icon;
                             return (
@@ -682,7 +688,7 @@ export function Home() {
                                         animationFillMode: 'both'
                                     }}
                                 >
-                                    {/* Animated Connector Line */}
+                                    {/* Animated Connector Line - HIDDEN ON MOBILE */}
                                     {index < steps.length - 1 && (
                                         <div className="hidden lg:block absolute top-24 left-full w-full h-1 z-0 overflow-hidden">
                                             {/* Base Line */}
@@ -705,9 +711,9 @@ export function Home() {
                                         </div>
                                     )}
 
-                                    {/* Step Card */}
+                                    {/* Step Card - COMPACT ON MOBILE */}
                                     <div
-                                        className="group relative p-8 rounded-3xl border transition-all duration-500 z-10 cursor-pointer h-full"
+                                        className="group relative p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl lg:rounded-3xl border transition-all duration-500 z-10 cursor-pointer h-full"
                                         style={{
                                             backgroundColor: '#ffffff',
                                             borderColor: '#e2e8f0',
@@ -726,10 +732,10 @@ export function Home() {
                                             e.currentTarget.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.05)';
                                         }}
                                     >
-                                        {/* Step Number Badge */}
-                                        <div className="absolute -top-5 -right-5 z-20">
+                                        {/* Step Number Badge - SMALLER ON MOBILE */}
+                                        <div className="absolute -top-3 -right-3 sm:-top-4 sm:-right-4 lg:-top-5 lg:-right-5 z-20">
                                             <div
-                                                className="relative w-14 h-14 rounded-full flex items-center justify-center text-white font-bold text-lg transition-all duration-300 group-hover:scale-110"
+                                                className="relative w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-full flex items-center justify-center text-white font-bold text-sm sm:text-base lg:text-lg transition-all duration-300 group-hover:scale-110"
                                                 style={{
                                                     background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)',
                                                     boxShadow: '0 4px 15px rgba(37, 99, 235, 0.4)'
@@ -739,33 +745,34 @@ export function Home() {
                                             </div>
                                         </div>
 
-                                        {/* Icon Container */}
-                                        <div className="relative mb-6">
-                                            <div
-                                                className="w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-3"
-                                                style={{
-                                                    background: 'linear-gradient(135deg, #dbeafe 0%, #ccfbf1 100%)',
-                                                    boxShadow: '0 4px 12px rgba(37, 99, 235, 0.1)'
-                                                }}
-                                            >
-                                                <Icon
-                                                    className="w-8 h-8 transition-all duration-300 group-hover:scale-110"
-                                                    style={{ color: '#1d4ed8' }}
+                                        {/* Icon and Title Row - Horizontal Layout */}
+                                        <div className="flex items-center gap-3 sm:gap-4 lg:gap-5 mb-3 sm:mb-4 lg:mb-5">
+                                            {/* Icon Container */}
+                                            <div className="relative flex-shrink-0">
+                                                <div
+                                                    className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-lg sm:rounded-xl lg:rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-3"
+                                                    style={{
+                                                        background: 'linear-gradient(135deg, #dbeafe 0%, #ccfbf1 100%)',
+                                                        boxShadow: '0 4px 12px rgba(37, 99, 235, 0.1)'
+                                                    }}
+                                                >
+                                                    <Icon
+                                                        className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 transition-all duration-300 group-hover:scale-110"
+                                                        style={{ color: '#1d4ed8' }}
+                                                    />
+                                                </div>
+                                                {/* Icon Glow */}
+                                                <div
+                                                    className="absolute inset-0 w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-lg sm:rounded-xl lg:rounded-2xl opacity-0 group-hover:opacity-40 blur-xl transition-opacity duration-500"
+                                                    style={{
+                                                        background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)',
+                                                    }}
                                                 />
                                             </div>
-                                            {/* Icon Glow */}
-                                            <div
-                                                className="absolute inset-0 w-16 h-16 rounded-2xl opacity-0 group-hover:opacity-40 blur-xl transition-opacity duration-500"
-                                                style={{
-                                                    background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)',
-                                                }}
-                                            />
-                                        </div>
 
-                                        {/* Content */}
-                                        <div className="relative">
+                                            {/* Title - Right of Icon */}
                                             <h3
-                                                className="text-xl font-bold mb-3 transition-all duration-300"
+                                                className="text-sm sm:text-base lg:text-lg font-bold transition-all duration-300"
                                                 style={{
                                                     color: '#0f172a',
                                                 }}
@@ -784,16 +791,20 @@ export function Home() {
                                             >
                                                 {step.title}
                                             </h3>
+                                        </div>
+
+                                        {/* Description - Below Icon and Title */}
+                                        <div className="relative">
                                             <p
-                                                className="leading-relaxed transition-colors duration-300"
+                                                className="text-xs sm:text-sm lg:text-base leading-relaxed transition-colors duration-300 line-clamp-3 sm:line-clamp-none"
                                                 style={{ color: '#475569' }}
                                             >
                                                 {step.description}
                                             </p>
                                         </div>
 
-                                        {/* Progress Indicator */}
-                                        <div className="mt-6 flex items-center gap-1">
+                                        {/* Progress Indicator - HIDDEN ON MOBILE */}
+                                        <div className="hidden sm:flex mt-4 lg:mt-6 items-center gap-1">
                                             {[...Array(4)].map((_, i) => (
                                                 <div
                                                     key={i}
@@ -813,7 +824,7 @@ export function Home() {
                         })}
                     </div>
 
-                    {/* CTA Button */}
+                    {/* CTA Button - COMPACT ON MOBILE */}
                     <div
                         className="text-center animate-fade-in-up"
                         style={{
@@ -823,7 +834,7 @@ export function Home() {
                     >
                         <Link to={ROUTES.REGISTER}>
                             <button
-                                className="group relative px-10 py-5 text-white rounded-2xl transition-all font-bold text-lg inline-flex items-center gap-3 overflow-hidden"
+                                className="group relative px-6 py-3 sm:px-8 sm:py-4 lg:px-10 lg:py-5 text-white rounded-xl sm:rounded-2xl transition-all font-bold text-sm sm:text-base lg:text-lg inline-flex items-center gap-2 sm:gap-3 overflow-hidden"
                                 style={{
                                     background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)',
                                     boxShadow: '0 8px 30px rgba(37, 99, 235, 0.3)'
@@ -847,35 +858,35 @@ export function Home() {
                                     }}
                                 />
                                 <span className="relative z-10">Get Started Now</span>
-                                <ArrowRight className="relative z-10 w-5 h-5 transition-transform group-hover:translate-x-2" />
+                                <ArrowRight className="relative z-10 w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-2" />
                             </button>
                         </Link>
-                        <p className="mt-4 text-sm" style={{ color: '#64748b' }}>
+                        <p className="mt-3 sm:mt-4 text-xs sm:text-sm" style={{ color: '#64748b' }}>
                             No credit card required • Free to start
                         </p>
                     </div>
                 </div>
             </section>
 
-            {/* Features Section */}
-            <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+            {/* Features Section - COMPACT ON MOBILE */}
+            <section className="py-10 sm:py-14 lg:py-20 px-4 sm:px-6 lg:px-8 bg-white">
                 <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-16">
-                        <h2 className="text-3xl sm:text-4xl font-bold mb-4" style={{ color: '#0f172a' }}>
+                    <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+                        <h2 className="text-xl sm:text-2xl lg:text-4xl font-bold mb-2 sm:mb-4" style={{ color: '#0f172a' }}>
                             Why Choose Jez Cabs?
                         </h2>
-                        <p className="text-lg max-w-2xl mx-auto" style={{ color: '#475569' }}>
+                        <p className="text-sm sm:text-base lg:text-lg max-w-2xl mx-auto" style={{ color: '#475569' }}>
                             We're committed to providing the best cab management experience
                         </p>
                     </div>
 
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 lg:gap-8">
                         {features.map((feature, index) => {
                             const Icon = feature.icon;
                             return (
                                 <div
                                     key={index}
-                                    className="flex gap-4 p-6 rounded-xl transition-all duration-300"
+                                    className="flex flex-row items-start gap-2 sm:gap-4 p-3 sm:p-4 lg:p-6 rounded-xl transition-all duration-300"
                                     onMouseEnter={(e) => {
                                         e.currentTarget.style.background = 'linear-gradient(to bottom right, #eff6ff, #f0fdfa)';
                                     }}
@@ -884,18 +895,18 @@ export function Home() {
                                     }}
                                 >
                                     <div
-                                        className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
+                                        className="w-9 h-9 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-lg flex items-center justify-center flex-shrink-0"
                                         style={{
                                             background: 'linear-gradient(to bottom right, #2563eb, #0d9488)'
                                         }}
                                     >
-                                        <Icon className="w-6 h-6 text-white" />
+                                        <Icon className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-white" />
                                     </div>
                                     <div>
-                                        <h4 className="text-lg font-semibold mb-2" style={{ color: '#0f172a' }}>
+                                        <h4 className="text-sm sm:text-base lg:text-lg font-semibold mb-0.5 sm:mb-1 lg:mb-2" style={{ color: '#0f172a' }}>
                                             {feature.title}
                                         </h4>
-                                        <p style={{ color: '#475569' }}>{feature.description}</p>
+                                        <p className="text-xs sm:text-sm lg:text-base line-clamp-2 sm:line-clamp-none" style={{ color: '#475569' }}>{feature.description}</p>
                                     </div>
                                 </div>
                             );
@@ -904,25 +915,25 @@ export function Home() {
                 </div>
             </section>
 
-            {/* For Owners Section */}
+            {/* For Owners Section - COMPACT ON MOBILE */}
             <section
                 id="for-owners"
-                className="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden"
+                className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden"
                 style={{
                     background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)'
                 }}
             >
-                {/* Animated Background Elements */}
+                {/* Animated Background Elements - SMALLER ON MOBILE */}
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                     <div
-                        className="absolute top-20 left-10 w-72 h-72 rounded-full opacity-20 animate-float"
+                        className="absolute top-10 left-5 sm:top-20 sm:left-10 w-36 h-36 sm:w-56 sm:h-56 lg:w-72 lg:h-72 rounded-full opacity-20 animate-float"
                         style={{
                             background: 'radial-gradient(circle, #3b82f6 0%, transparent 70%)',
                             animationDuration: '8s'
                         }}
                     />
                     <div
-                        className="absolute bottom-20 right-10 w-96 h-96 rounded-full opacity-15 animate-float"
+                        className="absolute bottom-10 right-5 sm:bottom-20 sm:right-10 w-48 h-48 sm:w-72 sm:h-72 lg:w-96 lg:h-96 rounded-full opacity-15 animate-float"
                         style={{
                             background: 'radial-gradient(circle, #14b8a6 0%, transparent 70%)',
                             animationDuration: '10s',
@@ -932,11 +943,11 @@ export function Home() {
                 </div>
 
                 <div className="max-w-7xl mx-auto relative z-10">
-                    <div className="grid lg:grid-cols-2 gap-16 items-center">
+                    <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
                         {/* Left Content */}
-                        <div className="space-y-8">
+                        <div className="space-y-4 sm:space-y-6 lg:space-y-8">
                             <div
-                                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold shadow-lg animate-fade-in-down"
+                                className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold shadow-lg animate-fade-in-down"
                                 style={{
                                     background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.3) 0%, rgba(20, 184, 166, 0.3) 100%)',
                                     color: '#93c5fd',
@@ -944,14 +955,14 @@ export function Home() {
                                     backdropFilter: 'blur(10px)'
                                 }}
                             >
-                                <Car className="w-4 h-4" />
+                                <Car className="w-3 h-3 sm:w-4 sm:h-4" />
                                 For Cab Owners
                             </div>
 
-                            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight" style={{ color: '#ffffff' }}>
+                            <h2 className="text-2xl sm:text-3xl lg:text-5xl font-bold leading-tight" style={{ color: '#ffffff' }}>
                                 Manage Your Fleet
                                 <span
-                                    className="block mt-2"
+                                    className="block mt-1 sm:mt-2"
                                     style={{
                                         background: 'linear-gradient(135deg, #60a5fa 0%, #2dd4bf 100%)',
                                         WebkitBackgroundClip: 'text',
@@ -963,19 +974,19 @@ export function Home() {
                                 </span>
                             </h2>
 
-                            <p style={{ color: '#e2e8f0' }} className="text-lg leading-relaxed">
+                            <p style={{ color: '#e2e8f0' }} className="text-sm sm:text-base lg:text-lg leading-relaxed">
                                 Take control of your cab business with our comprehensive management platform.
                                 Track vehicles, manage drivers, and grow your revenue effortlessly.
                             </p>
 
-                            {/* Enhanced Feature Cards */}
-                            <div className="grid sm:grid-cols-2 gap-5">
+                            {/* Enhanced Feature Cards - COMPACT ON MOBILE */}
+                            <div className="grid grid-cols-2 sm:grid-cols-2 gap-3 sm:gap-4 lg:gap-5">
                                 {ownerFeatures.map((feature, index) => {
                                     const Icon = feature.icon;
                                     return (
                                         <div
                                             key={index}
-                                            className="group p-5 rounded-2xl transition-all duration-300 cursor-pointer"
+                                            className="group p-3 sm:p-4 lg:p-5 rounded-xl sm:rounded-2xl transition-all duration-300 cursor-pointer"
                                             style={{
                                                 background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.6) 100%)',
                                                 border: '1px solid rgba(148, 163, 184, 0.2)',
@@ -994,21 +1005,21 @@ export function Home() {
                                                 e.currentTarget.style.boxShadow = 'none';
                                             }}
                                         >
-                                            <div className="flex gap-4">
+                                            <div className="flex flex-row items-start gap-2 sm:gap-3 lg:gap-4">
                                                 <div
-                                                    className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300"
+                                                    className="w-9 h-9 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300"
                                                     style={{
                                                         background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)',
                                                         boxShadow: '0 4px 15px rgba(37, 99, 235, 0.4)'
                                                     }}
                                                 >
-                                                    <Icon className="w-6 h-6 text-white" />
+                                                    <Icon className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-white" />
                                                 </div>
                                                 <div className="flex-1">
-                                                    <h4 className="text-white font-bold mb-1.5 text-base" style={{ color: '#f1f5f9' }}>
+                                                    <h4 className="text-white font-bold mb-0.5 sm:mb-1 lg:mb-1.5 text-xs sm:text-sm lg:text-base" style={{ color: '#f1f5f9' }}>
                                                         {feature.title}
                                                     </h4>
-                                                    <p className="text-sm leading-relaxed" style={{ color: '#cbd5e1' }}>
+                                                    <p className="text-xs sm:text-xs lg:text-sm leading-relaxed line-clamp-2 sm:line-clamp-none" style={{ color: '#cbd5e1' }}>
                                                         {feature.description}
                                                     </p>
                                                 </div>
@@ -1020,7 +1031,7 @@ export function Home() {
 
                             <Link to={ROUTES.REGISTER}>
                                 <button
-                                    className="group px-8 py-4 text-white rounded-xl transition-all font-semibold text-lg inline-flex items-center gap-3 shadow-xl"
+                                    className="group px-5 py-3 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-white rounded-lg sm:rounded-xl transition-all font-semibold text-sm sm:text-base lg:text-lg inline-flex items-center gap-2 sm:gap-3 shadow-xl"
                                     style={{
                                         background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)',
                                         boxShadow: '0 8px 30px rgba(37, 99, 235, 0.4)'
@@ -1034,45 +1045,46 @@ export function Home() {
                                         e.currentTarget.style.boxShadow = '0 8px 30px rgba(37, 99, 235, 0.4)';
                                     }}
                                 >
-                                    Start Managing Your Fleet
-                                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                    <span className="hidden sm:inline">Start Managing Your Fleet</span>
+                                    <span className="sm:hidden">Start Now</span>
+                                    <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
                                 </button>
                             </Link>
                         </div>
 
-                        {/* Right Content */}
-                        <div className="space-y-6">
+                        {/* Right Content - COMPACT ON MOBILE */}
+                        <div className="space-y-4 sm:space-y-6">
                             {/* Key Benefits Card */}
                             <div
-                                className="backdrop-blur-xl p-8 rounded-3xl transition-all duration-300 hover:shadow-2xl"
+                                className="backdrop-blur-xl p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl lg:rounded-3xl transition-all duration-300 hover:shadow-2xl"
                                 style={{
                                     background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.8) 100%)',
                                     border: '1px solid rgba(148, 163, 184, 0.3)',
                                     boxShadow: '0 10px 40px rgba(0, 0, 0, 0.3)'
                                 }}
                             >
-                                <div className="flex items-center gap-3 mb-6">
+                                <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4 lg:mb-6">
                                     <div
-                                        className="w-10 h-10 rounded-xl flex items-center justify-center"
+                                        className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-lg sm:rounded-xl flex items-center justify-center"
                                         style={{
                                             background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)'
                                         }}
                                     >
-                                        <Star className="w-5 h-5 text-white" />
+                                        <Star className="w-4 h-4 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
                                     </div>
-                                    <h3 className="text-2xl font-bold" style={{ color: '#ffffff' }}>Key Benefits</h3>
+                                    <h3 className="text-lg sm:text-xl lg:text-2xl font-bold" style={{ color: '#ffffff' }}>Key Benefits</h3>
                                 </div>
-                                <div className="space-y-4">
+                                <div className="space-y-2 sm:space-y-3 lg:space-y-4">
                                     {ownerBenefits.map((benefit, index) => (
                                         <div
                                             key={index}
-                                            className="flex items-center gap-3 p-3 rounded-xl transition-all duration-200 hover:bg-white/5"
+                                            className="flex items-center gap-2 sm:gap-3 p-2 sm:p-2.5 lg:p-3 rounded-lg sm:rounded-xl transition-all duration-200 hover:bg-white/5"
                                         >
                                             <CheckCircle
-                                                className="w-6 h-6 flex-shrink-0"
+                                                className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 flex-shrink-0"
                                                 style={{ color: '#2dd4bf' }}
                                             />
-                                            <span className="text-base" style={{ color: '#e2e8f0' }}>
+                                            <span className="text-xs sm:text-sm lg:text-base" style={{ color: '#e2e8f0' }}>
                                                 {benefit}
                                             </span>
                                         </div>
@@ -1082,7 +1094,7 @@ export function Home() {
 
                             {/* Book Drivers Card */}
                             <div
-                                className="p-8 rounded-3xl relative overflow-hidden group transition-all duration-300 hover:shadow-2xl"
+                                className="p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl lg:rounded-3xl relative overflow-hidden group transition-all duration-300 hover:shadow-2xl"
                                 style={{
                                     background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)',
                                     boxShadow: '0 10px 40px rgba(37, 99, 235, 0.3)'
@@ -1097,25 +1109,25 @@ export function Home() {
                                 />
 
                                 <div className="relative z-10">
-                                    <div className="flex items-center gap-3 mb-3">
+                                    <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
                                         <div
-                                            className="w-10 h-10 rounded-xl flex items-center justify-center"
+                                            className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-lg sm:rounded-xl flex items-center justify-center"
                                             style={{
                                                 backgroundColor: 'rgba(255, 255, 255, 0.2)',
                                                 backdropFilter: 'blur(10px)'
                                             }}
                                         >
-                                            <Users className="w-5 h-5 text-white" />
+                                            <Users className="w-4 h-4 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
                                         </div>
-                                        <h4 className="text-2xl font-bold text-white">Book Drivers Separately</h4>
+                                        <h4 className="text-lg sm:text-xl lg:text-2xl font-bold text-white">Book Drivers Separately</h4>
                                     </div>
-                                    <p className="text-white/95 mb-6 leading-relaxed text-base">
+                                    <p className="text-white/95 mb-4 sm:mb-5 lg:mb-6 leading-relaxed text-xs sm:text-sm lg:text-base">
                                         Need professional drivers for your fleet? Browse our network of verified,
                                         experienced drivers and hire them directly.
                                     </p>
                                     <Link to={ROUTES.REGISTER}>
                                         <button
-                                            className="px-6 py-3 rounded-xl font-semibold transition-all inline-flex items-center gap-2 group/btn"
+                                            className="px-4 py-2 sm:px-5 sm:py-2.5 lg:px-6 lg:py-3 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base transition-all inline-flex items-center gap-2 group/btn"
                                             style={{
                                                 backgroundColor: '#ffffff',
                                                 color: '#1d4ed8',
@@ -1131,7 +1143,7 @@ export function Home() {
                                             }}
                                         >
                                             Browse Drivers
-                                            <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                                            <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 group-hover/btn:translate-x-1 transition-transform" />
                                         </button>
                                     </Link>
                                 </div>
@@ -1141,52 +1153,52 @@ export function Home() {
                 </div>
             </section>
 
-            {/* CTA Section */}
-            <section className="py-20 px-4 sm:px-6 lg:px-8">
+            {/* CTA Section - COMPACT ON MOBILE */}
+            <section className="py-10 sm:py-14 lg:py-20 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-7xl mx-auto">
                     <div
-                        className="relative rounded-3xl overflow-hidden"
+                        className="relative rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden"
                         style={{
                             background: 'linear-gradient(to bottom right, #2563eb, #1d4ed8, #0d9488)'
                         }}
                     >
-                        {/* Background Pattern */}
+                        {/* Background Pattern - SMALLER ON MOBILE */}
                         <div className="absolute inset-0 opacity-10">
                             <div
-                                className="absolute top-0 left-0 w-96 h-96 rounded-full blur-3xl"
+                                className="absolute top-0 left-0 w-48 h-48 sm:w-72 sm:h-72 lg:w-96 lg:h-96 rounded-full blur-3xl"
                                 style={{ backgroundColor: '#ffffff' }}
                             />
                             <div
-                                className="absolute bottom-0 right-0 w-96 h-96 rounded-full blur-3xl"
+                                className="absolute bottom-0 right-0 w-48 h-48 sm:w-72 sm:h-72 lg:w-96 lg:h-96 rounded-full blur-3xl"
                                 style={{ backgroundColor: '#ffffff' }}
                             />
                         </div>
 
-                        <div className="relative px-8 py-16 md:px-16 md:py-20 text-center">
-                            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+                        <div className="relative px-5 py-10 sm:px-8 sm:py-12 md:px-12 md:py-16 lg:px-16 lg:py-20 text-center">
+                            <h2 className="text-xl sm:text-2xl lg:text-5xl font-bold text-white mb-3 sm:mb-4 lg:mb-6">
                                 Ready to Get Started?
                             </h2>
-                            <p className="text-white/90 text-lg max-w-2xl mx-auto mb-8">
+                            <p className="text-white/90 text-xs sm:text-sm lg:text-lg max-w-2xl mx-auto mb-5 sm:mb-6 lg:mb-8">
                                 Join thousands of satisfied customers and cab owners who trust Jez Cabs
                                 for their transportation needs
                             </p>
 
-                            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
                                 <Link to={ROUTES.REGISTER}>
                                     <button
-                                        className="px-8 py-3 rounded-lg transition-all inline-flex items-center justify-center gap-2 group font-medium hover:bg-gray-100"
+                                        className="px-5 py-2.5 sm:px-6 sm:py-3 lg:px-8 lg:py-3 rounded-lg transition-all inline-flex items-center justify-center gap-2 group font-medium text-sm sm:text-base hover:bg-gray-100 w-full sm:w-auto"
                                         style={{
                                             backgroundColor: '#ffffff',
                                             color: '#1d4ed8'
                                         }}
                                     >
                                         Book Your First Ride
-                                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                        <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
                                     </button>
                                 </Link>
                                 <Link to={ROUTES.REGISTER}>
                                     <button
-                                        className="px-8 py-3 bg-transparent border-2 border-white text-white rounded-lg hover:bg-white/10 transition-all font-medium"
+                                        className="px-5 py-2.5 sm:px-6 sm:py-3 lg:px-8 lg:py-3 bg-transparent border-2 border-white text-white rounded-lg hover:bg-white/10 transition-all font-medium text-sm sm:text-base w-full sm:w-auto"
                                     >
                                         Register as Owner
                                     </button>
