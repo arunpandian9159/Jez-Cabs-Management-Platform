@@ -56,7 +56,7 @@ export function TripHistory() {
                         rating: trip.customer_rating || 0,
                     },
                     fare: trip.actual_fare || trip.estimated_fare,
-                    distance: trip.distance_km,
+                    distance: Number(trip.distance_km) || 0,
                     duration: trip.estimated_duration_minutes,
                     status: trip.status === 'cancelled' ? 'cancelled' : 'completed',
                     rating: trip.driver_rating,
