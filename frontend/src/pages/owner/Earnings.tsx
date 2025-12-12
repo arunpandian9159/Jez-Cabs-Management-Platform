@@ -203,18 +203,37 @@ export function OwnerEarnings() {
                             <Card padding="md">
                                 <h3 className="font-semibold text-gray-900 mb-4">Monthly Revenue</h3>
                                 <div className="flex items-end gap-3 h-48">
-                                    {monthlyData.map((month) => (
-                                        <div key={month.month} className="flex-1 flex flex-col items-center gap-1">
-                                            <p className="text-xs font-medium text-gray-900">
-                                                {formatCurrency(month.earnings / 1000)}K
-                                            </p>
-                                            <div
-                                                className="w-full bg-gradient-to-t from-primary-500 to-accent-500 rounded-t transition-all hover:opacity-80"
-                                                style={{ height: `${(month.earnings / maxEarning) * 100}%` }}
-                                            />
-                                            <span className="text-xs text-gray-500">{month.month}</span>
-                                        </div>
-                                    ))}
+                                    {monthlyData.map((month) => {
+                                        // Calculate bar height percentage, handling zero max earnings
+                                        const heightPercent = maxEarning > 0
+                                            ? (month.earnings / maxEarning) * 100
+                                            : 0;
+                                        // Minimum height of 8px if there's any earning, to ensure visibility
+                                        const minHeightPx = month.earnings > 0 ? 8 : 4;
+
+                                        return (
+                                            <div key={month.month} className="flex-1 flex flex-col items-center gap-1 h-full">
+                                                <p className="text-xs font-medium text-gray-900">
+                                                    {month.earnings >= 1000
+                                                        ? `${formatCurrency(month.earnings / 1000)}K`
+                                                        : formatCurrency(month.earnings)
+                                                    }
+                                                </p>
+                                                <div className="flex-1 w-full flex items-end">
+                                                    <div
+                                                        className="w-full bg-gradient-to-t from-primary-500 to-accent-500 rounded-t transition-all hover:opacity-80"
+                                                        style={{
+                                                            height: heightPercent > 0
+                                                                ? `${Math.max(heightPercent, 5)}%`
+                                                                : `${minHeightPx}px`,
+                                                            minHeight: `${minHeightPx}px`
+                                                        }}
+                                                    />
+                                                </div>
+                                                <span className="text-xs text-gray-500">{month.month}</span>
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             </Card>
 

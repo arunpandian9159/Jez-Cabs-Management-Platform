@@ -103,6 +103,7 @@ export interface CabStatistics {
     available: number;
     onTrip: number;
     maintenance: number;
+    inactive: number;
 }
 
 export const cabsService = {

@@ -210,12 +210,14 @@ export class CabService {
     const availableCabs = await this.cabRepository.count({ where: { owner_id: ownerId, status: CabStatus.AVAILABLE } });
     const onTripCabs = await this.cabRepository.count({ where: { owner_id: ownerId, status: CabStatus.ON_TRIP } });
     const maintenanceCabs = await this.cabRepository.count({ where: { owner_id: ownerId, status: CabStatus.MAINTENANCE } });
+    const inactiveCabs = await this.cabRepository.count({ where: { owner_id: ownerId, status: CabStatus.INACTIVE } });
 
     return {
       total: totalCabs,
       available: availableCabs,
       onTrip: onTripCabs,
       maintenance: maintenanceCabs,
+      inactive: inactiveCabs,
     };
   }
 }
