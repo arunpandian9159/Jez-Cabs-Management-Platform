@@ -6,9 +6,7 @@ import L from 'leaflet';
 import {
     Phone,
     MessageSquare,
-    Shield,
     Star,
-    AlertTriangle,
     Share2,
     Wifi,
     WifiOff,
@@ -17,7 +15,6 @@ import { Button } from '../../../components/ui/Button';
 import { Card } from '../../../components/ui/Card';
 import { Avatar } from '../../../components/ui/Avatar';
 import { Badge } from '../../../components/ui/Badge';
-import { Modal } from '../../../components/ui/Modal';
 import { cn, formatCurrency, formatDuration } from '../../../lib/utils';
 import { ROUTES, MAP_CONFIG } from '../../../lib/constants';
 import { useDriverLocationSocket } from '../../../hooks';
@@ -58,7 +55,6 @@ export function LiveTracking() {
     const navigate = useNavigate();
     const location = useLocation();
     const [tripStatus, setTripStatus] = useState<TripStatus>('pickup');
-    const [showSOS, setShowSOS] = useState(false);
     const [eta, setEta] = useState(25);
     const [distance, setDistance] = useState(10.2);
 
@@ -122,16 +118,6 @@ export function LiveTracking() {
         });
     };
 
-    const handleSOS = () => {
-        setShowSOS(true);
-    };
-
-    const triggerSOS = () => {
-        // In real app, this would trigger emergency services
-        alert('SOS triggered! Emergency services have been notified.');
-        setShowSOS(false);
-    };
-
     // Generate a simple route line
     const routeCoords: [number, number][] = pickup && destination ? [
         [pickup.lat, pickup.lng],
@@ -180,7 +166,7 @@ export function LiveTracking() {
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="absolute top-4 left-4 right-4 z-[1000]"
+                    className="absolute top-4 left-4 right-4 z-10"
                 >
                     <Card padding="sm" className="bg-white/95 backdrop-blur shadow-lg">
                         <div className="flex items-center justify-between">
@@ -230,22 +216,12 @@ export function LiveTracking() {
                     </Card>
                 </motion.div>
 
-                {/* SOS button */}
-                <motion.button
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    onClick={handleSOS}
-                    className="absolute bottom-4 right-4 z-[1000] w-14 h-14 rounded-full bg-error-600 text-white shadow-lg flex items-center justify-center hover:bg-error-700 transition-colors"
-                >
-                    <Shield className="w-6 h-6" />
-                </motion.button>
-
                 {/* Share trip button */}
                 <motion.button
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.1 }}
-                    className="absolute bottom-4 right-20 z-[1000] w-12 h-12 rounded-full bg-white text-gray-700 shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors border border-gray-200"
+                    className="absolute bottom-4 right-20 z-10 w-12 h-12 rounded-full bg-white text-gray-700 shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors border border-gray-200"
                 >
                     <Share2 className="w-5 h-5" />
                 </motion.button>
@@ -327,60 +303,6 @@ export function LiveTracking() {
                     </Button>
                 </Card>
             </motion.div>
-
-            {/* SOS Modal */}
-            <Modal
-                open={showSOS}
-                onOpenChange={setShowSOS}
-                title="Emergency SOS"
-                description="Are you in an emergency situation?"
-                size="sm"
-            >
-                <div className="space-y-4">
-                    <div className="p-4 bg-error-50 rounded-lg">
-                        <div className="flex items-start gap-3">
-                            <AlertTriangle className="w-6 h-6 text-error-600 flex-shrink-0" />
-                            <div>
-                                <p className="font-medium text-error-900">Emergency Services</p>
-                                <p className="text-sm text-error-700">
-                                    This will alert emergency services and share your live location.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-3">
-                        <Button variant="outline" onClick={() => setShowSOS(false)}>
-                            Cancel
-                        </Button>
-                        <Button variant="danger" onClick={triggerSOS}>
-                            <Shield className="w-4 h-4 mr-2" />
-                            Trigger SOS
-                        </Button>
-                    </div>
-
-                    <div className="pt-4 border-t border-gray-100">
-                        <p className="text-sm text-gray-500 mb-3">Quick actions:</p>
-                        <div className="space-y-2">
-                            <Button
-                                variant="outline"
-                                fullWidth
-                                leftIcon={<Phone className="w-4 h-4" />}
-                                onClick={() => window.open('tel:100')}
-                            >
-                                Call Police (100)
-                            </Button>
-                            <Button
-                                variant="outline"
-                                fullWidth
-                                leftIcon={<Share2 className="w-4 h-4" />}
-                            >
-                                Share Trip with Emergency Contact
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-            </Modal>
         </div>
     );
 }

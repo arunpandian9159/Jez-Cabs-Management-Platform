@@ -13,7 +13,6 @@ import {
     Calendar,
     Wallet,
     Route,
-    Shield,
     Heart,
     ChevronRight,
     Sparkles,
@@ -696,33 +695,6 @@ export function CustomerDashboard() {
                         </Card>
                     </motion.div>
 
-                    {/* Safety Features */}
-                    <motion.div variants={itemVariants}>
-                        <Card className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white shadow-xl border-gray-700 overflow-hidden">
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-primary-500/20 rounded-full blur-3xl" />
-                            <CardContent className="p-5 relative">
-                                <div className="flex items-center gap-3 mb-4">
-                                    <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
-                                        <Shield className="w-5 h-5 text-primary-400" />
-                                    </div>
-                                    <span className="font-semibold">Safety First</span>
-                                </div>
-                                <p className="text-gray-400 text-sm mb-4">
-                                    Your safety is our priority. Access safety features anytime during your ride.
-                                </p>
-                                <Link to={ROUTES.CUSTOMER.SAFETY}>
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        className="w-full border-white/20 text-white hover:bg-white/10 hover:text-white"
-                                        rightIcon={<ArrowRight className="w-4 h-4" />}
-                                    >
-                                        Safety Center
-                                    </Button>
-                                </Link>
-                            </CardContent>
-                        </Card>
-                    </motion.div>
 
                     {/* Upcoming Features Teaser */}
                     <motion.div variants={itemVariants}>
