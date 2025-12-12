@@ -71,7 +71,7 @@ export function TripHistory() {
                         registrationNumber: trip.cab.registration_number,
                     } : null,
                     status: trip.status,
-                    fare: trip.actual_fare || trip.estimated_fare,
+                    fare: Number(trip.actual_fare) || Number(trip.estimated_fare) || 0,
                     distance: Number(trip.distance_km) || 0,
                     duration: trip.estimated_duration_minutes,
                     rating: trip.customer_rating,
