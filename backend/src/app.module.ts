@@ -10,6 +10,7 @@ import mongodbConfig from './config/mongodb.config';
 import jwtConfig from './config/jwt.config';
 import supabaseConfig from './config/supabase.config';
 import { IamModule } from './modules/iam/iam.module';
+import { UsersModule } from './modules/users/users.module';
 import { CabModule } from './modules/cab/cab.module';
 import { DriverModule } from './modules/driver/driver.module';
 import { TripsModule } from './modules/trips/trips.module';
@@ -58,6 +59,7 @@ import { HealthModule } from './health/health.module';
 
     // Feature Modules
     IamModule,
+    UsersModule,
     CabModule,
     DriverModule,
     TripsModule,

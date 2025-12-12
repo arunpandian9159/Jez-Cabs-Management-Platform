@@ -72,7 +72,7 @@ export function TripHistory() {
                     } : null,
                     status: trip.status,
                     fare: trip.actual_fare || trip.estimated_fare,
-                    distance: trip.distance_km,
+                    distance: Number(trip.distance_km) || 0,
                     duration: trip.estimated_duration_minutes,
                     rating: trip.customer_rating,
                     cancellationReason: trip.cancellation_reason,
@@ -98,7 +98,7 @@ export function TripHistory() {
 
     const completedTrips = trips.filter((t) => t.status === 'completed');
     const totalSpent = completedTrips.reduce((acc, t) => acc + t.fare, 0);
-    const totalDistance = completedTrips.reduce((acc, t) => acc + t.distance, 0);
+    const totalDistance = completedTrips.reduce((acc, t) => acc + (Number(t.distance) || 0), 0);
 
     return (
         <div className="space-y-6">
@@ -137,7 +137,7 @@ export function TripHistory() {
                     <p className="text-sm text-gray-500">Total Spent</p>
                 </Card>
                 <Card padding="md" className="text-center">
-                    <p className="text-2xl font-bold text-gray-900">{totalDistance.toFixed(0)} km</p>
+                    <p className="text-2xl font-bold text-gray-900">{(totalDistance || 0).toFixed(0)} km</p>
                     <p className="text-sm text-gray-500">Distance Traveled</p>
                 </Card>
             </motion.div>
