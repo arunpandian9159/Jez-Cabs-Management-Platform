@@ -47,7 +47,7 @@ export interface DisputeFilters {
 export const disputesService = {
     // Create a new dispute
     async create(data: CreateDisputeDto): Promise<Dispute> {
-        return apiClient.post<Dispute>('/v1/disputes', data);
+        return apiClient.post<Dispute>('/disputes', data);
     },
 
     // Get all disputes for the current user
@@ -58,22 +58,22 @@ export const disputesService = {
         if (filters?.offset) params.append('offset', filters.offset.toString());
 
         const query = params.toString();
-        return apiClient.get<Dispute[]>(`/v1/disputes${query ? `?${query}` : ''}`);
+        return apiClient.get<Dispute[]>(`/disputes${query ? `?${query}` : ''}`);
     },
 
     // Get a specific dispute by ID
     async findOne(id: string): Promise<Dispute> {
-        return apiClient.get<Dispute>(`/v1/disputes/${id}`);
+        return apiClient.get<Dispute>(`/disputes/${id}`);
     },
 
     // Resolve a dispute (admin only)
     async resolve(id: string, data: ResolveDisputeDto): Promise<Dispute> {
-        return apiClient.patch<Dispute>(`/v1/disputes/${id}/resolve`, data);
+        return apiClient.patch<Dispute>(`/disputes/${id}/resolve`, data);
     },
 
     // Update dispute status
     async updateStatus(id: string, status: 'pending' | 'in_progress' | 'resolved' | 'closed'): Promise<Dispute> {
-        return apiClient.patch<Dispute>(`/v1/disputes/${id}/status`, { status });
+        return apiClient.patch<Dispute>(`/disputes/${id}/status`, { status });
     },
 };
 

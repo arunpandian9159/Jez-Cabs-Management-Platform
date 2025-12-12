@@ -132,31 +132,31 @@ export const rideshareService = {
 
         const query = params.toString();
         return apiClient.get<CommunityTrip[]>(
-            `/v1/community-trips${query ? `?${query}` : ''}`
+            `/community-trips${query ? `?${query}` : ''}`
         );
     },
 
     // Get a specific community trip
     async getCommunityTrip(id: string): Promise<CommunityTrip> {
-        return apiClient.get<CommunityTrip>(`/v1/community-trips/${id}`);
+        return apiClient.get<CommunityTrip>(`/community-trips/${id}`);
     },
 
     // Create a new community trip
     async createCommunityTrip(data: CreateCommunityTripDto): Promise<CommunityTrip> {
-        return apiClient.post<CommunityTrip>('/v1/community-trips', data);
+        return apiClient.post<CommunityTrip>('/community-trips', data);
     },
 
     // Book a seat on a community trip
     async bookSeat(tripId: string, seats: number = 1): Promise<{ booking_id: string }> {
         return apiClient.post<{ booking_id: string }>(
-            `/v1/community-trips/${tripId}/book`,
+            `/community-trips/${tripId}/book`,
             { seats }
         );
     },
 
     // Cancel community trip booking
     async cancelBooking(tripId: string, reason?: string): Promise<void> {
-        return apiClient.delete<void>(`/v1/community-trips/${tripId}/book`, {
+        return apiClient.delete<void>(`/community-trips/${tripId}/book`, {
             data: { reason },
         });
     },
@@ -166,7 +166,7 @@ export const rideshareService = {
     // Get active trip for sharing
     async getActiveTrip(): Promise<ActiveTripForShare | null> {
         try {
-            return await apiClient.get<ActiveTripForShare>('/v1/trips/active');
+            return await apiClient.get<ActiveTripForShare>('/trips/active');
         } catch {
             // No active trip
             return null;
@@ -175,17 +175,17 @@ export const rideshareService = {
 
     // Get contacts the trip has been shared with
     async getSharedContacts(tripId: string): Promise<SharedContact[]> {
-        return apiClient.get<SharedContact[]>(`/v1/trips/${tripId}/shares`);
+        return apiClient.get<SharedContact[]>(`/trips/${tripId}/shares`);
     },
 
     // Share trip with a contact
     async shareTrip(tripId: string, data: ShareTripDto): Promise<SharedContact> {
-        return apiClient.post<SharedContact>(`/v1/trips/${tripId}/share`, data);
+        return apiClient.post<SharedContact>(`/trips/${tripId}/share`, data);
     },
 
     // Get shareable link for a trip
     async getShareLink(tripId: string): Promise<{ link: string }> {
-        return apiClient.get<{ link: string }>(`/v1/trips/${tripId}/share-link`);
+        return apiClient.get<{ link: string }>(`/trips/${tripId}/share-link`);
     },
 
     // ==================== Exchange History ====================
@@ -205,7 +205,7 @@ export const rideshareService = {
 
         const query = params.toString();
         return apiClient.get<ExchangeHistoryItem[]>(
-            `/v1/exchanges${query ? `?${query}` : ''}`
+            `/exchanges${query ? `?${query}` : ''}`
         );
     },
 
@@ -216,7 +216,7 @@ export const rideshareService = {
         trips_hosted: number;
         trips_booked: number;
     }> {
-        return apiClient.get('/v1/exchanges/stats');
+        return apiClient.get('/exchanges/stats');
     },
 
     // Rate an exchange/rideshare experience
@@ -225,7 +225,7 @@ export const rideshareService = {
         rating: number,
         feedback?: string
     ): Promise<void> {
-        return apiClient.post(`/v1/exchanges/${exchangeId}/rate`, {
+        return apiClient.post(`/exchanges/${exchangeId}/rate`, {
             rating,
             feedback,
         });

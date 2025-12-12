@@ -129,32 +129,32 @@ export const ownerService = {
         if (filters?.offset) params.append('offset', filters.offset.toString());
 
         const query = params.toString();
-        return apiClient.get<Contract[]>(`/v1/owner/contracts${query ? `?${query}` : ''}`);
+        return apiClient.get<Contract[]>(`/owner/contracts${query ? `?${query}` : ''}`);
     },
 
     // Get a specific contract
     async getContract(id: string): Promise<Contract> {
-        return apiClient.get<Contract>(`/v1/owner/contracts/${id}`);
+        return apiClient.get<Contract>(`/owner/contracts/${id}`);
     },
 
     // Create a new contract
     async createContract(data: CreateContractDto): Promise<Contract> {
-        return apiClient.post<Contract>('/v1/owner/contracts', data);
+        return apiClient.post<Contract>('/owner/contracts', data);
     },
 
     // Update a contract
     async updateContract(id: string, data: Partial<CreateContractDto>): Promise<Contract> {
-        return apiClient.patch<Contract>(`/v1/owner/contracts/${id}`, data);
+        return apiClient.patch<Contract>(`/owner/contracts/${id}`, data);
     },
 
     // Renew a contract
     async renewContract(id: string, newEndDate: string): Promise<Contract> {
-        return apiClient.patch<Contract>(`/v1/owner/contracts/${id}/renew`, { endDate: newEndDate });
+        return apiClient.patch<Contract>(`/owner/contracts/${id}/renew`, { endDate: newEndDate });
     },
 
     // Terminate a contract
     async terminateContract(id: string, reason?: string): Promise<Contract> {
-        return apiClient.patch<Contract>(`/v1/owner/contracts/${id}/terminate`, { reason });
+        return apiClient.patch<Contract>(`/owner/contracts/${id}/terminate`, { reason });
     },
 
     // ============= EARNINGS =============
@@ -162,68 +162,68 @@ export const ownerService = {
     // Get earnings summary
     async getEarningsSummary(period?: 'week' | 'month' | 'quarter' | 'year'): Promise<EarningsSummary> {
         const params = period ? `?period=${period}` : '';
-        return apiClient.get<EarningsSummary>(`/v1/owner/earnings/summary${params}`);
+        return apiClient.get<EarningsSummary>(`/owner/earnings/summary${params}`);
     },
 
     // Get earnings by cab
     async getEarningsByCab(): Promise<CabEarning[]> {
-        return apiClient.get<CabEarning[]>('/v1/owner/earnings/by-cab');
+        return apiClient.get<CabEarning[]>('/owner/earnings/by-cab');
     },
 
     // Get transactions
     async getTransactions(limit?: number): Promise<OwnerTransaction[]> {
         const params = limit ? `?limit=${limit}` : '';
-        return apiClient.get<OwnerTransaction[]>(`/v1/owner/transactions${params}`);
+        return apiClient.get<OwnerTransaction[]>(`/owner/transactions${params}`);
     },
 
     // Get monthly earnings data
     async getMonthlyEarnings(months?: number): Promise<MonthlyEarning[]> {
         const params = months ? `?months=${months}` : '';
-        return apiClient.get<MonthlyEarning[]>(`/v1/owner/earnings/monthly${params}`);
+        return apiClient.get<MonthlyEarning[]>(`/owner/earnings/monthly${params}`);
     },
 
     // ============= DRIVERS =============
 
     // Get all drivers under owner
     async getDrivers(): Promise<OwnerDriver[]> {
-        return apiClient.get<OwnerDriver[]>('/v1/owner/drivers');
+        return apiClient.get<OwnerDriver[]>('/owner/drivers');
     },
 
     // Get a specific driver
     async getDriver(id: string): Promise<OwnerDriver> {
-        return apiClient.get<OwnerDriver>(`/v1/owner/drivers/${id}`);
+        return apiClient.get<OwnerDriver>(`/owner/drivers/${id}`);
     },
 
     // Assign a vehicle to driver
     async assignVehicle(driverId: string, vehicleId: string): Promise<OwnerDriver> {
-        return apiClient.patch<OwnerDriver>(`/v1/owner/drivers/${driverId}/assign-vehicle`, { vehicleId });
+        return apiClient.patch<OwnerDriver>(`/owner/drivers/${driverId}/assign-vehicle`, { vehicleId });
     },
 
     // Remove a driver
     async removeDriver(driverId: string): Promise<void> {
-        return apiClient.delete(`/v1/owner/drivers/${driverId}`);
+        return apiClient.delete(`/owner/drivers/${driverId}`);
     },
 
     // ============= SETTINGS =============
 
     // Get business info
     async getBusinessInfo(): Promise<BusinessInfo> {
-        return apiClient.get<BusinessInfo>('/v1/owner/business');
+        return apiClient.get<BusinessInfo>('/owner/business');
     },
 
     // Update business info
     async updateBusinessInfo(data: Partial<BusinessInfo>): Promise<BusinessInfo> {
-        return apiClient.patch<BusinessInfo>('/v1/owner/business', data);
+        return apiClient.patch<BusinessInfo>('/owner/business', data);
     },
 
     // Get settings
     async getSettings(): Promise<OwnerSettings> {
-        return apiClient.get<OwnerSettings>('/v1/owner/settings');
+        return apiClient.get<OwnerSettings>('/owner/settings');
     },
 
     // Update settings
     async updateSettings(data: Partial<OwnerSettings>): Promise<OwnerSettings> {
-        return apiClient.patch<OwnerSettings>('/v1/owner/settings', data);
+        return apiClient.patch<OwnerSettings>('/owner/settings', data);
     },
 };
 

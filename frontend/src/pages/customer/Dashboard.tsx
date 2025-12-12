@@ -172,10 +172,10 @@ export function CustomerDashboard() {
     // Fetch dashboard data
     useEffect(() => {
         const fetchDashboardData = async () => {
-            try {
-                setIsLoading(true);
+            setIsLoading(true);
 
-                // Fetch recent trips
+            // Fetch recent trips - handle gracefully if API not available
+            try {
                 const trips = await tripsService.getRecent(3);
                 const formattedTrips: RecentTripDisplay[] = trips.map(trip => ({
                     id: trip.id,
@@ -190,8 +190,13 @@ export function CustomerDashboard() {
                     distance: `${trip.distance_km} km`,
                 }));
                 setRecentTrips(formattedTrips);
+            } catch (error) {
+                console.warn('Could not fetch recent trips (API may not be implemented yet):', error);
+                setRecentTrips([]);
+            }
 
-                // Fetch saved addresses
+            // Fetch saved addresses - handle gracefully if API not available
+            try {
                 const addresses = await usersService.getSavedAddresses();
                 const formattedAddresses: SavedAddressDisplay[] = addresses.map(addr => ({
                     id: addr.id,
@@ -202,10 +207,15 @@ export function CustomerDashboard() {
                 }));
                 setSavedAddresses(formattedAddresses);
             } catch (error) {
-                console.error('Error fetching dashboard data:', error);
-            } finally {
-                setIsLoading(false);
+                console.warn('Could not fetch saved addresses (API may not be implemented yet):', error);
+                // Provide some default addresses for demo purposes
+                setSavedAddresses([
+                    { id: '1', label: 'Home', address: 'Add your home address', icon: '🏠', color: 'bg-blue-100' },
+                    { id: '2', label: 'Work', address: 'Add your work address', icon: '💼', color: 'bg-green-100' },
+                ]);
             }
+
+            setIsLoading(false);
         };
 
         fetchDashboardData();

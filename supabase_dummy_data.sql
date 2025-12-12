@@ -15,42 +15,42 @@
 -- Cab Owner: kumar.fleet@email.com
 -- Support: support1@jezcabs.com
 
--- Password: password123
+-- Password: 9159788313@Abc
 
 -- Admin User (already created in setup, updating password hash)
-UPDATE users SET password_hash = '$2b$10$rQZ5QzT5WqDCqVK4I.3o.eHJ5mY3Lq8KE4wU9vgC8Y.QZ5I3P9abc' 
+UPDATE users SET password_hash = '$2b$12$wvXKATJHz/j39QBdQ4cyXuEWKxj0iZE4EXjRAyLIniv6zs20WB5jO' 
 WHERE email = 'admin@jezcabs.com';
 
 -- Customers (using 'c' as hex prefix - c is valid hex)
 INSERT INTO users (id, email, password_hash, first_name, last_name, phone, avatar_url, role, status, is_verified, email_verified_at, phone_verified_at)
 VALUES 
-    ('c1000001-0000-0000-0000-000000000001', 'rahul.kumar@email.com', '$2b$10$rQZ5QzT5WqDCqVK4I.3o.eHJ5mY3Lq8KE4wU9vgC8Y.QZ5I3P9abc', 'Rahul', 'Kumar', '+919876543210', NULL, 'customer', 'active', true, NOW(), NOW()),
-    ('c1000001-0000-0000-0000-000000000002', 'priya.sharma@email.com', '$2b$10$rQZ5QzT5WqDCqVK4I.3o.eHJ5mY3Lq8KE4wU9vgC8Y.QZ5I3P9abc', 'Priya', 'Sharma', '+919876543211', NULL, 'customer', 'active', true, NOW(), NOW()),
-    ('c1000001-0000-0000-0000-000000000003', 'amit.verma@email.com', '$2b$10$rQZ5QzT5WqDCqVK4I.3o.eHJ5mY3Lq8KE4wU9vgC8Y.QZ5I3P9abc', 'Amit', 'Verma', '+919876543212', NULL, 'customer', 'active', true, NOW(), NOW()),
-    ('c1000001-0000-0000-0000-000000000004', 'sneha.patel@email.com', '$2b$10$rQZ5QzT5WqDCqVK4I.3o.eHJ5mY3Lq8KE4wU9vgC8Y.QZ5I3P9abc', 'Sneha', 'Patel', '+919876543213', NULL, 'customer', 'active', true, NOW(), NOW()),
-    ('c1000001-0000-0000-0000-000000000005', 'vivek.singh@email.com', '$2b$10$rQZ5QzT5WqDCqVK4I.3o.eHJ5mY3Lq8KE4wU9vgC8Y.QZ5I3P9abc', 'Vivek', 'Singh', '+919876543214', NULL, 'customer', 'active', true, NOW(), NOW()),
-    ('c1000001-0000-0000-0000-000000000006', 'ananya.reddy@email.com', '$2b$10$rQZ5QzT5WqDCqVK4I.3o.eHJ5mY3Lq8KE4wU9vgC8Y.QZ5I3P9abc', 'Ananya', 'Reddy', '+919876543215', NULL, 'customer', 'pending_verification', false, NULL, NULL);
+    ('c1000001-0000-0000-0000-000000000001', 'rahul.kumar@email.com', '$2b$12$wvXKATJHz/j39QBdQ4cyXuEWKxj0iZE4EXjRAyLIniv6zs20WB5jO', 'Rahul', 'Kumar', '+919876543210', NULL, 'customer', 'active', true, NOW(), NOW()),
+    ('c1000001-0000-0000-0000-000000000002', 'priya.sharma@email.com', '$2b$12$wvXKATJHz/j39QBdQ4cyXuEWKxj0iZE4EXjRAyLIniv6zs20WB5jO', 'Priya', 'Sharma', '+919876543211', NULL, 'customer', 'active', true, NOW(), NOW()),
+    ('c1000001-0000-0000-0000-000000000003', 'amit.verma@email.com', '$2b$12$wvXKATJHz/j39QBdQ4cyXuEWKxj0iZE4EXjRAyLIniv6zs20WB5jO', 'Amit', 'Verma', '+919876543212', NULL, 'customer', 'active', true, NOW(), NOW()),
+    ('c1000001-0000-0000-0000-000000000004', 'sneha.patel@email.com', '$2b$12$wvXKATJHz/j39QBdQ4cyXuEWKxj0iZE4EXjRAyLIniv6zs20WB5jO', 'Sneha', 'Patel', '+919876543213', NULL, 'customer', 'active', true, NOW(), NOW()),
+    ('c1000001-0000-0000-0000-000000000005', 'vivek.singh@email.com', '$2b$12$wvXKATJHz/j39QBdQ4cyXuEWKxj0iZE4EXjRAyLIniv6zs20WB5jO', 'Vivek', 'Singh', '+919876543214', NULL, 'customer', 'active', true, NOW(), NOW()),
+    ('c1000001-0000-0000-0000-000000000006', 'ananya.reddy@email.com', '$2b$12$wvXKATJHz/j39QBdQ4cyXuEWKxj0iZE4EXjRAyLIniv6zs20WB5jO', 'Ananya', 'Reddy', '+919876543215', NULL, 'customer', 'pending_verification', false, NULL, NULL);
 
 -- Drivers (using 'd' as hex prefix - d is valid hex)
 INSERT INTO users (id, email, password_hash, first_name, last_name, phone, avatar_url, role, status, is_verified, email_verified_at, phone_verified_at)
 VALUES 
-    ('d1000001-0000-0000-0000-000000000001', 'rajesh.kumar.driver@email.com', '$2b$10$rQZ5QzT5WqDCqVK4I.3o.eHJ5mY3Lq8KE4wU9vgC8Y.QZ5I3P9abc', 'Rajesh', 'Kumar', '+919876543220', NULL, 'driver', 'active', true, NOW(), NOW()),
-    ('d1000001-0000-0000-0000-000000000002', 'suresh.menon@email.com', '$2b$10$rQZ5QzT5WqDCqVK4I.3o.eHJ5mY3Lq8KE4wU9vgC8Y.QZ5I3P9abc', 'Suresh', 'Menon', '+919876543221', NULL, 'driver', 'active', true, NOW(), NOW()),
-    ('d1000001-0000-0000-0000-000000000003', 'mahesh.rao@email.com', '$2b$10$rQZ5QzT5WqDCqVK4I.3o.eHJ5mY3Lq8KE4wU9vgC8Y.QZ5I3P9abc', 'Mahesh', 'Rao', '+919876543222', NULL, 'driver', 'active', true, NOW(), NOW()),
-    ('d1000001-0000-0000-0000-000000000004', 'vikram.patil@email.com', '$2b$10$rQZ5QzT5WqDCqVK4I.3o.eHJ5mY3Lq8KE4wU9vgC8Y.QZ5I3P9abc', 'Vikram', 'Patil', '+919876543223', NULL, 'driver', 'active', true, NOW(), NOW()),
-    ('d1000001-0000-0000-0000-000000000005', 'ganesh.kumar@email.com', '$2b$10$rQZ5QzT5WqDCqVK4I.3o.eHJ5mY3Lq8KE4wU9vgC8Y.QZ5I3P9abc', 'Ganesh', 'Kumar', '+919876543224', NULL, 'driver', 'pending_verification', false, NULL, NULL),
-    ('d1000001-0000-0000-0000-000000000006', 'ramesh.sharma@email.com', '$2b$10$rQZ5QzT5WqDCqVK4I.3o.eHJ5mY3Lq8KE4wU9vgC8Y.QZ5I3P9abc', 'Ramesh', 'Sharma', '+919876543225', NULL, 'driver', 'inactive', true, NOW(), NOW());
+    ('d1000001-0000-0000-0000-000000000001', 'rajesh.kumar.driver@email.com', '$2b$12$wvXKATJHz/j39QBdQ4cyXuEWKxj0iZE4EXjRAyLIniv6zs20WB5jO', 'Rajesh', 'Kumar', '+919876543220', NULL, 'driver', 'active', true, NOW(), NOW()),
+    ('d1000001-0000-0000-0000-000000000002', 'suresh.menon@email.com', '$2b$12$wvXKATJHz/j39QBdQ4cyXuEWKxj0iZE4EXjRAyLIniv6zs20WB5jO', 'Suresh', 'Menon', '+919876543221', NULL, 'driver', 'active', true, NOW(), NOW()),
+    ('d1000001-0000-0000-0000-000000000003', 'mahesh.rao@email.com', '$2b$12$wvXKATJHz/j39QBdQ4cyXuEWKxj0iZE4EXjRAyLIniv6zs20WB5jO', 'Mahesh', 'Rao', '+919876543222', NULL, 'driver', 'active', true, NOW(), NOW()),
+    ('d1000001-0000-0000-0000-000000000004', 'vikram.patil@email.com', '$2b$12$wvXKATJHz/j39QBdQ4cyXuEWKxj0iZE4EXjRAyLIniv6zs20WB5jO', 'Vikram', 'Patil', '+919876543223', NULL, 'driver', 'active', true, NOW(), NOW()),
+    ('d1000001-0000-0000-0000-000000000005', 'ganesh.kumar@email.com', '$2b$12$wvXKATJHz/j39QBdQ4cyXuEWKxj0iZE4EXjRAyLIniv6zs20WB5jO', 'Ganesh', 'Kumar', '+919876543224', NULL, 'driver', 'pending_verification', false, NULL, NULL),
+    ('d1000001-0000-0000-0000-000000000006', 'ramesh.sharma@email.com', '$2b$12$wvXKATJHz/j39QBdQ4cyXuEWKxj0iZE4EXjRAyLIniv6zs20WB5jO', 'Ramesh', 'Sharma', '+919876543225', NULL, 'driver', 'inactive', true, NOW(), NOW());
 
 -- Cab Owners (using 'a' as hex prefix for cab owners - 'o' is NOT valid hex)
 INSERT INTO users (id, email, password_hash, first_name, last_name, phone, avatar_url, role, status, is_verified, email_verified_at, phone_verified_at)
 VALUES 
-    ('a1000001-0000-0000-0000-000000000001', 'kumar.fleet@email.com', '$2b$10$rQZ5QzT5WqDCqVK4I.3o.eHJ5mY3Lq8KE4wU9vgC8Y.QZ5I3P9abc', 'Sunil', 'Kumar', '+919876543230', NULL, 'cab_owner', 'active', true, NOW(), NOW()),
-    ('a1000001-0000-0000-0000-000000000002', 'ravi.motors@email.com', '$2b$10$rQZ5QzT5WqDCqVK4I.3o.eHJ5mY3Lq8KE4wU9vgC8Y.QZ5I3P9abc', 'Ravi', 'Motors', '+919876543231', NULL, 'cab_owner', 'pending_verification', false, NULL, NULL);
+    ('a1000001-0000-0000-0000-000000000001', 'kumar.fleet@email.com', '$2b$12$wvXKATJHz/j39QBdQ4cyXuEWKxj0iZE4EXjRAyLIniv6zs20WB5jO', 'Sunil', 'Kumar', '+919876543230', NULL, 'cab_owner', 'active', true, NOW(), NOW()),
+    ('a1000001-0000-0000-0000-000000000002', 'ravi.motors@email.com', '$2b$12$wvXKATJHz/j39QBdQ4cyXuEWKxj0iZE4EXjRAyLIniv6zs20WB5jO', 'Ravi', 'Motors', '+919876543231', NULL, 'cab_owner', 'pending_verification', false, NULL, NULL);
 
 -- Support Staff (using 'e' as hex prefix for support - 's' is NOT valid hex)
 INSERT INTO users (id, email, password_hash, first_name, last_name, phone, avatar_url, role, status, is_verified, email_verified_at, phone_verified_at)
 VALUES 
-    ('e1000001-0000-0000-0000-000000000001', 'support1@jezcabs.com', '$2b$10$rQZ5QzT5WqDCqVK4I.3o.eHJ5mY3Lq8KE4wU9vgC8Y.QZ5I3P9abc', 'Lakshmi', 'Devi', '+919876543240', NULL, 'support', 'active', true, NOW(), NOW());
+    ('e1000001-0000-0000-0000-000000000001', 'support1@jezcabs.com', '$2b$12$wvXKATJHz/j39QBdQ4cyXuEWKxj0iZE4EXjRAyLIniv6zs20WB5jO', 'Lakshmi', 'Devi', '+919876543240', NULL, 'support', 'active', true, NOW(), NOW());
 
 -- =====================================================
 -- 2. DRIVER PROFILES

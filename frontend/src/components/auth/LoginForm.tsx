@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Mail, Lock, Eye, EyeOff, ArrowRight, Sparkles } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, ArrowRight, Sparkles, AlertCircle } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { loginSchema, LoginFormData, AuthModalType, SocialLoginButtons } from './AuthModal';
@@ -11,6 +11,7 @@ interface LoginFormProps {
     onSubmit: (data: LoginFormData) => Promise<void>;
     isLoading: boolean;
     onSwitchModal: (type: AuthModalType) => void;
+    error?: string | null;
 }
 
 const containerVariants = {
@@ -38,7 +39,7 @@ const itemVariants = {
     },
 } as const;
 
-export const LoginForm = ({ onSubmit, isLoading, onSwitchModal }: LoginFormProps) => {
+export const LoginForm = ({ onSubmit, isLoading, onSwitchModal, error }: LoginFormProps) => {
     const [showPassword, setShowPassword] = useState(false);
     const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>({
         resolver: zodResolver(loginSchema),
@@ -184,6 +185,34 @@ export const LoginForm = ({ onSubmit, isLoading, onSwitchModal }: LoginFormProps
                             </Button>
                         </motion.div>
                     </motion.div>
+
+                    {/* Error Message Display */}
+                    <AnimatePresence>
+                        {error && (
+                            <motion.div
+                                initial={{ opacity: 0, y: -10, height: 0 }}
+                                animate={{ opacity: 1, y: 0, height: 'auto' }}
+                                exit={{ opacity: 0, y: -10, height: 0 }}
+                                transition={{ duration: 0.3, ease: 'easeOut' }}
+                                className="mt-4"
+                            >
+                                <div className="flex items-center gap-3 p-4 bg-red-50 border-2 border-red-200 rounded-xl text-red-700">
+                                    <div className="flex-shrink-0">
+                                        <motion.div
+                                            initial={{ scale: 0, rotate: -180 }}
+                                            animate={{ scale: 1, rotate: 0 }}
+                                            transition={{ type: 'spring', stiffness: 200, damping: 10 }}
+                                        >
+                                            <AlertCircle className="w-5 h-5 text-red-500" />
+                                        </motion.div>
+                                    </div>
+                                    <div className="flex-1">
+                                        <p className="text-sm font-semibold">{error}</p>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </form>
 
                 <motion.div

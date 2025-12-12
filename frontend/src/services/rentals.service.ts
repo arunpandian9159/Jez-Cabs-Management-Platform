@@ -87,12 +87,12 @@ export const rentalsService = {
         if (filters?.endDate) params.append('endDate', filters.endDate);
 
         const query = params.toString();
-        return apiClient.get<CabForRental[]>(`/v1/cabs/available${query ? `?${query}` : ''}`);
+        return apiClient.get<CabForRental[]>(`/cabs/available${query ? `?${query}` : ''}`);
     },
 
     // Create a new rental booking
     async create(data: CreateRentalDto): Promise<Rental> {
-        return apiClient.post<Rental>('/v1/rentals', data);
+        return apiClient.post<Rental>('/rentals', data);
     },
 
     // Get all rentals for the current user
@@ -103,22 +103,22 @@ export const rentalsService = {
         if (filters?.offset) params.append('offset', filters.offset.toString());
 
         const query = params.toString();
-        return apiClient.get<Rental[]>(`/v1/rentals${query ? `?${query}` : ''}`);
+        return apiClient.get<Rental[]>(`/rentals${query ? `?${query}` : ''}`);
     },
 
     // Get a specific rental by ID
     async findOne(id: string): Promise<Rental> {
-        return apiClient.get<Rental>(`/v1/rentals/${id}`);
+        return apiClient.get<Rental>(`/rentals/${id}`);
     },
 
     // Confirm a rental
     async confirm(id: string): Promise<Rental> {
-        return apiClient.patch<Rental>(`/v1/rentals/${id}/confirm`, {});
+        return apiClient.patch<Rental>(`/rentals/${id}/confirm`, {});
     },
 
     // Cancel a rental
     async cancel(id: string): Promise<Rental> {
-        return apiClient.patch<Rental>(`/v1/rentals/${id}/cancel`, {});
+        return apiClient.patch<Rental>(`/rentals/${id}/cancel`, {});
     },
 
     // Get active rentals

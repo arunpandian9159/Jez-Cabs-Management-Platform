@@ -74,7 +74,7 @@ export interface TripFilters {
 export const tripsService = {
     // Create a new trip request
     async create(data: CreateTripDto): Promise<Trip> {
-        return apiClient.post<Trip>('/v1/trips', data);
+        return apiClient.post<Trip>('/trips', data);
     },
 
     // Get all trips for the current user
@@ -85,37 +85,37 @@ export const tripsService = {
         if (filters?.offset) params.append('offset', filters.offset.toString());
 
         const query = params.toString();
-        return apiClient.get<Trip[]>(`/v1/trips${query ? `?${query}` : ''}`);
+        return apiClient.get<Trip[]>(`/trips${query ? `?${query}` : ''}`);
     },
 
     // Get a specific trip by ID
     async findOne(id: string): Promise<Trip> {
-        return apiClient.get<Trip>(`/v1/trips/${id}`);
+        return apiClient.get<Trip>(`/trips/${id}`);
     },
 
     // Driver accepts a trip request
     async accept(tripId: string, cabId: string): Promise<Trip> {
-        return apiClient.patch<Trip>(`/v1/trips/${tripId}/accept`, { cab_id: cabId });
+        return apiClient.patch<Trip>(`/trips/${tripId}/accept`, { cab_id: cabId });
     },
 
     // Start the trip (driver verifies OTP)
     async start(tripId: string, otp: string): Promise<Trip> {
-        return apiClient.patch<Trip>(`/v1/trips/${tripId}/start`, { otp });
+        return apiClient.patch<Trip>(`/trips/${tripId}/start`, { otp });
     },
 
     // Complete the trip
     async complete(tripId: string, actualFare: number): Promise<Trip> {
-        return apiClient.patch<Trip>(`/v1/trips/${tripId}/complete`, { actual_fare: actualFare });
+        return apiClient.patch<Trip>(`/trips/${tripId}/complete`, { actual_fare: actualFare });
     },
 
     // Cancel a trip
     async cancel(tripId: string, reason: string): Promise<Trip> {
-        return apiClient.patch<Trip>(`/v1/trips/${tripId}/cancel`, { reason });
+        return apiClient.patch<Trip>(`/trips/${tripId}/cancel`, { reason });
     },
 
     // Rate a trip
     async rate(tripId: string, rating: number, feedback?: string): Promise<Trip> {
-        return apiClient.post<Trip>(`/v1/trips/${tripId}/rate`, { rating, feedback });
+        return apiClient.post<Trip>(`/trips/${tripId}/rate`, { rating, feedback });
     },
 
     // Get recent trips (for dashboard)

@@ -51,32 +51,32 @@ export const adminService = {
         if (filters?.offset) params.append('offset', filters.offset.toString());
 
         const query = params.toString();
-        return apiClient.get<Verification[]>(`/v1/admin/verifications${query ? `?${query}` : ''}`);
+        return apiClient.get<Verification[]>(`/admin/verifications${query ? `?${query}` : ''}`);
     },
 
     // Get verification stats
     async getVerificationStats(): Promise<VerificationStats> {
-        return apiClient.get<VerificationStats>('/v1/admin/verifications/stats');
+        return apiClient.get<VerificationStats>('/admin/verifications/stats');
     },
 
     // Get a specific verification
     async getVerification(id: string): Promise<Verification> {
-        return apiClient.get<Verification>(`/v1/admin/verifications/${id}`);
+        return apiClient.get<Verification>(`/admin/verifications/${id}`);
     },
 
     // Approve a verification
     async approveVerification(id: string, notes?: string): Promise<Verification> {
-        return apiClient.patch<Verification>(`/v1/admin/verifications/${id}/approve`, { notes });
+        return apiClient.patch<Verification>(`/admin/verifications/${id}/approve`, { notes });
     },
 
     // Reject a verification
     async rejectVerification(id: string, reason: string): Promise<Verification> {
-        return apiClient.patch<Verification>(`/v1/admin/verifications/${id}/reject`, { reason });
+        return apiClient.patch<Verification>(`/admin/verifications/${id}/reject`, { reason });
     },
 
     // Download verification document
     async downloadDocument(id: string): Promise<Blob> {
-        return apiClient.get<Blob>(`/v1/admin/verifications/${id}/document`, {
+        return apiClient.get<Blob>(`/admin/verifications/${id}/document`, {
             responseType: 'blob',
         });
     },

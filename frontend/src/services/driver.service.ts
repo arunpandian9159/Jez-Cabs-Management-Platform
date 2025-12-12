@@ -81,53 +81,53 @@ export interface UpdateProfileDto {
 export const driverService = {
     // Get driver profile
     async getProfile(): Promise<DriverProfile> {
-        return apiClient.get<DriverProfile>('/v1/drivers/profile');
+        return apiClient.get<DriverProfile>('/drivers/profile');
     },
 
     // Update driver profile
     async updateProfile(data: UpdateProfileDto): Promise<DriverProfile> {
-        return apiClient.patch<DriverProfile>('/v1/drivers/profile', data);
+        return apiClient.patch<DriverProfile>('/drivers/profile', data);
     },
 
     // Get driver dashboard stats
     async getDashboardStats(): Promise<DriverStats> {
-        return apiClient.get<DriverStats>('/v1/drivers/stats');
+        return apiClient.get<DriverStats>('/drivers/stats');
     },
 
     // Get driver earnings
     async getEarnings(): Promise<DriverEarnings> {
-        return apiClient.get<DriverEarnings>('/v1/drivers/earnings');
+        return apiClient.get<DriverEarnings>('/drivers/earnings');
     },
 
     // Update driver location
     async updateLocation(lat: number, lng: number): Promise<void> {
-        return apiClient.patch('/v1/drivers/location', { lat, lng });
+        return apiClient.patch('/drivers/location', { lat, lng });
     },
 
     // Go online (start accepting trips)
     async goOnline(): Promise<DriverProfile> {
-        return apiClient.patch<DriverProfile>('/v1/drivers/go-online', {});
+        return apiClient.patch<DriverProfile>('/drivers/go-online', {});
     },
 
     // Go offline (stop accepting trips)
     async goOffline(): Promise<DriverProfile> {
-        return apiClient.patch<DriverProfile>('/v1/drivers/go-offline', {});
+        return apiClient.patch<DriverProfile>('/drivers/go-offline', {});
     },
 
     // Update availability status
     async updateStatus(status: 'offline' | 'online' | 'busy'): Promise<DriverProfile> {
-        return apiClient.patch<DriverProfile>('/v1/drivers/status', { status });
+        return apiClient.patch<DriverProfile>('/drivers/status', { status });
     },
 
     // Get pending trip requests (usually via WebSocket, but fallback API)
     async getTripRequests(): Promise<TripRequest[]> {
-        return apiClient.get<TripRequest[]>('/v1/drivers/trip-requests');
+        return apiClient.get<TripRequest[]>('/drivers/trip-requests');
     },
 
     // Get driver trips history
     async getTripHistory(limit?: number): Promise<import('./trips.service').Trip[]> {
         const params = limit ? `?limit=${limit}` : '';
-        return apiClient.get(`/v1/trips${params}`);
+        return apiClient.get(`/trips${params}`);
     },
 };
 
