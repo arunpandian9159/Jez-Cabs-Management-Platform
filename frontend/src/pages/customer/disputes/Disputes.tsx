@@ -64,7 +64,7 @@ export function Disputes() {
     const [selectedTripId, setSelectedTripId] = useState('');
     const [disputes, setDisputes] = useState<DisputeDisplay[]>([]);
     const [tripOptions, setTripOptions] = useState<TripOption[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [_isLoading, setIsLoading] = useState(true);
 
     // Fetch disputes and trips on mount
     useEffect(() => {

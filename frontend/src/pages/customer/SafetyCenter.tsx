@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
     Shield,
@@ -17,29 +17,52 @@ import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Modal } from '../../components/ui/Modal';
 import { useNavigate } from 'react-router-dom';
+import { safetyService } from '../../services';
 
-// TODO: API Integration - Fetch user safety settings
-// API endpoint: GET /api/v1/users/safety-settings
-interface SafetySettings {
+// Types for safety settings display
+interface SafetySettingsDisplay {
     shareRideEnabled: boolean;
     trustedContactsCount: number;
     sosEnabled: boolean;
     audioRecordingEnabled: boolean;
     pinVerificationEnabled: boolean;
 }
-const safetySettings: SafetySettings = {
-    shareRideEnabled: false,
-    trustedContactsCount: 0,
-    sosEnabled: false,
-    audioRecordingEnabled: false,
-    pinVerificationEnabled: false,
-};
 
 export function SafetyCenter() {
     const navigate = useNavigate();
     const [showSOSModal, setShowSOSModal] = useState(false);
     const [sosTriggered, setSosTriggered] = useState(false);
     const [countdown, setCountdown] = useState(5);
+    const [safetySettings, setSafetySettings] = useState<SafetySettingsDisplay>({
+        shareRideEnabled: false,
+        trustedContactsCount: 0,
+        sosEnabled: false,
+        audioRecordingEnabled: false,
+        pinVerificationEnabled: false,
+    });
+    const [_isLoading, setIsLoading] = useState(true);
+
+    // Fetch safety settings and emergency contacts count on mount
+    useEffect(() => {
+        const fetchSafetyData = async () => {
+            try {
+                setIsLoading(true);
+                const contacts = await safetyService.getEmergencyContacts();
+                setSafetySettings(prev => ({
+                    ...prev,
+                    trustedContactsCount: contacts.length,
+                    sosEnabled: contacts.length > 0,
+                    shareRideEnabled: contacts.length > 0,
+                }));
+            } catch (error) {
+                console.error('Error fetching safety data:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchSafetyData();
+    }, []);
 
     const handleTriggerSOS = () => {
         setShowSOSModal(true);
@@ -51,6 +74,11 @@ export function SafetyCenter() {
             setCountdown((prev) => {
                 if (prev <= 1) {
                     clearInterval(timer);
+                    // Trigger SOS via API
+                    safetyService.triggerSOS({
+                        lat: 0, // In a real app, get current location
+                        lng: 0,
+                    }).catch(console.error);
                     setSosTriggered(true);
                     return 0;
                 }

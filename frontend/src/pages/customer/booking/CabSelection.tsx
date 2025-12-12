@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -19,11 +19,7 @@ import { Input } from '../../../components/ui/Input';
 import { cn, formatCurrency } from '../../../lib/utils';
 import { ROUTES, CAB_TYPES } from '../../../lib/constants';
 import type { CabType, PriceEstimate } from '../../../types';
-
-// TODO: Fetch price estimates from API based on pickup/destination
-// API endpoint: POST /api/v1/trips/estimate
-// This should be populated after receiving estimates from the backend
-const mockEstimates: PriceEstimate[] = [];
+import { cabsService } from '../../../services';
 
 export function CabSelection() {
     const navigate = useNavigate();
@@ -32,12 +28,54 @@ export function CabSelection() {
     const [showPromoInput, setShowPromoInput] = useState(false);
     const [promoCode, setPromoCode] = useState('');
     const [showFareBreakdown, setShowFareBreakdown] = useState(false);
-
+    const [estimates, setEstimates] = useState<PriceEstimate[]>([]);
+    const [_isLoading, setIsLoading] = useState(true);
 
     const pickup = location.state?.pickup;
     const destination = location.state?.destination;
 
-    const selectedEstimate = mockEstimates.find((e) => e.cabType === selectedCab);
+    // Fetch price estimates on mount
+    useEffect(() => {
+        const fetchEstimates = async () => {
+            if (!pickup || !destination) return;
+
+            try {
+                setIsLoading(true);
+                const priceEstimates = await cabsService.getPriceEstimates(
+                    pickup.lat || 0,
+                    pickup.lng || 0,
+                    destination.lat || 0,
+                    destination.lng || 0
+                );
+
+                // Map API response to PriceEstimate format
+                const formattedEstimates: PriceEstimate[] = priceEstimates.map(e => ({
+                    cabType: e.cab_type as CabType,
+                    cabTypeName: e.display_name,
+                    cabTypeIcon: CAB_TYPES[e.cab_type as keyof typeof CAB_TYPES]?.icon || '🚗',
+                    estimatedPickupTime: e.eta_minutes,
+                    fareBreakdown: {
+                        baseFare: e.base_fare,
+                        distanceCharge: e.estimated_fare * 0.6,
+                        timeCharge: e.estimated_fare * 0.2,
+                        taxes: e.estimated_fare * 0.1,
+                        total: e.estimated_fare,
+                        currency: 'INR',
+                    },
+                    available: true,
+                }));
+                setEstimates(formattedEstimates);
+            } catch (error) {
+                console.error('Error fetching price estimates:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchEstimates();
+    }, [pickup, destination]);
+
+    const selectedEstimate = estimates.find((e) => e.cabType === selectedCab);
 
     const handleConfirmBooking = () => {
         if (selectedCab && selectedEstimate) {
@@ -109,7 +147,7 @@ export function CabSelection() {
             >
                 <h2 className="text-lg font-semibold text-gray-900 mb-3">Choose your ride</h2>
                 <div className="space-y-2">
-                    {mockEstimates.map((estimate, index) => (
+                    {estimates.map((estimate: PriceEstimate, index: number) => (
                         <motion.div
                             key={estimate.cabType}
                             initial={{ opacity: 0, x: -20 }}

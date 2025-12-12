@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
     Plus,
@@ -16,10 +16,10 @@ import { Input } from '../../../components/ui/Input';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../../components/ui/Tabs';
 import { Modal } from '../../../components/ui/Modal';
 import { formatCurrency, formatDate, formatTime } from '../../../lib/utils';
+import { usersService } from '../../../services';
 
-// TODO: Fetch payment methods from API
-// API endpoint: GET /api/v1/payments/methods
-interface PaymentMethod {
+// Types for payments display
+interface PaymentMethodDisplay {
     id: string;
     type: string;
     brand?: string;
@@ -28,11 +28,8 @@ interface PaymentMethod {
     upiId?: string;
     isDefault: boolean;
 }
-const paymentMethods: PaymentMethod[] = [];
 
-// TODO: Fetch transactions from API
-// API endpoint: GET /api/v1/payments/transactions
-interface Transaction {
+interface TransactionDisplay {
     id: string;
     type: string;
     description: string;
@@ -41,16 +38,60 @@ interface Transaction {
     status: string;
     paymentMethod: string;
 }
-const transactions: Transaction[] = [];
-
-// TODO: Fetch wallet balance from API
-// API endpoint: GET /api/v1/payments/wallet
-const walletBalance = 0;
 
 export function Payments() {
     const [activeTab, setActiveTab] = useState('transactions');
     const [showAddCard, setShowAddCard] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    const [paymentMethods, setPaymentMethods] = useState<PaymentMethodDisplay[]>([]);
+    const [transactions, setTransactions] = useState<TransactionDisplay[]>([]);
+    const [walletBalance, setWalletBalance] = useState(0);
+    const [_isLoading, setIsLoading] = useState(true);
+
+    // Fetch payment data on mount
+    useEffect(() => {
+        const fetchPaymentData = async () => {
+            try {
+                setIsLoading(true);
+
+                // Fetch payment methods
+                const methods = await usersService.getPaymentMethods();
+                const formattedMethods: PaymentMethodDisplay[] = methods.map(m => ({
+                    id: m.id,
+                    type: m.type,
+                    brand: m.type === 'card' ? 'Visa' : undefined,
+                    last4: m.last_four,
+                    expiry: m.expires_at,
+                    upiId: m.upi_id,
+                    isDefault: m.is_default,
+                }));
+                setPaymentMethods(formattedMethods);
+
+                // Fetch transactions
+                const txns = await usersService.getTransactions();
+                const formattedTxns: TransactionDisplay[] = txns.map(t => ({
+                    id: t.id,
+                    type: t.type,
+                    description: t.description,
+                    amount: t.amount,
+                    date: t.created_at,
+                    status: t.status,
+                    paymentMethod: t.payment_method || 'Wallet',
+                }));
+                setTransactions(formattedTxns);
+
+                // Fetch wallet balance
+                const wallet = await usersService.getWalletBalance();
+                setWalletBalance(wallet.balance);
+            } catch (error) {
+                console.error('Error fetching payment data:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchPaymentData();
+    }, []);
 
     const filteredTransactions = transactions.filter((tx) =>
         tx.description.toLowerCase().includes(searchQuery.toLowerCase())

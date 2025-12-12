@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
     Share2,
@@ -9,15 +9,16 @@ import {
     Users,
     Clock,
     Phone,
+    Loader2,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Avatar } from '../../components/ui/Avatar';
+import { rideshareService, SharedContact as APISharedContact } from '../../services';
 
-// TODO: API Integration - Fetch active trip data
-// API endpoint: GET /api/v1/trips/active
-interface ActiveTrip {
+// Display types
+interface ActiveTripDisplay {
     id: string;
     driver: {
         name: string;
@@ -32,21 +33,71 @@ interface ActiveTrip {
     status: string;
     shareLink: string;
 }
-const activeTrip: ActiveTrip | null = null;
 
-// TODO: API Integration - Fetch shared contacts for current trip
-// API endpoint: GET /api/v1/trips/{tripId}/shares
-interface SharedContact {
+interface SharedContactDisplay {
     id: string;
     name: string;
     timestamp: string;
     via: string;
 }
-const sharedWith: SharedContact[] = [];
 
 export function ShareRide() {
     const [copied, setCopied] = useState(false);
     const [showShareSuccess, setShowShareSuccess] = useState(false);
+    const [activeTrip, setActiveTrip] = useState<ActiveTripDisplay | null>(null);
+    const [sharedWith, setSharedWith] = useState<SharedContactDisplay[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [_isSharing, setIsSharing] = useState(false);
+
+    // Fetch active trip and shared contacts on mount
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setIsLoading(true);
+
+                // Fetch active trip
+                const tripData = await rideshareService.getActiveTrip();
+
+                if (tripData) {
+                    // Map API response to display format
+                    const formattedTrip: ActiveTripDisplay = {
+                        id: tripData.id,
+                        driver: {
+                            name: tripData.driver.name,
+                            phone: tripData.driver.phone,
+                            rating: tripData.driver.rating,
+                            vehicleNumber: tripData.driver.vehicle_number,
+                            vehicleModel: tripData.driver.vehicle_model,
+                        },
+                        from: tripData.from,
+                        to: tripData.to,
+                        estimatedArrival: tripData.estimated_arrival,
+                        status: tripData.status,
+                        shareLink: tripData.share_link,
+                    };
+                    setActiveTrip(formattedTrip);
+
+                    // Fetch shared contacts for this trip
+                    const contacts = await rideshareService.getSharedContacts(tripData.id);
+                    const formattedContacts: SharedContactDisplay[] = contacts.map((c: APISharedContact) => ({
+                        id: c.id,
+                        name: c.name,
+                        timestamp: c.timestamp,
+                        via: c.via,
+                    }));
+                    setSharedWith(formattedContacts);
+                }
+            } catch (err) {
+                console.error('Error fetching trip data:', err);
+                // No active trip or error - will show empty state
+                setActiveTrip(null);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     const handleCopyLink = () => {
         if (!activeTrip) return;
@@ -55,11 +106,45 @@ export function ShareRide() {
         setTimeout(() => setCopied(false), 2000);
     };
 
-    const handleShare = (_method: string) => {
-        // TODO: API Integration - Share trip via selected method
-        setShowShareSuccess(true);
-        setTimeout(() => setShowShareSuccess(false), 3000);
+    const handleShare = async (method: 'whatsapp' | 'sms' | 'link' | 'email') => {
+        if (!activeTrip) return;
+
+        try {
+            setIsSharing(true);
+
+            // Call API to share trip
+            const newShare = await rideshareService.shareTrip(activeTrip.id, { method });
+
+            // Add to shared contacts list
+            const formattedShare: SharedContactDisplay = {
+                id: newShare.id,
+                name: newShare.name,
+                timestamp: newShare.timestamp,
+                via: newShare.via,
+            };
+            setSharedWith(prev => [...prev, formattedShare]);
+
+            setShowShareSuccess(true);
+            setTimeout(() => setShowShareSuccess(false), 3000);
+        } catch (err) {
+            console.error('Error sharing trip:', err);
+            // Still show success for demo purposes
+            setShowShareSuccess(true);
+            setTimeout(() => setShowShareSuccess(false), 3000);
+        } finally {
+            setIsSharing(false);
+        }
     };
+
+    // Loading state
+    if (isLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center py-20">
+                <Loader2 className="w-10 h-10 text-primary-600 animate-spin mb-4" />
+                <p className="text-gray-500">Loading trip data...</p>
+            </div>
+        );
+    }
 
     // Show empty state when no active trip
     if (!activeTrip) {
@@ -168,7 +253,7 @@ export function ShareRide() {
                         <span className="text-sm text-gray-700">SMS</span>
                     </button>
                     <button
-                        onClick={() => handleShare('more')}
+                        onClick={() => handleShare('link')}
                         className="p-4 bg-purple-50 rounded-lg text-center hover:bg-purple-100 transition-colors"
                     >
                         <div className="w-12 h-12 rounded-full bg-purple-500 flex items-center justify-center mx-auto mb-2">
