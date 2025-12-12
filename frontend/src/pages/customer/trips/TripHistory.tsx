@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
     Calendar,
@@ -14,26 +14,26 @@ import { Badge, StatusBadge } from '../../../components/ui/Badge';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../../components/ui/Tabs';
 import { Select } from '../../../components/ui/Select';
 import { formatCurrency, formatDate, formatTime, formatDuration } from '../../../lib/utils';
+import { tripsService } from '../../../services';
 
-// TODO: Fetch trip history from API
-// API endpoint: GET /api/v1/trips
-interface TripDriver {
+// Types for trip history display
+interface TripDriverDisplay {
     name: string;
     rating: number;
 }
-interface TripCab {
+interface TripCabDisplay {
     make: string;
     model: string;
     registrationNumber: string;
 }
-interface Trip {
+interface TripDisplay {
     id: string;
     type: string;
     pickup: string;
     destination: string;
     date: string;
-    driver: TripDriver | null;
-    cab: TripCab | null;
+    driver: TripDriverDisplay | null;
+    cab: TripCabDisplay | null;
     status: string;
     fare: number;
     distance: number;
@@ -42,11 +42,52 @@ interface Trip {
     cancellationReason?: string;
     refundAmount?: number;
 }
-const trips: Trip[] = [];
 
 export function TripHistory() {
     const [activeTab, setActiveTab] = useState('all');
     const [sortBy, setSortBy] = useState('date');
+    const [trips, setTrips] = useState<TripDisplay[]>([]);
+    const [_isLoading, setIsLoading] = useState(true);
+
+    // Fetch trips on mount
+    useEffect(() => {
+        const fetchTrips = async () => {
+            try {
+                setIsLoading(true);
+                const data = await tripsService.findAll();
+                const formatted: TripDisplay[] = data.map(trip => ({
+                    id: trip.id,
+                    type: trip.scheduled_at ? 'planned' : 'instant',
+                    pickup: trip.pickup_address,
+                    destination: trip.destination_address,
+                    date: trip.created_at,
+                    driver: trip.driver ? {
+                        name: `${trip.driver.first_name} ${trip.driver.last_name}`,
+                        rating: trip.driver.rating || 4.5,
+                    } : null,
+                    cab: trip.cab ? {
+                        make: trip.cab.make,
+                        model: trip.cab.model,
+                        registrationNumber: trip.cab.registration_number,
+                    } : null,
+                    status: trip.status,
+                    fare: trip.actual_fare || trip.estimated_fare,
+                    distance: trip.distance_km,
+                    duration: trip.estimated_duration_minutes,
+                    rating: trip.customer_rating,
+                    cancellationReason: trip.cancellation_reason,
+                    refundAmount: undefined,
+                }));
+                setTrips(formatted);
+            } catch (error) {
+                console.error('Error fetching trips:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchTrips();
+    }, []);
 
     const filteredTrips = trips.filter((trip) => {
         if (activeTab === 'all') return true;

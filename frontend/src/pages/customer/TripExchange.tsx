@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
     Users,
@@ -12,6 +12,8 @@ import {
     MessageCircle,
     DollarSign,
     ChevronDown,
+    Loader2,
+    AlertCircle,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
@@ -21,15 +23,16 @@ import { Modal } from '../../components/ui/Modal';
 import { Avatar } from '../../components/ui/Avatar';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
 import { formatCurrency, formatDate, formatTime } from '../../lib/utils';
+import { rideshareService, CommunityTrip as APICommunityTrip } from '../../services';
 
-// TODO: Fetch community trips from API
-// API endpoint: GET /api/v1/community-trips
+// Display types for community trips
 interface TripPoster {
     name: string;
     rating: number;
     trips: number;
 }
-interface CommunityTrip {
+
+interface CommunityTripDisplay {
     id: string;
     type: string;
     poster: TripPoster;
@@ -43,13 +46,57 @@ interface CommunityTrip {
     vehicleType: string;
     description: string;
 }
-const communityTrips: CommunityTrip[] = [];
 
 export function TripExchange() {
     const [activeTab, setActiveTab] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
     const [showFilters, setShowFilters] = useState(false);
-    const [selectedTrip, setSelectedTrip] = useState<typeof communityTrips[0] | null>(null);
+    const [selectedTrip, setSelectedTrip] = useState<CommunityTripDisplay | null>(null);
+    const [communityTrips, setCommunityTrips] = useState<CommunityTripDisplay[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    // Fetch community trips on mount
+    useEffect(() => {
+        const fetchCommunityTrips = async () => {
+            try {
+                setIsLoading(true);
+                setError(null);
+                const trips = await rideshareService.getCommunityTrips();
+
+                // Map API response to display format
+                const formatted: CommunityTripDisplay[] = trips.map((trip: APICommunityTrip) => ({
+                    id: trip.id,
+                    type: trip.type,
+                    poster: {
+                        name: trip.poster.name,
+                        rating: trip.poster.rating,
+                        trips: trip.poster.trips,
+                    },
+                    from: trip.from,
+                    to: trip.to,
+                    date: trip.date,
+                    time: trip.time,
+                    seats: trip.seats,
+                    pricePerSeat: trip.price_per_seat,
+                    status: trip.status,
+                    vehicleType: trip.vehicle_type,
+                    description: trip.description,
+                }));
+
+                setCommunityTrips(formatted);
+            } catch (err) {
+                console.error('Error fetching community trips:', err);
+                setError('Unable to load community trips. Please try again later.');
+                // Keep empty array on error
+                setCommunityTrips([]);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchCommunityTrips();
+    }, []);
 
     const filteredTrips = communityTrips.filter((trip) => {
         const matchesSearch =
@@ -59,6 +106,37 @@ export function TripExchange() {
         const matchesTab = activeTab === 'all' || trip.type === activeTab;
         return matchesSearch && matchesTab;
     });
+
+    // Loading state
+    if (isLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center py-20">
+                <Loader2 className="w-10 h-10 text-primary-600 animate-spin mb-4" />
+                <p className="text-gray-500">Loading community trips...</p>
+            </div>
+        );
+    }
+
+    // Error state
+    if (error) {
+        return (
+            <div className="space-y-6">
+                <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                >
+                    <h1 className="text-2xl font-bold text-gray-900 mb-1">Community Trips</h1>
+                    <p className="text-gray-500">Share rides and split costs with fellow travelers</p>
+                </motion.div>
+                <Card padding="lg" className="text-center">
+                    <AlertCircle className="w-12 h-12 text-error-500 mx-auto mb-4" />
+                    <h3 className="font-semibold text-gray-900 mb-2">Unable to Load Trips</h3>
+                    <p className="text-gray-500 mb-4">{error}</p>
+                    <Button onClick={() => window.location.reload()}>Try Again</Button>
+                </Card>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-6">

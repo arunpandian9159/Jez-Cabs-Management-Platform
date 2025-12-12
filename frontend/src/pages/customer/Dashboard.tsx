@@ -166,7 +166,7 @@ export function CustomerDashboard() {
     const [hoveredAction, setHoveredAction] = useState<string | null>(null);
     const [recentTrips, setRecentTrips] = useState<RecentTripDisplay[]>([]);
     const [savedAddresses, setSavedAddresses] = useState<SavedAddressDisplay[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [_isLoading, setIsLoading] = useState(true);
     const currentHour = new Date().getHours();
 
     // Fetch dashboard data

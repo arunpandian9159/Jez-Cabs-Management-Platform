@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -15,10 +15,10 @@ import { StatusBadge } from '../../../components/ui/Badge';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../../components/ui/Tabs';
 import { formatCurrency, formatDate } from '../../../lib/utils';
 import { ROUTES } from '../../../lib/constants';
+import { rentalsService, Rental } from '../../../services';
 
-// TODO: API Integration - Fetch active rentals
-// API endpoint: GET /api/v1/rentals?status=active
-interface Rental {
+// Types for rental display
+interface RentalDisplay {
     id: string;
     cab: {
         make: string;
@@ -41,14 +41,54 @@ interface Rental {
     rating?: number;
     refundAmount?: number;
 }
-const activeRentals: Rental[] = [];
-
-// TODO: API Integration - Fetch past rentals
-// API endpoint: GET /api/v1/rentals?status=completed,cancelled
-const pastRentals: Rental[] = [];
 
 export function ActiveRentals() {
     const [activeTab, setActiveTab] = useState('active');
+    const [activeRentals, setActiveRentals] = useState<RentalDisplay[]>([]);
+    const [pastRentals, setPastRentals] = useState<RentalDisplay[]>([]);
+    const [_isLoading, setIsLoading] = useState(true);
+
+    // Fetch rentals on mount
+    useEffect(() => {
+        const fetchRentals = async () => {
+            try {
+                setIsLoading(true);
+                const rentals = await rentalsService.findAll();
+
+                const formatRental = (r: Rental): RentalDisplay => ({
+                    id: r.id,
+                    cab: {
+                        make: r.cab?.make || '',
+                        model: r.cab?.model || '',
+                        registrationNumber: r.cab?.registration_number || '',
+                        color: r.cab?.color || 'Black',
+                    },
+                    owner: {
+                        name: '',
+                        phone: '',
+                    },
+                    startDate: r.start_date,
+                    endDate: r.end_date,
+                    status: r.status,
+                    totalAmount: r.total_amount,
+                    paidAmount: r.total_amount, // Assuming fully paid
+                    daysRemaining: Math.max(0, Math.ceil((new Date(r.end_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24))),
+                });
+
+                const active = rentals.filter((r: Rental) => r.status === 'active' || r.status === 'confirmed').map(formatRental);
+                const past = rentals.filter((r: Rental) => r.status === 'completed' || r.status === 'cancelled').map(formatRental);
+
+                setActiveRentals(active);
+                setPastRentals(past);
+            } catch (error) {
+                console.error('Error fetching rentals:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchRentals();
+    }, []);
 
     return (
         <div className="space-y-6">

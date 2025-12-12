@@ -32,7 +32,7 @@ interface EmergencyContactDisplay {
 
 export function EmergencyContacts() {
     const [contacts, setContacts] = useState<EmergencyContactDisplay[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [_isLoading, setIsLoading] = useState(true);
     const [showAddModal, setShowAddModal] = useState(false);
     const [editingContact, setEditingContact] = useState<EmergencyContactDisplay | null>(null);
     const [newContact, setNewContact] = useState({

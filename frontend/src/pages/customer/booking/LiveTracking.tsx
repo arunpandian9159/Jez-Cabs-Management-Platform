@@ -61,8 +61,31 @@ export function LiveTracking() {
 
     const { pickup, destination, cabType, fare, driver } = location.state || {};
 
-    // TODO: API Integration - Driver position should come from WebSocket
-    // WebSocket endpoint: ws://{host}/api/v1/trips/{tripId}/location
+    /**
+     * WebSocket Integration for Real-time Driver Location
+     * 
+     * When WebSocket is implemented, connect to:
+     * WebSocket endpoint: ws://{host}/api/v1/trips/{tripId}/location
+     * 
+     * Expected message format:
+     * {
+     *   lat: number,
+     *   lng: number,
+     *   heading: number,
+     *   speed: number,
+     *   timestamp: string
+     * }
+     * 
+     * Implementation example:
+     * useEffect(() => {
+     *   const ws = new WebSocket(`${WS_HOST}/api/v1/trips/${tripId}/location`);
+     *   ws.onmessage = (event) => {
+     *     const data = JSON.parse(event.data);
+     *     setDriverPosition({ lat: data.lat, lng: data.lng });
+     *   };
+     *   return () => ws.close();
+     * }, [tripId]);
+     */
     const [driverPosition, setDriverPosition] = useState({
         lat: pickup?.lat || 12.9352,
         lng: pickup?.lng || 77.6245,

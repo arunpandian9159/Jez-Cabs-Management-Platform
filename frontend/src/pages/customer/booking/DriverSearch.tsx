@@ -13,8 +13,52 @@ import { Avatar } from '../../../components/ui/Avatar';
 import { cn, formatCurrency } from '../../../lib/utils';
 import { ROUTES } from '../../../lib/constants';
 
-// TODO: Driver data will be received via WebSocket when a driver accepts the trip request
-// API endpoint: WebSocket /ws/trips/:tripId
+/**
+ * WebSocket Integration for Driver Assignment
+ * 
+ * When WebSocket is implemented, the flow will be:
+ * 1. Create trip via REST API (POST /api/v1/trips)
+ * 2. Connect to WebSocket: ws://{host}/api/v1/trips/{tripId}/status
+ * 3. Receive driver assignment when a driver accepts
+ * 
+ * Expected WebSocket message format:
+ * {
+ *   type: 'driver_assigned' | 'driver_arriving' | 'driver_arrived',
+ *   driver?: {
+ *     id: string,
+ *     name: string,
+ *     photo: string | null,
+ *     rating: number,
+ *     totalTrips: number,
+ *     phone: string,
+ *     cab: {
+ *       make: string,
+ *       model: string,
+ *       color: string,
+ *       registrationNumber: string,
+ *     },
+ *     eta: number,
+ *   },
+ *   eta?: number,
+ * }
+ * 
+ * Implementation example:
+ * useEffect(() => {
+ *   const ws = new WebSocket(`${WS_HOST}/api/v1/trips/${tripId}/status`);
+ *   ws.onmessage = (event) => {
+ *     const data = JSON.parse(event.data);
+ *     if (data.type === 'driver_assigned') {
+ *       setDriver(data.driver);
+ *       setSearchState('found');
+ *     } else if (data.type === 'driver_arriving') {
+ *       setSearchState('arriving');
+ *     } else if (data.type === 'driver_arrived') {
+ *       setSearchState('arrived');
+ *     }
+ *   };
+ *   return () => ws.close();
+ * }, [tripId]);
+ */
 interface DriverCab {
     make: string;
     model: string;
@@ -44,6 +88,7 @@ export function DriverSearch() {
     const { pickup, destination, cabType, fare } = location.state || {};
 
     // Simulate driver search
+    // In production, driver data will be received via WebSocket when a driver accepts the trip
     useEffect(() => {
         if (searchState === 'searching') {
             const progressInterval = setInterval(() => {
@@ -56,13 +101,11 @@ export function DriverSearch() {
                 });
             }, 100);
 
-            // TODO: Replace with WebSocket connection to receive driver assignment
-            // For now, this simulates the driver search - in production, driver data
-            // will be received via WebSocket when a driver accepts the trip
+            // For demo purposes, transition to 'found' state after 3 seconds
+            // In production, this will be triggered by WebSocket message
             const findTimer = setTimeout(() => {
                 setSearchState('found');
-                // TODO: Driver will be set from WebSocket response
-                // setDriver(receivedDriverData);
+                // Driver data will be set from WebSocket response
             }, 3000);
 
             return () => {

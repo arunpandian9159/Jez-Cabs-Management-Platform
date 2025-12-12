@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
     ArrowLeft,
@@ -9,6 +9,8 @@ import {
     DollarSign,
     Star,
     MessageCircle,
+    Loader2,
+    AlertCircle,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
@@ -16,10 +18,10 @@ import { Badge } from '../../components/ui/Badge';
 import { Avatar } from '../../components/ui/Avatar';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
 import { formatCurrency, formatDate, formatTime } from '../../lib/utils';
+import { rideshareService, ExchangeHistoryItem as APIExchangeHistoryItem } from '../../services';
 
-// TODO: API Integration - Fetch exchange history (ridesharing history)
-// API endpoint: GET /api/v1/exchanges
-interface ExchangeHistoryItem {
+// Display types for exchange history
+interface ExchangeHistoryDisplay {
     id: string;
     type: 'booked' | 'hosted';
     status: 'completed' | 'cancelled' | 'upcoming';
@@ -45,10 +47,76 @@ interface ExchangeHistoryItem {
     rating?: number;
     cancelReason?: string;
 }
-const exchangeHistory: ExchangeHistoryItem[] = [];
 
 export function ExchangeHistory() {
     const [activeTab, setActiveTab] = useState('all');
+    const [exchangeHistory, setExchangeHistory] = useState<ExchangeHistoryDisplay[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [totalEarnings, setTotalEarnings] = useState(0);
+    const [totalSaved, setTotalSaved] = useState(0);
+
+    // Fetch exchange history on mount
+    useEffect(() => {
+        const fetchExchangeHistory = async () => {
+            try {
+                setIsLoading(true);
+                setError(null);
+
+                // Fetch exchange history
+                const history = await rideshareService.getExchangeHistory();
+
+                // Map API response to display format
+                const formatted: ExchangeHistoryDisplay[] = history.map((item: APIExchangeHistoryItem) => ({
+                    id: item.id,
+                    type: item.type,
+                    status: item.status,
+                    trip: {
+                        from: item.trip.from,
+                        to: item.trip.to,
+                        date: item.trip.date,
+                        time: item.trip.time,
+                    },
+                    host: item.host ? {
+                        name: item.host.name,
+                        rating: item.host.rating,
+                    } : undefined,
+                    passengers: item.passengers?.map(p => ({
+                        name: p.name,
+                        rating: p.rating,
+                    })),
+                    price: item.price,
+                    earnings: item.earnings,
+                    seatsBooked: item.seats_booked,
+                    seatsOffered: item.seats_offered,
+                    seatsFilled: item.seats_filled,
+                    rating: item.rating,
+                    cancelReason: item.cancel_reason,
+                }));
+
+                setExchangeHistory(formatted);
+
+                // Calculate totals from the fetched data
+                const earnings = formatted
+                    .filter(e => e.type === 'hosted' && e.status === 'completed')
+                    .reduce((sum, e) => sum + (e.earnings || 0), 0);
+                setTotalEarnings(earnings);
+
+                const saved = formatted
+                    .filter(e => e.type === 'booked' && e.status === 'completed')
+                    .reduce((sum, e) => sum + (e.price || 0), 0);
+                setTotalSaved(saved);
+            } catch (err) {
+                console.error('Error fetching exchange history:', err);
+                setError('Unable to load exchange history. Please try again later.');
+                setExchangeHistory([]);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchExchangeHistory();
+    }, []);
 
     const filteredHistory = exchangeHistory.filter((item) => {
         if (activeTab === 'all') return true;
@@ -70,13 +138,36 @@ export function ExchangeHistory() {
         }
     };
 
-    const totalEarnings = exchangeHistory
-        .filter(e => e.type === 'hosted' && e.status === 'completed')
-        .reduce((sum, e) => sum + (e.earnings || 0), 0);
+    // Loading state
+    if (isLoading) {
+        return (
+            <div className="flex flex-col items-center justify-center py-20">
+                <Loader2 className="w-10 h-10 text-primary-600 animate-spin mb-4" />
+                <p className="text-gray-500">Loading exchange history...</p>
+            </div>
+        );
+    }
 
-    const totalSaved = exchangeHistory
-        .filter(e => e.type === 'booked' && e.status === 'completed')
-        .reduce((sum, e) => sum + (e.price || 0), 0);
+    // Error state
+    if (error) {
+        return (
+            <div className="space-y-6">
+                <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                >
+                    <h1 className="text-2xl font-bold text-gray-900 mb-1">Exchange History</h1>
+                    <p className="text-gray-500">Your trip sharing and booking history</p>
+                </motion.div>
+                <Card padding="lg" className="text-center">
+                    <AlertCircle className="w-12 h-12 text-error-500 mx-auto mb-4" />
+                    <h3 className="font-semibold text-gray-900 mb-2">Unable to Load History</h3>
+                    <p className="text-gray-500 mb-4">{error}</p>
+                    <Button onClick={() => window.location.reload()}>Try Again</Button>
+                </Card>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-6">

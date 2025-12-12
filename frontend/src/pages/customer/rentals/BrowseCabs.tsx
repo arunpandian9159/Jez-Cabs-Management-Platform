@@ -59,7 +59,7 @@ export function BrowseCabs() {
     const [showFilters, setShowFilters] = useState(false);
     const [favorites, setFavorites] = useState<string[]>([]);
     const [availableCabs, setAvailableCabs] = useState<AvailableCabDisplay[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [_isLoading, setIsLoading] = useState(true);
 
     // Fetch available cabs on mount
     useEffect(() => {
