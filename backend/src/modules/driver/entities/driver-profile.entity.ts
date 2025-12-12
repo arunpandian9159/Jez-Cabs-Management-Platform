@@ -47,9 +47,6 @@ export class DriverProfile {
     @Column({ type: 'int', default: 0 })
     total_trips: number;
 
-    @Column({ type: 'decimal', precision: 12, scale: 2, default: 0 })
-    total_earnings: number;
-
     @Column({ type: 'decimal', precision: 10, scale: 8, nullable: true })
     current_location_lat: number | null;
 

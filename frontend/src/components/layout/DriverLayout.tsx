@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -15,6 +15,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { Avatar } from '../ui/Avatar';
 import { Sidebar, NavItem } from './Sidebar';
 import { cn } from '../../lib/utils';
+import { driverService } from '../../services';
 
 const navigation: NavItem[] = [
     { name: 'Dashboard', href: '/driver', icon: LayoutDashboard, end: true },
@@ -31,6 +32,36 @@ export function DriverLayout() {
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const location = useLocation();
     const { user, logout } = useAuth();
+
+    // Fetch driver profile to get initial online status
+    useEffect(() => {
+        const fetchDriverProfile = async () => {
+            try {
+                const profile = await driverService.getProfile();
+                setIsOnline(profile.is_online || false);
+            } catch (error) {
+                console.error('Error fetching driver profile:', error);
+            }
+        };
+
+        fetchDriverProfile();
+    }, []);
+
+    // Handle online/offline toggle with API call
+    const handleToggleOnline = async () => {
+        try {
+            if (isOnline) {
+                await driverService.goOffline();
+                setIsOnline(false);
+            } else {
+                await driverService.goOnline();
+                setIsOnline(true);
+            }
+        } catch (error) {
+            console.error('Error toggling online status:', error);
+            // Optionally show an error toast to the user
+        }
+    };
 
     // Get current page title
     const currentPageTitle = navigation.find((item) =>
@@ -51,7 +82,7 @@ export function DriverLayout() {
                 onLogout={logout}
                 showOnlineToggle
                 isOnline={isOnline}
-                onToggleOnline={() => setIsOnline(!isOnline)}
+                onToggleOnline={handleToggleOnline}
             />
 
             {/* Main content area */}
