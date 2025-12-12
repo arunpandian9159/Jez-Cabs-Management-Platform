@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
     FileText,
@@ -12,6 +12,8 @@ import {
     Calendar,
     User,
     Car,
+    Loader2,
+    AlertTriangle,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
@@ -21,31 +23,39 @@ import { Select } from '../../components/ui/Select';
 import { Modal } from '../../components/ui/Modal';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
 import { formatCurrency, formatDate } from '../../lib/utils';
-
-// TODO: Fetch contracts from API
-// API endpoint: GET /api/v1/owner/contracts
-interface Contract {
-    id: string;
-    type: string;
-    title: string;
-    partyName: string;
-    vehicleAssigned: string;
-    startDate: string;
-    endDate: string;
-    status: string;
-    commission?: number;
-    monthlyTarget?: number;
-    premium?: number;
-    documents: string[];
-}
-const contracts: Contract[] = [];
+import { ownerService, type Contract } from '../../services/owner.service';
 
 export function Contracts() {
     const [activeTab, setActiveTab] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
-    const [selectedContract, setSelectedContract] = useState<typeof contracts[0] | null>(null);
+    const [selectedContract, setSelectedContract] = useState<Contract | null>(null);
     const [showNewContractModal, setShowNewContractModal] = useState(false);
+
+    // API state
+    const [contracts, setContracts] = useState<Contract[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [isProcessing, setIsProcessing] = useState(false);
+
+    // Fetch contracts on mount
+    useEffect(() => {
+        const fetchContracts = async () => {
+            try {
+                setIsLoading(true);
+                setError(null);
+                const contractsData = await ownerService.getContracts();
+                setContracts(contractsData);
+            } catch (err) {
+                console.error('Error fetching contracts:', err);
+                setError('Failed to load contracts. Please try again.');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchContracts();
+    }, []);
 
     const filteredContracts = contracts.filter((contract) => {
         const matchesSearch = contract.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -54,6 +64,37 @@ export function Contracts() {
         const matchesTab = activeTab === 'all' || contract.type === activeTab;
         return matchesSearch && matchesStatus && matchesTab;
     });
+
+    const handleTerminateContract = async (id: string) => {
+        try {
+            setIsProcessing(true);
+            await ownerService.terminateContract(id);
+            setContracts((prev) => prev.filter((c) => c.id !== id));
+            setSelectedContract(null);
+        } catch (err) {
+            console.error('Error terminating contract:', err);
+        } finally {
+            setIsProcessing(false);
+        }
+    };
+
+    const handleRenewContract = async (id: string) => {
+        try {
+            setIsProcessing(true);
+            // Extend by 1 year
+            const newEndDate = new Date();
+            newEndDate.setFullYear(newEndDate.getFullYear() + 1);
+            const updated = await ownerService.renewContract(id, newEndDate.toISOString());
+            setContracts((prev) =>
+                prev.map((c) => (c.id === id ? updated : c))
+            );
+            setSelectedContract(null);
+        } catch (err) {
+            console.error('Error renewing contract:', err);
+        } finally {
+            setIsProcessing(false);
+        }
+    };
 
     const getStatusBadge = (status: string) => {
         switch (status) {
@@ -73,6 +114,32 @@ export function Contracts() {
     const activeContracts = contracts.filter(c => c.status === 'active').length;
     const expiringContracts = contracts.filter(c => c.status === 'expiring').length;
     const expiredContracts = contracts.filter(c => c.status === 'expired').length;
+
+    // Loading state
+    if (isLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh]">
+                <div className="text-center">
+                    <Loader2 className="w-10 h-10 text-primary-600 animate-spin mx-auto mb-4" />
+                    <p className="text-gray-500">Loading contracts...</p>
+                </div>
+            </div>
+        );
+    }
+
+    // Error state
+    if (error) {
+        return (
+            <div className="flex items-center justify-center min-h-[60vh]">
+                <div className="text-center max-w-md">
+                    <AlertTriangle className="w-12 h-12 text-error-500 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Error Loading Data</h3>
+                    <p className="text-gray-500 mb-4">{error}</p>
+                    <Button onClick={() => window.location.reload()}>Try Again</Button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-6">
@@ -299,16 +366,27 @@ export function Contracts() {
 
                         {/* Actions */}
                         <div className="flex gap-3 pt-4 border-t border-gray-100">
-                            <Button variant="outline" fullWidth>
+                            <Button variant="outline" fullWidth disabled={isProcessing}>
                                 Edit Contract
                             </Button>
                             {selectedContract.status === 'expiring' && (
-                                <Button fullWidth>
+                                <Button
+                                    fullWidth
+                                    onClick={() => handleRenewContract(selectedContract.id)}
+                                    disabled={isProcessing}
+                                    loading={isProcessing}
+                                >
                                     Renew Contract
                                 </Button>
                             )}
                             {selectedContract.status === 'active' && (
-                                <Button variant="danger" fullWidth>
+                                <Button
+                                    variant="danger"
+                                    fullWidth
+                                    onClick={() => handleTerminateContract(selectedContract.id)}
+                                    disabled={isProcessing}
+                                    loading={isProcessing}
+                                >
                                     Terminate Contract
                                 </Button>
                             )}
