@@ -224,9 +224,9 @@ export function AuthModal({ isOpen, modalType, onClose, onSwitchModal }: AuthMod
                             <X className="w-5 h-5 text-gray-600" />
                         </motion.button>
 
-                        {/* Error Toast */}
+                        {/* Error Toast (only for registration - login errors show inline) */}
                         <AnimatePresence>
-                            {error && (
+                            {error && isRegister && (
                                 <motion.div
                                     initial={{ opacity: 0, y: -20 }}
                                     animate={{ opacity: 1, y: 0 }}
@@ -430,6 +430,7 @@ export function AuthModal({ isOpen, modalType, onClose, onSwitchModal }: AuthMod
                                             onSubmit={handleLogin}
                                             isLoading={isLoading}
                                             onSwitchModal={onSwitchModal}
+                                            error={error}
                                         />
                                     </motion.div>
                                 )}

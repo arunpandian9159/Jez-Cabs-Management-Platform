@@ -89,7 +89,7 @@ export interface CabFilters {
 export const cabsService = {
     // Create a new cab
     async create(data: CreateCabDto): Promise<Cab> {
-        return apiClient.post<Cab>('/v1/cabs', data);
+        return apiClient.post<Cab>('/cabs', data);
     },
 
     // Get all cabs (with filters)
@@ -102,12 +102,12 @@ export const cabsService = {
         if (filters?.offset) params.append('offset', filters.offset.toString());
 
         const query = params.toString();
-        return apiClient.get<Cab[]>(`/v1/cabs${query ? `?${query}` : ''}`);
+        return apiClient.get<Cab[]>(`/cabs${query ? `?${query}` : ''}`);
     },
 
     // Get a specific cab by ID
     async findOne(id: string): Promise<Cab> {
-        return apiClient.get<Cab>(`/v1/cabs/${id}`);
+        return apiClient.get<Cab>(`/cabs/${id}`);
     },
 
     // Get available cabs near a location
@@ -118,27 +118,27 @@ export const cabsService = {
         if (cabType) params.append('type', cabType);
 
         const query = params.toString();
-        return apiClient.get<Cab[]>(`/v1/cabs/available${query ? `?${query}` : ''}`);
+        return apiClient.get<Cab[]>(`/cabs/available${query ? `?${query}` : ''}`);
     },
 
     // Update a cab
     async update(id: string, data: UpdateCabDto): Promise<Cab> {
-        return apiClient.patch<Cab>(`/v1/cabs/${id}`, data);
+        return apiClient.patch<Cab>(`/cabs/${id}`, data);
     },
 
     // Update cab status
     async updateStatus(id: string, status: 'available' | 'busy' | 'maintenance' | 'inactive'): Promise<Cab> {
-        return apiClient.patch<Cab>(`/v1/cabs/${id}/status`, { status });
+        return apiClient.patch<Cab>(`/cabs/${id}/status`, { status });
     },
 
     // Assign driver to cab
     async assignDriver(cabId: string, driverId: string): Promise<Cab> {
-        return apiClient.patch<Cab>(`/v1/cabs/${cabId}/assign-driver`, { driver_id: driverId });
+        return apiClient.patch<Cab>(`/cabs/${cabId}/assign-driver`, { driver_id: driverId });
     },
 
     // Delete a cab
     async delete(id: string): Promise<void> {
-        return apiClient.delete(`/v1/cabs/${id}`);
+        return apiClient.delete(`/cabs/${id}`);
     },
 
     // Get cab statistics (for cab owners)
@@ -149,7 +149,7 @@ export const cabsService = {
         totalTrips: number;
         totalEarnings: number;
     }> {
-        return apiClient.get('/v1/cabs/statistics');
+        return apiClient.get('/cabs/statistics');
     },
 
     // Get price estimates for a route
@@ -165,7 +165,7 @@ export const cabsService = {
             dest_lat: destLat.toString(),
             dest_lng: destLng.toString(),
         });
-        return apiClient.get<CabPriceEstimate[]>(`/v1/cabs/price-estimates?${params}`);
+        return apiClient.get<CabPriceEstimate[]>(`/cabs/price-estimates?${params}`);
     },
 };
 

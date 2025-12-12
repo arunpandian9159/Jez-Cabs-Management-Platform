@@ -32,14 +32,22 @@ api.interceptors.request.use(
 api.interceptors.response.use(
     (response) => response,
     (error: AxiosError<ApiError>) => {
-        // Handle 401 Unauthorized - redirect to login
+        // Handle 401 Unauthorized
         if (error.response?.status === 401) {
-            storage.remove('auth_token');
-            storage.remove('user');
+            // Get the request URL to check if it's an auth endpoint
+            const requestUrl = error.config?.url || '';
+            const isAuthEndpoint = requestUrl.includes('/auth/login') || requestUrl.includes('/auth/register');
 
-            // Only redirect if not already on login page
-            if (!window.location.pathname.includes('/login')) {
-                window.location.href = '/login';
+            // Only redirect for non-auth endpoints (e.g., protected API calls)
+            // For auth endpoints (login/register), let the error be handled by the form
+            if (!isAuthEndpoint) {
+                storage.remove('auth_token');
+                storage.remove('user');
+
+                // Only redirect if not already on login page
+                if (!window.location.pathname.includes('/login')) {
+                    window.location.href = '/login';
+                }
             }
         }
 

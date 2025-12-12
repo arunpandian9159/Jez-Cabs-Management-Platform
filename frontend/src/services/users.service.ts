@@ -72,33 +72,33 @@ export interface UpdateAddressDto {
 export const usersService = {
     // Get saved addresses
     async getSavedAddresses(): Promise<SavedAddress[]> {
-        return apiClient.get<SavedAddress[]>('/v1/users/addresses');
+        return apiClient.get<SavedAddress[]>('/users/addresses');
     },
 
     // Create a new saved address
     async createAddress(data: CreateAddressDto): Promise<SavedAddress> {
-        return apiClient.post<SavedAddress>('/v1/users/addresses', data);
+        return apiClient.post<SavedAddress>('/users/addresses', data);
     },
 
     // Update a saved address
     async updateAddress(id: string, data: UpdateAddressDto): Promise<SavedAddress> {
-        return apiClient.patch<SavedAddress>(`/v1/users/addresses/${id}`, data);
+        return apiClient.patch<SavedAddress>(`/users/addresses/${id}`, data);
     },
 
     // Delete a saved address
     async deleteAddress(id: string): Promise<void> {
-        return apiClient.delete(`/v1/users/addresses/${id}`);
+        return apiClient.delete(`/users/addresses/${id}`);
     },
 
     // Get recent destinations
     async getRecentDestinations(limit?: number): Promise<RecentDestination[]> {
         const params = limit ? `?limit=${limit}` : '';
-        return apiClient.get<RecentDestination[]>(`/v1/users/recent-destinations${params}`);
+        return apiClient.get<RecentDestination[]>(`/users/recent-destinations${params}`);
     },
 
     // Get payment methods
     async getPaymentMethods(): Promise<PaymentMethod[]> {
-        return apiClient.get<PaymentMethod[]>('/v1/users/payment-methods');
+        return apiClient.get<PaymentMethod[]>('/users/payment-methods');
     },
 
     // Add a payment method
@@ -108,28 +108,28 @@ export const usersService = {
         upi_id?: string;
         is_default?: boolean;
     }): Promise<PaymentMethod> {
-        return apiClient.post<PaymentMethod>('/v1/users/payment-methods', data);
+        return apiClient.post<PaymentMethod>('/users/payment-methods', data);
     },
 
     // Remove a payment method
     async removePaymentMethod(id: string): Promise<void> {
-        return apiClient.delete(`/v1/users/payment-methods/${id}`);
+        return apiClient.delete(`/users/payment-methods/${id}`);
     },
 
     // Set default payment method
     async setDefaultPaymentMethod(id: string): Promise<PaymentMethod> {
-        return apiClient.patch<PaymentMethod>(`/v1/users/payment-methods/${id}/default`, {});
+        return apiClient.patch<PaymentMethod>(`/users/payment-methods/${id}/default`, {});
     },
 
     // Get wallet balance
     async getWalletBalance(): Promise<WalletInfo> {
-        return apiClient.get<WalletInfo>('/v1/users/wallet');
+        return apiClient.get<WalletInfo>('/users/wallet');
     },
 
     // Get transaction history
     async getTransactions(limit?: number): Promise<Transaction[]> {
         const params = limit ? `?limit=${limit}` : '';
-        return apiClient.get<Transaction[]>(`/v1/users/transactions${params}`);
+        return apiClient.get<Transaction[]>(`/users/transactions${params}`);
     },
 };
 
