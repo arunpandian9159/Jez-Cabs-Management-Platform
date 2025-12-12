@@ -67,29 +67,117 @@ export class DriverService {
   }
 
   async getEarnings(userId: string) {
-    const profile = await this.getProfile(userId);
+    try {
+      const profile = await this.getProfile(userId);
 
-    // In production, calculate actual earnings from the earnings table
-    // For now, return mock data structure that matches frontend expectations
-    // Ensure totalEarnings is always a valid number
-    const totalEarnings = Number(profile.total_earnings) || 0;
+      // Query actual trips from database
+      // trips.driver_id stores the user's ID, not the driver_profile ID
+      console.log('Fetching earnings for user_id:', userId);
 
-    return {
-      today: Math.round(totalEarnings * 0.1), // Mock: 10% of total
-      thisWeek: Math.round(totalEarnings * 0.3), // Mock: 30% of total
-      thisMonth: Math.round(totalEarnings * 0.5), // Mock: 50% of total
-      total: totalEarnings,
-      transactions: [], // Would fetch from earnings table
-      weeklyBreakdown: [
-        { day: 'Mon', earnings: Math.round(totalEarnings * 0.04), trips: Math.floor(profile.total_trips * 0.04) || 0 },
-        { day: 'Tue', earnings: Math.round(totalEarnings * 0.05), trips: Math.floor(profile.total_trips * 0.05) || 0 },
-        { day: 'Wed', earnings: Math.round(totalEarnings * 0.06), trips: Math.floor(profile.total_trips * 0.06) || 0 },
-        { day: 'Thu', earnings: Math.round(totalEarnings * 0.05), trips: Math.floor(profile.total_trips * 0.05) || 0 },
-        { day: 'Fri', earnings: Math.round(totalEarnings * 0.07), trips: Math.floor(profile.total_trips * 0.07) || 0 },
-        { day: 'Sat', earnings: Math.round(totalEarnings * 0.02), trips: Math.floor(profile.total_trips * 0.02) || 0 },
-        { day: 'Sun', earnings: Math.round(totalEarnings * 0.01), trips: Math.floor(profile.total_trips * 0.01) || 0 },
-      ],
-    };
+      const completedTrips = await this.driverRepository.manager.query(`
+        SELECT 
+          actual_fare,
+          estimated_fare,
+          tip_amount,
+          completed_at,
+          EXTRACT(DOW FROM completed_at) as day_of_week
+        FROM trips
+        WHERE driver_id = $1
+          AND status = 'completed'
+          AND completed_at IS NOT NULL
+        ORDER BY completed_at DESC
+      `, [userId]);
+
+      console.log('Found completed trips:', completedTrips.length);
+
+      // Calculate date boundaries
+      const now = new Date();
+      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+      const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+      console.log('Date boundaries:', { todayStart, weekAgo, monthAgo });
+
+      // Calculate earnings
+      let todayEarnings = 0;
+      let weekEarnings = 0;
+      let monthEarnings = 0;
+      let totalEarnings = 0;
+
+      // Weekly breakdown: [Sun, Mon, Tue, Wed, Thu, Fri, Sat]
+      const weeklyBreakdown = [
+        { day: 'Sun', earnings: 0, trips: 0 },
+        { day: 'Mon', earnings: 0, trips: 0 },
+        { day: 'Tue', earnings: 0, trips: 0 },
+        { day: 'Wed', earnings: 0, trips: 0 },
+        { day: 'Thu', earnings: 0, trips: 0 },
+        { day: 'Fri', earnings: 0, trips: 0 },
+        { day: 'Sat', earnings: 0, trips: 0 },
+      ];
+
+      completedTrips.forEach((trip: any) => {
+        const fare = parseFloat(trip.actual_fare || trip.estimated_fare || '0');
+        const tip = parseFloat(trip.tip_amount || '0');
+        const tripTotal = fare + tip;
+        const completedAt = new Date(trip.completed_at);
+
+        console.log('Processing trip:', { fare, tip, tripTotal, completedAt });
+
+        totalEarnings += tripTotal;
+
+        // Check if trip is from today
+        if (completedAt >= todayStart) {
+          todayEarnings += tripTotal;
+        }
+
+        // Check if trip is from last 7 days
+        if (completedAt >= weekAgo) {
+          weekEarnings += tripTotal;
+
+          // Add to weekly breakdown
+          const dayOfWeek = parseInt(trip.day_of_week);
+          if (dayOfWeek >= 0 && dayOfWeek <= 6) {
+            weeklyBreakdown[dayOfWeek].earnings += tripTotal;
+            weeklyBreakdown[dayOfWeek].trips += 1;
+          }
+        }
+
+        // Check if trip is from last 30 days
+        if (completedAt >= monthAgo) {
+          monthEarnings += tripTotal;
+        }
+      });
+
+      console.log('Earnings calculated:', { todayEarnings, weekEarnings, monthEarnings, totalEarnings });
+
+      return {
+        today: Math.round(todayEarnings),
+        thisWeek: Math.round(weekEarnings),
+        thisMonth: Math.round(monthEarnings),
+        total: Math.round(totalEarnings),
+        transactions: [],
+        weeklyBreakdown: weeklyBreakdown,
+      };
+    } catch (error) {
+      console.error('Error in getEarnings:', error);
+      // Return default values on error
+      return {
+        today: 0,
+        thisWeek: 0,
+        thisMonth: 0,
+        total: 0,
+        transactions: [],
+        weeklyBreakdown: [
+          { day: 'Sun', earnings: 0, trips: 0 },
+          { day: 'Mon', earnings: 0, trips: 0 },
+          { day: 'Tue', earnings: 0, trips: 0 },
+          { day: 'Wed', earnings: 0, trips: 0 },
+          { day: 'Thu', earnings: 0, trips: 0 },
+          { day: 'Fri', earnings: 0, trips: 0 },
+          { day: 'Sat', earnings: 0, trips: 0 },
+        ],
+      };
+    }
   }
 
   async getDashboardStats(userId: string) {
