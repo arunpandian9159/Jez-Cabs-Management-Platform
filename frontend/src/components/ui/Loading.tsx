@@ -1,32 +1,52 @@
 import { cn } from '../../lib/utils';
-import { Loader2 } from 'lucide-react';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
-export interface SpinnerProps {
-    size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+// Page loader with Lottie animation for full-page loading states
+export interface PageLoaderProps {
+    message?: string;
+    size?: 'sm' | 'md' | 'lg';
+    fullScreen?: boolean;
     className?: string;
 }
 
-const sizeClasses = {
-    xs: 'h-3 w-3',
-    sm: 'h-4 w-4',
-    md: 'h-6 w-6',
-    lg: 'h-8 w-8',
-    xl: 'h-12 w-12',
+const loaderSizeClasses = {
+    sm: 'w-24 h-24',
+    md: 'w-40 h-40',
+    lg: 'w-56 h-56',
 };
 
-export function Spinner({ size = 'md', className }: SpinnerProps) {
-    return (
-        <Loader2
-            className={cn(
-                'animate-spin text-primary-600',
-                sizeClasses[size],
-                className
+export function PageLoader({
+    message = 'Loading...',
+    size = 'md',
+    fullScreen = false,
+    className
+}: PageLoaderProps) {
+    const content = (
+        <div className={cn(
+            "flex flex-col items-center justify-center gap-4",
+            fullScreen ? "min-h-screen" : "min-h-[50vh]",
+            className
+        )}>
+            <div className={cn(loaderSizeClasses[size])}>
+                <DotLottieReact
+                    src="/Loading 49 _ Car Types.lottie"
+                    loop
+                    autoplay
+                    style={{ width: '100%', height: '100%' }}
+                />
+            </div>
+            {message && (
+                <p className="text-gray-500 text-sm font-medium animate-pulse">
+                    {message}
+                </p>
             )}
-        />
+        </div>
     );
+
+    return content;
 }
 
-// Full page loading overlay
+// Full page loading overlay with Lottie animation
 export interface LoadingOverlayProps {
     message?: string;
 }
@@ -35,8 +55,15 @@ export function LoadingOverlay({ message = 'Loading...' }: LoadingOverlayProps) 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm">
             <div className="flex flex-col items-center gap-4">
-                <Spinner size="xl" />
-                <p className="text-sm font-medium text-gray-600">
+                <div className="w-40 h-40">
+                    <DotLottieReact
+                        src="/Loading 49 _ Car Types.lottie"
+                        loop
+                        autoplay
+                        style={{ width: '100%', height: '100%' }}
+                    />
+                </div>
+                <p className="text-sm font-medium text-gray-600 animate-pulse">
                     {message}
                 </p>
             </div>

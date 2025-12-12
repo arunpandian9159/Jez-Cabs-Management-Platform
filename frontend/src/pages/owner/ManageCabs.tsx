@@ -15,6 +15,7 @@ import { Select } from '../../components/ui/Select';
 import { Avatar } from '../../components/ui/Avatar';
 import { Modal } from '../../components/ui/Modal';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
+import { PageLoader } from '../../components/ui/Loading';
 import { formatCurrency, formatDate } from '../../lib/utils';
 import { cabsService } from '../../services';
 
@@ -62,7 +63,7 @@ export function ManageCabs() {
     const [statusFilter, setStatusFilter] = useState('all');
     const [selectedCab, setSelectedCab] = useState<CabDisplay | null>(null);
     const [cabs, setCabs] = useState<CabDisplay[]>([]);
-    const [_isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
 
     // Fetch cabs on mount
     useEffect(() => {
@@ -131,6 +132,11 @@ export function ManageCabs() {
                 return 'default';
         }
     };
+
+
+    if (isLoading) {
+        return <PageLoader message="Loading cabs..." />;
+    }
 
     return (
         <div className="space-y-6">

@@ -10,7 +10,6 @@ import {
     ToggleLeft,
     ToggleRight,
     Car,
-    Loader2,
     AlertTriangle,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
@@ -18,6 +17,7 @@ import { Card } from '../../components/ui/Card';
 import { Input } from '../../components/ui/Input';
 import { Select } from '../../components/ui/Select';
 import { Modal } from '../../components/ui/Modal';
+import { PageLoader } from '../../components/ui/Loading';
 import { ownerService, type BusinessInfo, type OwnerSettings } from '../../services/owner.service';
 
 interface SettingToggleProps {
@@ -127,14 +127,7 @@ export function OwnerSettings() {
 
     // Loading state
     if (isLoading) {
-        return (
-            <div className="flex items-center justify-center min-h-[60vh]">
-                <div className="text-center">
-                    <Loader2 className="w-10 h-10 text-primary-600 animate-spin mx-auto mb-4" />
-                    <p className="text-gray-500">Loading settings...</p>
-                </div>
-            </div>
-        );
+        return <PageLoader message="Loading settings..." />;
     }
 
     // Error state

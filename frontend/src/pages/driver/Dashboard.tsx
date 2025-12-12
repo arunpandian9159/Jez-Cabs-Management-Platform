@@ -16,6 +16,7 @@ import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { Avatar } from '../../components/ui/Avatar';
+import { PageLoader } from '../../components/ui/Loading';
 import { cn, formatCurrency } from '../../lib/utils';
 import { driverService, tripsService } from '../../services';
 
@@ -70,13 +71,15 @@ export function DriverDashboard() {
     const [pendingRequests, setPendingRequests] = useState<TripRequestDisplay[]>([]);
     const [recentTrips, setRecentTrips] = useState<RecentTripDisplay[]>([]);
     const [showTripRequest, setShowTripRequest] = useState(false);
-    const [_isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     // Fetch dashboard data
     useEffect(() => {
         const fetchDashboardData = async () => {
             try {
                 setIsLoading(true);
+                setError(null);
 
                 // Fetch driver stats
                 const stats = await driverService.getDashboardStats();
@@ -100,8 +103,9 @@ export function DriverDashboard() {
                 const requests = await driverService.getTripRequests();
                 setPendingRequests(requests);
                 setShowTripRequest(requests.length > 0);
-            } catch (error) {
-                console.error('Error fetching driver dashboard data:', error);
+            } catch (err: any) {
+                console.error('Error fetching driver dashboard data:', err);
+                setError(err?.message || 'Failed to load dashboard data');
             } finally {
                 setIsLoading(false);
             }
@@ -125,6 +129,29 @@ export function DriverDashboard() {
     };
 
     const currentRequest = pendingRequests[0];
+
+    // Loading state
+    if (isLoading) {
+        return <PageLoader message="Loading dashboard..." />;
+    }
+
+    // Error state
+    if (error) {
+        return (
+            <div className="flex items-center justify-center min-h-[50vh]">
+                <div className="text-center">
+                    <div className="w-16 h-16 rounded-full bg-error-100 flex items-center justify-center mx-auto mb-4">
+                        <XCircle className="w-8 h-8 text-error-600" />
+                    </div>
+                    <h2 className="text-xl font-semibold text-gray-900 mb-2">Failed to Load Dashboard</h2>
+                    <p className="text-gray-500 mb-4">{error}</p>
+                    <Button onClick={() => window.location.reload()}>
+                        Try Again
+                    </Button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-6">

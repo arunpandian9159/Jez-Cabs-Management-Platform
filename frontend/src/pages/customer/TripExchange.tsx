@@ -12,7 +12,6 @@ import {
     MessageCircle,
     DollarSign,
     ChevronDown,
-    Loader2,
     AlertCircle,
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
@@ -21,6 +20,7 @@ import { Badge } from '../../components/ui/Badge';
 import { Input } from '../../components/ui/Input';
 import { Modal } from '../../components/ui/Modal';
 import { Avatar } from '../../components/ui/Avatar';
+import { PageLoader } from '../../components/ui/Loading';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
 import { formatCurrency, formatDate, formatTime } from '../../lib/utils';
 import { rideshareService, CommunityTrip as APICommunityTrip } from '../../services';
@@ -109,12 +109,7 @@ export function TripExchange() {
 
     // Loading state
     if (isLoading) {
-        return (
-            <div className="flex flex-col items-center justify-center py-20">
-                <Loader2 className="w-10 h-10 text-primary-600 animate-spin mb-4" />
-                <p className="text-gray-500">Loading community trips...</p>
-            </div>
-        );
+        return <PageLoader message="Loading community trips..." />;
     }
 
     // Error state

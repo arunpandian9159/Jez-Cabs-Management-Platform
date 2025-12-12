@@ -49,8 +49,8 @@ export function Navbar({
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
 
-    const { modalType, openLogin, openRegister, closeModal } = useAuthModal();
-    const { user, isAuthenticated, logout } = useAuth();
+    const { openLogin, openRegister } = useAuthModal();
+    const { user, logout } = useAuth();
     const location = useLocation();
 
     // Handle scroll effect for public navbar
@@ -71,12 +71,8 @@ export function Navbar({
         setUserMenuOpen(false);
     }, [location]);
 
-    // Close auth modal when user becomes authenticated
-    useEffect(() => {
-        if (isAuthenticated && modalType !== null) {
-            closeModal();
-        }
-    }, [isAuthenticated, modalType, closeModal]);
+    // Note: Auth modal closing is handled by navigation after successful login
+    // No need for explicit closeModal here as it could cause re-render loops
 
     const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
         if (path.startsWith('/#')) {

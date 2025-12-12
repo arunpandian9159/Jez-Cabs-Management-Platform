@@ -8,7 +8,6 @@ import {
     CheckCircle,
     Star,
     DollarSign,
-    Loader2,
 } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Polyline } from 'react-leaflet';
 import L from 'leaflet';
@@ -17,6 +16,7 @@ import { Card } from '../../components/ui/Card';
 import { Avatar } from '../../components/ui/Avatar';
 import { Badge } from '../../components/ui/Badge';
 import { Modal } from '../../components/ui/Modal';
+import { PageLoader } from '../../components/ui/Loading';
 import { formatCurrency } from '../../lib/utils';
 import { tripsService, type Trip } from '../../services/trips.service';
 import 'leaflet/dist/leaflet.css';
@@ -143,6 +143,16 @@ export function ActiveTrip() {
     const [isProcessing, setIsProcessing] = useState(false);
     const [cancelReason, setCancelReason] = useState('');
 
+    // Helper to validate if trip has valid coordinates
+    const isValidTrip = (tripData: CurrentTrip): boolean => {
+        return (
+            typeof tripData.pickup?.lat === 'number' && !isNaN(tripData.pickup.lat) &&
+            typeof tripData.pickup?.lng === 'number' && !isNaN(tripData.pickup.lng) &&
+            typeof tripData.destination?.lat === 'number' && !isNaN(tripData.destination.lat) &&
+            typeof tripData.destination?.lng === 'number' && !isNaN(tripData.destination.lng)
+        );
+    };
+
     // Fetch active trip on mount
     useEffect(() => {
         const fetchActiveTrip = async () => {
@@ -151,12 +161,22 @@ export function ActiveTrip() {
                 // Fetch trips with pending/accepted/started status
                 const trips = await tripsService.findAll({ status: 'started' });
                 if (trips.length > 0) {
-                    setTrip(transformTrip(trips[0]));
+                    const transformed = transformTrip(trips[0]);
+                    if (isValidTrip(transformed)) {
+                        setTrip(transformed);
+                    } else {
+                        setTrip(null); // Invalid coordinates, treat as no trip
+                    }
                 } else {
                     // Check for accepted trips
                     const acceptedTrips = await tripsService.findAll({ status: 'accepted' });
                     if (acceptedTrips.length > 0) {
-                        setTrip(transformTrip(acceptedTrips[0]));
+                        const transformed = transformTrip(acceptedTrips[0]);
+                        if (isValidTrip(transformed)) {
+                            setTrip(transformed);
+                        } else {
+                            setTrip(null); // Invalid coordinates, treat as no trip
+                        }
                     } else {
                         setTrip(null);
                     }
@@ -175,11 +195,8 @@ export function ActiveTrip() {
     // Loading state
     if (isLoading) {
         return (
-            <div className="h-[calc(100vh-4rem)] flex items-center justify-center">
-                <div className="text-center">
-                    <Loader2 className="w-10 h-10 text-primary-600 animate-spin mx-auto mb-4" />
-                    <p className="text-gray-500">Loading trip...</p>
-                </div>
+            <div className="h-[calc(100vh-4rem)]">
+                <PageLoader message="Loading trip..." />
             </div>
         );
     }
@@ -204,8 +221,12 @@ export function ActiveTrip() {
         );
     }
 
+    // Use driver location or default to pickup location
+    const driverLat = trip.driverLocation?.lat ?? trip.pickup.lat;
+    const driverLng = trip.driverLocation?.lng ?? trip.pickup.lng;
+
     const routeCoords: [number, number][] = [
-        [trip.driverLocation.lat, trip.driverLocation.lng],
+        [driverLat, driverLng],
         [trip.pickup.lat, trip.pickup.lng],
         [trip.destination.lat, trip.destination.lng],
     ];
@@ -266,7 +287,7 @@ export function ActiveTrip() {
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
-                    <Marker position={[trip.driverLocation.lat, trip.driverLocation.lng]} icon={driverIcon} />
+                    <Marker position={[driverLat, driverLng]} icon={driverIcon} />
                     <Marker position={[trip.pickup.lat, trip.pickup.lng]} icon={pickupIcon} />
                     <Marker position={[trip.destination.lat, trip.destination.lng]} icon={destinationIcon} />
                     <Polyline positions={routeCoords} color="#6366f1" weight={4} />
@@ -392,8 +413,8 @@ export function ActiveTrip() {
                             <button
                                 key={reason}
                                 className={`w-full p-3 text-left rounded-lg border transition-colors ${cancelReason === reason
-                                        ? 'border-primary-500 bg-primary-50'
-                                        : 'border-gray-200 hover:bg-gray-50'
+                                    ? 'border-primary-500 bg-primary-50'
+                                    : 'border-gray-200 hover:bg-gray-50'
                                     }`}
                                 onClick={() => setCancelReason(reason)}
                                 disabled={isProcessing}

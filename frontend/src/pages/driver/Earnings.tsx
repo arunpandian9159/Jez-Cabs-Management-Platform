@@ -15,6 +15,7 @@ import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
+import { PageLoader } from '../../components/ui/Loading';
 import { formatCurrency, formatDate, formatTime } from '../../lib/utils';
 import { driverService } from '../../services';
 
@@ -55,7 +56,7 @@ export function Earnings() {
     });
     const [transactions, setTransactions] = useState<TransactionDisplay[]>([]);
     const [weeklyBreakdown, setWeeklyBreakdown] = useState<DayBreakdownDisplay[]>([]);
-    const [_isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
 
     // Fetch earnings data on mount
     useEffect(() => {
@@ -75,8 +76,8 @@ export function Earnings() {
                     lastPayoutDate: '',
                 });
 
-                // Set transactions
-                const formattedTxns: TransactionDisplay[] = earnings.transactions.map(t => ({
+                // Set transactions with null check
+                const formattedTxns: TransactionDisplay[] = (earnings.transactions || []).map(t => ({
                     id: t.id,
                     type: t.type,
                     description: t.description,
@@ -86,8 +87,8 @@ export function Earnings() {
                 }));
                 setTransactions(formattedTxns);
 
-                // Set weekly breakdown
-                const formattedBreakdown: DayBreakdownDisplay[] = earnings.weeklyBreakdown.map(d => ({
+                // Set weekly breakdown with null check
+                const formattedBreakdown: DayBreakdownDisplay[] = (earnings.weeklyBreakdown || []).map(d => ({
                     day: d.day,
                     earnings: d.earnings,
                     trips: d.trips,
@@ -104,6 +105,10 @@ export function Earnings() {
     }, []);
 
     const maxEarning = Math.max(...weeklyBreakdown.map((d) => d.earnings), 1);
+
+    if (isLoading) {
+        return <PageLoader message="Loading earnings..." />;
+    }
 
     return (
         <div className="space-y-6">
@@ -193,18 +198,25 @@ export function Earnings() {
 
                     {/* Overview Tab */}
                     <TabsContent value="overview" className="mt-4">
-                        <div className="grid md:grid-cols-2 gap-4">
-                            {/* Weekly Chart */}
+                        <div className="space-y-4">
+                            {/* Weekly Chart - Full Width */}
                             <Card padding="md">
                                 <h3 className="font-semibold text-gray-900 mb-4">Weekly Earnings</h3>
-                                <div className="flex items-end gap-2 h-40">
+                                <div className="flex items-end gap-2 h-48">
                                     {weeklyBreakdown.map((day) => (
                                         <div key={day.day} className="flex-1 flex flex-col items-center gap-1">
-                                            <div
-                                                className="w-full bg-primary-500 rounded-t transition-all hover:bg-primary-600"
-                                                style={{ height: `${(day.earnings / maxEarning) * 100}%` }}
-                                            />
-                                            <span className="text-xs text-gray-500">{day.day}</span>
+                                            <div className="relative w-full group">
+                                                <div
+                                                    className="w-full bg-gradient-to-t from-primary-600 to-primary-400 rounded-t transition-all hover:from-primary-700 hover:to-primary-500"
+                                                    style={{ height: `${(day.earnings / maxEarning) * 100}%`, minHeight: day.earnings > 0 ? '8px' : '0' }}
+                                                />
+                                                {/* Tooltip on hover */}
+                                                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                                                    {formatCurrency(day.earnings)}
+                                                    <div className="text-gray-300">{day.trips} trips</div>
+                                                </div>
+                                            </div>
+                                            <span className="text-xs text-gray-500 mt-1">{day.day}</span>
                                         </div>
                                     ))}
                                 </div>
@@ -214,29 +226,94 @@ export function Earnings() {
                                 </div>
                             </Card>
 
-                            {/* Breakdown */}
-                            <Card padding="md">
-                                <h3 className="font-semibold text-gray-900 mb-4">Earnings Breakdown</h3>
-                                <div className="space-y-4">
+                            {/* Performance Insights Grid */}
+                            <div className="grid md:grid-cols-3 gap-4">
+                                {/* Avg per Trip */}
+                                <Card padding="md" className="border-l-4 border-primary-500">
                                     <div className="flex items-center justify-between">
-                                        <span className="text-gray-600">Trip Fares</span>
-                                        <span className="font-medium text-gray-900">{formatCurrency(16500)}</span>
+                                        <div>
+                                            <p className="text-sm text-gray-500 mb-1">Avg per Trip</p>
+                                            <p className="text-2xl font-bold text-gray-900">
+                                                {weeklyBreakdown.reduce((acc, d) => acc + d.trips, 0) > 0
+                                                    ? formatCurrency(earningsSummary.week / weeklyBreakdown.reduce((acc, d) => acc + d.trips, 0))
+                                                    : formatCurrency(0)}
+                                            </p>
+                                        </div>
+                                        <div className="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center">
+                                            <TrendingUp className="w-6 h-6 text-primary-600" />
+                                        </div>
                                     </div>
+                                </Card>
+
+                                {/* Avg per Day */}
+                                <Card padding="md" className="border-l-4 border-accent-500">
                                     <div className="flex items-center justify-between">
-                                        <span className="text-gray-600">Tips</span>
-                                        <span className="font-medium text-success-600">+{formatCurrency(850)}</span>
+                                        <div>
+                                            <p className="text-sm text-gray-500 mb-1">Avg per Day</p>
+                                            <p className="text-2xl font-bold text-gray-900">
+                                                {formatCurrency(earningsSummary.week / 7)}
+                                            </p>
+                                        </div>
+                                        <div className="w-12 h-12 rounded-full bg-accent-100 flex items-center justify-center">
+                                            <Calendar className="w-6 h-6 text-accent-600" />
+                                        </div>
                                     </div>
+                                </Card>
+
+                                {/* Best Day */}
+                                <Card padding="md" className="border-l-4 border-success-500">
                                     <div className="flex items-center justify-between">
-                                        <span className="text-gray-600">Incentives & Bonuses</span>
-                                        <span className="font-medium text-success-600">+{formatCurrency(1150)}</span>
+                                        <div>
+                                            <p className="text-sm text-gray-500 mb-1">Best Day</p>
+                                            <p className="text-2xl font-bold text-gray-900">
+                                                {(() => {
+                                                    if (weeklyBreakdown.length === 0) return 'N/A';
+                                                    const bestDay = weeklyBreakdown.reduce((max, day) =>
+                                                        day.earnings > max.earnings ? day : max
+                                                    );
+                                                    return bestDay?.day || 'N/A';
+                                                })()}
+                                            </p>
+                                            <p className="text-xs text-gray-500">
+                                                {weeklyBreakdown.length > 0
+                                                    ? formatCurrency(Math.max(...weeklyBreakdown.map(d => d.earnings)))
+                                                    : formatCurrency(0)}
+                                            </p>
+                                        </div>
+                                        <div className="w-12 h-12 rounded-full bg-success-100 flex items-center justify-center">
+                                            <DollarSign className="w-6 h-6 text-success-600" />
+                                        </div>
                                     </div>
-                                    <div className="border-t border-gray-100 pt-4 flex items-center justify-between">
-                                        <span className="text-gray-600">Platform Fee (15%)</span>
-                                        <span className="font-medium text-error-600">-{formatCurrency(2775)}</span>
+                                </Card>
+                            </div>
+
+                            {/* Earning Trend */}
+                            <Card padding="md" className="bg-gradient-to-br from-primary-50 to-accent-50">
+                                <div className="flex items-start justify-between">
+                                    <div>
+                                        <h3 className="font-semibold text-gray-900 mb-2">Earnings Trend</h3>
+                                        <p className="text-sm text-gray-600 mb-4">
+                                            You're earning well this week! Keep up the great work.
+                                        </p>
+                                        <div className="flex items-center gap-4">
+                                            <div>
+                                                <p className="text-xs text-gray-500">vs Last Week</p>
+                                                <p className="text-lg font-semibold text-success-600 flex items-center gap-1">
+                                                    <ArrowUpRight className="w-4 h-4" />
+                                                    +15%
+                                                </p>
+                                            </div>
+                                            <div>
+                                                <p className="text-xs text-gray-500">vs Last Month</p>
+                                                <p className="text-lg font-semibold text-success-600 flex items-center gap-1">
+                                                    <ArrowUpRight className="w-4 h-4" />
+                                                    +8%
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="border-t border-gray-100 pt-4 flex items-center justify-between">
-                                        <span className="font-semibold text-gray-900">Net Earnings</span>
-                                        <span className="font-bold text-gray-900">{formatCurrency(15725)}</span>
+                                    <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center shadow-sm">
+                                        <TrendingUp className="w-8 h-8 text-success-600" />
                                     </div>
                                 </div>
                             </Card>

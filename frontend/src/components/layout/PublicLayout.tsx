@@ -1,11 +1,11 @@
 import { Outlet, useLocation, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Phone, Mail, MapPin, ChevronRight } from 'lucide-react';
-import { useEffect } from 'react';
+
 import { Logo } from '../ui/Logo';
 import { ROUTES } from '../../lib/constants';
 import { AuthModal, useAuthModal } from '../auth';
-import { useAuth } from '../../contexts/AuthContext';
+
 import { Navbar } from './Navbar';
 
 const navLinks = [
@@ -17,15 +17,9 @@ const navLinks = [
 
 export function PublicLayout() {
     const { modalType, closeModal, setModalType } = useAuthModal();
-    const { isAuthenticated } = useAuth();
     const location = useLocation();
 
-    // Close auth modal when user becomes authenticated
-    useEffect(() => {
-        if (isAuthenticated && modalType !== null) {
-            closeModal();
-        }
-    }, [isAuthenticated, modalType, closeModal]);
+    // Note: Auth modal closing is handled by navigation after successful login
 
     return (
         <div className="min-h-screen bg-white">
