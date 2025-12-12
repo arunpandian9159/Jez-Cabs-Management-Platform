@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -8,11 +8,15 @@ import {
     DollarSign,
     FileText,
     Settings,
-    TrendingUp,
+    CheckCircle,
+    Navigation,
+    Wrench,
+    XCircle,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { Sidebar, NavItem, QuickStat } from './Sidebar';
 import { Navbar } from './Navbar';
+import { cabsService, CabStatistics } from '../../services/cabs.service';
 
 const navigation: NavItem[] = [
     { name: 'Dashboard', href: '/owner', icon: LayoutDashboard, end: true },
@@ -23,16 +27,39 @@ const navigation: NavItem[] = [
     { name: 'Settings', href: '/owner/settings', icon: Settings },
 ];
 
-// Quick stats to show in sidebar
-const quickStats: QuickStat[] = [
-    { icon: Car, label: 'Cabs', value: 12, color: 'primary' },
-    { icon: TrendingUp, label: 'Active', value: 8, color: 'success' },
-];
-
 export function CabOwnerLayout() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [cabStats, setCabStats] = useState<CabStatistics>({
+        total: 0,
+        available: 0,
+        onTrip: 0,
+        maintenance: 0,
+        inactive: 0,
+    });
     const location = useLocation();
     const { user, logout } = useAuth();
+
+    // Fetch cab statistics on mount
+    useEffect(() => {
+        const fetchCabStats = async () => {
+            try {
+                const stats = await cabsService.getStatistics();
+                setCabStats(stats);
+            } catch (error) {
+                console.error('Failed to fetch cab statistics:', error);
+            }
+        };
+
+        fetchCabStats();
+    }, []);
+
+    // Quick stats to show in sidebar
+    const quickStats: QuickStat[] = [
+        { icon: CheckCircle, label: 'Available', value: cabStats.available, color: 'success' },
+        { icon: Navigation, label: 'On Trip', value: cabStats.onTrip, color: 'primary' },
+        { icon: Wrench, label: 'Maintenance', value: cabStats.maintenance, color: 'warning' },
+        { icon: XCircle, label: 'Inactive', value: cabStats.inactive, color: 'error' },
+    ];
 
     // Get current page title
     const currentPageTitle = navigation.find((item) =>
