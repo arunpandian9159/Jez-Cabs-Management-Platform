@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -16,10 +17,10 @@ import { Card } from '../../components/ui/Card';
 import { Badge, StatusBadge } from '../../components/ui/Badge';
 import { Avatar } from '../../components/ui/Avatar';
 import { formatCurrency } from '../../lib/utils';
+import { cabsService } from '../../services';
 
-// TODO: Fetch owner stats from API
-// API endpoint: GET /api/v1/owner/dashboard/stats
-interface OwnerStats {
+// Types for owner dashboard display
+interface OwnerStatsDisplay {
     totalCabs: number;
     activeCabs: number;
     totalDrivers: number;
@@ -28,36 +29,80 @@ interface OwnerStats {
     pendingPayments: number;
     avgRating: number;
 }
-const ownerStats: OwnerStats = {
-    totalCabs: 0,
-    activeCabs: 0,
-    totalDrivers: 0,
-    activeDrivers: 0,
-    monthlyRevenue: 0,
-    pendingPayments: 0,
-    avgRating: 0,
-};
 
-// TODO: Fetch cabs from API
-// API endpoint: GET /api/v1/owner/cabs
-interface CabDriver {
+interface CabDriverDisplay {
     name: string;
     rating: number;
     trips: number;
 }
-interface Cab {
+interface CabDisplay {
     id: string;
     make: string;
     model: string;
     registrationNumber: string;
     status: string;
-    driver: CabDriver | null;
+    driver: CabDriverDisplay | null;
     todayEarnings: number;
     rating: number;
 }
-const cabs: Cab[] = [];
 
 export function OwnerDashboard() {
+    const [ownerStats, setOwnerStats] = useState<OwnerStatsDisplay>({
+        totalCabs: 0,
+        activeCabs: 0,
+        totalDrivers: 0,
+        activeDrivers: 0,
+        monthlyRevenue: 0,
+        pendingPayments: 0,
+        avgRating: 0,
+    });
+    const [cabs, setCabs] = useState<CabDisplay[]>([]);
+    const [_isLoading, setIsLoading] = useState(true);
+
+    // Fetch dashboard data on mount
+    useEffect(() => {
+        const fetchDashboardData = async () => {
+            try {
+                setIsLoading(true);
+
+                // Fetch cabs statistics
+                const stats = await cabsService.getStatistics();
+                setOwnerStats({
+                    totalCabs: stats.totalCabs || 0,
+                    activeCabs: stats.activeCabs || 0,
+                    totalDrivers: 0,
+                    activeDrivers: 0,
+                    monthlyRevenue: stats.totalEarnings || 0,
+                    pendingPayments: 0,
+                    avgRating: 0,
+                });
+
+                // Fetch cabs list
+                const cabsData = await cabsService.findAll();
+                const formattedCabs: CabDisplay[] = cabsData.map(c => ({
+                    id: c.id,
+                    make: c.make,
+                    model: c.model,
+                    registrationNumber: c.registration_number,
+                    status: c.status,
+                    driver: c.driver ? {
+                        name: `${c.driver.first_name} ${c.driver.last_name}`,
+                        rating: c.driver.rating || 4.5,
+                        trips: 0,
+                    } : null,
+                    todayEarnings: 0,
+                    rating: c.rating || 4.5,
+                }));
+                setCabs(formattedCabs);
+            } catch (error) {
+                console.error('Error fetching dashboard data:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchDashboardData();
+    }, []);
     return (
         <div className="space-y-6">
             {/* Header */}

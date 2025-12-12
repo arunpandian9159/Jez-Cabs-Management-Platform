@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
     User,
@@ -22,15 +22,15 @@ import { Avatar } from '../../components/ui/Avatar';
 import { Input } from '../../components/ui/Input';
 import { Modal } from '../../components/ui/Modal';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
+import { driverService } from '../../services';
 
-// TODO: Fetch driver profile from API
-// API endpoint: GET /api/v1/driver/profile
-interface Document {
+// Types for driver profile display
+interface DocumentDisplay {
     type: string;
     status: string;
     expiry: string | null;
 }
-interface Vehicle {
+interface VehicleDisplay {
     make: string;
     model: string;
     year: number;
@@ -38,7 +38,7 @@ interface Vehicle {
     registrationNumber: string;
     fuelType: string;
 }
-interface DriverProfile {
+interface DriverProfileDisplay {
     id: string;
     name: string;
     phone: string;
@@ -57,49 +57,104 @@ interface DriverProfile {
     totalEarnings: number;
     joinedDate: string;
     verificationStatus: string;
-    documents: Document[];
-    vehicle: Vehicle;
+    documents: DocumentDisplay[];
+    vehicle: VehicleDisplay;
 }
-const driverProfile: DriverProfile = {
-    id: '',
-    name: '',
-    phone: '',
-    email: '',
-    address: '',
-    dateOfBirth: '',
-    licenseNumber: '',
-    licenseExpiry: '',
-    aadharNumber: '',
-    panNumber: '',
-    bankAccount: '',
-    bankName: '',
-    ifscCode: '',
-    rating: 0,
-    totalTrips: 0,
-    totalEarnings: 0,
-    joinedDate: '',
-    verificationStatus: '',
-    documents: [],
-    vehicle: {
-        make: '',
-        model: '',
-        year: 0,
-        color: '',
-        registrationNumber: '',
-        fuelType: '',
-    },
-};
 
 export function DriverProfile() {
     const [activeTab, setActiveTab] = useState('profile');
     const [showEditModal, setShowEditModal] = useState(false);
-    // TODO: Initialize form with data fetched from API
-    const [editForm, setEditForm] = useState({
-        name: driverProfile.name,
-        phone: driverProfile.phone,
-        email: driverProfile.email,
-        address: driverProfile.address,
+    const [_isLoading, setIsLoading] = useState(true);
+    const [driverProfile, setDriverProfile] = useState<DriverProfileDisplay>({
+        id: '',
+        name: '',
+        phone: '',
+        email: '',
+        address: '',
+        dateOfBirth: '',
+        licenseNumber: '',
+        licenseExpiry: '',
+        aadharNumber: '',
+        panNumber: '',
+        bankAccount: '',
+        bankName: '',
+        ifscCode: '',
+        rating: 0,
+        totalTrips: 0,
+        totalEarnings: 0,
+        joinedDate: '',
+        verificationStatus: '',
+        documents: [],
+        vehicle: {
+            make: '',
+            model: '',
+            year: 0,
+            color: '',
+            registrationNumber: '',
+            fuelType: '',
+        },
     });
+
+    const [editForm, setEditForm] = useState({
+        name: '',
+        phone: '',
+        email: '',
+        address: '',
+    });
+
+    // Fetch driver profile on mount
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                setIsLoading(true);
+                const profile = await driverService.getProfile();
+
+                const formatted: DriverProfileDisplay = {
+                    id: profile.id,
+                    name: profile.user ? `${profile.user.first_name} ${profile.user.last_name}` : '',
+                    phone: profile.user?.phone || '',
+                    email: profile.user?.email || '',
+                    address: '',
+                    dateOfBirth: '',
+                    licenseNumber: profile.license_number,
+                    licenseExpiry: profile.license_expiry,
+                    aadharNumber: '',
+                    panNumber: '',
+                    bankAccount: '',
+                    bankName: '',
+                    ifscCode: '',
+                    rating: profile.rating,
+                    totalTrips: profile.total_trips,
+                    totalEarnings: profile.total_earnings,
+                    joinedDate: profile.created_at,
+                    verificationStatus: profile.status,
+                    documents: [],
+                    vehicle: {
+                        make: '',
+                        model: '',
+                        year: 0,
+                        color: '',
+                        registrationNumber: '',
+                        fuelType: '',
+                    },
+                };
+
+                setDriverProfile(formatted);
+                setEditForm({
+                    name: formatted.name,
+                    phone: formatted.phone,
+                    email: formatted.email,
+                    address: formatted.address,
+                });
+            } catch (error) {
+                console.error('Error fetching driver profile:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchProfile();
+    }, []);
 
     const getStatusIcon = (status: string) => {
         switch (status) {

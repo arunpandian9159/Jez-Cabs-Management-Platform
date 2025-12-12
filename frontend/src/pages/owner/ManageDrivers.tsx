@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
     Plus,
@@ -19,14 +19,13 @@ import { Avatar } from '../../components/ui/Avatar';
 import { Modal } from '../../components/ui/Modal';
 import { formatCurrency } from '../../lib/utils';
 
-// TODO: Fetch drivers from API
-// API endpoint: GET /api/v1/owner/drivers
-interface DriverCab {
+// Types for driver display
+interface DriverCabDisplay {
     make: string;
     model: string;
     registrationNumber: string;
 }
-interface DriverMetrics {
+interface DriverMetricsDisplay {
     totalTrips: number;
     rating: number;
     acceptanceRate: number;
@@ -34,24 +33,43 @@ interface DriverMetrics {
     thisMonthEarnings: number;
     totalEarnings: number;
 }
-interface Driver {
+interface DriverDisplay {
     id: string;
     name: string;
     phone: string;
     email: string;
     avatar: string | null;
     status: string;
-    cab: DriverCab | null;
-    metrics: DriverMetrics;
+    cab: DriverCabDisplay | null;
+    metrics: DriverMetricsDisplay;
     joinedDate: string;
     lastActive: string | null;
 }
-const drivers: Driver[] = [];
 
 export function ManageDrivers() {
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
-    const [selectedDriver, setSelectedDriver] = useState<typeof drivers[0] | null>(null);
+    const [selectedDriver, setSelectedDriver] = useState<DriverDisplay | null>(null);
+    const [drivers, setDrivers] = useState<DriverDisplay[]>([]);
+    const [_isLoading, setIsLoading] = useState(true);
+
+    // Fetch drivers on mount - placeholder for when owner drivers API is available
+    useEffect(() => {
+        const fetchDrivers = async () => {
+            try {
+                setIsLoading(true);
+                // TODO: Replace with actual API call when owner drivers endpoint is available
+                // const driversData = await ownerService.getDrivers();
+                setDrivers([]);
+            } catch (error) {
+                console.error('Error fetching drivers:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchDrivers();
+    }, []);
 
     const filteredDrivers = drivers.filter((driver) => {
         const matchesSearch = driver.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
