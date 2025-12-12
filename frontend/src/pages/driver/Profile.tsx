@@ -6,7 +6,6 @@ import {
     Mail,
     MapPin,
     Car,
-    FileText,
     Shield,
     Star,
     Edit,
@@ -48,14 +47,11 @@ interface DriverProfileDisplay {
     dateOfBirth: string;
     licenseNumber: string;
     licenseExpiry: string;
-    aadharNumber: string;
-    panNumber: string;
     bankAccount: string;
     bankName: string;
     ifscCode: string;
     rating: number;
     totalTrips: number;
-    totalEarnings: number;
     joinedDate: string;
     verificationStatus: string;
     documents: DocumentDisplay[];
@@ -75,14 +71,11 @@ export function DriverProfile() {
         dateOfBirth: '',
         licenseNumber: '',
         licenseExpiry: '',
-        aadharNumber: '',
-        panNumber: '',
         bankAccount: '',
         bankName: '',
         ifscCode: '',
         rating: 0,
         totalTrips: 0,
-        totalEarnings: 0,
         joinedDate: '',
         verificationStatus: '',
         documents: [],
@@ -115,18 +108,15 @@ export function DriverProfile() {
                     name: profile.user ? `${profile.user.first_name} ${profile.user.last_name}` : '',
                     phone: profile.user?.phone || '',
                     email: profile.user?.email || '',
-                    address: '',
-                    dateOfBirth: '',
-                    licenseNumber: profile.license_number,
-                    licenseExpiry: profile.license_expiry,
-                    aadharNumber: '',
-                    panNumber: '',
+                    address: profile.address || '',
+                    dateOfBirth: profile.date_of_birth || '',
+                    licenseNumber: profile.license_number || '',
+                    licenseExpiry: profile.license_expiry || '',
                     bankAccount: '',
                     bankName: '',
                     ifscCode: '',
-                    rating: profile.rating,
-                    totalTrips: profile.total_trips,
-                    totalEarnings: profile.total_earnings,
+                    rating: profile.rating || 0,
+                    totalTrips: profile.total_trips || 0,
                     joinedDate: profile.created_at,
                     verificationStatus: profile.status,
                     documents: [],
@@ -297,23 +287,9 @@ export function DriverProfile() {
                                 <div className="space-y-4">
                                     <div className="flex items-start gap-3">
                                         <MapPin className="w-5 h-5 text-gray-400 mt-0.5" />
-                                        <div>
+                                        <div className="flex-1">
                                             <p className="text-sm text-gray-500">Address</p>
-                                            <p className="font-medium text-gray-900">{driverProfile.address}</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-3">
-                                        <FileText className="w-5 h-5 text-gray-400 mt-0.5" />
-                                        <div>
-                                            <p className="text-sm text-gray-500">Aadhar Number</p>
-                                            <p className="font-medium text-gray-900">{driverProfile.aadharNumber}</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-3">
-                                        <FileText className="w-5 h-5 text-gray-400 mt-0.5" />
-                                        <div>
-                                            <p className="text-sm text-gray-500">PAN Number</p>
-                                            <p className="font-medium text-gray-900">{driverProfile.panNumber}</p>
+                                            <p className="font-medium text-gray-900">{driverProfile.address || 'Not provided'}</p>
                                         </div>
                                     </div>
                                 </div>

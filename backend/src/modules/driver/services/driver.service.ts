@@ -14,6 +14,7 @@ export class DriverService {
   async getProfile(userId: string): Promise<DriverProfile> {
     const profile = await this.driverRepository.findOne({
       where: { user_id: userId },
+      relations: ['user'],
     });
 
     if (!profile) {
@@ -183,12 +184,50 @@ export class DriverService {
   async getDashboardStats(userId: string) {
     const profile = await this.getProfile(userId);
 
-    // Return dashboard statistics
-    // In production, these would be calculated from actual trip data
+    // Calculate earnings from actual trip data
+    const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+    const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+    // Query trips for earnings calculation
+    const trips = await this.driverRepository.manager.query(`
+      SELECT 
+        actual_fare,
+        estimated_fare,
+        tip_amount,
+        completed_at
+      FROM trips
+      WHERE driver_id = $1
+        AND status = 'completed'
+        AND completed_at IS NOT NULL
+    `, [userId]);
+
+    let todayEarnings = 0;
+    let weeklyEarnings = 0;
+    let monthlyEarnings = 0;
+
+    trips.forEach((trip: any) => {
+      const fare = parseFloat(trip.actual_fare || trip.estimated_fare || '0');
+      const tip = parseFloat(trip.tip_amount || '0');
+      const tripTotal = fare + tip;
+      const completedAt = new Date(trip.completed_at);
+
+      if (completedAt >= todayStart) {
+        todayEarnings += tripTotal;
+      }
+      if (completedAt >= weekAgo) {
+        weeklyEarnings += tripTotal;
+      }
+      if (completedAt >= monthAgo) {
+        monthlyEarnings += tripTotal;
+      }
+    });
+
     return {
-      todayEarnings: 0, // Would sum today's completed trips
-      weeklyEarnings: 0, // Would sum this week's completed trips
-      monthlyEarnings: profile.total_earnings || 0,
+      todayEarnings: Math.round(todayEarnings),
+      weeklyEarnings: Math.round(weeklyEarnings),
+      monthlyEarnings: Math.round(monthlyEarnings),
       totalTrips: profile.total_trips || 0,
       rating: profile.rating || 0,
       acceptanceRate: 95, // Would be calculated from trip acceptance data

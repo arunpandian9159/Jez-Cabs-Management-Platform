@@ -81,6 +81,10 @@ export function DriverDashboard() {
                 setIsLoading(true);
                 setError(null);
 
+                // Fetch driver profile to get online status
+                const profile = await driverService.getProfile();
+                setIsOnline(profile.is_online || false);
+
                 // Fetch driver stats
                 const stats = await driverService.getDashboardStats();
                 setDriverStats(stats);

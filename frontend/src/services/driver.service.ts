@@ -5,14 +5,17 @@ export interface DriverProfile {
     user_id: string;
     license_number: string;
     license_expiry: string;
+    license_type?: string;
+    date_of_birth?: string;
+    address?: string;
     vehicle_type_expertise: string[];
     status: 'pending' | 'verified' | 'rejected' | 'suspended';
     availability_status: 'offline' | 'online' | 'busy';
+    is_online: boolean;
     current_lat?: number;
     current_lng?: number;
     rating: number;
     total_trips: number;
-    total_earnings: number;
     created_at: string;
     updated_at: string;
     user?: {
