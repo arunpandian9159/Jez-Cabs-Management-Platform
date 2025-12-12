@@ -23,7 +23,18 @@ import { Modal } from '../../components/ui/Modal';
 import { PageLoader } from '../../components/ui/Loading';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
 import { formatCurrency, formatDate } from '../../lib/utils';
-import { ownerService, type Contract } from '../../services/owner.service';
+import { ownerService, type Contract, type CreateContractDto } from '../../services/owner.service';
+
+// Initial form state for new contract
+const initialNewContract: CreateContractDto = {
+    type: 'driver',
+    title: '',
+    partyName: '',
+    startDate: new Date().toISOString().split('T')[0],
+    endDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    commission: 15,
+    monthlyTarget: 50000,
+};
 
 export function Contracts() {
     const [activeTab, setActiveTab] = useState('all');
@@ -37,6 +48,11 @@ export function Contracts() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [isProcessing, setIsProcessing] = useState(false);
+
+    // New contract form state
+    const [newContract, setNewContract] = useState<CreateContractDto>(initialNewContract);
+    const [isCreating, setIsCreating] = useState(false);
+    const [createError, setCreateError] = useState<string | null>(null);
 
     // Fetch contracts on mount
     useEffect(() => {
@@ -391,28 +407,129 @@ export function Contracts() {
             {/* New Contract Modal */}
             <Modal
                 open={showNewContractModal}
-                onOpenChange={setShowNewContractModal}
+                onOpenChange={(open) => {
+                    setShowNewContractModal(open);
+                    if (!open) {
+                        setNewContract(initialNewContract);
+                        setCreateError(null);
+                    }
+                }}
                 title="Create New Contract"
-                size="md"
+                size="lg"
             >
                 <div className="space-y-4">
-                    <p className="text-gray-500">
-                        Contract creation form will be implemented here with fields for:
-                    </p>
-                    <ul className="list-disc list-inside text-gray-600 space-y-1">
-                        <li>Contract Type (Driver/Platform/Insurance)</li>
-                        <li>Party Name</li>
-                        <li>Vehicle Assignment</li>
-                        <li>Duration (Start & End Date)</li>
-                        <li>Commission Rate / Premium</li>
-                        <li>Monthly Targets</li>
-                        <li>Document Uploads</li>
-                    </ul>
-                    <div className="flex gap-3 pt-4">
-                        <Button variant="outline" fullWidth onClick={() => setShowNewContractModal(false)}>
+                    {createError && (
+                        <div className="p-3 bg-error-50 border border-error-200 rounded-lg text-error-700 text-sm">
+                            {createError}
+                        </div>
+                    )}
+
+                    <Select
+                        label="Contract Type *"
+                        options={[
+                            { value: 'driver', label: 'Driver Agreement' },
+                            { value: 'platform', label: 'Platform Partnership' },
+                            { value: 'insurance', label: 'Insurance Policy' },
+                        ]}
+                        value={newContract.type}
+                        onValueChange={(value) => setNewContract(prev => ({ ...prev, type: value as 'driver' | 'platform' | 'insurance' }))}
+                    />
+
+                    <Input
+                        label="Contract Title *"
+                        placeholder="e.g., Driver Employment Agreement"
+                        value={newContract.title}
+                        onChange={(e) => setNewContract(prev => ({ ...prev, title: e.target.value }))}
+                    />
+
+                    <Input
+                        label="Party Name *"
+                        placeholder="e.g., John Doe"
+                        value={newContract.partyName}
+                        onChange={(e) => setNewContract(prev => ({ ...prev, partyName: e.target.value }))}
+                    />
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <Input
+                            label="Start Date *"
+                            type="date"
+                            value={newContract.startDate}
+                            onChange={(e) => setNewContract(prev => ({ ...prev, startDate: e.target.value }))}
+                        />
+                        <Input
+                            label="End Date *"
+                            type="date"
+                            value={newContract.endDate}
+                            onChange={(e) => setNewContract(prev => ({ ...prev, endDate: e.target.value }))}
+                        />
+                    </div>
+
+                    {newContract.type === 'driver' && (
+                        <div className="grid grid-cols-2 gap-4">
+                            <Input
+                                label="Commission Rate (%)"
+                                type="number"
+                                placeholder="15"
+                                value={newContract.commission?.toString() || ''}
+                                onChange={(e) => setNewContract(prev => ({ ...prev, commission: parseInt(e.target.value) || 0 }))}
+                            />
+                            <Input
+                                label="Monthly Target (₹)"
+                                type="number"
+                                placeholder="50000"
+                                value={newContract.monthlyTarget?.toString() || ''}
+                                onChange={(e) => setNewContract(prev => ({ ...prev, monthlyTarget: parseInt(e.target.value) || 0 }))}
+                            />
+                        </div>
+                    )}
+
+                    {newContract.type === 'insurance' && (
+                        <Input
+                            label="Premium Amount (₹)"
+                            type="number"
+                            placeholder="25000"
+                            value={newContract.premium?.toString() || ''}
+                            onChange={(e) => setNewContract(prev => ({ ...prev, premium: parseInt(e.target.value) || 0 }))}
+                        />
+                    )}
+
+                    <div className="flex gap-3 pt-4 border-t">
+                        <Button
+                            variant="outline"
+                            fullWidth
+                            onClick={() => {
+                                setShowNewContractModal(false);
+                                setNewContract(initialNewContract);
+                                setCreateError(null);
+                            }}
+                            disabled={isCreating}
+                        >
                             Cancel
                         </Button>
-                        <Button fullWidth onClick={() => setShowNewContractModal(false)}>
+                        <Button
+                            fullWidth
+                            onClick={async () => {
+                                if (!newContract.title || !newContract.partyName) {
+                                    setCreateError('Please fill in all required fields');
+                                    return;
+                                }
+                                try {
+                                    setIsCreating(true);
+                                    setCreateError(null);
+                                    const created = await ownerService.createContract(newContract);
+                                    setContracts(prev => [...prev, created]);
+                                    setShowNewContractModal(false);
+                                    setNewContract(initialNewContract);
+                                } catch (err) {
+                                    console.error('Error creating contract:', err);
+                                    setCreateError('Failed to create contract. Please try again.');
+                                } finally {
+                                    setIsCreating(false);
+                                }
+                            }}
+                            loading={isCreating}
+                            disabled={isCreating}
+                        >
                             Create Contract
                         </Button>
                     </div>

@@ -17,7 +17,7 @@ import { Modal } from '../../components/ui/Modal';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
 import { PageLoader } from '../../components/ui/Loading';
 import { formatCurrency, formatDate } from '../../lib/utils';
-import { cabsService, type Cab } from '../../services';
+import { cabsService, type Cab, type CreateCabDto } from '../../services';
 
 // Types for cab display
 interface CabDriverDisplay {
@@ -58,6 +58,21 @@ interface CabDisplay {
     nextService: string;
 }
 
+// Initial form state for new cab
+const initialNewCab: CreateCabDto = {
+    registration_number: '',
+    make: '',
+    model: '',
+    year: new Date().getFullYear(),
+    color: '',
+    cab_type: 'sedan',
+    seat_capacity: 4,
+    fuel_type: 'petrol',
+    base_fare: 50,
+    per_km_rate: 12,
+    daily_rate: 1500,
+};
+
 export function ManageCabs() {
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
@@ -65,54 +80,60 @@ export function ManageCabs() {
     const [cabs, setCabs] = useState<CabDisplay[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
+    // New cab modal state
+    const [showNewCabModal, setShowNewCabModal] = useState(false);
+    const [newCab, setNewCab] = useState<CreateCabDto>(initialNewCab);
+    const [isCreating, setIsCreating] = useState(false);
+    const [createError, setCreateError] = useState<string | null>(null);
+
     // Fetch cabs on mount
     useEffect(() => {
-        const fetchCabs = async () => {
-            try {
-                setIsLoading(true);
-                // Backend returns { data: cabs[], meta: {...} }
-                const cabsResponse = await cabsService.findAll();
-                const cabsArray = Array.isArray(cabsResponse) ? cabsResponse : cabsResponse.data || [];
-                const formattedCabs: CabDisplay[] = cabsArray.map((c: Cab) => ({
-                    id: c.id,
-                    make: c.make,
-                    model: c.model,
-                    year: c.year || 2023,
-                    color: c.color,
-                    registrationNumber: c.registration_number,
-                    fuelType: c.fuel_type || 'petrol',
-                    status: c.status,
-                    driver: c.driver ? {
-                        id: c.driver.id,
-                        name: `${c.driver.first_name} ${c.driver.last_name}`,
-                        phone: c.driver.phone || '',
-                        rating: c.driver.rating || 4.5,
-                        trips: 0,
-                    } : null,
-                    metrics: {
-                        totalTrips: c.total_trips || 0,
-                        totalEarnings: 0,
-                        thisMonthEarnings: 0,
-                        rating: c.rating || 4.5,
-                    },
-                    documents: {
-                        registration: { status: 'valid', expiry: new Date().toISOString() },
-                        insurance: { status: 'valid', expiry: new Date().toISOString() },
-                        permit: { status: 'valid', expiry: new Date().toISOString() },
-                    },
-                    lastService: new Date().toISOString(),
-                    nextService: new Date().toISOString(),
-                }));
-                setCabs(formattedCabs);
-            } catch (error) {
-                console.error('Error fetching cabs:', error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
         fetchCabs();
     }, []);
+
+    const fetchCabs = async () => {
+        try {
+            setIsLoading(true);
+            // Backend returns { data: cabs[], meta: {...} }
+            const cabsResponse = await cabsService.findAll();
+            const cabsArray = Array.isArray(cabsResponse) ? cabsResponse : cabsResponse.data || [];
+            const formattedCabs: CabDisplay[] = cabsArray.map((c: Cab) => ({
+                id: c.id,
+                make: c.make,
+                model: c.model,
+                year: c.year || 2023,
+                color: c.color,
+                registrationNumber: c.registration_number,
+                fuelType: c.fuel_type || 'petrol',
+                status: c.status,
+                driver: c.driver ? {
+                    id: c.driver.id,
+                    name: `${c.driver.first_name} ${c.driver.last_name}`,
+                    phone: c.driver.phone || '',
+                    rating: c.driver.rating || 4.5,
+                    trips: 0,
+                } : null,
+                metrics: {
+                    totalTrips: c.total_trips || 0,
+                    totalEarnings: 0,
+                    thisMonthEarnings: 0,
+                    rating: c.rating || 4.5,
+                },
+                documents: {
+                    registration: { status: 'valid', expiry: new Date().toISOString() },
+                    insurance: { status: 'valid', expiry: new Date().toISOString() },
+                    permit: { status: 'valid', expiry: new Date().toISOString() },
+                },
+                lastService: new Date().toISOString(),
+                nextService: new Date().toISOString(),
+            }));
+            setCabs(formattedCabs);
+        } catch (error) {
+            console.error('Error fetching cabs:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const filteredCabs = cabs.filter((cab) => {
         const matchesSearch = `${cab.make} ${cab.model} ${cab.registrationNumber}`
@@ -135,6 +156,35 @@ export function ManageCabs() {
         }
     };
 
+    // Handle new cab form submission
+    const handleCreateCab = async () => {
+        // Validate required fields
+        if (!newCab.registration_number || !newCab.make || !newCab.model || !newCab.color) {
+            setCreateError('Please fill in all required fields');
+            return;
+        }
+
+        try {
+            setIsCreating(true);
+            setCreateError(null);
+            await cabsService.create(newCab);
+            setShowNewCabModal(false);
+            setNewCab(initialNewCab);
+            // Refresh the cabs list
+            await fetchCabs();
+        } catch (error) {
+            console.error('Error creating cab:', error);
+            setCreateError('Failed to create cab. Please try again.');
+        } finally {
+            setIsCreating(false);
+        }
+    };
+
+    // Handle form field changes
+    const handleNewCabChange = (field: keyof CreateCabDto, value: string | number) => {
+        setNewCab(prev => ({ ...prev, [field]: value }));
+        setCreateError(null);
+    };
 
     if (isLoading) {
         return <PageLoader message="Loading cabs..." />;
@@ -152,8 +202,8 @@ export function ManageCabs() {
                     <h1 className="text-2xl font-bold text-gray-900 mb-1">Manage Cabs</h1>
                     <p className="text-gray-500">View and manage your fleet</p>
                 </div>
-                <Button leftIcon={<Plus className="w-5 h-5" />}>\r
-                    Add New Cab\r
+                <Button leftIcon={<Plus className="w-5 h-5" />} onClick={() => setShowNewCabModal(true)}>
+                    Add New Cab
                 </Button>
             </motion.div>
 
@@ -367,6 +417,153 @@ export function ManageCabs() {
                         </TabsContent>
                     </TabsRoot>
                 )}
+            </Modal>
+
+            {/* Add New Cab Modal */}
+            <Modal
+                open={showNewCabModal}
+                onOpenChange={(open) => {
+                    setShowNewCabModal(open);
+                    if (!open) {
+                        setNewCab(initialNewCab);
+                        setCreateError(null);
+                    }
+                }}
+                title="Add New Cab"
+                size="lg"
+            >
+                <div className="space-y-4">
+                    {createError && (
+                        <div className="p-3 bg-error-50 border border-error-200 rounded-lg text-error-700 text-sm">
+                            {createError}
+                        </div>
+                    )}
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <Input
+                            label="Registration Number *"
+                            placeholder="e.g., KA-01-AB-1234"
+                            value={newCab.registration_number}
+                            onChange={(e) => handleNewCabChange('registration_number', e.target.value)}
+                        />
+                        <Input
+                            label="Make *"
+                            placeholder="e.g., Toyota"
+                            value={newCab.make}
+                            onChange={(e) => handleNewCabChange('make', e.target.value)}
+                        />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <Input
+                            label="Model *"
+                            placeholder="e.g., Innova"
+                            value={newCab.model}
+                            onChange={(e) => handleNewCabChange('model', e.target.value)}
+                        />
+                        <Input
+                            label="Year"
+                            type="number"
+                            placeholder="e.g., 2023"
+                            value={newCab.year.toString()}
+                            onChange={(e) => handleNewCabChange('year', parseInt(e.target.value) || new Date().getFullYear())}
+                        />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <Input
+                            label="Color *"
+                            placeholder="e.g., White"
+                            value={newCab.color}
+                            onChange={(e) => handleNewCabChange('color', e.target.value)}
+                        />
+                        <Select
+                            label="Cab Type"
+                            options={[
+                                { value: 'sedan', label: 'Sedan' },
+                                { value: 'suv', label: 'SUV' },
+                                { value: 'hatchback', label: 'Hatchback' },
+                                { value: 'luxury', label: 'Luxury' },
+                                { value: 'van', label: 'Van' },
+                                { value: 'auto', label: 'Auto' },
+                            ]}
+                            value={newCab.cab_type}
+                            onValueChange={(value) => handleNewCabChange('cab_type', value)}
+                        />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <Select
+                            label="Fuel Type"
+                            options={[
+                                { value: 'petrol', label: 'Petrol' },
+                                { value: 'diesel', label: 'Diesel' },
+                                { value: 'cng', label: 'CNG' },
+                                { value: 'electric', label: 'Electric' },
+                                { value: 'hybrid', label: 'Hybrid' },
+                            ]}
+                            value={newCab.fuel_type}
+                            onValueChange={(value) => handleNewCabChange('fuel_type', value)}
+                        />
+                        <Input
+                            label="Seat Capacity"
+                            type="number"
+                            placeholder="e.g., 4"
+                            value={newCab.seat_capacity.toString()}
+                            onChange={(e) => handleNewCabChange('seat_capacity', parseInt(e.target.value) || 4)}
+                        />
+                    </div>
+
+                    <div className="border-t pt-4 mt-4">
+                        <h4 className="font-medium text-gray-900 mb-3">Pricing (Optional)</h4>
+                        <div className="grid grid-cols-3 gap-4">
+                            <Input
+                                label="Base Fare (₹)"
+                                type="number"
+                                placeholder="50"
+                                value={newCab.base_fare?.toString() || ''}
+                                onChange={(e) => handleNewCabChange('base_fare', parseInt(e.target.value) || 0)}
+                            />
+                            <Input
+                                label="Per KM Rate (₹)"
+                                type="number"
+                                placeholder="12"
+                                value={newCab.per_km_rate?.toString() || ''}
+                                onChange={(e) => handleNewCabChange('per_km_rate', parseInt(e.target.value) || 0)}
+                            />
+                            <Input
+                                label="Daily Rate (₹)"
+                                type="number"
+                                placeholder="1500"
+                                value={newCab.daily_rate?.toString() || ''}
+                                onChange={(e) => handleNewCabChange('daily_rate', parseInt(e.target.value) || 0)}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="flex gap-3 pt-4 border-t">
+                        <Button
+                            variant="outline"
+                            fullWidth
+                            onClick={() => {
+                                setShowNewCabModal(false);
+                                setNewCab(initialNewCab);
+                                setCreateError(null);
+                            }}
+                            disabled={isCreating}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            fullWidth
+                            onClick={handleCreateCab}
+                            loading={isCreating}
+                            disabled={isCreating}
+                        >
+                            Add Cab
+                        </Button>
+                    </div>
+                </div>
             </Modal>
         </div>
     );

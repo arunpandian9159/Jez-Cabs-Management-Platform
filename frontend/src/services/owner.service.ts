@@ -204,6 +204,11 @@ export const ownerService = {
         return apiClient.delete(`/owner/drivers/${driverId}`);
     },
 
+    // Invite a new driver
+    async inviteDriver(data: { name: string; phone: string; email: string }): Promise<{ success: boolean; message: string }> {
+        return apiClient.post<{ success: boolean; message: string }>('/owner/drivers/invite', data);
+    },
+
     // ============= SETTINGS =============
 
     // Get business info

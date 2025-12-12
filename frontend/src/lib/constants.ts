@@ -77,7 +77,7 @@ export const ROUTES = {
 
     // Admin
     ADMIN: {
-        DASHBOARD: '/admin/dashboard',
+        DASHBOARD: '/admin',
         USERS: '/admin/users',
         DRIVERS: '/admin/drivers',
         DRIVERS_VERIFICATION: '/admin/drivers/verification',

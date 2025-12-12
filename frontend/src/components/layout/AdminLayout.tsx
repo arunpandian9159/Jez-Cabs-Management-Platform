@@ -13,7 +13,7 @@ import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { Sidebar, NavItem } from './Sidebar';
 import { Navbar } from './Navbar';
-import { cn } from '../../lib/utils';
+
 
 const navItems: NavItem[] = [
     { name: 'Dashboard', href: '/admin', icon: LayoutDashboard, end: true },
@@ -31,7 +31,6 @@ export function AdminLayout() {
     const location = useLocation();
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [sidebarExpanded, setSidebarExpanded] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
 
     // Get current page title
@@ -48,15 +47,14 @@ export function AdminLayout() {
                 dashboardPath="/admin"
                 isOpen={sidebarOpen}
                 onClose={() => setSidebarOpen(false)}
-                isExpanded={sidebarExpanded}
-                onToggleExpand={() => setSidebarExpanded(!sidebarExpanded)}
+                isExpanded={true}
                 navigation={navItems}
                 user={user}
                 onLogout={logout}
             />
 
             {/* Main Content */}
-            <div className={cn('transition-all duration-300', sidebarExpanded ? 'lg:ml-72' : 'lg:ml-20')}>
+            <div className="transition-all duration-300 lg:ml-72">
                 {/* Header */}
                 <Navbar
                     variant="dashboard"

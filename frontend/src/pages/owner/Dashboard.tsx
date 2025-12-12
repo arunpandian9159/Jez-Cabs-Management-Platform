@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
     Car,
@@ -59,6 +59,7 @@ export function OwnerDashboard() {
     });
     const [cabs, setCabs] = useState<CabDisplay[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const navigate = useNavigate();
 
     // Fetch dashboard data on mount
     useEffect(() => {
@@ -126,7 +127,7 @@ export function OwnerDashboard() {
                         Manage your cabs and drivers
                     </p>
                 </div>
-                <Button leftIcon={<Plus className="w-5 h-5" />}>
+                <Button leftIcon={<Plus className="w-5 h-5" />} onClick={() => navigate('/owner/cabs')}>
                     Add New Cab
                 </Button>
             </motion.div>

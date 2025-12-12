@@ -22,6 +22,13 @@ import { PageLoader } from '../../components/ui/Loading';
 import { formatCurrency } from '../../lib/utils';
 import { ownerService, type OwnerDriver } from '../../services/owner.service';
 
+// Initial form state for new driver invitation
+const initialNewDriver = {
+    name: '',
+    phone: '',
+    email: '',
+};
+
 export function ManageDrivers() {
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
@@ -29,6 +36,13 @@ export function ManageDrivers() {
     const [drivers, setDrivers] = useState<OwnerDriver[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+
+    // Add driver modal state
+    const [showAddDriverModal, setShowAddDriverModal] = useState(false);
+    const [newDriver, setNewDriver] = useState(initialNewDriver);
+    const [isInviting, setIsInviting] = useState(false);
+    const [inviteError, setInviteError] = useState<string | null>(null);
+    const [inviteSuccess, setInviteSuccess] = useState(false);
 
     // Fetch drivers on mount
     useEffect(() => {
@@ -87,7 +101,7 @@ export function ManageDrivers() {
                     <h1 className="text-2xl font-bold text-gray-900 mb-1">Manage Drivers</h1>
                     <p className="text-gray-500">View and manage your driver team</p>
                 </div>
-                <Button leftIcon={<Plus className="w-5 h-5" />}>
+                <Button leftIcon={<Plus className="w-5 h-5" />} onClick={() => setShowAddDriverModal(true)}>
                     Add Driver
                 </Button>
             </motion.div>
@@ -303,6 +317,117 @@ export function ManageDrivers() {
                         </div>
                     </div>
                 )}
+            </Modal>
+
+            {/* Add Driver Modal */}
+            <Modal
+                open={showAddDriverModal}
+                onOpenChange={(open) => {
+                    setShowAddDriverModal(open);
+                    if (!open) {
+                        setNewDriver(initialNewDriver);
+                        setInviteError(null);
+                        setInviteSuccess(false);
+                    }
+                }}
+                title="Invite New Driver"
+                size="md"
+            >
+                <div className="space-y-4">
+                    {inviteError && (
+                        <div className="p-3 bg-error-50 border border-error-200 rounded-lg text-error-700 text-sm">
+                            {inviteError}
+                        </div>
+                    )}
+
+                    {inviteSuccess && (
+                        <div className="p-3 bg-success-50 border border-success-200 rounded-lg text-success-700 text-sm">
+                            Invitation sent successfully! The driver will receive an email with instructions to join.
+                        </div>
+                    )}
+
+                    {!inviteSuccess && (
+                        <>
+                            <p className="text-gray-500 text-sm">
+                                Enter the driver's details below to send them an invitation to join your fleet.
+                            </p>
+
+                            <Input
+                                label="Full Name *"
+                                placeholder="e.g., John Doe"
+                                value={newDriver.name}
+                                onChange={(e) => setNewDriver(prev => ({ ...prev, name: e.target.value }))}
+                            />
+
+                            <Input
+                                label="Phone Number *"
+                                placeholder="e.g., 9876543210"
+                                value={newDriver.phone}
+                                onChange={(e) => setNewDriver(prev => ({ ...prev, phone: e.target.value }))}
+                            />
+
+                            <Input
+                                label="Email Address *"
+                                type="email"
+                                placeholder="e.g., driver@example.com"
+                                value={newDriver.email}
+                                onChange={(e) => setNewDriver(prev => ({ ...prev, email: e.target.value }))}
+                            />
+                        </>
+                    )}
+
+                    <div className="flex gap-3 pt-4 border-t">
+                        <Button
+                            variant="outline"
+                            fullWidth
+                            onClick={() => {
+                                setShowAddDriverModal(false);
+                                setNewDriver(initialNewDriver);
+                                setInviteError(null);
+                                setInviteSuccess(false);
+                            }}
+                        >
+                            {inviteSuccess ? 'Close' : 'Cancel'}
+                        </Button>
+                        {!inviteSuccess && (
+                            <Button
+                                fullWidth
+                                onClick={async () => {
+                                    if (!newDriver.name || !newDriver.phone || !newDriver.email) {
+                                        setInviteError('Please fill in all required fields');
+                                        return;
+                                    }
+                                    // Basic email validation
+                                    if (!newDriver.email.includes('@')) {
+                                        setInviteError('Please enter a valid email address');
+                                        return;
+                                    }
+                                    // Basic phone validation
+                                    if (newDriver.phone.length < 10) {
+                                        setInviteError('Please enter a valid phone number');
+                                        return;
+                                    }
+                                    try {
+                                        setIsInviting(true);
+                                        setInviteError(null);
+                                        await ownerService.inviteDriver(newDriver);
+                                        setInviteSuccess(true);
+                                        setNewDriver(initialNewDriver);
+                                    } catch (err) {
+                                        console.error('Error inviting driver:', err);
+                                        setInviteError('Failed to send invitation. Please try again.');
+                                    } finally {
+                                        setIsInviting(false);
+                                    }
+                                }}
+                                loading={isInviting}
+                                disabled={isInviting}
+                            >
+                                Send Invitation
+                            </Button>
+                        )}
+                    </div>
+                </div>
             </Modal>
         </div>
     );
