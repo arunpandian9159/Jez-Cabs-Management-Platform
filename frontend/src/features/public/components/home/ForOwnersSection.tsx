@@ -78,7 +78,7 @@ export function ForOwnersSection() {
 
                         <button
                             onClick={openRegister}
-                            className="group px-5 py-3 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-white rounded-lg sm:rounded-xl transition-all font-semibold text-sm sm:text-base lg:text-lg inline-flex items-center gap-2 sm:gap-3 shadow-xl cursor-pointer"
+                            className="hidden sm:inline-flex group px-5 py-3 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-white rounded-lg sm:rounded-xl transition-all font-semibold text-sm sm:text-base lg:text-lg items-center gap-2 sm:gap-3 shadow-xl cursor-pointer"
                             style={{
                                 background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)',
                                 boxShadow: '0 8px 30px rgba(37, 99, 235, 0.4)'

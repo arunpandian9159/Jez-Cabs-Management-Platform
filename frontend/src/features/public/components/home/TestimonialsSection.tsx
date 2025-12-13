@@ -4,7 +4,7 @@ import { testimonials } from '../../pages/homeData';
 export function TestimonialsSection() {
     return (
         <section
-            className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8"
+            className="py-8 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8"
             style={{ background: 'linear-gradient(135deg, #eff6ff 0%, #f0fdfa 50%, #eff6ff 100%)' }}
         >
             <div className="max-w-7xl mx-auto">

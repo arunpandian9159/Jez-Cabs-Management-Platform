@@ -242,7 +242,7 @@ export function QuickBookingForm() {
 
     return (
         <div
-            className="max-w-sm p-6 sm:p-8 rounded-2xl sm:rounded-3xl animate-fade-in-up"
+            className="w-full max-w-sm p-5 sm:p-8 rounded-2xl sm:rounded-3xl animate-fade-in-up"
             style={{
                 background: 'rgba(255, 255, 255, 0.98)',
                 boxShadow: '0 4px 24px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04)',
@@ -266,7 +266,7 @@ export function QuickBookingForm() {
                                 type="button"
                                 onClick={() => setTripType(option.id)}
                                 className={cn(
-                                    'px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 border',
+                                    'px-3 py-1.5 sm:px-5 sm:py-2 rounded-full text-sm font-medium transition-all duration-200 border',
                                     isSelected
                                         ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
                                         : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-50'
@@ -433,17 +433,17 @@ export function QuickBookingForm() {
                 </div>
 
                 {/* Search Button */}
-                    <button
-                        onClick={() => openRegister()}
-                        className="w-full py-4 text-white rounded-xl transition-all duration-200 font-semibold text-base flex items-center justify-center gap-2 hover:opacity-95 active:scale-[0.99]"
-                        style={{
-                            background: '#3B82F6',
-                            boxShadow: '0 4px 14px rgba(59, 130, 246, 0.35)',
-                        }}
-                    >
-                        Search Cabs
-                        <ArrowRight className="w-5 h-5" />
-                    </button>
+                <button
+                    onClick={() => openRegister()}
+                    className="w-full py-4 text-white rounded-xl transition-all duration-200 font-semibold text-base flex items-center justify-center gap-2 hover:opacity-95 active:scale-[0.99]"
+                    style={{
+                        background: '#3B82F6',
+                        boxShadow: '0 4px 14px rgba(59, 130, 246, 0.35)',
+                    }}
+                >
+                    Search Cabs
+                    <ArrowRight className="w-5 h-5" />
+                </button>
 
                 {/* Footer Links with Lucide Icons */}
                 <div className="flex items-center justify-center gap-8 pt-2">
