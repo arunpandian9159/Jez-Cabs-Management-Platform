@@ -1,4 +1,4 @@
-import { apiClient } from '../lib/api';
+import { apiClient } from '@/shared/api';
 
 // Types for admin verification
 export interface VerificationApplicant {

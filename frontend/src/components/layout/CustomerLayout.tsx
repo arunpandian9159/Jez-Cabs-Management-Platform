@@ -19,8 +19,8 @@ import {
 import { Button } from '../ui/Button';
 import { Navbar } from './Navbar';
 import { Sidebar, NavItem } from './Sidebar';
-import { useAuth } from '../../contexts/AuthContext';
-import { ROUTES } from '../../lib/constants';
+import { useAuth } from '@/features/auth';
+import { ROUTES } from '@/shared/constants';
 
 // Navigation items for customer
 const customerNavItems: NavItem[] = [

@@ -10,11 +10,11 @@ import {
     Info,
     ChevronRight,
 } from 'lucide-react';
-import { Button } from '../../components/ui/Button';
-import { Card } from '../../components/ui/Card';
-import { Input } from '../../components/ui/Input';
-import { Select } from '../../components/ui/Select';
-import { TextArea } from '../../components/ui/TextArea';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Input } from '@/components/ui/Input';
+import { Select } from '@/components/ui/Select';
+import { TextArea } from '@/components/ui/TextArea';
 import { useNavigate } from 'react-router-dom';
 
 export function PostTrip() {

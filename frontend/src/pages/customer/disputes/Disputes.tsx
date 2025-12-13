@@ -18,7 +18,7 @@ import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../../component
 import { Modal } from '../../../components/ui/Modal';
 import { TextArea } from '../../../components/ui/TextArea';
 import { Select } from '../../../components/ui/Select';
-import { formatCurrency, formatRelativeTime } from '../../../lib/utils';
+import { formatCurrency, formatRelativeTime } from '@/shared/utils';
 import { disputesService, tripsService } from '../../../services';
 
 // Types for disputes display

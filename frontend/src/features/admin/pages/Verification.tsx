@@ -11,18 +11,18 @@ import {
     Calendar,
     AlertTriangle,
 } from 'lucide-react';
-import { Button } from '../../components/ui/Button';
-import { Card } from '../../components/ui/Card';
-import { Badge } from '../../components/ui/Badge';
-import { Input } from '../../components/ui/Input';
-import { Select } from '../../components/ui/Select';
-import { Modal } from '../../components/ui/Modal';
-import { Avatar } from '../../components/ui/Avatar';
-import { PageLoader } from '../../components/ui/Loading';
-import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
-import { TextArea } from '../../components/ui/TextArea';
-import { formatDate } from '../../lib/utils';
-import { adminService, type Verification, type VerificationStats } from '../../services/admin.service';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
+import { Input } from '@/components/ui/Input';
+import { Select } from '@/components/ui/Select';
+import { Modal } from '@/components/ui/Modal';
+import { Avatar } from '@/components/ui/Avatar';
+import { PageLoader } from '@/components/ui/Loading';
+import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '@/components/ui/Tabs';
+import { TextArea } from '@/components/ui/TextArea';
+import { formatDate } from '@/shared/utils';
+import { adminService, type Verification, type VerificationStats } from '@/services/admin.service';
 
 export function AdminVerification() {
     const [activeTab, setActiveTab] = useState('pending');

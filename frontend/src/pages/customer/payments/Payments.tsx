@@ -15,7 +15,7 @@ import { Badge, StatusBadge } from '../../../components/ui/Badge';
 import { Input } from '../../../components/ui/Input';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../../components/ui/Tabs';
 import { Modal } from '../../../components/ui/Modal';
-import { formatCurrency, formatDate, formatTime } from '../../../lib/utils';
+import { formatCurrency, formatDate, formatTime } from '@/shared/utils';
 import { usersService } from '../../../services';
 
 // Types for payments display

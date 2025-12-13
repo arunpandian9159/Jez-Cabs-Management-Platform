@@ -1,5 +1,5 @@
 import { forwardRef, TextareaHTMLAttributes } from 'react';
-import { cn } from '../../lib/utils';
+import { cn } from '@/shared/utils';
 import { AlertCircle } from 'lucide-react';
 
 export interface TextAreaProps

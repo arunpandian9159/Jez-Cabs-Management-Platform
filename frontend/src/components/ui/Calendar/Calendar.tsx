@@ -1,6 +1,6 @@
 import { DayPicker, type DayPickerProps } from 'react-day-picker';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { cn } from '../../lib/utils';
+import { cn } from '@/shared/utils';
 
 import 'react-day-picker/dist/style.css';
 

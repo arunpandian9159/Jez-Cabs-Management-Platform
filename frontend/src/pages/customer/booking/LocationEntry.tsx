@@ -16,8 +16,8 @@ import {
 import { Button } from '../../../components/ui/Button';
 import { Input } from '../../../components/ui/Input';
 import { Card } from '../../../components/ui/Card';
-import { cn } from '../../../lib/utils';
-import { ROUTES, MAP_CONFIG } from '../../../lib/constants';
+import { cn } from '@/shared/utils';
+import { ROUTES, MAP_CONFIG } from '@/shared/constants';
 import { usersService } from '../../../services';
 
 // Fix for default marker icon in Leaflet with React

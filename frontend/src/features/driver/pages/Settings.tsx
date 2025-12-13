@@ -10,9 +10,9 @@ import {
     ToggleLeft,
     ToggleRight,
 } from 'lucide-react';
-import { Button } from '../../components/ui/Button';
-import { Card } from '../../components/ui/Card';
-import { Select } from '../../components/ui/Select';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Select } from '@/components/ui/Select';
 
 interface SettingToggleProps {
     label: string;

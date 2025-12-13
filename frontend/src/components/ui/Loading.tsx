@@ -1,4 +1,4 @@
-import { cn } from '../../lib/utils';
+import { cn } from '@/shared/utils';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 // Page loader with Lottie animation for full-page loading states

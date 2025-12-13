@@ -13,8 +13,8 @@ import { Button } from '../../../components/ui/Button';
 import { Card } from '../../../components/ui/Card';
 import { StatusBadge } from '../../../components/ui/Badge';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../../components/ui/Tabs';
-import { formatCurrency, formatDate } from '../../../lib/utils';
-import { ROUTES } from '../../../lib/constants';
+import { formatCurrency, formatDate } from '@/shared/utils';
+import { ROUTES } from '@/shared/constants';
 import { rentalsService, Rental } from '../../../services';
 
 // Types for rental display

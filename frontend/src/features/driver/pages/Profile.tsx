@@ -14,15 +14,15 @@ import {
     AlertCircle,
     Clock,
 } from 'lucide-react';
-import { Button } from '../../components/ui/Button';
-import { Card } from '../../components/ui/Card';
-import { Badge } from '../../components/ui/Badge';
-import { Avatar } from '../../components/ui/Avatar';
-import { Input } from '../../components/ui/Input';
-import { Modal } from '../../components/ui/Modal';
-import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
-import { PageLoader } from '../../components/ui/Loading';
-import { driverService } from '../../services';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
+import { Avatar } from '@/components/ui/Avatar';
+import { Input } from '@/components/ui/Input';
+import { Modal } from '@/components/ui/Modal';
+import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '@/components/ui/Tabs';
+import { PageLoader } from '@/components/ui/Loading';
+import { driverService } from '@/services';
 
 // Types for driver profile display
 interface DocumentDisplay {

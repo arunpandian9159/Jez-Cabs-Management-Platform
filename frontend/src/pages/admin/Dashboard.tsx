@@ -9,11 +9,11 @@ import {
     DollarSign,
     AlertTriangle,
 } from 'lucide-react';
-import { Card } from '../../components/ui/Card';
-import { Badge } from '../../components/ui/Badge';
-import { Avatar } from '../../components/ui/Avatar';
-import { formatCurrency } from '../../lib/utils';
-import { tripsService, disputesService } from '../../services';
+import { Card } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
+import { Avatar } from '@/components/ui/Avatar';
+import { formatCurrency } from '@/shared/utils';
+import { tripsService, disputesService } from '@/services';
 
 // Types for admin dashboard display
 interface DashboardStatDisplay {

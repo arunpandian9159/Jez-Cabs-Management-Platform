@@ -7,17 +7,17 @@ import {
     Star,
     MoreVertical,
 } from 'lucide-react';
-import { Button } from '../../components/ui/Button';
-import { Card } from '../../components/ui/Card';
-import { Badge, StatusBadge } from '../../components/ui/Badge';
-import { Input } from '../../components/ui/Input';
-import { Select } from '../../components/ui/Select';
-import { Avatar } from '../../components/ui/Avatar';
-import { Modal } from '../../components/ui/Modal';
-import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
-import { PageLoader } from '../../components/ui/Loading';
-import { formatCurrency, formatDate } from '../../lib/utils';
-import { cabsService, type Cab, type CreateCabDto } from '../../services';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Badge, StatusBadge } from '@/components/ui/Badge';
+import { Input } from '@/components/ui/Input';
+import { Select } from '@/components/ui/Select';
+import { Avatar } from '@/components/ui/Avatar';
+import { Modal } from '@/components/ui/Modal';
+import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '@/components/ui/Tabs';
+import { PageLoader } from '@/components/ui/Loading';
+import { formatCurrency, formatDate } from '@/shared/utils';
+import { cabsService, type Cab, type CreateCabDto } from '@/services';
 
 // Types for cab display
 interface CabDriverDisplay {

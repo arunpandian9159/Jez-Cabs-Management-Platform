@@ -12,13 +12,13 @@ import {
     Settings,
     MoreVertical,
 } from 'lucide-react';
-import { Button } from '../../components/ui/Button';
-import { Card } from '../../components/ui/Card';
-import { Badge, StatusBadge } from '../../components/ui/Badge';
-import { Avatar } from '../../components/ui/Avatar';
-import { PageLoader } from '../../components/ui/Loading';
-import { formatCurrency } from '../../lib/utils';
-import { cabsService, type Cab } from '../../services';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Badge, StatusBadge } from '@/components/ui/Badge';
+import { Avatar } from '@/components/ui/Avatar';
+import { PageLoader } from '@/components/ui/Loading';
+import { formatCurrency } from '@/shared/utils';
+import { cabsService, type Cab } from '@/services';
 
 // Types for owner dashboard display
 interface OwnerStatsDisplay {

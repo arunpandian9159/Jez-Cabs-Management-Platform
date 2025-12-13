@@ -11,14 +11,14 @@ import {
     MessageCircle,
     AlertCircle,
 } from 'lucide-react';
-import { Button } from '../../components/ui/Button';
-import { Card } from '../../components/ui/Card';
-import { Badge } from '../../components/ui/Badge';
-import { Avatar } from '../../components/ui/Avatar';
-import { PageLoader } from '../../components/ui/Loading';
-import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
-import { formatCurrency, formatDate, formatTime } from '../../lib/utils';
-import { rideshareService, ExchangeHistoryItem as APIExchangeHistoryItem } from '../../services';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
+import { Avatar } from '@/components/ui/Avatar';
+import { PageLoader } from '@/components/ui/Loading';
+import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '@/components/ui/Tabs';
+import { formatCurrency, formatDate, formatTime } from '@/shared/utils';
+import { rideshareService, ExchangeHistoryItem as APIExchangeHistoryItem } from '@/services';
 
 // Display types for exchange history
 interface ExchangeHistoryDisplay {

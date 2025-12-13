@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
-import { storage } from '@/lib/utils';
+import { storage } from '@/shared/utils';
+
 import type { ApiError, ApiResponse } from '@/types';
 
 // API base URL from environment

@@ -13,7 +13,7 @@ import { Card } from '../../../components/ui/Card';
 import { Badge, StatusBadge } from '../../../components/ui/Badge';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../../components/ui/Tabs';
 import { Select } from '../../../components/ui/Select';
-import { formatCurrency, formatDate, formatTime, formatDuration } from '../../../lib/utils';
+import { formatCurrency, formatDate, formatTime, formatDuration } from '@/shared/utils';
 import { tripsService } from '../../../services';
 
 // Types for trip history display

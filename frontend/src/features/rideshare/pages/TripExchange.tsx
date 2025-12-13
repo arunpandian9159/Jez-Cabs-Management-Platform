@@ -14,16 +14,16 @@ import {
     ChevronDown,
     AlertCircle,
 } from 'lucide-react';
-import { Button } from '../../components/ui/Button';
-import { Card } from '../../components/ui/Card';
-import { Badge } from '../../components/ui/Badge';
-import { Input } from '../../components/ui/Input';
-import { Modal } from '../../components/ui/Modal';
-import { Avatar } from '../../components/ui/Avatar';
-import { PageLoader } from '../../components/ui/Loading';
-import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
-import { formatCurrency, formatDate, formatTime } from '../../lib/utils';
-import { rideshareService, CommunityTrip as APICommunityTrip } from '../../services';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
+import { Input } from '@/components/ui/Input';
+import { Modal } from '@/components/ui/Modal';
+import { Avatar } from '@/components/ui/Avatar';
+import { PageLoader } from '@/components/ui/Loading';
+import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '@/components/ui/Tabs';
+import { formatCurrency, formatDate, formatTime } from '@/shared/utils';
+import { rideshareService, CommunityTrip as APICommunityTrip } from '@/services';
 
 // Display types for community trips
 interface TripPoster {

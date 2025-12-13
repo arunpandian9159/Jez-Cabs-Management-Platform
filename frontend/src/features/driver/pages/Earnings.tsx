@@ -11,13 +11,13 @@ import {
     CreditCard,
     Clock,
 } from 'lucide-react';
-import { Button } from '../../components/ui/Button';
-import { Card } from '../../components/ui/Card';
-import { Badge } from '../../components/ui/Badge';
-import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
-import { PageLoader } from '../../components/ui/Loading';
-import { formatCurrency, formatDate, formatTime } from '../../lib/utils';
-import { driverService } from '../../services';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
+import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '@/components/ui/Tabs';
+import { PageLoader } from '@/components/ui/Loading';
+import { formatCurrency, formatDate, formatTime } from '@/shared/utils';
+import { driverService } from '@/services';
 
 // Types for earnings display
 interface EarningsSummaryDisplay {

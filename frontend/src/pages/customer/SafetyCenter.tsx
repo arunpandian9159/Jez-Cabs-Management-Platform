@@ -12,12 +12,12 @@ import {
     ChevronRight,
     CheckCircle,
 } from 'lucide-react';
-import { Button } from '../../components/ui/Button';
-import { Card } from '../../components/ui/Card';
-import { Badge } from '../../components/ui/Badge';
-import { Modal } from '../../components/ui/Modal';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
+import { Modal } from '@/components/ui/Modal';
 import { useNavigate } from 'react-router-dom';
-import { safetyService } from '../../services';
+import { safetyService } from '@/services';
 
 // Types for safety settings display
 interface SafetySettingsDisplay {

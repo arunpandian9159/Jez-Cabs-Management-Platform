@@ -13,8 +13,8 @@ import { Card } from '../../../components/ui/Card';
 import { Avatar } from '../../../components/ui/Avatar';
 import { TextArea } from '../../../components/ui/TextArea';
 import { Badge } from '../../../components/ui/Badge';
-import { formatCurrency } from '../../../lib/utils';
-import { ROUTES } from '../../../lib/constants';
+import { formatCurrency } from '@/shared/utils';
+import { ROUTES } from '@/shared/constants';
 
 const quickFeedback = [
     { id: 'clean', label: 'Clean car', icon: '✨' },

@@ -9,9 +9,9 @@ import {
     ChevronRight,
     LucideIcon,
 } from 'lucide-react';
-import { cn } from '../../lib/utils';
-import { Avatar } from '../ui/Avatar';
-import { Badge } from '../ui/Badge';
+import { cn } from '@/shared/utils';
+import { Avatar } from '@/components/ui/Avatar';
+import { Badge } from '@/components/ui/Badge';
 
 // Types
 export interface NavItem {

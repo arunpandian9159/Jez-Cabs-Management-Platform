@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { DotLottiePlayer } from '@dotlottie/react-player';
 import '@dotlottie/react-player/dist/index.css';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '@/features/auth';
 
 import { LoginForm } from './LoginForm';
 import { RegisterForm } from './RegisterForm';

@@ -11,15 +11,15 @@ import {
     Car,
     AlertTriangle,
 } from 'lucide-react';
-import { Button } from '../../components/ui/Button';
-import { Card } from '../../components/ui/Card';
-import { StatusBadge } from '../../components/ui/Badge';
-import { Input } from '../../components/ui/Input';
-import { Select } from '../../components/ui/Select';
-import { Avatar } from '../../components/ui/Avatar';
-import { Modal } from '../../components/ui/Modal';
-import { PageLoader } from '../../components/ui/Loading';
-import { formatCurrency } from '../../lib/utils';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { StatusBadge } from '@/components/ui/Badge';
+import { Input } from '@/components/ui/Input';
+import { Select } from '@/components/ui/Select';
+import { Avatar } from '@/components/ui/Avatar';
+import { Modal } from '@/components/ui/Modal';
+import { PageLoader } from '@/components/ui/Loading';
+import { formatCurrency } from '@/shared/utils';
 import { ownerService, type OwnerDriver } from '../../services/owner.service';
 
 // Initial form state for new driver invitation

@@ -1,7 +1,7 @@
 import { forwardRef, InputHTMLAttributes, useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cva } from 'class-variance-authority';
-import { cn } from '../../lib/utils';
+import { cn } from '@/shared/utils';
 import { Eye, EyeOff, AlertCircle, CheckCircle } from 'lucide-react';
 
 const inputVariants = cva(

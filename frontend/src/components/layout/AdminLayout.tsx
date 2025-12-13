@@ -10,7 +10,7 @@ import {
     Shield,
 } from 'lucide-react';
 import { useState } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '@/features/auth';
 import { Sidebar, NavItem } from './Sidebar';
 import { Navbar } from './Navbar';
 

@@ -1,7 +1,7 @@
 import { Outlet, useLocation} from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ROUTES } from '../../lib/constants';
-import { AuthModal, useAuthModal } from '../auth';
+import { ROUTES } from '@/shared/constants';
+import { AuthModal, useAuthModal } from '@/features/auth';
 
 import { Navbar } from './Navbar';
 

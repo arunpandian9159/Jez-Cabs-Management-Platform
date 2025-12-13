@@ -13,13 +13,13 @@ import {
     Clock,
     AlertTriangle,
 } from 'lucide-react';
-import { Button } from '../../components/ui/Button';
-import { Card } from '../../components/ui/Card';
-import { Badge } from '../../components/ui/Badge';
-import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
-import { Select } from '../../components/ui/Select';
-import { PageLoader } from '../../components/ui/Loading';
-import { formatCurrency, formatDate } from '../../lib/utils';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
+import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '@/components/ui/Tabs';
+import { Select } from '@/components/ui/Select';
+import { PageLoader } from '@/components/ui/Loading';
+import { formatCurrency, formatDate } from '@/shared/utils';
 import {
     ownerService,
     type EarningsSummary,

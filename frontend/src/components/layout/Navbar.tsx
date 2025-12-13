@@ -17,12 +17,12 @@ import {
     Zap,
     LucideIcon
 } from 'lucide-react';
-import { cn } from '../../lib/utils';
+import { cn } from '@/shared/utils';
 import { Logo } from '../ui/Logo';
-import { Avatar } from '../ui/Avatar';
-import { ROUTES } from '../../lib/constants';
-import { useAuthModal } from '../auth';
-import { useAuth } from '../../contexts/AuthContext';
+import { Avatar } from '@/components/ui/Avatar';
+import { ROUTES } from '@/shared/constants';
+import { useAuthModal } from '@/features/auth';
+import { useAuth } from '@/features/auth';
 
 interface NavLink {
     path: string;

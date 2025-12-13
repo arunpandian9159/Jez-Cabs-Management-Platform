@@ -9,14 +9,14 @@ import {
     CheckCircle,
     XCircle,
 } from 'lucide-react';
-import { Button } from '../../components/ui/Button';
-import { Card } from '../../components/ui/Card';
-import { StatusBadge } from '../../components/ui/Badge';
-import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
-import { Select } from '../../components/ui/Select';
-import { PageLoader } from '../../components/ui/Loading';
-import { formatCurrency, formatDate, formatTime, formatDuration } from '../../lib/utils';
-import { tripsService } from '../../services';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { StatusBadge } from '@/components/ui/Badge';
+import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '@/components/ui/Tabs';
+import { Select } from '@/components/ui/Select';
+import { PageLoader } from '@/components/ui/Loading';
+import { formatCurrency, formatDate, formatTime, formatDuration } from '@/shared/utils';
+import { tripsService } from '@/services';
 
 // Types for driver trip display
 interface TripDisplay {

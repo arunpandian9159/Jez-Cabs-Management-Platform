@@ -1,7 +1,7 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '@/features/auth';
 import { LoadingOverlay } from './ui/Loading';
-import { ROUTES } from '../lib/constants';
+import { ROUTES } from '@/shared/constants';
 import type { UserRole } from '../types';
 
 interface ProtectedRouteProps {

@@ -16,8 +16,8 @@ import { Button } from '../../../components/ui/Button';
 import { Card } from '../../../components/ui/Card';
 import { Badge } from '../../../components/ui/Badge';
 import { Input } from '../../../components/ui/Input';
-import { cn, formatCurrency } from '../../../lib/utils';
-import { ROUTES, CAB_TYPES } from '../../../lib/constants';
+import { cn, formatCurrency } from '@/shared/utils';
+import { ROUTES, CAB_TYPES } from '@/shared/constants';
 import type { CabType, PriceEstimate } from '../../../types';
 import { cabsService } from '../../../services';
 
