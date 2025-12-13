@@ -1,7 +1,6 @@
-export { OwnerDashboard as Dashboard } from './Dashboard';
+export { OwnerDashboard } from './Dashboard';
 export { ManageCabs } from './ManageCabs';
 export { ManageDrivers } from './ManageDrivers';
 export { Contracts } from './Contracts';
-export { OwnerEarnings as Earnings } from './Earnings';
-export { OwnerSettings as Settings } from './Settings';
-
+export { OwnerEarnings } from './Earnings';
+export { OwnerSettings } from './Settings';

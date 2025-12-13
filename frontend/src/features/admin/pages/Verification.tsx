@@ -20,7 +20,7 @@ import { Modal } from '@/components/ui/Modal';
 import { Avatar } from '@/components/ui/Avatar';
 import { PageLoader } from '@/components/ui/Loading';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '@/components/ui/Tabs';
-import { TextArea } from '@/components/ui/TextArea';
+import { TextArea } from '@/components/ui/Input/TextArea';
 import { formatDate } from '@/shared/utils';
 import { adminService, type Verification, type VerificationStats } from '@/services/admin.service';
 
