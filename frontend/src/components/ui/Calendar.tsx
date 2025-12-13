@@ -55,8 +55,8 @@ function Calendar({
                     cellSizeClasses[cellSize],
                     '[&:has([aria-selected].day-range-end)]:rounded-r-lg',
                     '[&:has([aria-selected].day-range-start)]:rounded-l-lg',
-                    '[&:has([aria-selected].day-outside)]:bg-blue-50/50',
-                    '[&:has([aria-selected])]:bg-blue-50',
+                    '[&:has([aria-selected].day-outside)]:bg-blue-100/50',
+                    '[&:has([aria-selected])]:bg-blue-100',
                     'first:[&:has([aria-selected])]:rounded-l-lg',
                     'last:[&:has([aria-selected])]:rounded-r-lg',
                     'focus-within:relative focus-within:z-20'
@@ -65,16 +65,16 @@ function Calendar({
                     'p-0 font-normal aria-selected:opacity-100 inline-flex items-center justify-center rounded-lg ring-offset-white transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 hover:bg-blue-100 hover:text-blue-800 active:scale-95',
                     cellSizeClasses[cellSize]
                 ),
-                day_range_start: 'day-range-start',
-                day_range_end: 'day-range-end',
+                day_range_start: 'day-range-start aria-selected:!bg-blue-400 aria-selected:!text-white',
+                day_range_end: 'day-range-end aria-selected:!bg-blue-400 aria-selected:!text-white',
                 day_selected:
-                    'bg-gradient-to-br from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 hover:text-white focus:from-blue-600 focus:to-blue-700 focus:text-white shadow-md',
+                    'bg-blue-400 !text-white hover:bg-blue-400 focus:bg-blue-400',
                 day_today: 'bg-blue-50 text-blue-600 font-semibold ring-1 ring-blue-200',
                 day_outside:
-                    'day-outside text-gray-300 opacity-50 aria-selected:bg-blue-50/50 aria-selected:text-gray-400 aria-selected:opacity-40',
+                    'day-outside text-gray-300 opacity-50 aria-selected:bg-blue-100/50 aria-selected:text-gray-400 aria-selected:opacity-40',
                 day_disabled: 'text-gray-300 opacity-50 cursor-not-allowed',
                 day_range_middle:
-                    'aria-selected:bg-blue-50 aria-selected:text-blue-800',
+                    'aria-selected:!bg-blue-100 aria-selected:!text-blue-900 hover:aria-selected:!bg-blue-200 hover:aria-selected:!text-blue-900',
                 day_hidden: 'invisible',
                 ...classNames,
             }}

@@ -150,7 +150,7 @@ export function Home() {
         <div className="min-h-screen bg-white">
             {/* Hero Section */}
             <section
-                className="relative pt-8 pb-12 sm:pt-12 sm:pb-20 px-4 sm:px-6 lg:px-8 min-h-[85vh] sm:min-h-[90vh] flex items-center"
+                className="relative pt-8 pb-12 sm:pt-12 sm:pb-20 px-6 sm:px-6 lg:px-9 min-h-[85vh] sm:min-h-[90vh] flex items-center"
                 style={{
                     background: 'linear-gradient(135deg, #f8fafc 0%, #eff6ff 25%, #ffffff 50%, #f0fdfa 75%, #f8fafc 100%)'
                 }}
@@ -203,10 +203,10 @@ export function Home() {
                     }}
                 />
 
-                <div className="max-w-7xl mx-auto relative z-10">
-                    <div className="grid lg:grid-cols-2 gap-8 sm:gap-16 items-center">
-                        {/* Left Content */}
-                        <div className="space-y-4 sm:space-y-8">
+                <div className="mx-auto relative z-10">
+                    <div className="grid lg:grid-cols-2 gap-20 items-start">
+                        {/* Left Content - Title and Animation */}
+                        <div className="space-y-4 sm:space-y-6">
                             {/* Badge with animation - KEPT FULL SIZE */}
                             <div
                                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold animate-fade-in-down shadow-md"
@@ -246,75 +246,82 @@ export function Home() {
                                 </span>
                             </h1>
 
-                            {/* Quick Booking Form - Enhanced */}
-                            <QuickBookingForm />
+                            {/* Animation - Below Title (Desktop Only) */}
+                            <div
+                                className="relative hidden lg:block animate-fade-in mt-4 lg:-ml-12"
+                                style={{
+                                    animationDelay: '0.3s',
+                                    animationFillMode: 'both'
+                                }}
+                            >
+                                {/* Background glow for animation */}
+                                <div
+                                    className="absolute inset-0 rounded-full opacity-30 blur-3xl animate-pulse"
+                                    style={{
+                                        background: 'radial-gradient(circle, #60a5fa 0%, transparent 60%)',
+                                        transform: 'scale(0.8)'
+                                    }}
+                                />
 
+                                <div className="relative w-full max-w-md rounded-3xl overflow-visible animate-float" style={{ animationDuration: '6s' }}>
+                                    <DotLottiePlayer
+                                        src="/Man waiting car.lottie"
+                                        autoplay
+                                        loop
+                                        className="w-full h-full drop-shadow-2xl"
+                                    />
+                                </div>
+
+                                {/* Floating cards around animation */}
+                                <div
+                                    className="absolute top-4 right-0 p-4 rounded-2xl shadow-xl animate-float-subtle"
+                                    style={{
+                                        background: 'rgba(255, 255, 255, 0.95)',
+                                        backdropFilter: 'blur(10px)',
+                                        border: '1px solid rgba(255, 255, 255, 0.8)'
+                                    }}
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
+                                            <CheckCircle className="w-5 h-5 text-white" />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-semibold" style={{ color: '#0f172a' }}>Ride Confirmed!</p>
+                                            <p className="text-xs" style={{ color: '#64748b' }}>Driver arriving in 10 mins</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div
+                                    className="absolute bottom-10 -left-4 p-4 rounded-2xl shadow-xl animate-float-subtle-delayed"
+                                    style={{
+                                        background: 'rgba(255, 255, 255, 0.95)',
+                                        backdropFilter: 'blur(10px)',
+                                        border: '1px solid rgba(255, 255, 255, 0.8)'
+                                    }}
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+                                            <Car className="w-5 h-5 text-white" />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-semibold" style={{ color: '#0f172a' }}>10+ Cabs</p>
+                                            <p className="text-xs" style={{ color: '#64748b' }}>Available nearby</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        {/* Right Animation */}
+                        {/* Right Content - Quick Booking Form */}
                         <div
-                            className="relative hidden lg:block animate-fade-in"
+                            className="animate-fade-in-up mt-8 lg:mt-16 lg:ml-12"
                             style={{
                                 animationDelay: '0.3s',
                                 animationFillMode: 'both'
                             }}
                         >
-                            {/* Background glow for animation */}
-                            <div
-                                className="absolute inset-0 rounded-full opacity-30 blur-3xl animate-pulse"
-                                style={{
-                                    background: 'radial-gradient(circle, #60a5fa 0%, transparent 60%)',
-                                    transform: 'scale(0.8)'
-                                }}
-                            />
-
-                            <div className="relative aspect-square rounded-3xl overflow-visible animate-float" style={{ animationDuration: '6s' }}>
-                                <DotLottiePlayer
-                                    src="/Man waiting car.lottie"
-                                    autoplay
-                                    loop
-                                    className="w-full h-full drop-shadow-2xl"
-                                />
-                            </div>
-
-                            {/* Floating cards around animation */}
-                            <div
-                                className="absolute -top-4 -right-4 p-4 rounded-2xl shadow-xl animate-float-subtle"
-                                style={{
-                                    background: 'rgba(255, 255, 255, 0.95)',
-                                    backdropFilter: 'blur(10px)',
-                                    border: '1px solid rgba(255, 255, 255, 0.8)'
-                                }}
-                            >
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
-                                        <CheckCircle className="w-5 h-5 text-white" />
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-semibold" style={{ color: '#0f172a' }}>Ride Confirmed!</p>
-                                        <p className="text-xs" style={{ color: '#64748b' }}>Driver arriving in 10 mins</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div
-                                className="absolute bottom-10 -left-8 p-4 rounded-2xl shadow-xl animate-float-subtle-delayed"
-                                style={{
-                                    background: 'rgba(255, 255, 255, 0.95)',
-                                    backdropFilter: 'blur(10px)',
-                                    border: '1px solid rgba(255, 255, 255, 0.8)'
-                                }}
-                            >
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
-                                        <Car className="w-5 h-5 text-white" />
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-semibold" style={{ color: '#0f172a' }}>10+ Cabs</p>
-                                        <p className="text-xs" style={{ color: '#64748b' }}>Available nearby</p>
-                                    </div>
-                                </div>
-                            </div>
+                            <QuickBookingForm />
                         </div>
                     </div>
                 </div>
