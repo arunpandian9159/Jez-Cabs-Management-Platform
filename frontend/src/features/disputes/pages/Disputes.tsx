@@ -16,7 +16,7 @@ import { Card } from '@/components/ui/Card';
 import { StatusBadge } from '@/components/ui/Badge';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '@/components/ui/Tabs';
 import { Modal } from '@/components/ui/Modal';
-import { TextArea } from '@/components/ui/TextArea';
+import { TextArea } from '@/components/ui/Input/TextArea';
 import { Select } from '@/components/ui/Select';
 import { formatCurrency, formatRelativeTime } from '@/shared/utils';
 import { disputesService, tripsService } from '@/services';

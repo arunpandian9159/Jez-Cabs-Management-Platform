@@ -21,7 +21,7 @@ import { Select } from '@/components/ui/Select';
 import { Modal } from '@/components/ui/Modal';
 import { Avatar } from '@/components/ui/Avatar';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '@/components/ui/Tabs';
-import { TextArea } from '@/components/ui/TextArea';
+import { TextArea } from '@/components/ui/Input/TextArea';
 import { formatCurrency, formatDate } from '@/shared/utils';
 import { disputesService } from '@/services';
 

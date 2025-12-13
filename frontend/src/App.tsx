@@ -20,26 +20,28 @@ import {
 import { Home } from '@/features/public';
 
 // Customer feature pages
-import { CustomerDashboard } from '@/pages/customer/Dashboard';
-import { LocationEntry, CabSelection, DriverSearch, LiveTracking, TripComplete } from '@/pages/customer/booking';
-import { BrowseCabs, ActiveRentals } from '@/pages/customer/rentals';
-import { PlanTrip, TripHistory } from '@/pages/customer/trips';
-import { Payments } from '@/pages/customer/payments';
-import { Disputes } from '@/pages/customer/disputes';
-import { EmergencyContacts, SafetyCenter } from '@/pages/customer';
-import { TripExchange, PostTrip, ShareRide, ExchangeHistory } from '@/pages/customer';
+import { CustomerDashboard } from '@/features/customer/pages/Dashboard';
+import { LocationEntry, CabSelection, DriverSearch, LiveTracking, TripComplete } from '@/features/booking/components';
+import { BrowseCabs, ActiveRentals } from '@/features/rentals/pages';
+import { PlanTrip, TripHistory } from '@/features/trips/pages';
+import { Payments } from '@/features/payments/pages';
+import { Disputes } from '@/features/disputes/pages';
+import { EmergencyContacts, SafetyCenter } from '@/features/safety/pages';
+import { TripExchange, ShareRide, ExchangeHistory } from '@/features/rideshare/pages';
+import { PostTrip } from '@/features/customer/pages/PostTrip';
 
 // Driver feature pages
-import { DriverDashboard, ActiveTrip, TripHistory as DriverTripHistory, Earnings, DriverProfile, DriverSettings } from '@/pages/driver';
+import { DriverDashboard, ActiveTrip, TripHistory as DriverTripHistory, Earnings, DriverProfile, DriverSettings } from '@/features/driver/pages';
 
 // Owner feature pages
-import { OwnerDashboard, ManageCabs, ManageDrivers, OwnerEarnings, OwnerSettings, Contracts } from '@/pages/owner';
+import { OwnerDashboard, ManageCabs, ManageDrivers, OwnerEarnings, OwnerSettings, Contracts } from '@/features/owner/pages';
 
 // Admin feature pages
-import { AdminDashboard, AdminDisputes, AdminUsers, AdminVerification } from '@/pages/admin';
+import { AdminDashboard, AdminDisputes, AdminUsers, AdminVerification } from '@/features/admin/pages';
 
 // Shared utilities
 import { ROUTES } from '@/shared/constants';
+
 
 
 // Create React Query client

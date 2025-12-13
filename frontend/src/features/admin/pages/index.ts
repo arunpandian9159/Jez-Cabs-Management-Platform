@@ -1,5 +1,4 @@
-export { AdminDashboard as Dashboard } from './Dashboard';
-export { AdminUsers as Users } from './Users';
-export { AdminDisputes as Disputes } from './Disputes';
-export { AdminVerification as VerificationPage } from './Verification';
-
+export { AdminDashboard } from './Dashboard';
+export { AdminUsers } from './Users';
+export { AdminDisputes } from './Disputes';
+export { AdminVerification } from './Verification';
