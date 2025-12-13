@@ -9,14 +9,14 @@ import {
     Download,
     Search,
 } from 'lucide-react';
-import { Button } from '../../../components/ui/Button';
-import { Card } from '../../../components/ui/Card';
-import { Badge, StatusBadge } from '../../../components/ui/Badge';
-import { Input } from '../../../components/ui/Input';
-import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '../../../components/ui/Tabs';
-import { Modal } from '../../../components/ui/Modal';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Badge, StatusBadge } from '@/components/ui/Badge';
+import { Input } from '@/components/ui/Input';
+import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '@/components/ui/Tabs';
+import { Modal } from '@/components/ui/Modal';
 import { formatCurrency, formatDate, formatTime } from '@/shared/utils';
-import { usersService } from '../../../services';
+import { usersService } from '@/services';
 
 // Types for payments display
 interface PaymentMethodDisplay {

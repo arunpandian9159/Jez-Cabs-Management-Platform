@@ -12,14 +12,14 @@ import {
     Gift,
     Shield,
 } from 'lucide-react';
-import { Button } from '../../../components/ui/Button';
-import { Card } from '../../../components/ui/Card';
-import { Badge } from '../../../components/ui/Badge';
-import { Input } from '../../../components/ui/Input';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
+import { Input } from '@/components/ui/Input';
 import { cn, formatCurrency } from '@/shared/utils';
 import { ROUTES, CAB_TYPES } from '@/shared/constants';
 import type { CabType, PriceEstimate } from '../../../types';
-import { cabsService } from '../../../services';
+import { cabsService } from '@/services';
 
 export function CabSelection() {
     const navigate = useNavigate();

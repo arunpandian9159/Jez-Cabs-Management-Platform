@@ -1,6 +1,6 @@
 import { apiClient } from '@/shared/api';
 
-export interface EmergencyContact {
+export interface EmergencyContactApiResponse {
     id: string;
     user_id: string;
     name: string;
@@ -51,18 +51,18 @@ export interface SharedTrip {
 
 export const safetyService = {
     // Get all emergency contacts
-    async getEmergencyContacts(): Promise<EmergencyContact[]> {
-        return apiClient.get<EmergencyContact[]>('/safety/contacts');
+    async getEmergencyContacts(): Promise<EmergencyContactApiResponse[]> {
+        return apiClient.get<EmergencyContactApiResponse[]>('/safety/contacts');
     },
 
     // Create a new emergency contact
-    async createEmergencyContact(data: CreateEmergencyContactDto): Promise<EmergencyContact> {
-        return apiClient.post<EmergencyContact>('/safety/contacts', data);
+    async createEmergencyContact(data: CreateEmergencyContactDto): Promise<EmergencyContactApiResponse> {
+        return apiClient.post<EmergencyContactApiResponse>('/safety/contacts', data);
     },
 
     // Update an emergency contact
-    async updateEmergencyContact(id: string, data: UpdateEmergencyContactDto): Promise<EmergencyContact> {
-        return apiClient.patch<EmergencyContact>(`/safety/contacts/${id}`, data);
+    async updateEmergencyContact(id: string, data: UpdateEmergencyContactDto): Promise<EmergencyContactApiResponse> {
+        return apiClient.patch<EmergencyContactApiResponse>(`/safety/contacts/${id}`, data);
     },
 
     // Delete an emergency contact
@@ -71,8 +71,8 @@ export const safetyService = {
     },
 
     // Set a contact as primary
-    async setPrimaryContact(id: string): Promise<EmergencyContact> {
-        return apiClient.patch<EmergencyContact>(`/safety/contacts/${id}/primary`, {});
+    async setPrimaryContact(id: string): Promise<EmergencyContactApiResponse> {
+        return apiClient.patch<EmergencyContactApiResponse>(`/safety/contacts/${id}/primary`, {});
     },
 
     // Trigger SOS alert

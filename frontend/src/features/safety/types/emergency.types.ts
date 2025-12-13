@@ -1,4 +1,4 @@
-import type { LatLng } from './booking.types';
+import type { LatLng } from '@/types/booking.types';
 
 // Emergency status
 export type EmergencyStatus =

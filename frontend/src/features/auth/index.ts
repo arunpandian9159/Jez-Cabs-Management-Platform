@@ -3,5 +3,5 @@ export { AuthModal, loginSchema, registerSchema, roleOptions, getPasswordStrengt
 export type { LoginFormData, RegisterFormData, AuthModalType } from './components/AuthModal';
 export { LoginForm } from './components/LoginForm';
 export { RegisterForm } from './components/RegisterForm';
-export { AuthProvider, useAuth, useUserRole, useHasRole } from '@/features/auth';
+export { AuthProvider, useAuth, useUserRole, useHasRole } from './contexts/AuthContext';
 export { AuthModalProvider, useAuthModal } from './contexts/AuthModalContext';

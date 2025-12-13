@@ -11,14 +11,14 @@ import {
     ChevronDown,
     Heart,
 } from 'lucide-react';
-import { Button } from '../../../components/ui/Button';
-import { Card } from '../../../components/ui/Card';
-import { Input } from '../../../components/ui/Input';
-import { Select } from '../../../components/ui/Select';
-import { Badge } from '../../../components/ui/Badge';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Input } from '@/components/ui/Input';
+import { Select } from '@/components/ui/Select';
+import { Badge } from '@/components/ui/Badge';
 import { cn, formatCurrency } from '@/shared/utils';
 import { ROUTES } from '@/shared/constants';
-import { rentalsService } from '../../../services';
+import { rentalsService } from '@/services';
 
 // Types for available cabs display
 interface AvailableCabDisplay {

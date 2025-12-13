@@ -13,12 +13,12 @@ import {
     ArrowRight,
     Crosshair,
 } from 'lucide-react';
-import { Button } from '../../../components/ui/Button';
-import { Input } from '../../../components/ui/Input';
-import { Card } from '../../../components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { Card } from '@/components/ui/Card';
 import { cn } from '@/shared/utils';
 import { ROUTES, MAP_CONFIG } from '@/shared/constants';
-import { usersService } from '../../../services';
+import { usersService } from '@/services';
 
 // Fix for default marker icon in Leaflet with React
 delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: unknown })._getIconUrl;

@@ -1,6 +1,6 @@
 // Re-export all types from a single entry point
 export * from './api.types';
-export * from './booking.types';
+export * from '@/types/booking.types';
 export * from './rental.types';
 export * from './driver.types';
 export * from './emergency.types';

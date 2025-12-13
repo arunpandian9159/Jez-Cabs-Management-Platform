@@ -1,2 +1,2 @@
-export { AuthModalContext, AuthModalProvider } from './AuthModalContext';
-export { AuthProvider, useAuth } from './AuthContext';
+export { AuthModalProvider, useAuthModal } from './AuthModalContext';
+export { AuthProvider, useAuth, useUserRole, useHasRole } from './AuthContext';

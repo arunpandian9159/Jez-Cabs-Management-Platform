@@ -23,7 +23,7 @@ import { Modal } from '@/components/ui/Modal';
 import { PageLoader } from '@/components/ui/Loading';
 import { TabsRoot, TabsList, TabsTrigger, TabsContent } from '@/components/ui/Tabs';
 import { formatCurrency, formatDate } from '@/shared/utils';
-import { ownerService, type Contract, type CreateContractDto } from '../../services/owner.service';
+import { ownerService, type Contract, type CreateContractDto } from '@/services/owner.service';
 
 // Initial form state for new contract
 const initialNewContract: CreateContractDto = {
