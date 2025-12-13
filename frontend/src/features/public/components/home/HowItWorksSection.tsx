@@ -1,9 +1,10 @@
-import { Link } from 'react-router-dom';
 import { Map, ArrowRight } from 'lucide-react';
 import { steps, StepItem } from '../../pages/homeData';
-import { ROUTES } from '@/shared/constants';
+import { useAuthModal } from '@/features/auth';
 
 export function HowItWorksSection() {
+    const { openRegister } = useAuthModal();
+
     return (
         <section
             id="how-it-works"
@@ -82,35 +83,34 @@ export function HowItWorksSection() {
                         animationFillMode: 'both'
                     }}
                 >
-                    <Link to={ROUTES.REGISTER}>
-                        <button
-                            className="group relative px-6 py-3 sm:px-8 sm:py-4 lg:px-10 lg:py-5 text-white rounded-xl sm:rounded-2xl transition-all font-bold text-sm sm:text-base lg:text-lg inline-flex items-center gap-2 sm:gap-3 overflow-hidden"
+                    <button
+                        onClick={openRegister}
+                        className="group relative px-6 py-3 sm:px-8 sm:py-4 lg:px-10 lg:py-5 text-white rounded-xl sm:rounded-2xl transition-all font-bold text-sm sm:text-base lg:text-lg inline-flex items-center gap-2 sm:gap-3 overflow-hidden cursor-pointer"
+                        style={{
+                            background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)',
+                            boxShadow: '0 8px 30px rgba(37, 99, 235, 0.3)'
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = 'translateY(-3px) scale(1.05)';
+                            e.currentTarget.style.boxShadow = '0 15px 40px rgba(37, 99, 235, 0.4)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                            e.currentTarget.style.boxShadow = '0 8px 30px rgba(37, 99, 235, 0.3)';
+                        }}
+                    >
+                        {/* Shimmer Effect */}
+                        <div
+                            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                             style={{
-                                background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)',
-                                boxShadow: '0 8px 30px rgba(37, 99, 235, 0.3)'
+                                background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)',
+                                backgroundSize: '200% 100%',
+                                animation: 'shimmer 2s infinite'
                             }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.transform = 'translateY(-3px) scale(1.05)';
-                                e.currentTarget.style.boxShadow = '0 15px 40px rgba(37, 99, 235, 0.4)';
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                                e.currentTarget.style.boxShadow = '0 8px 30px rgba(37, 99, 235, 0.3)';
-                            }}
-                        >
-                            {/* Shimmer Effect */}
-                            <div
-                                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                                style={{
-                                    background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)',
-                                    backgroundSize: '200% 100%',
-                                    animation: 'shimmer 2s infinite'
-                                }}
-                            />
-                            <span className="relative z-10">Get Started Now</span>
-                            <ArrowRight className="relative z-10 w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-2" />
-                        </button>
-                    </Link>
+                        />
+                        <span className="relative z-10">Get Started Now</span>
+                        <ArrowRight className="relative z-10 w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-2" />
+                    </button>
                     <p className="mt-3 sm:mt-4 text-xs sm:text-sm" style={{ color: '#64748b' }}>
                         No credit card required • Free to start
                     </p>
@@ -128,6 +128,7 @@ interface StepCardProps {
 
 function StepCard({ step, index, isLast }: StepCardProps) {
     const Icon = step.icon;
+    const { openRegister } = useAuthModal();
 
     return (
         <div
@@ -160,6 +161,7 @@ function StepCard({ step, index, isLast }: StepCardProps) {
 
             {/* Step Card */}
             <div
+                onClick={openRegister}
                 className="group relative p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl lg:rounded-3xl border transition-all duration-500 z-10 cursor-pointer h-full"
                 style={{
                     backgroundColor: '#ffffff',

@@ -1,8 +1,9 @@
-import { Link } from 'react-router-dom';
 import { Car, Users, ArrowRight } from 'lucide-react';
-import { ROUTES } from '@/shared/constants';
+import { useAuthModal } from '@/features/auth';
 
 export function CTASection() {
+    const { openRegister } = useAuthModal();
+
     return (
         <section
             className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8"
@@ -30,47 +31,45 @@ export function CTASection() {
                             Join thousands of happy customers who trust Jez Cabs for safe, reliable, and comfortable rides.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                            <Link to={ROUTES.REGISTER}>
-                                <button
-                                    className="px-6 py-3 sm:px-8 sm:py-3.5 rounded-xl font-semibold text-sm sm:text-base inline-flex items-center justify-center gap-2 group transition-all w-full sm:w-auto"
-                                    style={{
-                                        background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
-                                        color: '#ffffff',
-                                        boxShadow: '0 8px 30px rgba(37, 99, 235, 0.3)'
-                                    }}
-                                    onMouseEnter={(e) => {
-                                        e.currentTarget.style.transform = 'translateY(-2px)';
-                                        e.currentTarget.style.boxShadow = '0 12px 40px rgba(37, 99, 235, 0.4)';
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        e.currentTarget.style.transform = 'translateY(0)';
-                                        e.currentTarget.style.boxShadow = '0 8px 30px rgba(37, 99, 235, 0.3)';
-                                    }}
-                                >
-                                    Book Your Ride Now
-                                    <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
-                                </button>
-                            </Link>
-                            <Link to="/contact">
-                                <button
-                                    className="px-6 py-3 sm:px-8 sm:py-3.5 rounded-xl font-semibold text-sm sm:text-base w-full sm:w-auto transition-all"
-                                    style={{
-                                        backgroundColor: 'transparent',
-                                        border: '2px solid #475569',
-                                        color: '#e2e8f0'
-                                    }}
-                                    onMouseEnter={(e) => {
-                                        e.currentTarget.style.borderColor = '#60a5fa';
-                                        e.currentTarget.style.backgroundColor = 'rgba(96, 165, 250, 0.1)';
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        e.currentTarget.style.borderColor = '#475569';
-                                        e.currentTarget.style.backgroundColor = 'transparent';
-                                    }}
-                                >
-                                    Contact Us
-                                </button>
-                            </Link>
+                            <button
+                                onClick={openRegister}
+                                className="px-6 py-3 sm:px-8 sm:py-3.5 rounded-xl font-semibold text-sm sm:text-base inline-flex items-center justify-center gap-2 group transition-all w-full sm:w-auto cursor-pointer"
+                                style={{
+                                    background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
+                                    color: '#ffffff',
+                                    boxShadow: '0 8px 30px rgba(37, 99, 235, 0.3)'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(-2px)';
+                                    e.currentTarget.style.boxShadow = '0 12px 40px rgba(37, 99, 235, 0.4)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(0)';
+                                    e.currentTarget.style.boxShadow = '0 8px 30px rgba(37, 99, 235, 0.3)';
+                                }}
+                            >
+                                Book Your Ride Now
+                                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
+                            </button>
+                            <button
+                                onClick={openRegister}
+                                className="px-6 py-3 sm:px-8 sm:py-3.5 rounded-xl font-semibold text-sm sm:text-base w-full sm:w-auto transition-all cursor-pointer"
+                                style={{
+                                    backgroundColor: 'transparent',
+                                    border: '2px solid #475569',
+                                    color: '#e2e8f0'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.borderColor = '#60a5fa';
+                                    e.currentTarget.style.backgroundColor = 'rgba(96, 165, 250, 0.1)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.borderColor = '#475569';
+                                    e.currentTarget.style.backgroundColor = 'transparent';
+                                }}
+                            >
+                                Contact Us
+                            </button>
                         </div>
                     </div>
 
@@ -96,14 +95,14 @@ export function CTASection() {
                             <p className="text-xs sm:text-sm mb-3 sm:mb-4" style={{ color: '#94a3b8' }}>
                                 Join our network of professional drivers and earn on your own schedule.
                             </p>
-                            <Link
-                                to={ROUTES.REGISTER}
-                                className="text-xs sm:text-sm font-semibold inline-flex items-center gap-1 group"
+                            <button
+                                onClick={openRegister}
+                                className="text-xs sm:text-sm font-semibold inline-flex items-center gap-1 group cursor-pointer"
                                 style={{ color: '#60a5fa' }}
                             >
                                 Learn More
                                 <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" />
-                            </Link>
+                            </button>
                         </div>
 
                         {/* Fleet Partner Card */}
@@ -126,14 +125,14 @@ export function CTASection() {
                             <p className="text-xs sm:text-sm mb-3 sm:mb-4" style={{ color: '#94a3b8' }}>
                                 Expand your fleet business with our comprehensive management tools.
                             </p>
-                            <Link
-                                to={ROUTES.REGISTER}
-                                className="text-xs sm:text-sm font-semibold inline-flex items-center gap-1 group"
+                            <button
+                                onClick={openRegister}
+                                className="text-xs sm:text-sm font-semibold inline-flex items-center gap-1 group cursor-pointer"
                                 style={{ color: '#60a5fa' }}
                             >
                                 Learn More
                                 <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" />
-                            </Link>
+                            </button>
                         </div>
                     </div>
                 </div>

@@ -1,5 +1,6 @@
 import { Zap, ArrowRight } from 'lucide-react';
 import { services, ServiceItem } from '../../pages/homeData';
+import { useAuthModal } from '@/features/auth';
 
 export function ServicesSection() {
     return (
@@ -69,6 +70,7 @@ interface ServiceCardProps {
 
 function ServiceCard({ service, index }: ServiceCardProps) {
     const Icon = service.icon;
+    const { openRegister } = useAuthModal();
 
     return (
         <div
@@ -79,6 +81,7 @@ function ServiceCard({ service, index }: ServiceCardProps) {
             }}
         >
             <div
+                onClick={openRegister}
                 className="relative p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl lg:rounded-3xl border transition-all duration-500 bg-white cursor-pointer h-full"
                 style={{
                     borderColor: '#e2e8f0',
