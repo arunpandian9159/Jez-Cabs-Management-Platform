@@ -12,9 +12,9 @@ import {
 import { Button } from '../../../components/ui/Button';
 import { Card } from '../../../components/ui/Card';
 import { Avatar } from '../../../components/ui/Avatar';
-import { cn, formatCurrency } from '../../../lib/utils';
-import { ROUTES } from '../../../lib/constants';
-import { useTripStatusSocket } from '../../../hooks';
+import { cn, formatCurrency } from '@/shared/utils';
+import { ROUTES } from '@/shared/constants';
+import { useTripStatusSocket } from '@/shared/hooks';
 
 interface DriverCab {
     make: string;

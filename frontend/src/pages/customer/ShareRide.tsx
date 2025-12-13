@@ -10,12 +10,12 @@ import {
     Clock,
     Phone,
 } from 'lucide-react';
-import { Button } from '../../components/ui/Button';
-import { Card } from '../../components/ui/Card';
-import { Badge } from '../../components/ui/Badge';
-import { Avatar } from '../../components/ui/Avatar';
-import { PageLoader } from '../../components/ui/Loading';
-import { rideshareService, SharedContact as APISharedContact } from '../../services';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
+import { Avatar } from '@/components/ui/Avatar';
+import { PageLoader } from '@/components/ui/Loading';
+import { rideshareService, SharedContact as APISharedContact } from '@/services';
 
 // Display types
 interface ActiveTripDisplay {

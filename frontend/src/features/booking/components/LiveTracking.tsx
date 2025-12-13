@@ -15,9 +15,9 @@ import { Button } from '../../../components/ui/Button';
 import { Card } from '../../../components/ui/Card';
 import { Avatar } from '../../../components/ui/Avatar';
 import { Badge } from '../../../components/ui/Badge';
-import { cn, formatCurrency, formatDuration } from '../../../lib/utils';
-import { ROUTES, MAP_CONFIG } from '../../../lib/constants';
-import { useDriverLocationSocket } from '../../../hooks';
+import { cn, formatCurrency, formatDuration } from '@/shared/utils';
+import { ROUTES, MAP_CONFIG } from '@/shared/constants';
+import { useDriverLocationSocket } from '@/shared/hooks';
 
 // Fix for default marker icon
 delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: unknown })._getIconUrl;

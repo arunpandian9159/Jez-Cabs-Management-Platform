@@ -19,13 +19,13 @@ import {
     Gift,
 } from 'lucide-react';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
-import { Button } from '../../components/ui/Button';
-import { Badge } from '../../components/ui/Badge';
-import { useAuth } from '../../contexts/AuthContext';
-import { ROUTES } from '../../lib/constants';
-import { formatCurrency, formatRelativeTime, cn } from '../../lib/utils';
-import { tripsService, usersService } from '../../services';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { Badge } from '@/components/ui/Badge';
+import { useAuth } from '@/features/auth';
+import { ROUTES } from '@/shared/constants';
+import { formatCurrency, formatRelativeTime, cn } from '@/shared/utils';
+import { tripsService, usersService } from '@/services';
 
 // Types for dashboard data
 interface RecentTripDisplay {

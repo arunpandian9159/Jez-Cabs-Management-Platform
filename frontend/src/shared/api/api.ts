@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
-import { storage } from './utils';
-import type { ApiError } from '../types';
+import { storage } from '@/shared/utils';
+import type { ApiError } from '@/types';
+
 
 // API base URL from environment
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';

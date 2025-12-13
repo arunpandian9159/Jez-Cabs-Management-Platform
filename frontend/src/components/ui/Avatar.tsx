@@ -1,5 +1,5 @@
-import { cn } from '../../lib/utils';
-import { getInitials } from '../../lib/utils';
+import { cn } from '@/shared/utils';
+import { getInitials } from '@/shared/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 const avatarVariants = cva(

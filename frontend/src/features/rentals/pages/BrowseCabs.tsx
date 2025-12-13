@@ -16,8 +16,8 @@ import { Card } from '../../../components/ui/Card';
 import { Input } from '../../../components/ui/Input';
 import { Select } from '../../../components/ui/Select';
 import { Badge } from '../../../components/ui/Badge';
-import { cn, formatCurrency } from '../../../lib/utils';
-import { ROUTES } from '../../../lib/constants';
+import { cn, formatCurrency } from '@/shared/utils';
+import { ROUTES } from '@/shared/constants';
 import { rentalsService } from '../../../services';
 
 // Types for available cabs display

@@ -1,4 +1,4 @@
-import { apiClient } from '../lib/api';
+import { apiClient } from '@/shared/api';
 
 export interface Dispute {
     id: string;

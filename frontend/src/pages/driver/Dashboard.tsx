@@ -12,13 +12,13 @@ import {
     CheckCircle,
     XCircle,
 } from 'lucide-react';
-import { Button } from '../../components/ui/Button';
-import { Card } from '../../components/ui/Card';
-import { Badge } from '../../components/ui/Badge';
-import { Avatar } from '../../components/ui/Avatar';
-import { PageLoader } from '../../components/ui/Loading';
-import { cn, formatCurrency } from '../../lib/utils';
-import { driverService, tripsService } from '../../services';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
+import { Avatar } from '@/components/ui/Avatar';
+import { PageLoader } from '@/components/ui/Loading';
+import { cn, formatCurrency } from '@/shared/utils';
+import { driverService, tripsService } from '@/services';
 
 // Types for driver dashboard
 interface DriverStatsDisplay {

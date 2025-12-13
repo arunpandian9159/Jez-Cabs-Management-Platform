@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { format } from 'date-fns';
 import { Calendar } from './Calendar';
 import { Calendar as CalendarIcon } from 'lucide-react';
-import { cn } from '../../lib/utils';
+import { cn } from '@/shared/utils';
 import type { DateRange } from 'react-day-picker';
 
 interface DateRangePickerProps {

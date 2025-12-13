@@ -13,7 +13,7 @@ import {
     Wrench,
     XCircle,
 } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '@/features/auth';
 import { Sidebar, NavItem, QuickStat } from './Sidebar';
 import { Navbar } from './Navbar';
 import { cabsService, CabStatistics } from '../../services/cabs.service';

@@ -25,8 +25,8 @@ import {
     Users2,
 } from 'lucide-react';
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from 'react-icons/fa';
-import { QuickBookingForm } from '../../components/ui/QuickBookingForm';
-import { ROUTES } from '../../lib/constants';
+import { QuickBookingForm } from '@/components/ui/QuickBookingForm';
+import { ROUTES } from '@/shared/constants';
 
 // Services data
 const services = [

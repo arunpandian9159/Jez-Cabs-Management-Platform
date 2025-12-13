@@ -12,13 +12,13 @@ import {
     User,
     Heart,
 } from 'lucide-react';
-import { Button } from '../../components/ui/Button';
-import { Card } from '../../components/ui/Card';
-import { Badge } from '../../components/ui/Badge';
-import { Input } from '../../components/ui/Input';
-import { Modal } from '../../components/ui/Modal';
-import { Avatar } from '../../components/ui/Avatar';
-import { safetyService } from '../../services';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
+import { Input } from '@/components/ui/Input';
+import { Modal } from '@/components/ui/Modal';
+import { Avatar } from '@/components/ui/Avatar';
+import { safetyService } from '@/services';
 
 // Type for emergency contacts display
 interface EmergencyContactDisplay {

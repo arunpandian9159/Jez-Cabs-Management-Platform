@@ -11,13 +11,13 @@ import {
 } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Polyline } from 'react-leaflet';
 import L from 'leaflet';
-import { Button } from '../../components/ui/Button';
-import { Card } from '../../components/ui/Card';
-import { Avatar } from '../../components/ui/Avatar';
-import { Badge } from '../../components/ui/Badge';
-import { Modal } from '../../components/ui/Modal';
-import { PageLoader } from '../../components/ui/Loading';
-import { formatCurrency } from '../../lib/utils';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Avatar } from '@/components/ui/Avatar';
+import { Badge } from '@/components/ui/Badge';
+import { Modal } from '@/components/ui/Modal';
+import { PageLoader } from '@/components/ui/Loading';
+import { formatCurrency } from '@/shared/utils';
 import { tripsService, type Trip } from '../../services/trips.service';
 import 'leaflet/dist/leaflet.css';
 
