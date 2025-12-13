@@ -9,9 +9,11 @@ import { CabService, OwnerService } from './services';
 import { CabController, OwnerController } from './controllers';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Cab, User, DriverProfile, CabOwnerProfile, Trip])],
+  imports: [
+    TypeOrmModule.forFeature([Cab, User, DriverProfile, CabOwnerProfile, Trip]),
+  ],
   controllers: [CabController, OwnerController],
   providers: [CabService, OwnerService],
   exports: [CabService, OwnerService],
 })
-export class CabModule { }
+export class CabModule {}

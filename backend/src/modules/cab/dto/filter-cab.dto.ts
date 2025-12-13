@@ -21,17 +21,26 @@ export class FilterCabDto {
   @IsEnum(CabType)
   cab_type?: CabType;
 
-  @ApiPropertyOptional({ description: 'Filter by vehicle make', example: 'Toyota' })
+  @ApiPropertyOptional({
+    description: 'Filter by vehicle make',
+    example: 'Toyota',
+  })
   @IsOptional()
   @IsString()
   make?: string;
 
-  @ApiPropertyOptional({ description: 'Filter by vehicle model', example: 'Camry' })
+  @ApiPropertyOptional({
+    description: 'Filter by vehicle model',
+    example: 'Camry',
+  })
   @IsOptional()
   @IsString()
   model?: string;
 
-  @ApiPropertyOptional({ description: 'Search by registration number', example: 'ABC' })
+  @ApiPropertyOptional({
+    description: 'Search by registration number',
+    example: 'ABC',
+  })
   @IsOptional()
   @IsString()
   search?: string;
@@ -43,7 +52,11 @@ export class FilterCabDto {
   @Min(1)
   page?: number = 1;
 
-  @ApiPropertyOptional({ description: 'Items per page', example: 50, default: 50 })
+  @ApiPropertyOptional({
+    description: 'Items per page',
+    example: 50,
+    default: 50,
+  })
   @IsOptional()
   @Type(() => Number)
   @IsNumber()

@@ -34,13 +34,20 @@ export class CreateCabDto {
   @Max(new Date().getFullYear() + 1)
   year?: number;
 
-  @ApiProperty({ example: 'ABC-1234', description: 'Vehicle registration number' })
+  @ApiProperty({
+    example: 'ABC-1234',
+    description: 'Vehicle registration number',
+  })
   @IsNotEmpty()
   @IsString()
   @MaxLength(50)
   registration_number: string;
 
-  @ApiPropertyOptional({ enum: CabType, example: CabType.SEDAN, description: 'Type of cab' })
+  @ApiPropertyOptional({
+    enum: CabType,
+    example: CabType.SEDAN,
+    description: 'Type of cab',
+  })
   @IsOptional()
   @IsEnum(CabType)
   cab_type?: CabType;
@@ -79,39 +86,51 @@ export class CreateCabDto {
   @IsString()
   image_url?: string;
 
-  @ApiPropertyOptional({ example: '2025-12-31', description: 'Insurance expiry date' })
+  @ApiPropertyOptional({
+    example: '2025-12-31',
+    description: 'Insurance expiry date',
+  })
   @IsOptional()
   @IsDateString()
   insurance_expiry?: string;
 
-  @ApiPropertyOptional({ example: '2026-06-30', description: 'Registration expiry date' })
+  @ApiPropertyOptional({
+    example: '2026-06-30',
+    description: 'Registration expiry date',
+  })
   @IsOptional()
   @IsDateString()
   registration_expiry?: string;
 
-  @ApiPropertyOptional({ example: '2025-12-31', description: 'Fitness certificate expiry' })
+  @ApiPropertyOptional({
+    example: '2025-12-31',
+    description: 'Fitness certificate expiry',
+  })
   @IsOptional()
   @IsDateString()
   fitness_expiry?: string;
 
-  @ApiPropertyOptional({ example: '2025-12-31', description: 'Permit expiry date' })
+  @ApiPropertyOptional({
+    example: '2025-12-31',
+    description: 'Permit expiry date',
+  })
   @IsOptional()
   @IsDateString()
   permit_expiry?: string;
 
-  @ApiPropertyOptional({ example: 50.00, description: 'Base fare' })
+  @ApiPropertyOptional({ example: 50.0, description: 'Base fare' })
   @IsOptional()
   @IsNumber()
   @IsPositive()
   base_fare?: number;
 
-  @ApiPropertyOptional({ example: 12.00, description: 'Per kilometer rate' })
+  @ApiPropertyOptional({ example: 12.0, description: 'Per kilometer rate' })
   @IsOptional()
   @IsNumber()
   @IsPositive()
   per_km_rate?: number;
 
-  @ApiPropertyOptional({ example: 2.00, description: 'Per minute rate' })
+  @ApiPropertyOptional({ example: 2.0, description: 'Per minute rate' })
   @IsOptional()
   @IsNumber()
   @IsPositive()

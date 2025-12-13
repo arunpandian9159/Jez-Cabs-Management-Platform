@@ -18,7 +18,7 @@ export class CabService {
     @InjectRepository(Cab)
     private readonly cabRepository: Repository<Cab>,
     private readonly eventEmitter: EventEmitter2,
-  ) { }
+  ) {}
 
   async create(createCabDto: CreateCabDto, currentUser: User): Promise<Cab> {
     // Check if registration number already exists
@@ -71,7 +71,9 @@ export class CabService {
 
     // If cab owner, only show their cabs
     if (currentUser.role === 'cab_owner') {
-      queryBuilder.where('cab.owner_id = :ownerId', { ownerId: currentUser.id });
+      queryBuilder.where('cab.owner_id = :ownerId', {
+        ownerId: currentUser.id,
+      });
     }
 
     // Apply filters
@@ -99,8 +101,18 @@ export class CabService {
     }
 
     // Sorting
-    const allowedSortFields = ['created_at', 'updated_at', 'make', 'model', 'year', 'registration_number', 'status'];
-    const sortField = allowedSortFields.includes(sort_by) ? sort_by : 'created_at';
+    const allowedSortFields = [
+      'created_at',
+      'updated_at',
+      'make',
+      'model',
+      'year',
+      'registration_number',
+      'status',
+    ];
+    const sortField = allowedSortFields.includes(sort_by)
+      ? sort_by
+      : 'created_at';
     queryBuilder.orderBy(`cab.${sortField}`, sort_order);
 
     // Pagination
@@ -120,7 +132,11 @@ export class CabService {
     };
   }
 
-  async findAvailable(lat?: number, lng?: number, cabType?: CabType): Promise<Cab[]> {
+  async findAvailable(
+    lat?: number,
+    lng?: number,
+    cabType?: CabType,
+  ): Promise<Cab[]> {
     const queryBuilder = this.cabRepository
       .createQueryBuilder('cab')
       .where('cab.status = :status', { status: CabStatus.AVAILABLE });
@@ -153,7 +169,11 @@ export class CabService {
     });
   }
 
-  async update(id: string, updateCabDto: UpdateCabDto, currentUser: User): Promise<Cab> {
+  async update(
+    id: string,
+    updateCabDto: UpdateCabDto,
+    currentUser: User,
+  ): Promise<Cab> {
     const cab = await this.findOne(id);
 
     // Check ownership
@@ -162,7 +182,10 @@ export class CabService {
     }
 
     // If registration number is being updated, check for conflicts
-    if (updateCabDto.registration_number && updateCabDto.registration_number !== cab.registration_number) {
+    if (
+      updateCabDto.registration_number &&
+      updateCabDto.registration_number !== cab.registration_number
+    ) {
       const existingCab = await this.cabRepository.findOne({
         where: { registration_number: updateCabDto.registration_number },
       });
@@ -198,7 +221,9 @@ export class CabService {
     }
 
     if (cab.status === CabStatus.ON_TRIP) {
-      throw new BadRequestException('Cannot delete a vehicle that is on a trip');
+      throw new BadRequestException(
+        'Cannot delete a vehicle that is on a trip',
+      );
     }
 
     await this.cabRepository.remove(cab);
@@ -206,11 +231,21 @@ export class CabService {
   }
 
   async getStatistics(ownerId: string) {
-    const totalCabs = await this.cabRepository.count({ where: { owner_id: ownerId } });
-    const availableCabs = await this.cabRepository.count({ where: { owner_id: ownerId, status: CabStatus.AVAILABLE } });
-    const onTripCabs = await this.cabRepository.count({ where: { owner_id: ownerId, status: CabStatus.ON_TRIP } });
-    const maintenanceCabs = await this.cabRepository.count({ where: { owner_id: ownerId, status: CabStatus.MAINTENANCE } });
-    const inactiveCabs = await this.cabRepository.count({ where: { owner_id: ownerId, status: CabStatus.INACTIVE } });
+    const totalCabs = await this.cabRepository.count({
+      where: { owner_id: ownerId },
+    });
+    const availableCabs = await this.cabRepository.count({
+      where: { owner_id: ownerId, status: CabStatus.AVAILABLE },
+    });
+    const onTripCabs = await this.cabRepository.count({
+      where: { owner_id: ownerId, status: CabStatus.ON_TRIP },
+    });
+    const maintenanceCabs = await this.cabRepository.count({
+      where: { owner_id: ownerId, status: CabStatus.MAINTENANCE },
+    });
+    const inactiveCabs = await this.cabRepository.count({
+      where: { owner_id: ownerId, status: CabStatus.INACTIVE },
+    });
 
     return {
       total: totalCabs,

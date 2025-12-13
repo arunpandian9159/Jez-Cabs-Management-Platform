@@ -4,9 +4,22 @@ export { useDriverProfile } from './useDriverProfile';
 export { useTripHistory } from './useTripHistory';
 export { useDriverSettings } from './useDriverSettings';
 export { useActiveTrip, tripStatuses } from './useActiveTrip';
-export type { DriverStatsDisplay, TripRequestDisplay, RecentTripDisplay } from './useDriverDashboard';
-export type { EarningsSummaryDisplay, TransactionDisplay, DayBreakdownDisplay } from './useDriverEarnings';
-export type { DocumentDisplay, VehicleDisplay, DriverProfileDisplay, EditFormData } from './useDriverProfile';
+export type {
+  DriverStatsDisplay,
+  TripRequestDisplay,
+  RecentTripDisplay,
+} from './useDriverDashboard';
+export type {
+  EarningsSummaryDisplay,
+  TransactionDisplay,
+  DayBreakdownDisplay,
+} from './useDriverEarnings';
+export type {
+  DocumentDisplay,
+  VehicleDisplay,
+  DriverProfileDisplay,
+  EditFormData,
+} from './useDriverProfile';
 export type { TripDisplay } from './useTripHistory';
 export type { DriverSettingsState } from './useDriverSettings';
 export type { CurrentTrip } from './useActiveTrip';

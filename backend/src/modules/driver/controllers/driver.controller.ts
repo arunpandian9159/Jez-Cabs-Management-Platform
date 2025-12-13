@@ -23,7 +23,7 @@ import { UserRole, DriverStatus } from '../../../common/enums';
 @UseGuards(JwtAuthGuard, RolesGuard)
 @ApiBearerAuth('JWT-auth')
 export class DriverController {
-  constructor(private readonly driverService: DriverService) { }
+  constructor(private readonly driverService: DriverService) {}
 
   @Get('profile')
   @Roles(UserRole.DRIVER)
@@ -44,7 +44,10 @@ export class DriverController {
   @Get('trip-requests')
   @Roles(UserRole.DRIVER)
   @ApiOperation({ summary: 'Get pending trip requests for driver' })
-  @ApiResponse({ status: 200, description: 'Trip requests retrieved successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Trip requests retrieved successfully',
+  })
   async getTripRequests(@CurrentUser() currentUser: User) {
     return this.driverService.getTripRequests(currentUser.id);
   }
@@ -61,7 +64,10 @@ export class DriverController {
   @Roles(UserRole.DRIVER)
   @ApiOperation({ summary: 'Update driver availability status' })
   @ApiResponse({ status: 200, description: 'Status updated' })
-  async updateStatus(@CurrentUser() currentUser: User, @Body('status') status: DriverStatus) {
+  async updateStatus(
+    @CurrentUser() currentUser: User,
+    @Body('status') status: DriverStatus,
+  ) {
     return this.driverService.updateStatus(currentUser.id, status);
   }
 
@@ -72,7 +78,11 @@ export class DriverController {
     @CurrentUser() currentUser: User,
     @Body() data: { lat: number; lng: number },
   ) {
-    return this.driverService.updateLocation(currentUser.id, data.lat, data.lng);
+    return this.driverService.updateLocation(
+      currentUser.id,
+      data.lat,
+      data.lng,
+    );
   }
 
   @Get('earnings')
@@ -96,4 +106,3 @@ export class DriverController {
     return this.driverService.goOffline(currentUser.id);
   }
 }
-

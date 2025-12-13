@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  ConflictException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -28,7 +32,7 @@ export class AuthService {
     private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-  ) { }
+  ) {}
 
   async register(registerDto: RegisterDto) {
     // Check if user email already exists
@@ -41,7 +45,10 @@ export class AuthService {
     }
 
     // Hash password
-    const bcryptRounds = parseInt(this.configService.get('BCRYPT_ROUNDS', '12'), 10);
+    const bcryptRounds = parseInt(
+      this.configService.get('BCRYPT_ROUNDS', '12'),
+      10,
+    );
     const password_hash = await bcrypt.hash(registerDto.password, bcryptRounds);
 
     // Create user
@@ -96,7 +103,10 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const isPasswordValid = await bcrypt.compare(loginDto.password, user.password_hash);
+    const isPasswordValid = await bcrypt.compare(
+      loginDto.password,
+      user.password_hash,
+    );
 
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');

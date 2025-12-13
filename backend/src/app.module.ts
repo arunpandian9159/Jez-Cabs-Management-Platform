@@ -37,13 +37,16 @@ import { HealthModule } from './health/health.module';
     // Supabase PostgreSQL Database (via TypeORM)
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => configService.get('database')!,
+      useFactory: (configService: ConfigService) =>
+        configService.get('database')!,
     }),
 
     // MongoDB Database
     MongooseModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({ uri: configService.get('mongodb.uri'), }),
+      useFactory: (configService: ConfigService) => ({
+        uri: configService.get('mongodb.uri'),
+      }),
     }),
 
     // Event Emitter for event-driven architecture
@@ -73,4 +76,4 @@ import { HealthModule } from './health/health.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

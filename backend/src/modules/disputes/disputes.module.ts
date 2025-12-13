@@ -5,9 +5,9 @@ import { DisputesService } from './disputes.service';
 import { DisputesController } from './disputes.controller';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Dispute])],
-    controllers: [DisputesController],
-    providers: [DisputesService],
-    exports: [DisputesService],
+  imports: [TypeOrmModule.forFeature([Dispute])],
+  controllers: [DisputesController],
+  providers: [DisputesService],
+  exports: [DisputesService],
 })
-export class DisputesModule { }
+export class DisputesModule {}
