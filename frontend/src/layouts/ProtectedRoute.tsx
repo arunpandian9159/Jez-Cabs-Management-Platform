@@ -1,8 +1,8 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '@/features/auth';
-import { LoadingOverlay } from './ui/Loading';
+import { LoadingOverlay } from '@/components/ui/Loading';
 import { ROUTES } from '@/shared/constants';
-import type { UserRole } from '../types';
+import type { UserRole } from '@/types';
 
 interface ProtectedRouteProps {
     allowedRoles?: UserRole[];
@@ -37,7 +37,7 @@ export function ProtectedRoute({
             support: ROUTES.SUPPORT.DASHBOARD,
         };
 
-        return <Navigate to={roleDashboards[user.role]} replace />;
+        return <Navigate to={roleDashboards[user.role as UserRole]} replace />;
     }
 
     return <Outlet />;
@@ -64,7 +64,7 @@ export function PublicOnlyRoute({ redirectTo }: { redirectTo?: string }) {
             support: ROUTES.SUPPORT.DASHBOARD,
         };
 
-        return <Navigate to={from || redirectTo || roleDashboards[user.role]} replace />;
+        return <Navigate to={from || redirectTo || roleDashboards[user.role as UserRole]} replace />;
     }
 
     return <Outlet />;

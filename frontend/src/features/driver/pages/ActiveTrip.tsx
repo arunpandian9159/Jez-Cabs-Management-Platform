@@ -18,7 +18,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Modal } from '@/components/ui/Modal';
 import { PageLoader } from '@/components/ui/Loading';
 import { formatCurrency } from '@/shared/utils';
-import { tripsService, type Trip } from '../../services/trips.service';
+import { tripsService, type Trip } from '@/services/trips.service';
 import 'leaflet/dist/leaflet.css';
 
 // Custom marker icons

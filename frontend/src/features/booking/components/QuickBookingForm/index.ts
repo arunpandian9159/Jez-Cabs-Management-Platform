@@ -1,1 +1,1 @@
-export { default as QuickBookingForm } from './QuickBookingForm';
+export { QuickBookingForm } from './QuickBookingForm';

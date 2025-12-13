@@ -20,7 +20,7 @@ import { Avatar } from '@/components/ui/Avatar';
 import { Modal } from '@/components/ui/Modal';
 import { PageLoader } from '@/components/ui/Loading';
 import { formatCurrency } from '@/shared/utils';
-import { ownerService, type OwnerDriver } from '../../services/owner.service';
+import { ownerService, type OwnerDriver } from '@/services/owner.service';
 
 // Initial form state for new driver invitation
 const initialNewDriver = {

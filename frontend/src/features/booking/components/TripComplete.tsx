@@ -8,11 +8,11 @@ import {
     CheckCircle,
     Gift,
 } from 'lucide-react';
-import { Button } from '../../../components/ui/Button';
-import { Card } from '../../../components/ui/Card';
-import { Avatar } from '../../../components/ui/Avatar';
-import { TextArea } from '../../../components/ui/TextArea';
-import { Badge } from '../../../components/ui/Badge';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Avatar } from '@/components/ui/Avatar';
+import { TextArea } from '@/components/ui/TextArea';
+import { Badge } from '@/components/ui/Badge';
 import { formatCurrency } from '@/shared/utils';
 import { ROUTES } from '@/shared/constants';
 

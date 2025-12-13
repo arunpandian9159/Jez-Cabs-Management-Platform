@@ -1,4 +1,4 @@
-import type { LatLng, Cab, CabType } from './booking.types';
+import type { LatLng, Cab, CabType } from '@/types/booking.types';
 
 // Driver verification status
 export type VerificationStatus =

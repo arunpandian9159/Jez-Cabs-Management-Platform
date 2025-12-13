@@ -11,10 +11,10 @@ import {
     Wifi,
     WifiOff,
 } from 'lucide-react';
-import { Button } from '../../../components/ui/Button';
-import { Card } from '../../../components/ui/Card';
-import { Avatar } from '../../../components/ui/Avatar';
-import { Badge } from '../../../components/ui/Badge';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Avatar } from '@/components/ui/Avatar';
+import { Badge } from '@/components/ui/Badge';
 import { cn, formatCurrency, formatDuration } from '@/shared/utils';
 import { ROUTES, MAP_CONFIG } from '@/shared/constants';
 import { useDriverLocationSocket } from '@/shared/hooks';

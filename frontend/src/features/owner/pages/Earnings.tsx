@@ -26,7 +26,7 @@ import {
     type CabEarning,
     type OwnerTransaction,
     type MonthlyEarning,
-} from '../../services/owner.service';
+} from '@/services/owner.service';
 
 export function OwnerEarnings() {
     const [activeTab, setActiveTab] = useState('overview');

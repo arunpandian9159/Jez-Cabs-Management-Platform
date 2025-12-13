@@ -128,10 +128,11 @@ export const driverService = {
     },
 
     // Get driver trips history
-    async getTripHistory(limit?: number): Promise<import('./trips.service').Trip[]> {
+    async getTripHistory(limit?: number): Promise<import('@/services/trips.service').Trip[]> {
         const params = limit ? `?limit=${limit}` : '';
         return apiClient.get(`/trips${params}`);
     },
+
 };
 
 export default driverService;

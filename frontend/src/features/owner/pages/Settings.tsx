@@ -18,7 +18,7 @@ import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Modal } from '@/components/ui/Modal';
 import { PageLoader } from '@/components/ui/Loading';
-import { ownerService, type BusinessInfo, type OwnerSettings } from '../../services/owner.service';
+import { ownerService, type BusinessInfo, type OwnerSettings } from '@/services/owner.service';
 
 interface SettingToggleProps {
     label: string;

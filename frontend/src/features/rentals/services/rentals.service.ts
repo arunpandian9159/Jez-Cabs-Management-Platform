@@ -1,6 +1,6 @@
 import { apiClient } from '@/shared/api';
 
-export interface Rental {
+export interface RentalApiResponse {
     id: string;
     customer_id: string;
     cab_id: string;
@@ -91,43 +91,43 @@ export const rentalsService = {
     },
 
     // Create a new rental booking
-    async create(data: CreateRentalDto): Promise<Rental> {
-        return apiClient.post<Rental>('/rentals', data);
+    async create(data: CreateRentalDto): Promise<RentalApiResponse> {
+        return apiClient.post<RentalApiResponse>('/rentals', data);
     },
 
     // Get all rentals for the current user
-    async findAll(filters?: RentalFilters): Promise<Rental[]> {
+    async findAll(filters?: RentalFilters): Promise<RentalApiResponse[]> {
         const params = new URLSearchParams();
         if (filters?.status) params.append('status', filters.status);
         if (filters?.limit) params.append('limit', filters.limit.toString());
         if (filters?.offset) params.append('offset', filters.offset.toString());
 
         const query = params.toString();
-        return apiClient.get<Rental[]>(`/rentals${query ? `?${query}` : ''}`);
+        return apiClient.get<RentalApiResponse[]>(`/rentals${query ? `?${query}` : ''}`);
     },
 
     // Get a specific rental by ID
-    async findOne(id: string): Promise<Rental> {
-        return apiClient.get<Rental>(`/rentals/${id}`);
+    async findOne(id: string): Promise<RentalApiResponse> {
+        return apiClient.get<RentalApiResponse>(`/rentals/${id}`);
     },
 
     // Confirm a rental
-    async confirm(id: string): Promise<Rental> {
-        return apiClient.patch<Rental>(`/rentals/${id}/confirm`, {});
+    async confirm(id: string): Promise<RentalApiResponse> {
+        return apiClient.patch<RentalApiResponse>(`/rentals/${id}/confirm`, {});
     },
 
     // Cancel a rental
-    async cancel(id: string): Promise<Rental> {
-        return apiClient.patch<Rental>(`/rentals/${id}/cancel`, {});
+    async cancel(id: string): Promise<RentalApiResponse> {
+        return apiClient.patch<RentalApiResponse>(`/rentals/${id}/cancel`, {});
     },
 
     // Get active rentals
-    async getActiveRentals(): Promise<Rental[]> {
+    async getActiveRentals(): Promise<RentalApiResponse[]> {
         return this.findAll({ status: 'active' });
     },
 
     // Get past rentals (completed or cancelled)
-    async getPastRentals(): Promise<Rental[]> {
+    async getPastRentals(): Promise<RentalApiResponse[]> {
         return this.findAll({ status: 'completed' });
     },
 };
