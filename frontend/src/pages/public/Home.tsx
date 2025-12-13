@@ -150,7 +150,7 @@ export function Home() {
         <div className="min-h-screen bg-white">
             {/* Hero Section */}
             <section
-                className="relative pt-8 pb-12 sm:pt-12 sm:pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-[85vh] sm:min-h-[90vh] flex items-center"
+                className="relative pt-8 pb-12 sm:pt-12 sm:pb-20 px-4 sm:px-6 lg:px-8 min-h-[85vh] sm:min-h-[90vh] flex items-center"
                 style={{
                     background: 'linear-gradient(135deg, #f8fafc 0%, #eff6ff 25%, #ffffff 50%, #f0fdfa 75%, #f8fafc 100%)'
                 }}
