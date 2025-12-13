@@ -18,7 +18,13 @@ import {
     Settings,
     CheckCircle,
     ArrowRight,
+    Mail,
+    Phone,
+    MapPin,
+    Quote,
+    Users2,
 } from 'lucide-react';
+import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from 'react-icons/fa';
 import { QuickBookingForm } from '../../components/ui/QuickBookingForm';
 import { ROUTES } from '../../lib/constants';
 
@@ -144,6 +150,79 @@ const ownerBenefits = [
     'Verified driver network',
     'Instant notifications',
 ];
+
+// Fleet Options
+const fleetOptions = [
+    {
+        id: 1,
+        name: 'Economy',
+        description: 'Budget-friendly rides for everyday travel',
+        capacity: '4 Passengers',
+        price: 'From $8/km',
+        image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400'
+    },
+    {
+        id: 2,
+        name: 'Premium',
+        description: 'Comfortable sedans for business travel',
+        capacity: '4 Passengers',
+        price: 'From $12/km',
+        image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=400'
+    },
+    {
+        id: 3,
+        name: 'SUV',
+        description: 'Spacious rides for family trips',
+        capacity: '6 Passengers',
+        price: 'From $15/km',
+        image: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=400'
+    },
+    {
+        id: 4,
+        name: 'Luxury',
+        description: 'Premium experience for special occasions',
+        capacity: '4 Passengers',
+        price: 'From $25/km',
+        image: 'https://images.unsplash.com/photo-1563720223185-11003d516935?w=400'
+    }
+];
+
+// Testimonials
+const testimonials = [
+    {
+        id: 1,
+        name: 'Sarah Johnson',
+        role: 'Business Traveler',
+        content: 'Jez Cabs has transformed my daily commute. The drivers are professional and the cars are always clean. Highly recommended!',
+        rating: 5,
+        avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100'
+    },
+    {
+        id: 2,
+        name: 'Michael Chen',
+        role: 'Frequent Traveler',
+        content: 'The booking process is seamless and the pricing is transparent. No more haggling with taxi drivers!',
+        rating: 5,
+        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100'
+    },
+    {
+        id: 3,
+        name: 'Emily Rodriguez',
+        role: 'Fleet Owner',
+        content: 'As a fleet owner, the dashboard helps me manage my vehicles efficiently. Great analytics and revenue tracking!',
+        rating: 5,
+        avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100'
+    }
+];
+
+// Stats
+const stats = [
+    { value: '50K+', label: 'Happy Customers' },
+    { value: '1000+', label: 'Verified Drivers' },
+    { value: '100+', label: 'Cities Covered' },
+    { value: '5M+', label: 'Trips Completed' },
+];
+
 
 export function Home() {
     return (
@@ -481,6 +560,27 @@ export function Home() {
                 </div>
             </section>
 
+            {/* Stats Section */}
+            <section
+                className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8"
+                style={{ backgroundColor: '#2563eb' }}
+            >
+                <div className="max-w-7xl mx-auto">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 lg:gap-12">
+                        {stats.map((stat, index) => (
+                            <div key={index} className="text-center">
+                                <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-1 sm:mb-2">
+                                    {stat.value}
+                                </div>
+                                <div className="text-xs sm:text-sm lg:text-base text-blue-100">
+                                    {stat.label}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
             {/* How It Works Section */}
             <section
                 id="how-it-works"
@@ -733,6 +833,88 @@ export function Home() {
                         <p className="mt-3 sm:mt-4 text-xs sm:text-sm" style={{ color: '#64748b' }}>
                             No credit card required • Free to start
                         </p>
+                    </div>
+                </div>
+            </section>
+
+            {/* Fleet Section */}
+            <section id="fleet" className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8 bg-white">
+                <div className="max-w-7xl mx-auto">
+                    {/* Section Header */}
+                    <div className="text-center mb-10 sm:mb-14 lg:mb-16">
+                        <span
+                            className="inline-block text-xs sm:text-sm font-semibold tracking-wider uppercase mb-3 sm:mb-4"
+                            style={{ color: '#2563eb' }}
+                        >
+                            OUR FLEET
+                        </span>
+                        <h2
+                            className="text-2xl sm:text-3xl lg:text-5xl font-bold mb-3 sm:mb-4 lg:mb-6"
+                            style={{ color: '#0f172a' }}
+                        >
+                            Choose Your Perfect Ride
+                        </h2>
+                        <p
+                            className="text-sm sm:text-base lg:text-lg max-w-2xl mx-auto"
+                            style={{ color: '#475569' }}
+                        >
+                            From <span className="text-blue-600 font-medium">budget-friendly options</span> to{' '}
+                            <span className="text-amber-600 font-medium">luxury vehicles</span>, we have the perfect cab for every journey.
+                        </p>
+                    </div>
+
+                    {/* Fleet Grid */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-10 lg:mb-12">
+                        {fleetOptions.map((option) => (
+                            <div
+                                key={option.id}
+                                className="group bg-white rounded-xl sm:rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl border border-gray-100"
+                            >
+                                {/* Image */}
+                                <div className="relative h-32 sm:h-40 lg:h-48 overflow-hidden">
+                                    <img
+                                        src={option.image}
+                                        alt={option.name}
+                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                    />
+                                    {/* Overlay with name */}
+                                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3 sm:p-4">
+                                        <h3 className="text-white font-bold text-base sm:text-lg">{option.name}</h3>
+                                    </div>
+                                </div>
+                                {/* Content */}
+                                <div className="p-3 sm:p-4 lg:p-5">
+                                    <p
+                                        className="text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2"
+                                        style={{ color: '#475569' }}
+                                    >
+                                        {option.description}
+                                    </p>
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-1 text-xs sm:text-sm" style={{ color: '#64748b' }}>
+                                            <Users2 className="w-3 h-3 sm:w-4 sm:h-4" />
+                                            <span>{option.capacity}</span>
+                                        </div>
+                                        <span className="text-xs sm:text-sm font-bold" style={{ color: '#2563eb' }}>
+                                            {option.price}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* View All Button */}
+                    <div className="text-center">
+                        <Link to={ROUTES.REGISTER}>
+                            <button
+                                className="px-6 py-2.5 sm:px-8 sm:py-3 rounded-full border-2 transition-all inline-flex items-center gap-2 font-medium text-sm sm:text-base group hover:bg-gray-50"
+                                style={{ borderColor: '#e2e8f0', color: '#0f172a' }}
+                            >
+                                View All Vehicles
+                                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                            </button>
+                        </Link>
                     </div>
                 </div>
             </section>
@@ -1022,61 +1204,368 @@ export function Home() {
                 </div>
             </section>
 
-            {/* CTA Section - COMPACT ON MOBILE */}
-            <section className="py-10 sm:py-14 lg:py-20 px-4 sm:px-6 lg:px-8">
+            {/* Testimonials Section */}
+            <section
+                className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-8"
+                style={{ background: 'linear-gradient(135deg, #eff6ff 0%, #f0fdfa 50%, #eff6ff 100%)' }}
+            >
                 <div className="max-w-7xl mx-auto">
-                    <div
-                        className="relative rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden"
-                        style={{
-                            background: 'linear-gradient(to bottom right, #2563eb, #1d4ed8, #0d9488)'
-                        }}
-                    >
-                        {/* Background Pattern - SMALLER ON MOBILE */}
-                        <div className="absolute inset-0 opacity-10">
-                            <div
-                                className="absolute top-0 left-0 w-48 h-48 sm:w-72 sm:h-72 lg:w-96 lg:h-96 rounded-full blur-3xl"
-                                style={{ backgroundColor: '#ffffff' }}
-                            />
-                            <div
-                                className="absolute bottom-0 right-0 w-48 h-48 sm:w-72 sm:h-72 lg:w-96 lg:h-96 rounded-full blur-3xl"
-                                style={{ backgroundColor: '#ffffff' }}
-                            />
-                        </div>
+                    {/* Section Header */}
+                    <div className="text-center mb-10 sm:mb-14 lg:mb-16">
+                        <span
+                            className="inline-block text-xs sm:text-sm font-semibold tracking-wider uppercase mb-3 sm:mb-4"
+                            style={{ color: '#2563eb' }}
+                        >
+                            TESTIMONIALS
+                        </span>
+                        <h2
+                            className="text-2xl sm:text-3xl lg:text-5xl font-bold italic mb-3 sm:mb-4 lg:mb-6"
+                            style={{ color: '#0f172a' }}
+                        >
+                            What Our Customers Say
+                        </h2>
+                        <p
+                            className="text-sm sm:text-base lg:text-lg max-w-2xl mx-auto"
+                            style={{ color: '#475569' }}
+                        >
+                            Real stories from real customers who trust us for their journeys.
+                        </p>
+                    </div>
 
-                        <div className="relative px-5 py-10 sm:px-8 sm:py-12 md:px-12 md:py-16 lg:px-16 lg:py-20 text-center">
-                            <h2 className="text-xl sm:text-2xl lg:text-5xl font-bold text-white mb-3 sm:mb-4 lg:mb-6">
-                                Ready to Get Started?
+                    {/* Testimonials Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+                        {testimonials.map((testimonial) => (
+                            <div
+                                key={testimonial.id}
+                                className="relative bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-8 shadow-md transition-all duration-300 hover:shadow-xl"
+                            >
+                                {/* Quote Icon */}
+                                <div
+                                    className="absolute -top-3 right-5 sm:-top-4 sm:right-6 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center"
+                                    style={{ backgroundColor: '#2563eb' }}
+                                >
+                                    <Quote className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                                </div>
+
+                                {/* Stars */}
+                                <div className="flex gap-1 mb-3 sm:mb-4">
+                                    {[...Array(testimonial.rating)].map((_, i) => (
+                                        <Star
+                                            key={i}
+                                            className="w-4 h-4 sm:w-5 sm:h-5 fill-amber-400 text-amber-400"
+                                        />
+                                    ))}
+                                </div>
+
+                                {/* Content */}
+                                <p
+                                    className="text-sm sm:text-base mb-5 sm:mb-6 leading-relaxed"
+                                    style={{ color: '#475569' }}
+                                >
+                                    "{testimonial.content}"
+                                </p>
+
+                                {/* Author */}
+                                <div className="flex items-center gap-3">
+                                    <img
+                                        src={testimonial.avatar}
+                                        alt={testimonial.name}
+                                        className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover"
+                                    />
+                                    <div>
+                                        <h4 className="font-semibold text-sm sm:text-base" style={{ color: '#0f172a' }}>
+                                            {testimonial.name}
+                                        </h4>
+                                        <p className="text-xs sm:text-sm" style={{ color: '#2563eb' }}>
+                                            {testimonial.role}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* CTA Section with Partner Cards */}
+            <section
+                className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8"
+                style={{ background: 'linear-gradient(180deg, #0f172a 0%, #1e293b 100%)' }}
+            >
+                <div className="max-w-7xl mx-auto">
+                    <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
+                        {/* Left Content */}
+                        <div>
+                            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4" style={{ color: '#ffffff' }}>
+                                Ready to Start Your{' '}
+                                <span
+                                    className="block"
+                                    style={{
+                                        background: 'linear-gradient(135deg, #60a5fa 0%, #2dd4bf 100%)',
+                                        WebkitBackgroundClip: 'text',
+                                        WebkitTextFillColor: 'transparent',
+                                        backgroundClip: 'text'
+                                    }}
+                                >
+                                    Journey?
+                                </span>
                             </h2>
-                            <p className="text-white/90 text-xs sm:text-sm lg:text-lg max-w-2xl mx-auto mb-5 sm:mb-6 lg:mb-8">
-                                Join thousands of satisfied customers and cab owners who trust Jez Cabs
-                                for their transportation needs
+                            <p className="text-sm sm:text-base lg:text-lg mb-6 sm:mb-8" style={{ color: '#94a3b8' }}>
+                                Join thousands of happy customers who trust Jez Cabs for safe, reliable, and comfortable rides.
                             </p>
-
-                            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+                            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                                 <Link to={ROUTES.REGISTER}>
                                     <button
-                                        className="px-5 py-2.5 sm:px-6 sm:py-3 lg:px-8 lg:py-3 rounded-lg transition-all inline-flex items-center justify-center gap-2 group font-medium text-sm sm:text-base hover:bg-gray-100 w-full sm:w-auto"
+                                        className="px-6 py-3 sm:px-8 sm:py-3.5 rounded-xl font-semibold text-sm sm:text-base inline-flex items-center justify-center gap-2 group transition-all w-full sm:w-auto"
                                         style={{
-                                            backgroundColor: '#ffffff',
-                                            color: '#1d4ed8'
+                                            background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
+                                            color: '#ffffff',
+                                            boxShadow: '0 8px 30px rgba(37, 99, 235, 0.3)'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.transform = 'translateY(-2px)';
+                                            e.currentTarget.style.boxShadow = '0 12px 40px rgba(37, 99, 235, 0.4)';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.transform = 'translateY(0)';
+                                            e.currentTarget.style.boxShadow = '0 8px 30px rgba(37, 99, 235, 0.3)';
                                         }}
                                     >
-                                        Book Your First Ride
+                                        Book Your Ride Now
                                         <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
                                     </button>
                                 </Link>
-                                <Link to={ROUTES.REGISTER}>
+                                <Link to="/contact">
                                     <button
-                                        className="px-5 py-2.5 sm:px-6 sm:py-3 lg:px-8 lg:py-3 bg-transparent border-2 border-white text-white rounded-lg hover:bg-white/10 transition-all font-medium text-sm sm:text-base w-full sm:w-auto"
+                                        className="px-6 py-3 sm:px-8 sm:py-3.5 rounded-xl font-semibold text-sm sm:text-base w-full sm:w-auto transition-all"
+                                        style={{
+                                            backgroundColor: 'transparent',
+                                            border: '2px solid #475569',
+                                            color: '#e2e8f0'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.borderColor = '#60a5fa';
+                                            e.currentTarget.style.backgroundColor = 'rgba(96, 165, 250, 0.1)';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.borderColor = '#475569';
+                                            e.currentTarget.style.backgroundColor = 'transparent';
+                                        }}
                                     >
-                                        Register as Owner
+                                        Contact Us
                                     </button>
+                                </Link>
+                            </div>
+                        </div>
+
+                        {/* Right Content - Partner Cards */}
+                        <div className="grid grid-cols-2 gap-4 sm:gap-6">
+                            {/* Become a Driver Card */}
+                            <div
+                                className="p-5 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl transition-all duration-300 hover:shadow-lg"
+                                style={{
+                                    background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.2) 0%, rgba(37, 99, 235, 0.1) 100%)',
+                                    border: '1px solid rgba(37, 99, 235, 0.3)'
+                                }}
+                            >
+                                <div
+                                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center mb-3 sm:mb-4"
+                                    style={{ backgroundColor: '#2563eb' }}
+                                >
+                                    <Car className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                                </div>
+                                <h3 className="text-base sm:text-lg font-bold mb-2" style={{ color: '#ffffff' }}>
+                                    Become a Driver
+                                </h3>
+                                <p className="text-xs sm:text-sm mb-3 sm:mb-4" style={{ color: '#94a3b8' }}>
+                                    Join our network of professional drivers and earn on your own schedule.
+                                </p>
+                                <Link
+                                    to={ROUTES.REGISTER}
+                                    className="text-xs sm:text-sm font-semibold inline-flex items-center gap-1 group"
+                                    style={{ color: '#60a5fa' }}
+                                >
+                                    Learn More
+                                    <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" />
+                                </Link>
+                            </div>
+
+                            {/* Fleet Partner Card */}
+                            <div
+                                className="p-5 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl transition-all duration-300 hover:shadow-lg"
+                                style={{
+                                    background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.2) 0%, rgba(37, 99, 235, 0.1) 100%)',
+                                    border: '1px solid rgba(37, 99, 235, 0.3)'
+                                }}
+                            >
+                                <div
+                                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center mb-3 sm:mb-4"
+                                    style={{ backgroundColor: '#2563eb' }}
+                                >
+                                    <Users className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                                </div>
+                                <h3 className="text-base sm:text-lg font-bold mb-2" style={{ color: '#ffffff' }}>
+                                    Fleet Partner
+                                </h3>
+                                <p className="text-xs sm:text-sm mb-3 sm:mb-4" style={{ color: '#94a3b8' }}>
+                                    Expand your fleet business with our comprehensive management tools.
+                                </p>
+                                <Link
+                                    to={ROUTES.REGISTER}
+                                    className="text-xs sm:text-sm font-semibold inline-flex items-center gap-1 group"
+                                    style={{ color: '#60a5fa' }}
+                                >
+                                    Learn More
+                                    <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" />
                                 </Link>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
+
+            {/* Footer */}
+            <footer
+                className="py-10 sm:py-12 lg:py-16 px-4 sm:px-6 lg:px-8"
+                style={{ backgroundColor: '#0f172a' }}
+            >
+                <div className="max-w-7xl mx-auto">
+                    {/* Main Footer Grid */}
+                    <div className="grid grid-cols-2 md:grid-cols-6 gap-6 sm:gap-8 lg:gap-12 mb-8 sm:mb-10 lg:mb-12">
+                        {/* Brand Column */}
+                        <div className="col-span-2">
+                            <div className="flex items-center gap-2 mb-4 sm:mb-5">
+                                <div
+                                    className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center"
+                                    style={{ backgroundColor: '#2563eb' }}
+                                >
+                                    <Car className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                                </div>
+                                <span className="text-lg sm:text-xl font-bold text-white">Jez Cabs</span>
+                            </div>
+                            <p className="text-xs sm:text-sm mb-4 sm:mb-6 max-w-xs" style={{ color: '#94a3b8' }}>
+                                Your trusted partner for safe, reliable, and comfortable cab services across the country.
+                            </p>
+                            {/* Contact Info */}
+                            <div className="space-y-2 sm:space-y-3">
+                                <div className="flex items-center gap-2" style={{ color: '#94a3b8' }}>
+                                    <Mail className="w-4 h-4" />
+                                    <span className="text-xs sm:text-sm">support@jezcabs.com</span>
+                                </div>
+                                <div className="flex items-center gap-2" style={{ color: '#94a3b8' }}>
+                                    <Phone className="w-4 h-4" />
+                                    <span className="text-xs sm:text-sm">+1 (800) 123-4567</span>
+                                </div>
+                                <div className="flex items-center gap-2" style={{ color: '#94a3b8' }}>
+                                    <MapPin className="w-4 h-4" />
+                                    <span className="text-xs sm:text-sm">123 Main Street, NY 10001</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Company Links */}
+                        <div>
+                            <h4 className="text-sm sm:text-base font-semibold text-white mb-3 sm:mb-4">Company</h4>
+                            <ul className="space-y-2 sm:space-y-3">
+                                {['About Us', 'Careers', 'Blog', 'Press'].map((link) => (
+                                    <li key={link}>
+                                        <a
+                                            href="#"
+                                            className="text-xs sm:text-sm transition-colors hover:text-white"
+                                            style={{ color: '#94a3b8' }}
+                                        >
+                                            {link}
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        {/* Services Links */}
+                        <div>
+                            <h4 className="text-sm sm:text-base font-semibold text-white mb-3 sm:mb-4">Services</h4>
+                            <ul className="space-y-2 sm:space-y-3">
+                                {['One Way Trips', 'Round Trips', 'Car Rentals', 'Airport Transfer'].map((link) => (
+                                    <li key={link}>
+                                        <a
+                                            href="#"
+                                            className="text-xs sm:text-sm transition-colors hover:text-white"
+                                            style={{ color: '#94a3b8' }}
+                                        >
+                                            {link}
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        {/* Support Links */}
+                        <div>
+                            <h4 className="text-sm sm:text-base font-semibold text-white mb-3 sm:mb-4">Support</h4>
+                            <ul className="space-y-2 sm:space-y-3">
+                                {['Help Center', 'Safety', 'Terms of Service', 'Privacy Policy'].map((link) => (
+                                    <li key={link}>
+                                        <a
+                                            href="#"
+                                            className="text-xs sm:text-sm transition-colors hover:text-white"
+                                            style={{ color: '#94a3b8' }}
+                                        >
+                                            {link}
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        {/* Partners Links */}
+                        <div>
+                            <h4 className="text-sm sm:text-base font-semibold text-white mb-3 sm:mb-4">Partners</h4>
+                            <ul className="space-y-2 sm:space-y-3">
+                                {['Become a Driver', 'Fleet Partners', 'Corporate', 'Affiliate Program'].map((link) => (
+                                    <li key={link}>
+                                        <a
+                                            href="#"
+                                            className="text-xs sm:text-sm transition-colors hover:text-white"
+                                            style={{ color: '#94a3b8' }}
+                                        >
+                                            {link}
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="border-t border-slate-800 pt-6 sm:pt-8">
+                        <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+                            {/* Copyright */}
+                            <p className="text-xs sm:text-sm" style={{ color: '#64748b' }}>
+                                © 2025 Jez Cabs. All rights reserved.
+                            </p>
+
+                            {/* Social Icons */}
+                            <div className="flex items-center gap-4">
+                                {[
+                                    { icon: FaFacebook, href: '#' },
+                                    { icon: FaTwitter, href: '#' },
+                                    { icon: FaInstagram, href: '#' },
+                                    { icon: FaLinkedin, href: '#' },
+                                ].map((social, index) => (
+                                    <a
+                                        key={index}
+                                        href={social.href}
+                                        className="w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center transition-all hover:bg-slate-700"
+                                        style={{ backgroundColor: '#1e293b' }}
+                                    >
+                                        <social.icon className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: '#94a3b8' }} />
+                                    </a>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
         </div>
     );
 }
