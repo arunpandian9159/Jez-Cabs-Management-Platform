@@ -333,8 +333,8 @@ export function QuickBookingForm() {
             </div>
 
             <div className="space-y-4">
-                {/* Trip Type Selection - Enhanced */}
-                <div className="grid grid-cols-4 gap-2 p-2 rounded-2xl bg-gradient-to-br from-gray-100/80 to-gray-50/80 border border-gray-200/50">
+                {/* Trip Type Selection - Compact */}
+                <div className="grid grid-cols-4 gap-1 p-1.5 rounded-xl bg-gradient-to-br from-gray-100/80 to-gray-50/80 border border-gray-200/50">
                     {tripTypeOptions.map((option) => {
                         const Icon = option.icon;
                         const isSelected = tripType === option.id;
@@ -344,9 +344,9 @@ export function QuickBookingForm() {
                                 type="button"
                                 onClick={() => setTripType(option.id)}
                                 className={cn(
-                                    'relative flex flex-col items-center justify-center p-2.5 sm:p-3.5 rounded-xl transition-all duration-300 gap-1.5 group/trip overflow-hidden',
+                                    'relative flex flex-col items-center justify-center p-1.5 sm:p-2 rounded-lg transition-all duration-300 gap-1 group/trip overflow-hidden',
                                     isSelected
-                                        ? 'bg-white shadow-lg text-blue-600 scale-[1.02]'
+                                        ? 'bg-white shadow-md text-blue-600 scale-[1.02]'
                                         : 'hover:bg-white/60 text-gray-600 hover:text-gray-800'
                                 )}
                             >
@@ -355,22 +355,22 @@ export function QuickBookingForm() {
                                 )}
                                 <div
                                     className={cn(
-                                        'relative z-10 w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center transition-all duration-300',
+                                        'relative z-10 w-7 h-7 sm:w-8 sm:h-8 rounded-md flex items-center justify-center transition-all duration-300',
                                         isSelected
-                                            ? `bg-gradient-to-br ${option.gradient} shadow-md`
+                                            ? `bg-gradient-to-br ${option.gradient} shadow-sm`
                                             : 'bg-gray-100 group-hover/trip:bg-gray-200'
                                     )}
                                 >
                                     <Icon
                                         className={cn(
-                                            'w-4 h-4 sm:w-5 sm:h-5 transition-colors',
+                                            'w-3.5 h-3.5 sm:w-4 sm:h-4 transition-colors',
                                             isSelected ? 'text-white' : 'text-gray-500 group-hover/trip:text-gray-700'
                                         )}
                                     />
                                 </div>
                                 <span
                                     className={cn(
-                                        'relative z-10 text-[10px] sm:text-xs font-semibold whitespace-nowrap transition-colors',
+                                        'relative z-10 text-[9px] sm:text-[10px] font-semibold whitespace-nowrap transition-colors',
                                         isSelected ? 'text-blue-600' : 'text-gray-600'
                                     )}
                                 >
