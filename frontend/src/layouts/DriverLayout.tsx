@@ -9,10 +9,11 @@ import {
     User,
     Settings,
 } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
-import { Sidebar, NavItem } from './Sidebar';
+import { useAuth } from '@/features/auth';
+import { Sidebar, NavItem } from './Sidebar/Sidebar';
 import { Navbar } from './Navbar';
-import { driverService } from '../../services';
+import { driverService } from '@/services';
+
 
 const navigation: NavItem[] = [
     { name: 'Dashboard', href: '/driver', icon: LayoutDashboard, end: true },

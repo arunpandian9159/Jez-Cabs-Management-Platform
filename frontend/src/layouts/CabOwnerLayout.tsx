@@ -13,10 +13,11 @@ import {
     Wrench,
     XCircle,
 } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
-import { Sidebar, NavItem, QuickStat } from './Sidebar';
+import { useAuth } from '@/features/auth';
+import { Sidebar, NavItem, QuickStat } from './Sidebar/Sidebar';
 import { Navbar } from './Navbar';
-import { cabsService, CabStatistics } from '../../services/cabs.service';
+import { cabsService, CabStatistics } from '@/services/cabs.service';
+
 
 const navigation: NavItem[] = [
     { name: 'Dashboard', href: '/owner', icon: LayoutDashboard, end: true },

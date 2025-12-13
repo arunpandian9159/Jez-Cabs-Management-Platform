@@ -4,7 +4,7 @@ This document describes the restructured frontend architecture following **Featu
 
 ## 📁 Directory Structure Overview
 
-```
+```text
 src/
 ├── app/                          # App-level configuration (future)
 │   └── providers/                # App-wide providers
@@ -148,7 +148,7 @@ src/
 
 Each feature is self-contained:
 
-```
+```text
 feature/
 ├── components/     # Feature-specific components
 ├── pages/         # Pages for this feature

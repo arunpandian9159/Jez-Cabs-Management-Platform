@@ -16,11 +16,12 @@ import {
     Users,
     Siren,
 } from 'lucide-react';
-import { Button } from '../ui/Button';
+import { Button } from '@/components/ui/Button';
 import { Navbar } from './Navbar';
-import { Sidebar, NavItem } from './Sidebar';
-import { useAuth } from '../../contexts/AuthContext';
-import { ROUTES } from '../../lib/constants';
+import { Sidebar, NavItem } from './Sidebar/Sidebar';
+import { useAuth } from '@/features/auth';
+import { ROUTES } from '@/shared/constants';
+
 
 // Navigation items for customer
 const customerNavItems: NavItem[] = [
@@ -172,8 +173,8 @@ export function CustomerLayout() {
                                                 key={option.id}
                                                 onClick={() => handleEmergencySelect(option.id)}
                                                 className={`w-full flex items-center gap-4 p-4 rounded-xl border-2 transition-all ${isSelected
-                                                        ? 'border-red-500 bg-red-50'
-                                                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                                                    ? 'border-red-500 bg-red-50'
+                                                    : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                                                     }`}
                                                 whileHover={{ scale: 1.01 }}
                                                 whileTap={{ scale: 0.99 }}

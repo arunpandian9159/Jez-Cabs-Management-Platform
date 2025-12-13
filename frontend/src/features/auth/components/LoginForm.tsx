@@ -3,9 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Mail, Lock, Eye, EyeOff, ArrowRight, Sparkles, AlertCircle } from 'lucide-react';
-import { Button } from '../ui/Button';
-import { Input } from '../ui/Input';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
 import { loginSchema, LoginFormData, AuthModalType, SocialLoginButtons } from './AuthModal';
+
 
 interface LoginFormProps {
     onSubmit: (data: LoginFormData) => Promise<void>;

@@ -3,10 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Mail, Lock, User, Phone, Eye, EyeOff, ArrowRight, ArrowLeft, Check, Sparkles, Shield } from 'lucide-react';
-import { Button } from '../ui/Button';
-import { Input } from '../ui/Input';
-import { Select } from '../ui/Select';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { Select } from '@/components/ui/Select';
 import { registerSchema, RegisterFormData, AuthModalType, roleOptions, getPasswordStrength } from './AuthModal';
+
 
 interface RegisterFormProps {
     onSubmit: (data: RegisterFormData) => Promise<void>;

@@ -1,16 +1,48 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { AuthProvider } from './contexts/AuthContext';
-import { ThemeProvider } from './contexts/ThemeContext';
-import { AuthModalProvider } from './components/auth';
-import { ProtectedRoute, PublicOnlyRoute } from './components/ProtectedRoute';
-import { PublicLayout, CustomerLayout, DriverLayout, CabOwnerLayout, AdminLayout } from './components/layout';
-import { Home } from './pages/public';
-import { CustomerDashboard, LocationEntry, CabSelection, DriverSearch, LiveTracking, TripComplete, BrowseCabs, ActiveRentals, PlanTrip, TripHistory, Payments, Disputes, EmergencyContacts, SafetyCenter, TripExchange, PostTrip, ShareRide, ExchangeHistory } from './pages/customer';
-import { DriverDashboard, ActiveTrip, TripHistory as DriverTripHistory, Earnings, DriverProfile, DriverSettings } from './pages/driver';
-import { OwnerDashboard, ManageCabs, ManageDrivers, OwnerEarnings, OwnerSettings, Contracts } from './pages/owner';
-import { AdminDashboard, AdminDisputes, AdminUsers, AdminVerification } from './pages/admin';
-import { ROUTES } from './lib/constants';
+
+// Auth - from features
+import { AuthProvider, AuthModalProvider } from '@/features/auth';
+import { ThemeProvider } from '@/contexts/ThemeContext';
+
+
+
+// Layouts - from layouts folder
+import {
+    PublicLayout,
+    CustomerLayout,
+    DriverLayout,
+    CabOwnerLayout,
+    AdminLayout,
+    ProtectedRoute,
+    PublicOnlyRoute,
+} from '@/layouts';
+
+// Public pages - from public feature
+import { Home } from '@/features/public';
+
+// Customer feature pages
+import { CustomerDashboard } from '@/pages/customer/Dashboard';
+import { LocationEntry, CabSelection, DriverSearch, LiveTracking, TripComplete } from '@/pages/customer/booking';
+import { BrowseCabs, ActiveRentals } from '@/pages/customer/rentals';
+import { PlanTrip, TripHistory } from '@/pages/customer/trips';
+import { Payments } from '@/pages/customer/payments';
+import { Disputes } from '@/pages/customer/disputes';
+import { EmergencyContacts, SafetyCenter } from '@/pages/customer';
+import { TripExchange, PostTrip, ShareRide, ExchangeHistory } from '@/pages/customer';
+
+// Driver feature pages
+import { DriverDashboard, ActiveTrip, TripHistory as DriverTripHistory, Earnings, DriverProfile, DriverSettings } from '@/pages/driver';
+
+// Owner feature pages
+import { OwnerDashboard, ManageCabs, ManageDrivers, OwnerEarnings, OwnerSettings, Contracts } from '@/pages/owner';
+
+// Admin feature pages
+import { AdminDashboard, AdminDisputes, AdminUsers, AdminVerification } from '@/pages/admin';
+
+// Shared utilities
+import { ROUTES } from '@/shared/constants';
+
 
 // Create React Query client
 const queryClient = new QueryClient({

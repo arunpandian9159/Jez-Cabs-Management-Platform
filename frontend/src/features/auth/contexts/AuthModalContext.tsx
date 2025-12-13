@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, ReactNode, useCallback } from 'react';
-import { AuthModalType } from './AuthModal';
+import { AuthModalType } from '../components/AuthModal';
+
 
 interface AuthModalContextType {
     modalType: AuthModalType;
