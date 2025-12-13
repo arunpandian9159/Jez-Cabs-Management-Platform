@@ -18,7 +18,6 @@ import { Select } from '@/components/ui/Select';
 import { Modal } from '@/components/ui/Modal';
 import { PageLoader } from '@/components/ui/Loading';
 import { useOwnerSettings } from '../hooks/useOwnerSettings';
-import { type OwnerSettings as SettingsType } from '@/services/owner.service';
 
 interface SettingToggleProps {
     label: string;
