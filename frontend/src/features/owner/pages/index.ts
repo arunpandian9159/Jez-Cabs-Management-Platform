@@ -1,6 +1,7 @@
-export { default as Dashboard } from './Dashboard';
-export { default as ManageCabs } from './ManageCabs';
-export { default as ManageDrivers } from './ManageDrivers';
-export { default as Contracts } from './Contracts';
-export { default as Earnings } from './Earnings';
-export { default as Settings } from './Settings';
+export { OwnerDashboard as Dashboard } from './Dashboard';
+export { ManageCabs } from './ManageCabs';
+export { ManageDrivers } from './ManageDrivers';
+export { Contracts } from './Contracts';
+export { OwnerEarnings as Earnings } from './Earnings';
+export { OwnerSettings as Settings } from './Settings';
+

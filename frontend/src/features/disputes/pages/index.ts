@@ -1,1 +1,2 @@
-export { default as Disputes } from './Disputes';
+export { Disputes } from './Disputes';
+
