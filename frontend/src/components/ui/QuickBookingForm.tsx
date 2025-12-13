@@ -241,7 +241,7 @@ export function QuickBookingForm() {
 
     return (
         <div
-            className="p-6 sm:p-8 rounded-2xl sm:rounded-3xl animate-fade-in-up"
+            className="max-w-sm p-6 sm:p-8 rounded-2xl sm:rounded-3xl animate-fade-in-up"
             style={{
                 background: 'rgba(255, 255, 255, 0.98)',
                 boxShadow: '0 4px 24px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04)',
