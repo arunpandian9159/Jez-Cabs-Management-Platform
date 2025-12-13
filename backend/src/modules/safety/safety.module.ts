@@ -5,9 +5,9 @@ import { SafetyService } from './safety.service';
 import { SafetyController } from './safety.controller';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([EmergencyContact])],
-    controllers: [SafetyController],
-    providers: [SafetyService],
-    exports: [SafetyService],
+  imports: [TypeOrmModule.forFeature([EmergencyContact])],
+  controllers: [SafetyController],
+  providers: [SafetyService],
+  exports: [SafetyService],
 })
-export class SafetyModule { }
+export class SafetyModule {}

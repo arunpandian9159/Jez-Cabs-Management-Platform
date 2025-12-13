@@ -40,8 +40,12 @@ export class NotificationPreference {
   driverNotifications: boolean;
 }
 
-export const NotificationPreferenceSchema = SchemaFactory.createForClass(NotificationPreference);
+export const NotificationPreferenceSchema = SchemaFactory.createForClass(
+  NotificationPreference,
+);
 
 // Create compound unique index
-NotificationPreferenceSchema.index({ companyId: 1, userId: 1 }, { unique: true });
-
+NotificationPreferenceSchema.index(
+  { companyId: 1, userId: 1 },
+  { unique: true },
+);

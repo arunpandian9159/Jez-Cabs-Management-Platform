@@ -29,20 +29,26 @@ import { UserRole, CabStatus, CabType } from '../../../common/enums';
 @UseGuards(JwtAuthGuard, RolesGuard)
 @ApiBearerAuth('JWT-auth')
 export class CabController {
-  constructor(private readonly cabService: CabService) { }
+  constructor(private readonly cabService: CabService) {}
 
   @Post()
   @Roles(UserRole.CAB_OWNER, UserRole.ADMIN)
   @ApiOperation({ summary: 'Add a new vehicle (Cab Owner only)' })
   @ApiResponse({ status: 201, description: 'Vehicle created successfully' })
-  async create(@Body() createCabDto: CreateCabDto, @CurrentUser() currentUser: User) {
+  async create(
+    @Body() createCabDto: CreateCabDto,
+    @CurrentUser() currentUser: User,
+  ) {
     return this.cabService.create(createCabDto, currentUser);
   }
 
   @Get()
   @ApiOperation({ summary: 'Get all vehicles with filtering' })
   @ApiResponse({ status: 200, description: 'Vehicles retrieved successfully' })
-  async findAll(@Query() filterDto: FilterCabDto, @CurrentUser() currentUser: User) {
+  async findAll(
+    @Query() filterDto: FilterCabDto,
+    @CurrentUser() currentUser: User,
+  ) {
     return this.cabService.findAll(filterDto, currentUser);
   }
 
@@ -89,14 +95,20 @@ export class CabController {
   @Roles(UserRole.CAB_OWNER, UserRole.ADMIN, UserRole.DRIVER)
   @ApiOperation({ summary: 'Update vehicle status' })
   @ApiResponse({ status: 200, description: 'Vehicle status updated' })
-  async updateStatus(@Param('id') id: string, @Body('status') status: CabStatus) {
+  async updateStatus(
+    @Param('id') id: string,
+    @Body('status') status: CabStatus,
+  ) {
     return this.cabService.updateStatus(id, status);
   }
 
   @Patch(':id/assign-driver')
   @Roles(UserRole.CAB_OWNER, UserRole.ADMIN)
   @ApiOperation({ summary: 'Assign driver to vehicle' })
-  async assignDriver(@Param('id') id: string, @Body('driver_id') driverId: string) {
+  async assignDriver(
+    @Param('id') id: string,
+    @Body('driver_id') driverId: string,
+  ) {
     return this.cabService.assignDriver(id, driverId);
   }
 

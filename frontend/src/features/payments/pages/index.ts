@@ -1,2 +1,1 @@
 export { Payments } from './Payments';
-

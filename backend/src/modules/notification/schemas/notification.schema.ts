@@ -32,20 +32,20 @@ export class Notification {
   @Prop({ index: true })
   userId: string;
 
-  @Prop({ 
+  @Prop({
     required: true,
     enum: Object.values(NotificationType),
   })
   type: NotificationType;
 
-  @Prop({ 
+  @Prop({
     required: true,
     enum: Object.values(NotificationStatus),
     default: NotificationStatus.PENDING,
   })
   status: NotificationStatus;
 
-  @Prop({ 
+  @Prop({
     enum: Object.values(NotificationPriority),
     default: NotificationPriority.MEDIUM,
   })
@@ -82,4 +82,3 @@ export const NotificationSchema = SchemaFactory.createForClass(Notification);
 NotificationSchema.index({ companyId: 1, userId: 1, createdAt: -1 });
 NotificationSchema.index({ status: 1, createdAt: -1 });
 NotificationSchema.index({ type: 1, status: 1 });
-

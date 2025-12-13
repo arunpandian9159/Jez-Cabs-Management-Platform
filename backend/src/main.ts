@@ -44,7 +44,9 @@ async function bootstrap() {
   // Swagger Documentation
   if (configService.get('SWAGGER_ENABLED', 'true') === 'true') {
     const config = new DocumentBuilder()
-      .setTitle(configService.get('SWAGGER_TITLE', 'Jez Cabs Management Platform API'))
+      .setTitle(
+        configService.get('SWAGGER_TITLE', 'Jez Cabs Management Platform API'),
+      )
       .setDescription(
         configService.get(
           'SWAGGER_DESCRIPTION',
@@ -63,7 +65,10 @@ async function bootstrap() {
         },
         'JWT-auth',
       )
-      .addTag('Authentication', 'User authentication and authorization endpoints')
+      .addTag(
+        'Authentication',
+        'User authentication and authorization endpoints',
+      )
       .addTag('Companies', 'Company management endpoints')
       .addTag('Users', 'User management endpoints')
       .addTag('Cabs', 'Vehicle fleet management endpoints')
@@ -83,13 +88,17 @@ async function bootstrap() {
       },
     });
 
-    console.log(`📚 Swagger documentation available at: http://localhost:${configService.get('PORT', 3000)}/${swaggerPath}`);
+    console.log(
+      `📚 Swagger documentation available at: http://localhost:${configService.get('PORT', 3000)}/${swaggerPath}`,
+    );
   }
 
   const port = configService.get('PORT', 3000);
   await app.listen(port);
 
-  console.log(`🚀 Application is running on: http://localhost:${port}/${apiPrefix}`);
+  console.log(
+    `🚀 Application is running on: http://localhost:${port}/${apiPrefix}`,
+  );
 }
 
 bootstrap();

@@ -9,7 +9,7 @@ export class DriverService {
   constructor(
     @InjectRepository(DriverProfile)
     private readonly driverRepository: Repository<DriverProfile>,
-  ) { }
+  ) {}
 
   async getProfile(userId: string): Promise<DriverProfile> {
     const profile = await this.driverRepository.findOne({
@@ -24,7 +24,10 @@ export class DriverService {
     return profile;
   }
 
-  async createProfile(userId: string, data: Partial<DriverProfile>): Promise<DriverProfile> {
+  async createProfile(
+    userId: string,
+    data: Partial<DriverProfile>,
+  ): Promise<DriverProfile> {
     const profile = this.driverRepository.create({
       ...data,
       user_id: userId,
@@ -33,20 +36,30 @@ export class DriverService {
     return this.driverRepository.save(profile);
   }
 
-  async updateProfile(userId: string, data: Partial<DriverProfile>): Promise<DriverProfile> {
+  async updateProfile(
+    userId: string,
+    data: Partial<DriverProfile>,
+  ): Promise<DriverProfile> {
     const profile = await this.getProfile(userId);
     Object.assign(profile, data);
     return this.driverRepository.save(profile);
   }
 
-  async updateStatus(userId: string, status: DriverStatus): Promise<DriverProfile> {
+  async updateStatus(
+    userId: string,
+    status: DriverStatus,
+  ): Promise<DriverProfile> {
     const profile = await this.getProfile(userId);
     profile.status = status;
     profile.is_online = status === DriverStatus.AVAILABLE;
     return this.driverRepository.save(profile);
   }
 
-  async updateLocation(userId: string, lat: number, lng: number): Promise<DriverProfile> {
+  async updateLocation(
+    userId: string,
+    lat: number,
+    lng: number,
+  ): Promise<DriverProfile> {
     const profile = await this.getProfile(userId);
     profile.current_location_lat = lat;
     profile.current_location_lng = lng;
@@ -75,7 +88,8 @@ export class DriverService {
       // trips.driver_id stores the user's ID, not the driver_profile ID
       console.log('Fetching earnings for user_id:', userId);
 
-      const completedTrips = await this.driverRepository.manager.query(`
+      const completedTrips = await this.driverRepository.manager.query(
+        `
         SELECT 
           actual_fare,
           estimated_fare,
@@ -87,13 +101,22 @@ export class DriverService {
           AND status = 'completed'
           AND completed_at IS NOT NULL
         ORDER BY completed_at DESC
-      `, [userId]);
+      `,
+        [userId],
+      );
 
       console.log('Found completed trips:', completedTrips.length);
 
       // Calculate date boundaries
       const now = new Date();
-      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+      const todayStart = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        0,
+        0,
+        0,
+      );
       const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
       const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
@@ -149,7 +172,12 @@ export class DriverService {
         }
       });
 
-      console.log('Earnings calculated:', { todayEarnings, weekEarnings, monthEarnings, totalEarnings });
+      console.log('Earnings calculated:', {
+        todayEarnings,
+        weekEarnings,
+        monthEarnings,
+        totalEarnings,
+      });
 
       return {
         today: Math.round(todayEarnings),
@@ -186,12 +214,20 @@ export class DriverService {
 
     // Calculate earnings from actual trip data
     const now = new Date();
-    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+    const todayStart = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      0,
+      0,
+      0,
+    );
     const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
     const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
     // Query trips for earnings calculation
-    const trips = await this.driverRepository.manager.query(`
+    const trips = await this.driverRepository.manager.query(
+      `
       SELECT 
         actual_fare,
         estimated_fare,
@@ -201,7 +237,9 @@ export class DriverService {
       WHERE driver_id = $1
         AND status = 'completed'
         AND completed_at IS NOT NULL
-    `, [userId]);
+    `,
+      [userId],
+    );
 
     let todayEarnings = 0;
     let weeklyEarnings = 0;
@@ -242,7 +280,10 @@ export class DriverService {
     return [];
   }
 
-  async getAvailableDrivers(lat?: number, lng?: number): Promise<DriverProfile[]> {
+  async getAvailableDrivers(
+    lat?: number,
+    lng?: number,
+  ): Promise<DriverProfile[]> {
     const queryBuilder = this.driverRepository
       .createQueryBuilder('driver')
       .where('driver.is_online = true')
@@ -252,4 +293,3 @@ export class DriverService {
     return queryBuilder.getMany();
   }
 }
-

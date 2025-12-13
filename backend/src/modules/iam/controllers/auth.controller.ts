@@ -1,12 +1,33 @@
-import { Controller, Post, Body, HttpCode, HttpStatus, Get, UseGuards, Request } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  Controller,
+  Post,
+  Body,
+  HttpCode,
+  HttpStatus,
+  Get,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { AuthService } from '../services/auth.service';
 import { Public, CurrentUser } from '../../../common/decorators';
 import { JwtAuthGuard } from '../guards';
 import { User } from '../entities';
 import { UserRole } from '../../../common/enums';
 
-import { IsEmail, IsString, MinLength, IsEnum, IsOptional, Matches } from 'class-validator';
+import {
+  IsEmail,
+  IsString,
+  MinLength,
+  IsEnum,
+  IsOptional,
+  Matches,
+} from 'class-validator';
 
 class RegisterDto {
   @IsEmail({}, { message: 'Please enter a valid email address' })
@@ -14,7 +35,9 @@ class RegisterDto {
 
   @IsString()
   @MinLength(8, { message: 'Password must be at least 8 characters' })
-  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, { message: 'Password is too weak' })
+  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
+    message: 'Password is too weak',
+  })
   password: string;
 
   @IsString()
@@ -26,7 +49,9 @@ class RegisterDto {
   lastName: string;
 
   @IsString()
-  @Matches(/^[6-9]\d{9}$/, { message: 'Please enter a valid 10-digit phone number' })
+  @Matches(/^[6-9]\d{9}$/, {
+    message: 'Please enter a valid 10-digit phone number',
+  })
   phone: string;
 
   @IsOptional()
@@ -46,7 +71,7 @@ class LoginDto {
 @ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
   @Public()
   @Post('register')

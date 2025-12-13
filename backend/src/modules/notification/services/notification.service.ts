@@ -7,7 +7,7 @@ import {
   NotificationDocument,
   NotificationType,
   NotificationStatus,
-  NotificationPriority
+  NotificationPriority,
 } from '../schemas/notification.schema';
 
 @Injectable()
@@ -17,9 +17,14 @@ export class NotificationService {
   constructor(
     @InjectModel(Notification.name)
     private notificationModel: Model<NotificationDocument>,
-  ) { }
+  ) {}
 
-  async create(userId: string, subject: string, message: string, type: NotificationType = NotificationType.PUSH): Promise<Notification> {
+  async create(
+    userId: string,
+    subject: string,
+    message: string,
+    type: NotificationType = NotificationType.PUSH,
+  ): Promise<Notification> {
     const notification = new this.notificationModel({
       userId,
       type,
@@ -41,25 +46,31 @@ export class NotificationService {
   }
 
   async getUnreadCount(userId: string): Promise<number> {
-    return this.notificationModel.countDocuments({
-      userId,
-      status: { $in: [NotificationStatus.PENDING, NotificationStatus.SENT] },
-    }).exec();
+    return this.notificationModel
+      .countDocuments({
+        userId,
+        status: { $in: [NotificationStatus.PENDING, NotificationStatus.SENT] },
+      })
+      .exec();
   }
 
   async markAsRead(id: string): Promise<NotificationDocument | null> {
-    return this.notificationModel.findByIdAndUpdate(
-      id,
-      { status: NotificationStatus.READ, readAt: new Date() },
-      { new: true }
-    ).exec();
+    return this.notificationModel
+      .findByIdAndUpdate(
+        id,
+        { status: NotificationStatus.READ, readAt: new Date() },
+        { new: true },
+      )
+      .exec();
   }
 
   async markAllAsRead(userId: string) {
-    await this.notificationModel.updateMany(
-      { userId, status: { $ne: NotificationStatus.READ } },
-      { status: NotificationStatus.READ, readAt: new Date() }
-    ).exec();
+    await this.notificationModel
+      .updateMany(
+        { userId, status: { $ne: NotificationStatus.READ } },
+        { status: NotificationStatus.READ, readAt: new Date() },
+      )
+      .exec();
     return { message: 'All notifications marked as read' };
   }
 
@@ -71,7 +82,7 @@ export class NotificationService {
       payload.customerId,
       'Trip Requested',
       'Your trip request has been submitted. Looking for a driver...',
-      NotificationType.PUSH
+      NotificationType.PUSH,
     );
   }
 
@@ -82,7 +93,7 @@ export class NotificationService {
       payload.customerId,
       'Driver Found',
       'A driver has accepted your trip request!',
-      NotificationType.PUSH
+      NotificationType.PUSH,
     );
   }
 
@@ -93,7 +104,7 @@ export class NotificationService {
       payload.customerId,
       'Trip Completed',
       'Your trip has been completed. Please rate your driver!',
-      NotificationType.PUSH
+      NotificationType.PUSH,
     );
   }
 }
