@@ -1,2 +1,3 @@
-export { default as TripHistory } from './TripHistory';
-export { default as PlanTrip } from './PlanTrip';
+export { TripHistory } from './TripHistory';
+export { PlanTrip } from './PlanTrip';
+

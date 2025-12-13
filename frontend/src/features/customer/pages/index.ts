@@ -1,2 +1,3 @@
-export { default as Dashboard } from './Dashboard';
-export { default as PostTrip } from './PostTrip';
+export { CustomerDashboard as Dashboard } from './Dashboard';
+export { PostTrip } from './PostTrip';
+
