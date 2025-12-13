@@ -246,20 +246,6 @@ export function Home() {
                                 </span>
                             </h1>
 
-                            {/* Subheading - REDUCED SIZE ON MOBILE */}
-                            <p
-                                className="max-w-xl animate-fade-in-up text-sm sm:text-base lg:text-lg"
-                                style={{
-                                    color: '#475569',
-                                    lineHeight: 1.6,
-                                    animationDelay: '0.3s',
-                                    animationFillMode: 'both'
-                                }}
-                            >
-                                Book instant rides, rent cabs for any duration, or plan trips with complete
-                                transparency and safety. For cab owners, manage your fleet and drivers effortlessly.
-                            </p>
-
                             {/* Quick Booking Form - Enhanced */}
                             <QuickBookingForm />
 
