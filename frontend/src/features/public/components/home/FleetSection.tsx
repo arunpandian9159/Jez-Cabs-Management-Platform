@@ -61,7 +61,8 @@ export function FleetSection() {
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-1 text-xs sm:text-sm" style={{ color: '#64748b' }}>
                                         <Users2 className="w-3 h-3 sm:w-4 sm:h-4" />
-                                        <span>{option.capacity}</span>
+                                        <span className="sm:hidden">{option.capacity.split(' ')[0]}</span>
+                                        <span className="hidden sm:inline">{option.capacity}</span>
                                     </div>
                                     <span className="text-xs sm:text-sm font-bold" style={{ color: '#2563eb' }}>
                                         {option.price}

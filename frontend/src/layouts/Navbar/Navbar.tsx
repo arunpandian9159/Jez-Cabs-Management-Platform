@@ -15,6 +15,7 @@ import {
     Briefcase,
     Building,
     Zap,
+    Car,
     LucideIcon
 } from 'lucide-react';
 import { cn } from '@/shared/utils';
@@ -65,7 +66,7 @@ export function Navbar({
             setScrolled(window.scrollY > 20);
 
             // Track which section is currently in view
-            const sections = ['services', 'how-it-works', 'for-owners'];
+            const sections = ['services', 'how-it-works', 'fleet', 'for-owners'];
             const scrollPosition = window.scrollY + 150; // Offset for header
 
             // Check if we're at the top (Home section)
@@ -128,6 +129,8 @@ export function Navbar({
                 return Briefcase;
             case 'how it works':
                 return Zap;
+            case 'fleet':
+                return Car;
             case 'for owners':
                 return Building;
             default:
@@ -271,7 +274,7 @@ export function Navbar({
 
                     {/* Navigation items */}
                     <div className="relative flex items-center justify-around py-2 px-2 safe-area-pb">
-                        {publicLinks.map((link) => {
+                        {publicLinks.filter(link => link.label !== 'Fleet').map((link) => {
                             const Icon = link.icon || getNavIcon(link.label);
                             // Determine active state based on scroll position
                             const getSectionId = (path: string) => {

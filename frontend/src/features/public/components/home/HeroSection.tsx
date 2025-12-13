@@ -60,7 +60,7 @@ export function HeroSection() {
             />
 
             <div className="mx-auto relative z-10">
-                <div className="grid lg:grid-cols-2 gap-20 items-start">
+                <div className="grid lg:grid-cols-2 lg:gap-20 items-start">
                     {/* Left Content - Title and Animation */}
                     <div className="space-y-4 sm:space-y-6">
                         {/* Badge with animation */}
@@ -101,6 +101,20 @@ export function HeroSection() {
                                 Your Way
                             </span>
                         </h1>
+
+                        {/* Subheading - REDUCED SIZE ON MOBILE */}
+                        <p
+                            className="lg:hidden animate-fade-in-up text-sm sm:text-base lg:text-lg mb-0"
+                            style={{
+                                color: '#475569',
+                                lineHeight: 1.6,
+                                animationDelay: '0.3s',
+                                animationFillMode: 'both'
+                            }}
+                        >
+                            Book instant rides, rent cabs for any duration, or plan trips with complete
+                            transparency and safety. For cab owners, manage your fleet and drivers effortlessly.
+                        </p>
 
                         {/* Animation - Below Title (Desktop Only) */}
                         <div

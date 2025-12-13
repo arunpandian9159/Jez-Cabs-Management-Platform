@@ -11,6 +11,7 @@ const navLinks = [
     { path: ROUTES.HOME, label: 'Home' },
     { path: '/#services', label: 'Services' },
     { path: '/#how-it-works', label: 'How It Works' },
+    { path: '/#fleet', label: 'Fleet' },
     { path: '/#for-owners', label: 'For Owners' },
 ];
 
