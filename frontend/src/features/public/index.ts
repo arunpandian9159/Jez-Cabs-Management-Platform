@@ -1,2 +1,2 @@
 // Public feature public API
-export * from './pages';
+export { Home } from './pages/Home';

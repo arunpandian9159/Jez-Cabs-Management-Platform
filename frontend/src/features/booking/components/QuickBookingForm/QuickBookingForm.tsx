@@ -14,9 +14,10 @@ import {
     History,
 } from 'lucide-react';
 import { Calendar as CalendarComponent } from './Calendar';
-import { cn } from '../../lib/utils';
-import { ROUTES } from '../../lib/constants';
+import { cn } from '@/shared/utils';
+import { ROUTES } from '@/shared/constants';
 import type { DateRange } from 'react-day-picker';
+
 
 // Trip type options - simplified without icons for quick book
 type TripType = 'oneway' | 'roundtrip' | 'rental';

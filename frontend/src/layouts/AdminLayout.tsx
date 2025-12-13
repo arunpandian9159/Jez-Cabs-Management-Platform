@@ -10,9 +10,10 @@ import {
     Shield,
 } from 'lucide-react';
 import { useState } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
-import { Sidebar, NavItem } from './Sidebar';
+import { useAuth } from '@/features/auth';
+import { Sidebar, NavItem } from './Sidebar/Sidebar';
 import { Navbar } from './Navbar';
+
 
 
 const navItems: NavItem[] = [

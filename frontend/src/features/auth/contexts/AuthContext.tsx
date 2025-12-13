@@ -7,10 +7,11 @@ import {
     ReactNode,
 } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { storage } from '../lib/utils';
-import { apiClient } from '../lib/api';
-import { STORAGE_KEYS, ROUTES } from '../lib/constants';
-import type { User, AuthState, LoginCredentials, RegisterData, AuthResponse, UserRole } from '../types';
+import { storage } from '@/shared/utils';
+import { apiClient } from '@/shared/api';
+import { STORAGE_KEYS, ROUTES } from '@/shared/constants';
+import type { User, AuthState, LoginCredentials, RegisterData, AuthResponse, UserRole } from '@/types';
+
 
 interface AuthContextType extends AuthState {
     login: (credentials: LoginCredentials) => Promise<void>;
