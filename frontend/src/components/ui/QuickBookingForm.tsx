@@ -256,7 +256,7 @@ export function QuickBookingForm() {
 
             <div className="space-y-5">
                 {/* Trip Type Buttons */}
-                <div className="flex gap-2">
+                <div className="flex gap-2 justify-center">
                     {tripTypeOptions.map((option) => {
                         const isSelected = tripType === option.id;
                         return (
