@@ -5,8 +5,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider, AuthModalProvider } from '@/features/auth';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 
-
-
 // Layouts - from layouts folder
 import {
     PublicLayout,
