@@ -311,14 +311,6 @@ export function Navbar({
                                                     : "text-gray-500 group-hover:text-gray-700"
                                             )}
                                         />
-                                        {/* Active dot */}
-                                        {isActive && (
-                                            <motion.div
-                                                initial={{ scale: 0 }}
-                                                animate={{ scale: 1 }}
-                                                className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-primary-600 rounded-full"
-                                            />
-                                        )}
                                     </motion.div>
 
                                     {/* Label */}
