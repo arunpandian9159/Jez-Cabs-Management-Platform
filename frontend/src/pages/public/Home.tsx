@@ -2,9 +2,6 @@ import { Link } from 'react-router-dom';
 import { DotLottiePlayer } from '@dotlottie/react-player';
 import '@dotlottie/react-player/dist/index.css';
 import {
-    MapPin,
-    Calendar,
-    User,
     Zap,
     Clock,
     Map,
@@ -22,6 +19,7 @@ import {
     CheckCircle,
     ArrowRight,
 } from 'lucide-react';
+import { QuickBookingForm } from '../../components/ui/QuickBookingForm';
 import { ROUTES } from '../../lib/constants';
 
 // Services data
@@ -262,130 +260,8 @@ export function Home() {
                                 transparency and safety. For cab owners, manage your fleet and drivers effortlessly.
                             </p>
 
-                            {/* Quick Booking Form - COMPACT ON MOBILE */}
-                            <div
-                                className="p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl animate-fade-in-up group"
-                                style={{
-                                    background: 'rgba(255, 255, 255, 0.85)',
-                                    backdropFilter: 'blur(20px)',
-                                    WebkitBackdropFilter: 'blur(20px)',
-                                    border: '1px solid rgba(255, 255, 255, 0.8)',
-                                    boxShadow: '0 15px 30px -8px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(37, 99, 235, 0.05)',
-                                    animationDelay: '0.4s',
-                                    animationFillMode: 'both'
-                                }}
-                            >
-                                <div className="space-y-3 sm:space-y-4">
-                                    {/* Pickup Location - COMPACT ON MOBILE */}
-                                    <div
-                                        className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-lg sm:rounded-xl transition-all duration-300 hover:shadow-md group/input"
-                                        style={{
-                                            backgroundColor: 'rgba(248, 250, 252, 0.8)',
-                                            border: '1px solid #e2e8f0'
-                                        }}
-                                        onFocus={(e) => {
-                                            e.currentTarget.style.borderColor = '#2563eb';
-                                            e.currentTarget.style.boxShadow = '0 0 0 3px rgba(37, 99, 235, 0.1)';
-                                        }}
-                                        onBlur={(e) => {
-                                            e.currentTarget.style.borderColor = '#e2e8f0';
-                                            e.currentTarget.style.boxShadow = 'none';
-                                        }}
-                                    >
-                                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-md sm:rounded-lg flex items-center justify-center bg-gradient-to-br from-blue-500 to-blue-600 shadow-sm flex-shrink-0">
-                                            <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-                                        </div>
-                                        <input
-                                            type="text"
-                                            placeholder="Where from?"
-                                            className="bg-transparent flex-1 outline-none text-sm sm:text-base font-medium placeholder:font-normal focus:outline-none focus:ring-0 border-none min-w-0"
-                                            style={{ color: '#0f172a', boxShadow: 'none' }}
-                                        />
-                                    </div>
-
-                                    {/* Drop Location - COMPACT ON MOBILE */}
-                                    <div
-                                        className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-lg sm:rounded-xl transition-all duration-300 hover:shadow-md"
-                                        style={{
-                                            backgroundColor: 'rgba(248, 250, 252, 0.8)',
-                                            border: '1px solid #e2e8f0'
-                                        }}
-                                    >
-                                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-md sm:rounded-lg flex items-center justify-center bg-gradient-to-br from-teal-500 to-teal-600 shadow-sm flex-shrink-0">
-                                            <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-                                        </div>
-                                        <input
-                                            type="text"
-                                            placeholder="Where to?"
-                                            className="bg-transparent flex-1 outline-none text-sm sm:text-base font-medium placeholder:font-normal focus:outline-none focus:ring-0 border-none min-w-0"
-                                            style={{ color: '#0f172a', boxShadow: 'none' }}
-                                        />
-                                    </div>
-
-                                    {/* Date and Passengers - COMPACT ON MOBILE */}
-                                    <div className="grid grid-cols-2 gap-2 sm:gap-4">
-                                        <div
-                                            className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-lg sm:rounded-xl transition-all duration-300 hover:shadow-md"
-                                            style={{
-                                                backgroundColor: 'rgba(248, 250, 252, 0.8)',
-                                                border: '1px solid #e2e8f0'
-                                            }}
-                                        >
-                                            <Calendar className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" style={{ color: '#2563eb' }} />
-                                            <input
-                                                type="date"
-                                                className="bg-transparent flex-1 outline-none text-xs sm:text-sm font-medium focus:outline-none focus:ring-0 border-none min-w-0"
-                                                style={{ color: '#0f172a', boxShadow: 'none' }}
-                                            />
-                                        </div>
-
-                                        <div
-                                            className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-4 rounded-lg sm:rounded-xl transition-all duration-300 hover:shadow-md"
-                                            style={{
-                                                backgroundColor: 'rgba(248, 250, 252, 0.8)',
-                                                border: '1px solid #e2e8f0'
-                                            }}
-                                        >
-                                            <User className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" style={{ color: '#2563eb' }} />
-                                            <select
-                                                className="bg-transparent flex-1 outline-none text-xs sm:text-sm font-medium cursor-pointer focus:outline-none focus:ring-0 border-none min-w-0"
-                                                style={{ color: '#0f172a', boxShadow: 'none' }}
-                                            >
-                                                <option>1 Passenger</option>
-                                                <option>2 Passengers</option>
-                                                <option>3 Passengers</option>
-                                                <option>4+ Passengers</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    {/* Book Now Button - COMPACT ON MOBILE */}
-                                    <Link to={ROUTES.REGISTER} className="block">
-                                        <button
-                                            className="w-full py-3 sm:py-4 text-white rounded-lg sm:rounded-xl transition-all font-semibold text-sm sm:text-lg group/btn relative overflow-hidden"
-                                            style={{
-                                                backgroundColor: '#0177c6',
-                                                boxShadow: '0 4px 15px rgba(1, 119, 198, 0.3)'
-                                            }}
-                                            onMouseEnter={(e) => {
-                                                e.currentTarget.style.transform = 'translateY(-2px)';
-                                                e.currentTarget.style.backgroundColor = '#025fa1';
-                                                e.currentTarget.style.boxShadow = '0 8px 25px rgba(1, 119, 198, 0.4)';
-                                            }}
-                                            onMouseLeave={(e) => {
-                                                e.currentTarget.style.transform = 'translateY(0)';
-                                                e.currentTarget.style.backgroundColor = '#0177c6';
-                                                e.currentTarget.style.boxShadow = '0 4px 15px rgba(1, 119, 198, 0.3)';
-                                            }}
-                                        >
-                                            <span className="relative z-10 flex items-center justify-center gap-2">
-                                                Book Now
-                                                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover/btn:translate-x-1" />
-                                            </span>
-                                        </button>
-                                    </Link>
-                                </div>
-                            </div>
+                            {/* Quick Booking Form - Enhanced */}
+                            <QuickBookingForm />
 
                         </div>
 
