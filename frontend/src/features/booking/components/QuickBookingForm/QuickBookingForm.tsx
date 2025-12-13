@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { format, differenceInDays } from 'date-fns';
 import {
     MapPin,
@@ -15,7 +14,7 @@ import {
 } from 'lucide-react';
 import { Calendar as CalendarComponent } from './Calendar';
 import { cn } from '@/shared/utils';
-import { ROUTES } from '@/shared/constants';
+import { useAuthModal } from '@/features/auth';
 import type { DateRange } from 'react-day-picker';
 
 
@@ -200,6 +199,7 @@ function LocationInput({
 }
 
 export function QuickBookingForm() {
+    const { openRegister } = useAuthModal();
     const [tripType, setTripType] = useState<TripType>('oneway');
     const [fromLocation, setFromLocation] = useState('');
     const [toLocation, setToLocation] = useState('');
@@ -433,8 +433,8 @@ export function QuickBookingForm() {
                 </div>
 
                 {/* Search Button */}
-                <Link to={ROUTES.REGISTER} className="block">
                     <button
+                        onClick={() => openRegister()}
                         className="w-full py-4 text-white rounded-xl transition-all duration-200 font-semibold text-base flex items-center justify-center gap-2 hover:opacity-95 active:scale-[0.99]"
                         style={{
                             background: '#3B82F6',
@@ -444,7 +444,6 @@ export function QuickBookingForm() {
                         Search Cabs
                         <ArrowRight className="w-5 h-5" />
                     </button>
-                </Link>
 
                 {/* Footer Links with Lucide Icons */}
                 <div className="flex items-center justify-center gap-8 pt-2">

@@ -1,9 +1,10 @@
-import { Link } from 'react-router-dom';
 import { Car, Users, Star, CheckCircle, ArrowRight } from 'lucide-react';
 import { ownerFeatures, ownerBenefits, FeatureItem } from '../../pages/homeData';
-import { ROUTES } from '@/shared/constants';
+import { useAuthModal } from '@/features/auth';
 
 export function ForOwnersSection() {
+    const { openRegister } = useAuthModal();
+
     return (
         <section
             id="for-owners"
@@ -75,27 +76,26 @@ export function ForOwnersSection() {
                             ))}
                         </div>
 
-                        <Link to={ROUTES.REGISTER}>
-                            <button
-                                className="group px-5 py-3 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-white rounded-lg sm:rounded-xl transition-all font-semibold text-sm sm:text-base lg:text-lg inline-flex items-center gap-2 sm:gap-3 shadow-xl"
-                                style={{
-                                    background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)',
-                                    boxShadow: '0 8px 30px rgba(37, 99, 235, 0.4)'
-                                }}
-                                onMouseEnter={(e) => {
-                                    e.currentTarget.style.transform = 'translateY(-2px)';
-                                    e.currentTarget.style.boxShadow = '0 12px 40px rgba(37, 99, 235, 0.5)';
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.currentTarget.style.transform = 'translateY(0)';
-                                    e.currentTarget.style.boxShadow = '0 8px 30px rgba(37, 99, 235, 0.4)';
-                                }}
-                            >
-                                <span className="hidden sm:inline">Start Managing Your Fleet</span>
-                                <span className="sm:hidden">Start Now</span>
-                                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
-                            </button>
-                        </Link>
+                        <button
+                            onClick={openRegister}
+                            className="group px-5 py-3 sm:px-6 sm:py-3 lg:px-8 lg:py-4 text-white rounded-lg sm:rounded-xl transition-all font-semibold text-sm sm:text-base lg:text-lg inline-flex items-center gap-2 sm:gap-3 shadow-xl cursor-pointer"
+                            style={{
+                                background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)',
+                                boxShadow: '0 8px 30px rgba(37, 99, 235, 0.4)'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'translateY(-2px)';
+                                e.currentTarget.style.boxShadow = '0 12px 40px rgba(37, 99, 235, 0.5)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'translateY(0)';
+                                e.currentTarget.style.boxShadow = '0 8px 30px rgba(37, 99, 235, 0.4)';
+                            }}
+                        >
+                            <span className="hidden sm:inline">Start Managing Your Fleet</span>
+                            <span className="sm:hidden">Start Now</span>
+                            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
+                        </button>
                     </div>
 
                     {/* Right Content */}
@@ -170,27 +170,26 @@ export function ForOwnersSection() {
                                     Need professional drivers for your fleet? Browse our network of verified,
                                     experienced drivers and hire them directly.
                                 </p>
-                                <Link to={ROUTES.REGISTER}>
-                                    <button
-                                        className="px-4 py-2 sm:px-5 sm:py-2.5 lg:px-6 lg:py-3 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base transition-all inline-flex items-center gap-2 group/btn"
-                                        style={{
-                                            backgroundColor: '#ffffff',
-                                            color: '#1d4ed8',
-                                            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)'
-                                        }}
-                                        onMouseEnter={(e) => {
-                                            e.currentTarget.style.transform = 'translateY(-2px)';
-                                            e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.3)';
-                                        }}
-                                        onMouseLeave={(e) => {
-                                            e.currentTarget.style.transform = 'translateY(0)';
-                                            e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.2)';
-                                        }}
-                                    >
-                                        Browse Drivers
-                                        <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 group-hover/btn:translate-x-1 transition-transform" />
-                                    </button>
-                                </Link>
+                                <button
+                                    onClick={openRegister}
+                                    className="px-4 py-2 sm:px-5 sm:py-2.5 lg:px-6 lg:py-3 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-base transition-all inline-flex items-center gap-2 group/btn cursor-pointer"
+                                    style={{
+                                        backgroundColor: '#ffffff',
+                                        color: '#1d4ed8',
+                                        boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        e.currentTarget.style.transform = 'translateY(-2px)';
+                                        e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.3)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.currentTarget.style.transform = 'translateY(0)';
+                                        e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.2)';
+                                    }}
+                                >
+                                    Browse Drivers
+                                    <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 group-hover/btn:translate-x-1 transition-transform" />
+                                </button>
                             </div>
                         </div>
                     </div>
