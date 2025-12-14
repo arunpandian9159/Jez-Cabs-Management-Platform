@@ -21,7 +21,7 @@ import { JwtAuthGuard } from '../iam/guards/jwt-auth.guard';
 @Controller('users')
 @UseGuards(JwtAuthGuard)
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   // ==================== Saved Addresses ====================
 
@@ -105,5 +105,12 @@ export class UsersController {
   async getTransactions(@Request() req: any, @Query('limit') limit?: string) {
     const parsedLimit = limit ? parseInt(limit, 10) : 20;
     return this.usersService.getTransactions(req.user.id, parsedLimit);
+  }
+
+  // ==================== Payment Stats ====================
+
+  @Get('payment-stats')
+  async getPaymentStats(@Request() req: any) {
+    return this.usersService.getPaymentStats(req.user.id);
   }
 }

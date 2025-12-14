@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Between } from 'typeorm';
 import {
   SavedAddress,
   RecentDestination,
@@ -8,6 +8,7 @@ import {
   Wallet,
   Transaction,
 } from './entities';
+import { Payment } from '../payments/entities/payment.entity';
 import { PaymentMethodType } from './entities/payment-method.entity';
 import {
   CreateAddressDto,
@@ -28,7 +29,9 @@ export class UsersService {
     private walletRepository: Repository<Wallet>,
     @InjectRepository(Transaction)
     private transactionRepository: Repository<Transaction>,
-  ) {}
+    @InjectRepository(Payment)
+    private paymentRepository: Repository<Payment>,
+  ) { }
 
   // ==================== Saved Addresses ====================
 
@@ -267,5 +270,68 @@ export class UsersService {
     });
 
     return this.transactionRepository.save(transaction);
+  }
+
+  // ==================== Payment Stats (from payments table) ====================
+
+  async getPaymentStats(userId: string): Promise<{
+    thisMonth: number;
+    lastMonth: number;
+    total: number;
+  }> {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth();
+
+    // Start of current month
+    const startOfCurrentMonth = new Date(currentYear, currentMonth, 1);
+    // Start of next month (end of current month)
+    const startOfNextMonth = new Date(currentYear, currentMonth + 1, 1);
+    // Start of last month
+    const startOfLastMonth = new Date(currentYear, currentMonth - 1, 1);
+
+    // Query for this month's payments
+    const thisMonthPayments = await this.paymentRepository.find({
+      where: {
+        payer_id: userId,
+        created_at: Between(startOfCurrentMonth, startOfNextMonth),
+      },
+    });
+
+    // Query for last month's payments
+    const lastMonthPayments = await this.paymentRepository.find({
+      where: {
+        payer_id: userId,
+        created_at: Between(startOfLastMonth, startOfCurrentMonth),
+      },
+    });
+
+    // Query for all payments (total)
+    const allPayments = await this.paymentRepository.find({
+      where: {
+        payer_id: userId,
+      },
+    });
+
+    const thisMonthTotal = thisMonthPayments.reduce(
+      (acc, payment) => acc + Number(payment.amount || 0),
+      0,
+    );
+
+    const lastMonthTotal = lastMonthPayments.reduce(
+      (acc, payment) => acc + Number(payment.amount || 0),
+      0,
+    );
+
+    const total = allPayments.reduce(
+      (acc, payment) => acc + Number(payment.amount || 0),
+      0,
+    );
+
+    return {
+      thisMonth: thisMonthTotal,
+      lastMonth: lastMonthTotal,
+      total,
+    };
   }
 }

@@ -139,6 +139,17 @@ export const usersService = {
     const params = limit ? `?limit=${limit}` : '';
     return apiClient.get<Transaction[]>(`/users/transactions${params}`);
   },
+
+  // Get payment stats (from payments table)
+  async getPaymentStats(): Promise<PaymentStats> {
+    return apiClient.get<PaymentStats>('/users/payment-stats');
+  },
 };
+
+export interface PaymentStats {
+  thisMonth: number;
+  lastMonth: number;
+  total: number;
+}
 
 export default usersService;

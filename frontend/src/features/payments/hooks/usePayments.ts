@@ -21,6 +21,12 @@ export interface TransactionDisplay {
   paymentMethod: string;
 }
 
+export interface PaymentStatsDisplay {
+  thisMonth: number;
+  lastMonth: number;
+  total: number;
+}
+
 export function usePayments() {
   const [activeTab, setActiveTab] = useState('transactions');
   const [showAddCard, setShowAddCard] = useState(false);
@@ -30,6 +36,11 @@ export function usePayments() {
   );
   const [transactions, setTransactions] = useState<TransactionDisplay[]>([]);
   const [walletBalance, setWalletBalance] = useState(0);
+  const [paymentStats, setPaymentStats] = useState<PaymentStatsDisplay>({
+    thisMonth: 0,
+    lastMonth: 0,
+    total: 0,
+  });
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchPaymentData = useCallback(async () => {
@@ -61,6 +72,14 @@ export function usePayments() {
       );
       const wallet = await usersService.getWalletBalance();
       setWalletBalance(wallet.balance);
+
+      // Fetch payment stats from payments table
+      const stats = await usersService.getPaymentStats();
+      setPaymentStats({
+        thisMonth: stats.thisMonth || 0,
+        lastMonth: stats.lastMonth || 0,
+        total: stats.total || 0,
+      });
     } catch (error) {
       console.error('Error fetching payment data:', error);
     } finally {
@@ -89,6 +108,7 @@ export function usePayments() {
     paymentMethods,
     transactions,
     walletBalance,
+    paymentStats,
     isLoading,
     filteredTransactions,
     pendingTransactions,
