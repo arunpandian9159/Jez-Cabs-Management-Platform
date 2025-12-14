@@ -1,18 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { z } from 'zod';
-import {
-  X,
-  Sparkles,
-  Shield,
-  Clock,
-  AlertCircle,
-  Zap,
-  Heart,
-  Github,
-} from 'lucide-react';
-import { DotLottiePlayer } from '@dotlottie/react-player';
-import '@dotlottie/react-player/dist/index.css';
+import { X, ArrowLeft } from 'lucide-react';
 import { useAuth } from '@/features/auth';
 
 import { LoginForm } from './LoginForm';
@@ -58,21 +47,6 @@ export const roleOptions = [
   { value: 'trip_planner', label: '🗺️ Trip Planner - Plan group trips' },
 ];
 
-const benefits = [
-  {
-    icon: Zap,
-    text: 'Book rides instantly with transparent pricing',
-    color: 'text-yellow-400',
-  },
-  {
-    icon: Clock,
-    text: 'Rent cabs for hours, days, or weeks',
-    color: 'text-teal-400',
-  },
-  { icon: Shield, text: '24/7 customer support', color: 'text-green-400' },
-  { icon: Heart, text: 'Verified drivers and vehicles', color: 'text-red-400' },
-];
-
 // ============ PASSWORD STRENGTH CHECKER ============
 export const getPasswordStrength = (
   password: string
@@ -101,58 +75,15 @@ interface AuthModalProps {
   onSwitchModal: (type: AuthModalType) => void;
 }
 
-// ============ BACKDROP COMPONENT ============
-const Backdrop = ({
-  children,
-  onClose,
-}: {
-  children: React.ReactNode;
-  onClose: () => void;
-}) => (
-  <motion.div
-    className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gradient-to-br from-slate-900/90 via-teal-900/80 to-slate-900/90 backdrop-blur-md"
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
-    onClick={onClose}
-  >
-    {/* Animated background particles */}
-    <div className="absolute inset-0 overflow-hidden">
-      {[...Array(20)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-2 h-2 bg-teal-400/20 rounded-full"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-          }}
-          animate={{
-            y: [0, -30, 0],
-            opacity: [0.2, 0.5, 0.2],
-          }}
-          transition={{
-            duration: 3 + Math.random() * 2,
-            repeat: Infinity,
-            delay: Math.random() * 2,
-          }}
-        />
-      ))}
-    </div>
-    {children}
-  </motion.div>
-);
-
 // ============ SOCIAL LOGIN BUTTONS ============
 export const SocialLoginButtons = () => (
-  <div className="space-y-3">
+  <div className="space-y-4">
     <div className="relative">
       <div className="absolute inset-0 flex items-center">
         <div className="w-full border-t border-gray-200"></div>
       </div>
       <div className="relative flex justify-center text-sm">
-        <span className="px-4 bg-white text-gray-500 font-medium">
-          Or continue with
-        </span>
+        <span className="px-4 bg-white text-gray-400 font-medium">or</span>
       </div>
     </div>
 
@@ -160,7 +91,7 @@ export const SocialLoginButtons = () => (
       <motion.button
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
-        className="flex items-center justify-center gap-2 px-4 py-2.5 border-2 border-gray-200 rounded-xl hover:border-gray-300 hover:bg-gray-50 transition-all group"
+        className="flex items-center justify-center gap-2 px-4 py-3 border border-gray-200 rounded-xl hover:border-gray-300 hover:bg-gray-50 transition-all"
       >
         <svg className="w-5 h-5" viewBox="0 0 24 24">
           <path
@@ -180,16 +111,22 @@ export const SocialLoginButtons = () => (
             d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
           />
         </svg>
-        <span className="text-sm font-medium text-gray-700">Google</span>
+        <span className="text-sm font-medium text-gray-600">
+          Google
+        </span>
       </motion.button>
 
       <motion.button
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
-        className="flex items-center justify-center gap-2 px-4 py-2.5 border-2 border-gray-200 rounded-xl hover:border-gray-300 hover:bg-gray-50 transition-all group"
+        className="flex items-center justify-center gap-2 px-4 py-3 border border-gray-200 rounded-xl hover:border-gray-300 hover:bg-gray-50 transition-all"
       >
-        <Github className="w-5 h-5 text-gray-700" />
-        <span className="text-sm font-medium text-gray-700">GitHub</span>
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="#1877F2">
+          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+        </svg>
+        <span className="text-sm font-medium text-gray-600">
+          Facebook
+        </span>
       </motion.button>
     </div>
   </div>
@@ -214,13 +151,31 @@ export function AuthModal({
     };
   }, [isOpen]);
 
+  // Clear error when modal type changes or modal closes
+  useEffect(() => {
+    setError(null);
+  }, [modalType, isOpen]);
+
+  // Detect mobile screen
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth < 768;
+    }
+    return false;
+  });
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const isRegister = modalType === 'register';
 
   const handleLogin = async (data: LoginFormData) => {
     setError(null);
     try {
       await login(data);
-      // Don't call onClose() - navigation will handle modal state
     } catch (err: any) {
       setError(err?.message || 'Login failed');
     }
@@ -229,11 +184,8 @@ export function AuthModal({
   const handleRegister = async (data: RegisterFormData) => {
     setError(null);
     try {
-      // Remove confirmPassword as it's not part of the backend DTO
-      // and causes 400 Bad Request due to forbidNonWhitelisted: true
       const { confirmPassword, ...registerData } = data;
       await registerUser(registerData as any);
-      // Don't call onClose() - navigation will handle modal state
     } catch (err: any) {
       setError(err?.message || 'Registration failed');
     }
@@ -244,258 +196,238 @@ export function AuthModal({
   return (
     <AnimatePresence>
       {isOpen && (
-        <Backdrop onClose={onClose}>
+        <motion.div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-0 md:p-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          {/* Backdrop with gradient */}
           <motion.div
-            className="relative w-full max-w-6xl h-[650px] bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden flex border border-white/20"
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            className="absolute inset-0 bg-gradient-to-br from-slate-800/90 via-blue-900/80 to-slate-800/90 backdrop-blur-md"
+            onClick={onClose}
+          />
+
+          {/* Modal Container */}
+          <motion.div
+            className="relative w-full h-full md:w-full md:max-w-[1000px] md:h-[680px] bg-white md:rounded-[50px] shadow-2xl overflow-hidden flex"
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close Button */}
+            {/* Close Button - Desktop */}
             <motion.button
               whileHover={{ scale: 1.1, rotate: 90 }}
               whileTap={{ scale: 0.9 }}
               onClick={onClose}
-              className="absolute top-6 right-6 z-50 p-2.5 rounded-xl bg-white/80 hover:bg-white shadow-lg hover:shadow-xl transition-all border border-gray-200"
+              className="absolute top-4 right-4 z-50 p-2 rounded-full bg-white/90 hover:bg-white shadow-lg hover:shadow-xl transition-all md:hidden"
             >
               <X className="w-5 h-5 text-gray-600" />
             </motion.button>
 
-            {/* Error Toast (only for registration - login errors show inline) */}
-            <AnimatePresence>
-              {error && isRegister && (
+            {/* Desktop Layout - Side by Side with Sliding */}
+            {!isMobile && (
+              <>
+                {/* Image Panel - Slides between left and right */}
                 <motion.div
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  className="absolute top-6 left-1/2 -translate-x-1/2 z-50 bg-red-50 text-red-600 px-6 py-3 rounded-xl shadow-lg border-2 border-red-200 text-sm font-medium flex items-center gap-2"
-                >
-                  <AlertCircle className="w-4 h-4" />
-                  {error}
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Info Panel (Gradient Side with Blue/Teal Theme) */}
-            <motion.div
-              className="absolute top-0 bottom-0 w-[42%] bg-gradient-to-br from-blue-600 via-teal-500 to-teal-600 text-white z-20 flex flex-col justify-center p-12 overflow-hidden"
-              initial={false}
-              animate={{
-                left: isRegister ? '0%' : '58%',
-                borderTopRightRadius: isRegister ? '0px' : '24px',
-                borderBottomRightRadius: isRegister ? '0px' : '24px',
-                borderTopLeftRadius: isRegister ? '24px' : '0px',
-                borderBottomLeftRadius: isRegister ? '24px' : '0px',
-              }}
-              transition={{ type: 'spring', stiffness: 260, damping: 30 }}
-            >
-              {/* Animated gradient overlay */}
-              <div className="absolute inset-0 opacity-30">
-                <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent"></div>
-                <motion.div
-                  className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1),transparent_50%)]"
+                  className="absolute top-2 bottom-2 w-[45%] overflow-hidden rounded-3xl z-10"
+                  initial={false}
                   animate={{
-                    scale: [1, 1.2, 1],
-                    opacity: [0.3, 0.5, 0.3],
+                    left: isRegister ? '8px' : 'auto',
+                    right: isRegister ? 'auto' : '8px',
                   }}
-                  transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
+                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                  style={{
+                    left: isRegister ? '8px' : 'auto',
+                    right: isRegister ? 'auto' : '8px',
                   }}
-                />
-              </div>
+                >
+                  <div className="relative w-full h-full rounded-[50px] overflow-hidden">
+                    {/* Background Image */}
+                    <AnimatePresence mode="wait">
+                      <motion.img
+                        key={isRegister ? 'register-img' : 'login-img'}
+                        src={
+                          isRegister
+                            ? '/Pink Urban Hustle.png'
+                            : '/Night City Taxi Scene.png'
+                        }
+                        alt="Auth background"
+                        className="absolute inset-0 w-full h-full object-cover"
+                        initial={{ opacity: 0, scale: 1.1 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 1.1 }}
+                        transition={{ duration: 0.5 }}
+                      />
+                    </AnimatePresence>
 
-              <AnimatePresence mode="wait">
-                {isRegister ? (
-                  <motion.div
-                    key="register-info"
-                    initial={{ opacity: 0, x: -30 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -30 }}
-                    transition={{ duration: 0.4 }}
-                    className="relative z-10"
-                  >
+                    {/* Dark Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-slate-900/30 to-slate-900/70" />
+
+                    {/* Back Button for Register - positioned on image */}
+                    {isRegister && (
+                      <motion.button
+                        className="absolute top-6 left-6 p-2 rounded-lg bg-white/20 hover:bg-white/30 backdrop-blur-sm transition-colors z-20"
+                        onClick={onClose}
+                        whileHover={{ x: -2 }}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.3 }}
+                      >
+                        <ArrowLeft className="w-5 h-5 text-white" />
+                      </motion.button>
+                    )}
+
+                    {/* Cancel Button for Login - positioned on image */}
+                    {!isRegister && (
+                      <motion.button
+                        className="absolute top-6 right-6 p-2 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm transition-colors z-20"
+                        onClick={onClose}
+                        whileHover={{ scale: 1.1, rotate: 90 }}
+                        whileTap={{ scale: 0.9 }}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.3 }}
+                      >
+                        <X className="w-5 h-5 text-white" />
+                      </motion.button>
+                    )}
+
+                    {/* Logo */}
                     <motion.div
-                      className="mb-8"
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: 0.2, type: 'spring' }}
-                    >
-                      <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm mb-6 shadow-xl">
-                        <Sparkles className="w-10 h-10 text-white" />
-                      </div>
-                      <h2 className="text-4xl font-bold mb-4 leading-tight">
-                        Start Your Journey
-                      </h2>
-                      <p className="text-teal-100 leading-relaxed text-lg">
-                        Join thousands of satisfied users who trust Jez Cabs for
-                        their daily commute and travel needs.
-                      </p>
-                    </motion.div>
-                    <div className="space-y-5">
-                      {benefits.map((item, idx) => (
-                        <motion.div
-                          key={idx}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: 0.3 + idx * 0.1 }}
-                          className="flex items-center gap-4"
-                        >
-                          <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center backdrop-blur-sm shadow-lg">
-                            <item.icon className={`w-5 h-5 ${item.color}`} />
-                          </div>
-                          <span className="text-sm font-medium text-teal-50">
-                            {item.text}
-                          </span>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="login-info"
-                    initial={{ opacity: 0, x: 30 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 30 }}
-                    transition={{ duration: 0.4 }}
-                    className="relative z-10 flex flex-col items-center justify-center h-full px-8"
-                  >
-                    {/* Welcome Text */}
-                    <motion.div
-                      className="text-center mb-6"
+                      className="absolute top-8 left-8"
                       initial={{ opacity: 0, y: -20 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.3, duration: 0.5 }}
+                      transition={{ delay: 0.2 }}
                     >
-                      <motion.h3
-                        className="text-3xl font-bold text-white mb-3 leading-tight"
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{
-                          delay: 0.4,
-                          type: 'spring',
-                          stiffness: 200,
-                        }}
+                    </motion.div>
+                  </div>
+                </motion.div>
+
+                {/* Form Panel - Slides between left and right */}
+                <motion.div
+                  className="absolute top-0 bottom-0 w-[55%] bg-white flex flex-col justify-center p-6 lg:p-10"
+                  initial={false}
+                  animate={{
+                    left: isRegister ? '45%' : '0%',
+                  }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                >
+                  {/* Close Button - only show for register since login has cancel on image */}
+                  {isRegister && (
+                    <motion.button
+                      whileHover={{ scale: 1.1, rotate: 90 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={onClose}
+                      className="absolute top-6 right-6 p-2 rounded-full hover:bg-gray-100 transition-all"
+                    >
+                      <X className="w-5 h-5 text-gray-600" />
+                    </motion.button>
+                  )}
+
+                  {/* Form Content */}
+                  <AnimatePresence mode="wait">
+                    {isRegister ? (
+                      <motion.div
+                        key="register-form"
+                        initial={{ opacity: 0, x: 30 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 30 }}
+                        transition={{ duration: 0.3 }}
+                        className="h-full"
                       >
-                        Welcome to Jez Cabs
-                      </motion.h3>
-                      <motion.p
-                        className="text-teal-100 text-base leading-relaxed"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.5 }}
+                        <RegisterForm
+                          onSubmit={handleRegister}
+                          isLoading={isLoading}
+                          onSwitchModal={onSwitchModal}
+                          error={error}
+                        />
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        key="login-form"
+                        initial={{ opacity: 0, x: -30 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -30 }}
+                        transition={{ duration: 0.3 }}
+                        className="h-full flex items-center justify-center"
                       >
-                        Your journey starts here
-                      </motion.p>
-                    </motion.div>
+                        <LoginForm
+                          onSubmit={handleLogin}
+                          isLoading={isLoading}
+                          onSwitchModal={onSwitchModal}
+                          error={error}
+                        />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              </>
+            )}
 
-                    {/* Lottie Animation */}
-                    <motion.div
-                      className="w-full flex items-center justify-center my-4"
-                      initial={{ scale: 0.8, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{
-                        delay: 0.2,
-                        type: 'spring',
-                        stiffness: 200,
-                      }}
-                    >
-                      <DotLottiePlayer
-                        src="/Login.lottie"
-                        autoplay
-                        loop
-                        style={{ width: '100%', height: 'auto' }}
-                      />
-                    </motion.div>
+            {/* Mobile Layout - Full Screen Form with Background */}
+            {isMobile && (
+              <div className="w-full h-full bg-white flex flex-col">
+                {/* Mobile Header with Background Image */}
+                <div className="relative h-40 shrink-0">
+                  <img
+                    src={
+                      isRegister
+                        ? '/Pink Urban Hustle.png'
+                        : '/Night City Taxi Scene.png'
+                    }
+                    alt="Auth background"
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 to-slate-900/80" />
+                  <div className="absolute top-4 left-4">
+                  </div>
+                </div>
 
-                    {/* Feature Highlights */}
-                    <motion.div
-                      className="space-y-3 mt-6"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.6, duration: 0.5 }}
-                    >
-                      {[
-                        {
-                          icon: Zap,
-                          text: 'Instant booking & real-time tracking',
-                        },
-                        {
-                          icon: Shield,
-                          text: 'Safe & secure rides guaranteed',
-                        },
-                        { icon: Clock, text: '24/7 customer support' },
-                      ].map((feature, idx) => (
-                        <motion.div
-                          key={idx}
-                          className="flex items-center gap-3"
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: 0.7 + idx * 0.1 }}
-                        >
-                          <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center backdrop-blur-sm">
-                            <feature.icon className="w-4 h-4 text-white" />
-                          </div>
-                          <span className="text-sm font-medium text-teal-50">
-                            {feature.text}
-                          </span>
-                        </motion.div>
-                      ))}
-                    </motion.div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-
-            {/* Form Panel (White Side) */}
-            <motion.div
-              className="absolute top-0 bottom-0 w-[58%] bg-gradient-to-br from-white to-gray-50/50 z-10 flex flex-col justify-center p-12"
-              initial={false}
-              animate={{
-                left: isRegister ? '42%' : '0%',
-              }}
-              transition={{ type: 'spring', stiffness: 260, damping: 30 }}
-            >
-              <AnimatePresence mode="wait">
-                {isRegister ? (
-                  <motion.div
-                    key="register-form"
-                    initial={{ opacity: 0, x: 30 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 30 }}
-                    transition={{ duration: 0.3 }}
-                    className="h-full"
-                  >
-                    <RegisterForm
-                      onSubmit={handleRegister}
-                      isLoading={isLoading}
-                      onSwitchModal={onSwitchModal}
-                    />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="login-form"
-                    initial={{ opacity: 0, x: -30 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -30 }}
-                    transition={{ duration: 0.3 }}
-                    className="h-full flex items-center"
-                  >
-                    <LoginForm
-                      onSubmit={handleLogin}
-                      isLoading={isLoading}
-                      onSwitchModal={onSwitchModal}
-                      error={error}
-                    />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
+                {/* Mobile Form */}
+                <div className="flex-1 p-6 pt-8 overflow-y-auto">
+                  <AnimatePresence mode="wait">
+                    {isRegister ? (
+                      <motion.div
+                        key="register-form-mobile"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.3 }}
+                        className="h-full"
+                      >
+                        <RegisterForm
+                          onSubmit={handleRegister}
+                          isLoading={isLoading}
+                          onSwitchModal={onSwitchModal}
+                          error={error}
+                        />
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        key="login-form-mobile"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.3 }}
+                        className="h-full"
+                      >
+                        <LoginForm
+                          onSubmit={handleLogin}
+                          isLoading={isLoading}
+                          onSwitchModal={onSwitchModal}
+                          error={error}
+                        />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </div>
+            )}
           </motion.div>
-        </Backdrop>
+        </motion.div>
       )}
     </AnimatePresence>
   );
