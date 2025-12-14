@@ -14,6 +14,9 @@ import {
     Trash2,
     FileText,
     CreditCard,
+    UserCheck,
+    Clock,
+    Users,
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -24,6 +27,7 @@ import { Modal } from '@/components/ui/Modal';
 import { Avatar } from '@/components/ui/Avatar';
 import { formatCurrency, formatDate } from '@/shared/utils';
 import { useAdminDrivers } from '../hooks/useAdminDrivers';
+import { AdminPageHeader, AdminStatCard, AdminTableWrapper, tableStyles } from '../components';
 
 export function AdminDrivers() {
     const {
@@ -61,29 +65,31 @@ export function AdminDrivers() {
     const renderStars = (rating: number) => {
         return (
             <div className="flex items-center gap-1">
-                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                <span className="text-sm font-medium">{rating.toFixed(1)}</span>
+                {[1, 2, 3, 4, 5].map((star) => (
+                    <Star
+                        key={star}
+                        className={`w-4 h-4 ${star <= Math.floor(rating)
+                                ? 'fill-yellow-400 text-yellow-400'
+                                : 'fill-gray-200 text-gray-200'
+                            }`}
+                    />
+                ))}
+                <span className="text-sm font-medium ml-1">{rating.toFixed(1)}</span>
             </div>
         );
     };
 
     return (
         <div className="space-y-6">
-            <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="flex items-center justify-between"
-            >
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900 mb-1">
-                        Driver Management
-                    </h1>
-                    <p className="text-gray-500">
-                        Manage driver accounts, vehicles, and verification
-                    </p>
-                </div>
-                <Button leftIcon={<UserPlus className="w-5 h-5" />}>Add Driver</Button>
-            </motion.div>
+            <AdminPageHeader
+                title="Driver Management"
+                subtitle="Manage driver accounts, vehicles, and verification"
+                icon={UserCheck}
+                iconColor="success"
+                action={
+                    <Button leftIcon={<UserPlus className="w-5 h-5" />}>Add Driver</Button>
+                }
+            />
 
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -91,22 +97,34 @@ export function AdminDrivers() {
                 transition={{ delay: 0.1 }}
                 className="grid grid-cols-4 gap-4"
             >
-                <Card padding="md" className="text-center">
-                    <p className="text-3xl font-bold text-gray-900">{totalCount}</p>
-                    <p className="text-sm text-gray-500">Total Drivers</p>
-                </Card>
-                <Card padding="md" className="text-center">
-                    <p className="text-3xl font-bold text-success-600">{activeCount}</p>
-                    <p className="text-sm text-gray-500">Active</p>
-                </Card>
-                <Card padding="md" className="text-center">
-                    <p className="text-3xl font-bold text-warning-600">{pendingCount}</p>
-                    <p className="text-sm text-gray-500">Pending Verification</p>
-                </Card>
-                <Card padding="md" className="text-center">
-                    <p className="text-3xl font-bold text-gray-400">{inactiveCount}</p>
-                    <p className="text-sm text-gray-500">Inactive</p>
-                </Card>
+                <AdminStatCard
+                    label="Total Drivers"
+                    value={totalCount}
+                    icon={Users}
+                    color="primary"
+                    delay={0.1}
+                />
+                <AdminStatCard
+                    label="Active"
+                    value={activeCount}
+                    icon={UserCheck}
+                    color="success"
+                    delay={0.15}
+                />
+                <AdminStatCard
+                    label="Pending Verification"
+                    value={pendingCount}
+                    icon={Clock}
+                    color="warning"
+                    delay={0.2}
+                />
+                <AdminStatCard
+                    label="Inactive"
+                    value={inactiveCount}
+                    icon={Ban}
+                    color="gray"
+                    delay={0.25}
+                />
             </motion.div>
 
             <motion.div
@@ -135,114 +153,107 @@ export function AdminDrivers() {
                 />
             </motion.div>
 
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
+            <AdminTableWrapper
+                isEmpty={filteredDrivers.length === 0}
+                emptyState={{
+                    icon: UserCheck,
+                    title: 'No drivers found',
+                    description: 'Try adjusting your search or filter to find what you\'re looking for.',
+                }}
             >
-                <Card padding="none">
-                    <div className="overflow-x-auto">
-                        <table className="w-full">
-                            <thead className="bg-gray-50 border-b border-gray-200">
-                                <tr>
-                                    <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">
-                                        Driver
-                                    </th>
-                                    <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">
-                                        Vehicle
-                                    </th>
-                                    <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">
-                                        Rating
-                                    </th>
-                                    <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">
-                                        Trips
-                                    </th>
-                                    <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">
-                                        Earnings
-                                    </th>
-                                    <th className="text-left py-3 px-4 text-sm font-medium text-gray-500">
-                                        Status
-                                    </th>
-                                    <th className="text-left py-3 px-4 text-sm font-medium text-gray-500"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {filteredDrivers.map((driver, index) => (
-                                    <motion.tr
-                                        key={driver.id}
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        transition={{ delay: index * 0.05 }}
-                                        className="border-b border-gray-100 last:border-0 hover:bg-gray-50"
+                <table className={tableStyles.table}>
+                    <thead className={tableStyles.thead}>
+                        <tr>
+                            <th className={tableStyles.th}>Driver</th>
+                            <th className={tableStyles.th}>Vehicle</th>
+                            <th className={tableStyles.th}>Rating</th>
+                            <th className={tableStyles.th}>Trips</th>
+                            <th className={tableStyles.th}>Earnings</th>
+                            <th className={tableStyles.th}>Status</th>
+                            <th className={tableStyles.th}></th>
+                        </tr>
+                    </thead>
+                    <tbody className={tableStyles.tbody}>
+                        {filteredDrivers.map((driver, index) => (
+                            <motion.tr
+                                key={driver.id}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: index * 0.05 }}
+                                className={tableStyles.tr}
+                            >
+                                <td className={tableStyles.td}>
+                                    <div
+                                        className="flex items-center gap-3 cursor-pointer"
+                                        onClick={() => setSelectedDriver(driver)}
                                     >
-                                        <td className="py-3 px-4">
-                                            <div
-                                                className="flex items-center gap-3 cursor-pointer"
-                                                onClick={() => setSelectedDriver(driver)}
-                                            >
-                                                <Avatar size="sm" name={driver.name} />
-                                                <div>
-                                                    <p className="font-medium text-gray-900">
-                                                        {driver.name}
-                                                    </p>
-                                                    <p className="text-xs text-gray-500">{driver.phone}</p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="py-3 px-4">
-                                            <div className="flex items-center gap-2">
-                                                <Car className="w-4 h-4 text-gray-400" />
-                                                <div>
-                                                    <p className="text-sm text-gray-900">{driver.vehicleNumber}</p>
-                                                    <p className="text-xs text-gray-500">{driver.vehicleType}</p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="py-3 px-4">{renderStars(driver.rating)}</td>
-                                        <td className="py-3 px-4 text-sm text-gray-900 font-medium">
-                                            {driver.totalTrips.toLocaleString()}
-                                        </td>
-                                        <td className="py-3 px-4 text-sm text-gray-900 font-medium">
-                                            {formatCurrency(driver.totalEarnings)}
-                                        </td>
-                                        <td className="py-3 px-4">{getStatusBadge(driver.status)}</td>
-                                        <td className="py-3 px-4 relative">
-                                            <button
-                                                onClick={() => toggleActionMenu(driver.id)}
-                                                className="p-2 rounded-lg hover:bg-gray-100"
-                                            >
-                                                <MoreVertical className="w-4 h-4 text-gray-500" />
+                                        <Avatar size="sm" name={driver.name} />
+                                        <div>
+                                            <p className="font-medium text-gray-900">
+                                                {driver.name}
+                                            </p>
+                                            <p className="text-xs text-gray-500">{driver.phone}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td className={tableStyles.td}>
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-8 h-8 rounded-lg bg-primary-100 flex items-center justify-center">
+                                            <Car className="w-4 h-4 text-primary-600" />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm text-gray-900">{driver.vehicleNumber}</p>
+                                            <p className="text-xs text-gray-500">{driver.vehicleType}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td className={tableStyles.td}>{renderStars(driver.rating)}</td>
+                                <td className={`${tableStyles.td} ${tableStyles.tdBold}`}>
+                                    {driver.totalTrips.toLocaleString()}
+                                </td>
+                                <td className={`${tableStyles.td} ${tableStyles.tdBold}`}>
+                                    {formatCurrency(driver.totalEarnings)}
+                                </td>
+                                <td className={tableStyles.td}>{getStatusBadge(driver.status)}</td>
+                                <td className={`${tableStyles.td} relative`}>
+                                    <button
+                                        onClick={() => toggleActionMenu(driver.id)}
+                                        className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                                    >
+                                        <MoreVertical className="w-4 h-4 text-gray-500" />
+                                    </button>
+                                    {showActionMenu === driver.id && (
+                                        <motion.div
+                                            initial={{ opacity: 0, scale: 0.95 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            className="absolute right-4 top-12 bg-white border border-gray-200 rounded-xl shadow-xl py-2 z-10 min-w-[160px]"
+                                        >
+                                            <button className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50">
+                                                <Edit className="w-4 h-4" /> Edit
                                             </button>
-                                            {showActionMenu === driver.id && (
-                                                <div className="absolute right-4 top-12 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-10 min-w-[150px]">
-                                                    <button className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                                                        <Edit className="w-4 h-4" /> Edit
-                                                    </button>
-                                                    <button className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                                                        <FileText className="w-4 h-4" /> Documents
-                                                    </button>
-                                                    {driver.status === 'active' ? (
-                                                        <button className="w-full flex items-center gap-2 px-4 py-2 text-sm text-error-600 hover:bg-error-50">
-                                                            <Ban className="w-4 h-4" /> Suspend
-                                                        </button>
-                                                    ) : (
-                                                        <button className="w-full flex items-center gap-2 px-4 py-2 text-sm text-success-600 hover:bg-success-50">
-                                                            <CheckCircle className="w-4 h-4" /> Activate
-                                                        </button>
-                                                    )}
-                                                    <button className="w-full flex items-center gap-2 px-4 py-2 text-sm text-error-600 hover:bg-error-50">
-                                                        <Trash2 className="w-4 h-4" /> Delete
-                                                    </button>
-                                                </div>
+                                            <button className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50">
+                                                <FileText className="w-4 h-4" /> Documents
+                                            </button>
+                                            {driver.status === 'active' ? (
+                                                <button className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-error-600 hover:bg-error-50">
+                                                    <Ban className="w-4 h-4" /> Suspend
+                                                </button>
+                                            ) : (
+                                                <button className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-success-600 hover:bg-success-50">
+                                                    <CheckCircle className="w-4 h-4" /> Activate
+                                                </button>
                                             )}
-                                        </td>
-                                    </motion.tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </Card>
-            </motion.div>
+                                            <button className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-error-600 hover:bg-error-50">
+                                                <Trash2 className="w-4 h-4" /> Delete
+                                            </button>
+                                        </motion.div>
+                                    )}
+                                </td>
+                            </motion.tr>
+                        ))}
+                    </tbody>
+                </table>
+            </AdminTableWrapper>
 
             <Modal
                 open={!!selectedDriver}
@@ -265,22 +276,28 @@ export function AdminDrivers() {
                             </div>
                         </div>
                         <div className="grid grid-cols-2 gap-4">
-                            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                                <Mail className="w-5 h-5 text-gray-400" />
+                            <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl">
+                                <div className="w-10 h-10 rounded-lg bg-primary-100 flex items-center justify-center">
+                                    <Mail className="w-5 h-5 text-primary-600" />
+                                </div>
                                 <div>
                                     <p className="text-xs text-gray-500">Email</p>
                                     <p className="text-sm text-gray-900">{selectedDriver.email}</p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                                <Phone className="w-5 h-5 text-gray-400" />
+                            <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl">
+                                <div className="w-10 h-10 rounded-lg bg-success-100 flex items-center justify-center">
+                                    <Phone className="w-5 h-5 text-success-600" />
+                                </div>
                                 <div>
                                     <p className="text-xs text-gray-500">Phone</p>
                                     <p className="text-sm text-gray-900">{selectedDriver.phone}</p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                                <Car className="w-5 h-5 text-gray-400" />
+                            <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl">
+                                <div className="w-10 h-10 rounded-lg bg-accent-100 flex items-center justify-center">
+                                    <Car className="w-5 h-5 text-accent-600" />
+                                </div>
                                 <div>
                                     <p className="text-xs text-gray-500">Vehicle</p>
                                     <p className="text-sm text-gray-900">
@@ -288,8 +305,10 @@ export function AdminDrivers() {
                                     </p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                                <Calendar className="w-5 h-5 text-gray-400" />
+                            <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl">
+                                <div className="w-10 h-10 rounded-lg bg-warning-100 flex items-center justify-center">
+                                    <Calendar className="w-5 h-5 text-warning-600" />
+                                </div>
                                 <div>
                                     <p className="text-xs text-gray-500">Joined</p>
                                     <p className="text-sm text-gray-900">
@@ -297,15 +316,19 @@ export function AdminDrivers() {
                                     </p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                                <FileText className="w-5 h-5 text-gray-400" />
+                            <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl">
+                                <div className="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center">
+                                    <FileText className="w-5 h-5 text-gray-600" />
+                                </div>
                                 <div>
                                     <p className="text-xs text-gray-500">License Number</p>
                                     <p className="text-sm text-gray-900">{selectedDriver.licenseNumber}</p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                                <CreditCard className="w-5 h-5 text-gray-400" />
+                            <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl">
+                                <div className="w-10 h-10 rounded-lg bg-error-100 flex items-center justify-center">
+                                    <CreditCard className="w-5 h-5 text-error-600" />
+                                </div>
                                 <div>
                                     <p className="text-xs text-gray-500">License Expiry</p>
                                     <p className="text-sm text-gray-900">
@@ -315,13 +338,13 @@ export function AdminDrivers() {
                             </div>
                         </div>
                         <div className="grid grid-cols-2 gap-4">
-                            <Card padding="md" className="text-center bg-primary-50">
+                            <Card padding="md" className="text-center bg-gradient-to-br from-primary-50 to-primary-100 border-primary-200">
                                 <p className="text-2xl font-bold text-primary-600">
                                     {selectedDriver.totalTrips.toLocaleString()}
                                 </p>
                                 <p className="text-sm text-primary-600">Total Trips</p>
                             </Card>
-                            <Card padding="md" className="text-center bg-success-50">
+                            <Card padding="md" className="text-center bg-gradient-to-br from-success-50 to-success-100 border-success-200">
                                 <p className="text-2xl font-bold text-success-600">
                                     {formatCurrency(selectedDriver.totalEarnings)}
                                 </p>

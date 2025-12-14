@@ -1,14 +1,20 @@
 import { motion } from 'framer-motion';
 import {
   Search,
-  FileText,
+  FileCheck,
+  Clock,
   CheckCircle,
   XCircle,
-  Clock,
+  FileText,
+  Calendar,
+  User,
+  Building2,
+  Car,
+  CreditCard,
+  ChevronRight,
   Eye,
   Download,
-  Calendar,
-  AlertTriangle,
+  BadgeCheck,
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -17,7 +23,6 @@ import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Modal } from '@/components/ui/Modal';
 import { Avatar } from '@/components/ui/Avatar';
-import { PageLoader } from '@/components/ui/Loading';
 import {
   TabsRoot,
   TabsList,
@@ -27,6 +32,7 @@ import {
 import { TextArea } from '@/components/ui/Input/TextArea';
 import { formatDate } from '@/shared/utils';
 import { useAdminVerification } from '../hooks/useAdminVerification';
+import { AdminPageHeader, AdminStatCard } from '../components';
 
 export function AdminVerification() {
   const {
@@ -35,14 +41,12 @@ export function AdminVerification() {
     typeFilter,
     selectedVerification,
     rejectionReason,
+    isProcessing,
     filteredVerifications,
     pendingCount,
     approvedCount,
     rejectedCount,
     totalCount,
-    isLoading,
-    error,
-    isProcessing,
     setActiveTab,
     setSearchQuery,
     setTypeFilter,
@@ -50,13 +54,19 @@ export function AdminVerification() {
     setRejectionReason,
     handleApprove,
     handleReject,
-    closeModal,
   } = useAdminVerification();
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'pending':
-        return <Badge variant="warning">Pending</Badge>;
+        return (
+          <motion.div
+            animate={{ scale: [1, 1.02, 1] }}
+            transition={{ repeat: Infinity, duration: 2 }}
+          >
+            <Badge variant="warning">Pending Review</Badge>
+          </motion.div>
+        );
       case 'approved':
         return <Badge variant="success">Approved</Badge>;
       case 'rejected':
@@ -66,48 +76,42 @@ export function AdminVerification() {
     }
   };
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'pending':
-        return <Clock className="w-5 h-5 text-warning-600" />;
-      case 'approved':
-        return <CheckCircle className="w-5 h-5 text-success-600" />;
-      case 'rejected':
-        return <XCircle className="w-5 h-5 text-error-600" />;
+  const getDocumentIcon = (type: string) => {
+    switch (type.toLowerCase()) {
+      case 'license':
+        return <CreditCard className="w-5 h-5" />;
+      case 'aadhaar':
+      case 'pan':
+        return <BadgeCheck className="w-5 h-5" />;
+      case 'registration':
+      case 'rc':
+        return <Car className="w-5 h-5" />;
+      case 'insurance':
+        return <FileText className="w-5 h-5" />;
       default:
-        return null;
+        return <FileText className="w-5 h-5" />;
     }
   };
 
-  if (isLoading)
-    return <PageLoader message="Loading verification requests..." />;
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="text-center max-w-md">
-          <AlertTriangle className="w-12 h-12 text-error-500 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
-            Error Loading Data
-          </h3>
-          <p className="text-gray-500 mb-4">{error}</p>
-          <Button onClick={() => window.location.reload()}>Try Again</Button>
-        </div>
-      </div>
-    );
-  }
+  const getApplicantIcon = (applicantType: string) => {
+    switch (applicantType) {
+      case 'driver':
+        return <User className="w-4 h-4" />;
+      case 'cab_owner':
+        return <Building2 className="w-4 h-4" />;
+      default:
+        return <User className="w-4 h-4" />;
+    }
+  };
 
   return (
     <div className="space-y-6">
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">
-          Document Verification
-        </h1>
-        <p className="text-gray-500">Review and verify submitted documents</p>
-      </motion.div>
+      <AdminPageHeader
+        title="Document Verification"
+        subtitle="Review and verify driver and owner documents"
+        icon={FileCheck}
+        iconColor="warning"
+      />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -115,22 +119,34 @@ export function AdminVerification() {
         transition={{ delay: 0.1 }}
         className="grid grid-cols-4 gap-4"
       >
-        <Card padding="md" className="text-center">
-          <p className="text-3xl font-bold text-gray-900">{totalCount}</p>
-          <p className="text-sm text-gray-500">Total Submissions</p>
-        </Card>
-        <Card padding="md" className="text-center border-warning-200">
-          <p className="text-3xl font-bold text-warning-600">{pendingCount}</p>
-          <p className="text-sm text-gray-500">Pending Review</p>
-        </Card>
-        <Card padding="md" className="text-center border-success-200">
-          <p className="text-3xl font-bold text-success-600">{approvedCount}</p>
-          <p className="text-sm text-gray-500">Approved</p>
-        </Card>
-        <Card padding="md" className="text-center border-error-200">
-          <p className="text-3xl font-bold text-error-600">{rejectedCount}</p>
-          <p className="text-sm text-gray-500">Rejected</p>
-        </Card>
+        <AdminStatCard
+          label="Total Submissions"
+          value={totalCount}
+          icon={FileText}
+          color="primary"
+          delay={0.1}
+        />
+        <AdminStatCard
+          label="Pending Review"
+          value={pendingCount}
+          icon={Clock}
+          color="warning"
+          delay={0.15}
+        />
+        <AdminStatCard
+          label="Approved"
+          value={approvedCount}
+          icon={CheckCircle}
+          color="success"
+          delay={0.2}
+        />
+        <AdminStatCard
+          label="Rejected"
+          value={rejectedCount}
+          icon={XCircle}
+          color="error"
+          delay={0.25}
+        />
       </motion.div>
 
       <motion.div
@@ -141,6 +157,7 @@ export function AdminVerification() {
         <TabsRoot value={activeTab} onValueChange={setActiveTab}>
           <div className="flex items-center justify-between mb-4">
             <TabsList>
+              <TabsTrigger value="all">All ({totalCount})</TabsTrigger>
               <TabsTrigger value="pending">
                 Pending ({pendingCount})
               </TabsTrigger>
@@ -150,11 +167,10 @@ export function AdminVerification() {
               <TabsTrigger value="rejected">
                 Rejected ({rejectedCount})
               </TabsTrigger>
-              <TabsTrigger value="all">All ({totalCount})</TabsTrigger>
             </TabsList>
             <div className="flex gap-3">
               <Input
-                placeholder="Search documents..."
+                placeholder="Search by name..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 prefix={<Search className="w-4 h-4" />}
@@ -163,8 +179,11 @@ export function AdminVerification() {
               <Select
                 options={[
                   { value: 'all', label: 'All Types' },
-                  { value: 'driver', label: 'Driver' },
-                  { value: 'cab_owner', label: 'Cab Owner' },
+                  { value: 'license', label: 'Driving License' },
+                  { value: 'aadhaar', label: 'Aadhaar Card' },
+                  { value: 'pan', label: 'PAN Card' },
+                  { value: 'registration', label: 'Vehicle Registration' },
+                  { value: 'insurance', label: 'Insurance' },
                 ]}
                 value={typeFilter}
                 onValueChange={setTypeFilter}
@@ -179,49 +198,44 @@ export function AdminVerification() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
+                  whileHover={{ scale: 1.01 }}
                 >
                   <Card
-                    padding="md"
-                    interactive
+                    padding="lg"
+                    className="cursor-pointer hover:shadow-lg transition-all border-l-4 border-l-transparent hover:border-l-primary-500"
                     onClick={() => setSelectedVerification(verification)}
                   >
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex items-center gap-3">
-                        <Avatar size="md" name={verification.applicant.name} />
-                        <div>
-                          <p className="font-medium text-gray-900">
+                    <div className="flex items-start gap-4">
+                      <div className={`w-14 h-14 rounded-xl flex items-center justify-center shadow-md ${verification.status === 'pending'
+                          ? 'bg-gradient-to-br from-warning-400 to-warning-500 text-white'
+                          : verification.status === 'approved'
+                            ? 'bg-gradient-to-br from-success-400 to-success-500 text-white'
+                            : 'bg-gradient-to-br from-error-400 to-error-500 text-white'
+                        }`}>
+                        {getDocumentIcon(verification.documentType)}
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-medium text-gray-900">
                             {verification.applicant.name}
-                          </p>
-                          <p className="text-xs text-gray-500 capitalize">
+                          </h3>
+                          {getStatusBadge(verification.status)}
+                        </div>
+                        <p className="text-sm text-gray-500 mt-1 capitalize">
+                          {verification.documentType.replace('_', ' ')}
+                        </p>
+                        <div className="flex items-center gap-3 mt-3 text-xs text-gray-400">
+                          <span className="flex items-center gap-1">
+                            <Calendar className="w-3 h-3" />
+                            {formatDate(verification.submittedAt)}
+                          </span>
+                          <span className="flex items-center gap-1 capitalize">
+                            {getApplicantIcon(verification.type)}
                             {verification.type.replace('_', ' ')}
-                          </p>
+                          </span>
                         </div>
                       </div>
-                      {getStatusBadge(verification.status)}
-                    </div>
-                    <div className="p-3 bg-gray-50 rounded-lg mb-3">
-                      <div className="flex items-center gap-2 mb-1">
-                        <FileText className="w-4 h-4 text-gray-400" />
-                        <span className="font-medium text-gray-900">
-                          {verification.documentType}
-                        </span>
-                      </div>
-                      <p className="text-sm text-gray-500">
-                        {verification.documentNumber}
-                      </p>
-                    </div>
-                    <div className="flex items-center justify-between text-xs text-gray-500">
-                      <span className="flex items-center gap-1">
-                        <Calendar className="w-3 h-3" />
-                        Submitted {formatDate(verification.submittedAt)}
-                      </span>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        leftIcon={<Eye className="w-4 h-4" />}
-                      >
-                        Review
-                      </Button>
+                      <ChevronRight className="w-5 h-5 text-gray-300" />
                     </div>
                   </Card>
                 </motion.div>
@@ -233,116 +247,139 @@ export function AdminVerification() {
 
       <Modal
         open={!!selectedVerification}
-        onOpenChange={closeModal}
+        onOpenChange={() => setSelectedVerification(null)}
         title="Document Verification"
         size="lg"
       >
         {selectedVerification && (
           <div className="space-y-6">
-            <div className="flex items-center gap-3">
-              {getStatusIcon(selectedVerification.status)}
-              {getStatusBadge(selectedVerification.status)}
-              <span className="text-sm text-gray-500">
-                Submitted on {formatDate(selectedVerification.submittedAt)}
-              </span>
+            <div className="flex items-center gap-4">
+              <Avatar size="lg" name={selectedVerification.applicant.name} />
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900">
+                  {selectedVerification.applicant.name}
+                </h2>
+                <div className="flex items-center gap-2 mt-1">
+                  {getStatusBadge(selectedVerification.status)}
+                  <Badge variant="secondary" className="capitalize">
+                    {selectedVerification.type.replace('_', ' ')}
+                  </Badge>
+                </div>
+              </div>
             </div>
-            <Card padding="md" className="bg-gray-50">
-              <div className="flex items-center gap-4">
-                <Avatar size="lg" name={selectedVerification.applicant.name} />
+
+            <Card padding="md" className="bg-gradient-to-r from-gray-50 to-gray-100">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 rounded-lg bg-primary-100 flex items-center justify-center">
+                  {getDocumentIcon(selectedVerification.documentType)}
+                </div>
                 <div>
-                  <p className="font-semibold text-gray-900">
-                    {selectedVerification.applicant.name}
+                  <p className="font-medium text-gray-900 capitalize">
+                    {selectedVerification.documentType.replace('_', ' ')}
                   </p>
                   <p className="text-sm text-gray-500">
-                    {selectedVerification.applicant.email}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    {selectedVerification.applicant.phone}
+                    Document #{selectedVerification.documentNumber}
                   </p>
                 </div>
-                <Badge variant="secondary" className="ml-auto capitalize">
-                  {selectedVerification.type.replace('_', ' ')}
-                </Badge>
+              </div>
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <p className="text-gray-500">Document Number</p>
+                  <p className="font-medium text-gray-900">{selectedVerification.documentNumber || 'N/A'}</p>
+                </div>
+                <div>
+                  <p className="text-gray-500">Submitted</p>
+                  <p className="font-medium text-gray-900">{formatDate(selectedVerification.submittedAt)}</p>
+                </div>
               </div>
             </Card>
+
             <div>
-              <h3 className="font-semibold text-gray-900 mb-3">
-                Document Details
-              </h3>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="p-3 border border-gray-200 rounded-lg">
-                  <p className="text-xs text-gray-500">Document Type</p>
-                  <p className="font-medium text-gray-900">
-                    {selectedVerification.documentType}
-                  </p>
+              <p className="text-sm font-medium text-gray-700 mb-3">Document Preview</p>
+              <div className="relative group">
+                <div className="w-full h-64 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl flex items-center justify-center overflow-hidden">
+                  {selectedVerification.documentUrl ? (
+                    <img
+                      src={selectedVerification.documentUrl}
+                      alt="Document"
+                      className="w-full h-full object-contain"
+                    />
+                  ) : (
+                    <div className="text-center text-gray-400">
+                      <FileText className="w-12 h-12 mx-auto mb-2" />
+                      <p>No document preview available</p>
+                    </div>
+                  )}
                 </div>
-                <div className="p-3 border border-gray-200 rounded-lg">
-                  <p className="text-xs text-gray-500">Document Number</p>
-                  <p className="font-medium text-gray-900">
-                    {selectedVerification.documentNumber}
-                  </p>
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl flex items-center justify-center gap-3">
+                  <Button variant="secondary" size="sm" leftIcon={<Eye className="w-4 h-4" />}>
+                    View Full
+                  </Button>
+                  <Button variant="secondary" size="sm" leftIcon={<Download className="w-4 h-4" />}>
+                    Download
+                  </Button>
                 </div>
               </div>
             </div>
-            <div className="p-8 border-2 border-dashed border-gray-300 rounded-lg text-center">
-              <FileText className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-              <p className="text-gray-500 mb-3">Document Preview</p>
-              <Button
-                variant="outline"
-                leftIcon={<Download className="w-4 h-4" />}
-              >
-                Download Document
-              </Button>
-            </div>
+
             {selectedVerification.status === 'pending' && (
-              <TextArea
-                label="Rejection Reason (if rejecting)"
-                placeholder="Enter reason for rejection..."
-                value={rejectionReason}
-                onChange={(e) => setRejectionReason(e.target.value)}
-                rows={2}
-              />
-            )}
-            {selectedVerification.notes && (
-              <div
-                className={`p-4 rounded-lg ${selectedVerification.status === 'approved' ? 'bg-success-50' : 'bg-error-50'}`}
-              >
-                <p
-                  className={`text-sm ${selectedVerification.status === 'approved' ? 'text-success-700' : 'text-error-700'}`}
-                >
-                  {selectedVerification.notes}
-                </p>
-              </div>
-            )}
-            <div className="flex gap-3 pt-4 border-t border-gray-100">
-              {selectedVerification.status === 'pending' ? (
-                <>
+              <>
+                <TextArea
+                  label="Rejection Reason (if rejecting)"
+                  placeholder="Enter reason for rejection..."
+                  value={rejectionReason}
+                  onChange={(e) => setRejectionReason(e.target.value)}
+                  rows={2}
+                />
+                <div className="flex gap-3 pt-4 border-t border-gray-100">
                   <Button
                     variant="danger"
                     fullWidth
-                    leftIcon={<XCircle className="w-5 h-5" />}
                     onClick={() => handleReject(selectedVerification.id)}
-                    disabled={isProcessing || !rejectionReason.trim()}
-                    loading={isProcessing}
+                    disabled={isProcessing || !rejectionReason}
+                    leftIcon={<XCircle className="w-5 h-5" />}
                   >
-                    Reject
+                    Reject Document
                   </Button>
                   <Button
                     fullWidth
-                    leftIcon={<CheckCircle className="w-5 h-5" />}
                     onClick={() => handleApprove(selectedVerification.id)}
                     disabled={isProcessing}
-                    loading={isProcessing}
+                    leftIcon={<CheckCircle className="w-5 h-5" />}
                   >
-                    Approve
+                    Approve Document
                   </Button>
-                </>
-              ) : (
-                <Button variant="outline" fullWidth onClick={closeModal}>
-                  Close
-                </Button>
-              )}
-            </div>
+                </div>
+              </>
+            )}
+
+            {selectedVerification.status === 'approved' && (
+              <div className="p-4 bg-gradient-to-r from-success-50 to-success-100 rounded-xl">
+                <div className="flex items-center gap-2 mb-1">
+                  <CheckCircle className="w-5 h-5 text-success-600" />
+                  <span className="font-medium text-success-700">Document Approved</span>
+                </div>
+                {selectedVerification.approvedAt && (
+                  <p className="text-sm text-success-600">
+                    Verified on {formatDate(selectedVerification.approvedAt)}
+                  </p>
+                )}
+              </div>
+            )}
+
+            {selectedVerification.status === 'rejected' && (
+              <div className="p-4 bg-gradient-to-r from-error-50 to-error-100 rounded-xl">
+                <div className="flex items-center gap-2 mb-1">
+                  <XCircle className="w-5 h-5 text-error-600" />
+                  <span className="font-medium text-error-700">Document Rejected</span>
+                </div>
+                {selectedVerification.notes && (
+                  <p className="text-sm text-error-600">
+                    {selectedVerification.notes}
+                  </p>
+                )}
+              </div>
+            )}
           </div>
         )}
       </Modal>

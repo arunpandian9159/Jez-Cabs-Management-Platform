@@ -8,11 +8,14 @@ import {
     Users,
     UserCheck,
     TrendingUp,
+    BarChart3,
+    PieChart,
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Select } from '@/components/ui/Select';
 import { useAdminReports, ReportType } from '../hooks/useAdminReports';
+import { AdminPageHeader } from '../components';
 
 export function AdminReports() {
     const {
@@ -31,50 +34,53 @@ export function AdminReports() {
         { key: 'drivers', label: 'Drivers', icon: <UserCheck className="w-4 h-4" /> },
     ];
 
+    const chartColors = {
+        revenue: 'from-success-500 to-success-600',
+        trips: 'from-primary-500 to-primary-600',
+        users: 'from-accent-500 to-accent-600',
+        drivers: 'from-warning-500 to-warning-600',
+    };
+
     return (
         <div className="space-y-6">
-            <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="flex items-center justify-between"
-            >
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900 mb-1">Reports</h1>
-                    <p className="text-gray-500">
-                        Analytics and insights for your business
-                    </p>
-                </div>
-                <div className="flex items-center gap-3">
-                    <Select
-                        options={[
-                            { value: 'today', label: 'Today' },
-                            { value: 'week', label: 'This Week' },
-                            { value: 'month', label: 'This Month' },
-                            { value: 'quarter', label: 'This Quarter' },
-                            { value: 'year', label: 'This Year' },
-                        ]}
-                        value={dateRange}
-                        onValueChange={(value) => setDateRange(value as typeof dateRange)}
-                    />
-                    <Button variant="outline" leftIcon={<Download className="w-4 h-4" />}>
-                        Export Report
-                    </Button>
-                </div>
-            </motion.div>
+            <AdminPageHeader
+                title="Reports"
+                subtitle="Analytics and insights for your business"
+                icon={BarChart3}
+                iconColor="success"
+                action={
+                    <div className="flex items-center gap-3">
+                        <Select
+                            options={[
+                                { value: 'today', label: 'Today' },
+                                { value: 'week', label: 'This Week' },
+                                { value: 'month', label: 'This Month' },
+                                { value: 'quarter', label: 'This Quarter' },
+                                { value: 'year', label: 'This Year' },
+                            ]}
+                            value={dateRange}
+                            onValueChange={(value) => setDateRange(value as typeof dateRange)}
+                        />
+                        <Button variant="outline" leftIcon={<Download className="w-4 h-4" />}>
+                            Export Report
+                        </Button>
+                    </div>
+                }
+            />
 
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="flex gap-2 border-b border-gray-200"
+                className="flex gap-2 p-1 bg-gray-100 rounded-xl"
             >
                 {reportTabs.map((tab) => (
                     <button
                         key={tab.key}
                         onClick={() => setActiveReport(tab.key)}
-                        className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${activeReport === tab.key
-                                ? 'border-primary-600 text-primary-600'
-                                : 'border-transparent text-gray-500 hover:text-gray-700'
+                        className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-lg transition-all ${activeReport === tab.key
+                            ? 'bg-white shadow-md text-primary-600'
+                            : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
                             }`}
                     >
                         {tab.icon}
@@ -92,15 +98,16 @@ export function AdminReports() {
                 {currentReport.metrics.map((metric, index) => (
                     <motion.div
                         key={metric.label}
-                        initial={{ opacity: 0, scale: 0.9 }}
+                        initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 0.2 + index * 0.05 }}
+                        whileHover={{ scale: 1.02 }}
                     >
-                        <Card padding="lg">
+                        <Card padding="lg" className="bg-gradient-to-br from-white to-gray-50 overflow-hidden relative">
                             <div className="flex items-center justify-between mb-2">
-                                <p className="text-sm text-gray-500">{metric.label}</p>
+                                <p className="text-sm font-medium text-gray-500">{metric.label}</p>
                                 <div
-                                    className={`flex items-center gap-1 text-xs font-medium ${metric.trending === 'up' ? 'text-success-600' : 'text-error-600'
+                                    className={`flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full ${metric.trending === 'up' ? 'text-success-600 bg-success-100' : 'text-error-600 bg-error-100'
                                         }`}
                                 >
                                     {metric.trending === 'up' ? (
@@ -112,6 +119,7 @@ export function AdminReports() {
                                 </div>
                             </div>
                             <p className="text-2xl font-bold text-gray-900">{metric.value}</p>
+                            <div className={`absolute -right-4 -bottom-4 w-16 h-16 rounded-full bg-gradient-to-br ${chartColors[activeReport]} opacity-10 blur-xl`} />
                         </Card>
                     </motion.div>
                 ))}
@@ -122,19 +130,24 @@ export function AdminReports() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
             >
-                <Card padding="lg">
+                <Card padding="lg" className="overflow-hidden">
                     <div className="flex items-center justify-between mb-6">
                         <div className="flex items-center gap-2">
-                            <TrendingUp className="w-5 h-5 text-primary-600" />
-                            <h2 className="font-semibold text-gray-900">
-                                {activeReport === 'revenue' && 'Revenue Trend'}
-                                {activeReport === 'trips' && 'Weekly Trip Distribution'}
-                                {activeReport === 'users' && 'User Growth'}
-                                {activeReport === 'drivers' && 'Driver Growth'}
-                            </h2>
+                            <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${chartColors[activeReport]} flex items-center justify-center`}>
+                                <TrendingUp className="w-5 h-5 text-white" />
+                            </div>
+                            <div>
+                                <h2 className="font-semibold text-gray-900">
+                                    {activeReport === 'revenue' && 'Revenue Trend'}
+                                    {activeReport === 'trips' && 'Weekly Trip Distribution'}
+                                    {activeReport === 'users' && 'User Growth'}
+                                    {activeReport === 'drivers' && 'Driver Growth'}
+                                </h2>
+                                <p className="text-sm text-gray-500">Last 7 days performance</p>
+                            </div>
                         </div>
                     </div>
-                    <div className="h-64 flex items-end gap-2">
+                    <div className="h-64 flex items-end gap-3">
                         {currentReport.chart.map((data, index) => {
                             const height = (data.value / maxChartValue) * 100;
                             return (
@@ -142,20 +155,25 @@ export function AdminReports() {
                                     key={data.label}
                                     initial={{ height: 0 }}
                                     animate={{ height: `${height}%` }}
-                                    transition={{ delay: 0.4 + index * 0.05, duration: 0.5 }}
+                                    transition={{ delay: 0.4 + index * 0.05, duration: 0.5, type: 'spring' }}
                                     className="flex-1 flex flex-col items-center gap-2"
                                 >
                                     <div
-                                        className="w-full bg-gradient-to-t from-primary-600 to-primary-400 rounded-t-md hover:from-primary-700 hover:to-primary-500 transition-colors cursor-pointer group relative"
+                                        className={`w-full bg-gradient-to-t ${chartColors[activeReport]} rounded-t-lg hover:opacity-90 transition-opacity cursor-pointer group relative shadow-lg`}
                                         style={{ height: '100%' }}
                                     >
-                                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 10 }}
+                                            whileHover={{ opacity: 1, y: 0 }}
+                                            className="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs px-3 py-1.5 rounded-lg shadow-lg whitespace-nowrap"
+                                        >
                                             {typeof data.value === 'number' && data.value > 1000
                                                 ? `₹${(data.value / 1000).toFixed(0)}K`
                                                 : data.value}
-                                        </div>
+                                            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45" />
+                                        </motion.div>
                                     </div>
-                                    <span className="text-xs text-gray-500">{data.label}</span>
+                                    <span className="text-xs font-medium text-gray-500">{data.label}</span>
                                 </motion.div>
                             );
                         })}
@@ -169,54 +187,68 @@ export function AdminReports() {
                 transition={{ delay: 0.5 }}
                 className="grid grid-cols-2 gap-4"
             >
-                <Card padding="lg">
-                    <h3 className="font-semibold text-gray-900 mb-4">Quick Stats</h3>
+                <Card padding="lg" className="bg-gradient-to-br from-white to-gray-50">
+                    <div className="flex items-center gap-2 mb-4">
+                        <div className="w-8 h-8 rounded-lg bg-primary-100 flex items-center justify-center">
+                            <PieChart className="w-4 h-4 text-primary-600" />
+                        </div>
+                        <h3 className="font-semibold text-gray-900">Quick Stats</h3>
+                    </div>
                     <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-600">Peak Hours</span>
-                            <span className="text-sm font-medium text-gray-900">9 AM - 11 AM</span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-600">Most Popular Route</span>
-                            <span className="text-sm font-medium text-gray-900">
-                                Airport - City Center
-                            </span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-600">Avg. Wait Time</span>
-                            <span className="text-sm font-medium text-gray-900">4.5 min</span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-600">Customer Satisfaction</span>
-                            <span className="text-sm font-medium text-success-600">92%</span>
-                        </div>
+                        {[
+                            { label: 'Peak Hours', value: '9 AM - 11 AM', color: 'text-primary-600' },
+                            { label: 'Most Popular Route', value: 'Airport - City Center', color: 'text-accent-600' },
+                            { label: 'Avg. Wait Time', value: '4.5 min', color: 'text-warning-600' },
+                            { label: 'Customer Satisfaction', value: '92%', color: 'text-success-600' },
+                        ].map((stat, index) => (
+                            <motion.div
+                                key={stat.label}
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.6 + index * 0.1 }}
+                                className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors"
+                            >
+                                <span className="text-sm text-gray-600">{stat.label}</span>
+                                <span className={`text-sm font-semibold ${stat.color}`}>{stat.value}</span>
+                            </motion.div>
+                        ))}
                     </div>
                 </Card>
-                <Card padding="lg">
-                    <h3 className="font-semibold text-gray-900 mb-4">Top Performing Areas</h3>
-                    <div className="space-y-3">
+                <Card padding="lg" className="bg-gradient-to-br from-white to-gray-50">
+                    <div className="flex items-center gap-2 mb-4">
+                        <div className="w-8 h-8 rounded-lg bg-success-100 flex items-center justify-center">
+                            <TrendingUp className="w-4 h-4 text-success-600" />
+                        </div>
+                        <h3 className="font-semibold text-gray-900">Top Performing Areas</h3>
+                    </div>
+                    <div className="space-y-4">
                         {[
                             { area: 'Chennai Central', trips: 1245, percentage: 75 },
                             { area: 'T. Nagar', trips: 982, percentage: 60 },
                             { area: 'Anna Nagar', trips: 876, percentage: 55 },
                             { area: 'Velachery', trips: 654, percentage: 40 },
-                        ].map((item) => (
-                            <div key={item.area}>
-                                <div className="flex items-center justify-between mb-1">
-                                    <span className="text-sm text-gray-600">{item.area}</span>
-                                    <span className="text-sm font-medium text-gray-900">
+                        ].map((item, index) => (
+                            <motion.div
+                                key={item.area}
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.6 + index * 0.1 }}
+                            >
+                                <div className="flex items-center justify-between mb-1.5">
+                                    <span className="text-sm font-medium text-gray-700">{item.area}</span>
+                                    <span className="text-sm font-semibold text-gray-900">
                                         {item.trips} trips
                                     </span>
                                 </div>
-                                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                                <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden">
                                     <motion.div
                                         initial={{ width: 0 }}
                                         animate={{ width: `${item.percentage}%` }}
-                                        transition={{ delay: 0.6, duration: 0.5 }}
-                                        className="h-full bg-primary-600 rounded-full"
+                                        transition={{ delay: 0.7 + index * 0.1, duration: 0.5 }}
+                                        className={`h-full bg-gradient-to-r ${chartColors[activeReport]} rounded-full`}
                                     />
                                 </div>
-                            </div>
+                            </motion.div>
                         ))}
                     </div>
                 </Card>
