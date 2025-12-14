@@ -177,11 +177,10 @@ export function CustomerLayout() {
                       <motion.button
                         key={option.id}
                         onClick={() => handleEmergencySelect(option.id)}
-                        className={`w-full flex items-center gap-4 p-4 rounded-xl border-2 transition-all ${
-                          isSelected
+                        className={`w-full flex items-center gap-4 p-4 rounded-xl border-2 transition-all ${isSelected
                             ? 'border-red-500 bg-red-50'
                             : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                        }`}
+                          }`}
                         whileHover={{ scale: 1.01 }}
                         whileTap={{ scale: 0.99 }}
                       >
@@ -312,7 +311,7 @@ export function CustomerLayout() {
         />
 
         {/* Page content */}
-        <main className="p-4 lg:p-6">
+        <main className={location.pathname.startsWith(ROUTES.CUSTOMER.BOOK_LOCATION) ? '' : 'p-4 lg:p-6'}>
           <motion.div
             key={location.pathname}
             initial={{ opacity: 0, y: 10 }}

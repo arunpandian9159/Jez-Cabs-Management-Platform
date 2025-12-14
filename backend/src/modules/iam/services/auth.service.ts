@@ -32,7 +32,7 @@ export class AuthService {
     private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-  ) {}
+  ) { }
 
   async register(registerDto: RegisterDto) {
     // Check if user email already exists
@@ -90,7 +90,7 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('Email address not found');
     }
 
     // Check if user is active
@@ -100,7 +100,7 @@ export class AuthService {
 
     // Verify password
     if (!user.password_hash) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('Incorrect password');
     }
 
     const isPasswordValid = await bcrypt.compare(
@@ -109,7 +109,7 @@ export class AuthService {
     );
 
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('Incorrect password');
     }
 
     // Generate JWT token

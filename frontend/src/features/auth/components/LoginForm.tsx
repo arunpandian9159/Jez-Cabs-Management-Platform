@@ -58,6 +58,33 @@ export const LoginForm = ({
     resolver: zodResolver(loginSchema),
   });
 
+  // Determine which field the error belongs to
+  const getFieldError = (field: 'email' | 'password') => {
+    if (!error) return null;
+
+    const errorLower = error.toLowerCase();
+
+    if (field === 'email') {
+      // Show error below email if it mentions email
+      if (errorLower.includes('email')) {
+        return error;
+      }
+    } else if (field === 'password') {
+      // Show error below password if it mentions password
+      if (errorLower.includes('password')) {
+        return error;
+      }
+    }
+
+    return null;
+  };
+
+  // Check if error should be shown as general error (not field-specific)
+  const generalError = error && !getFieldError('email') && !getFieldError('password') ? error : null;
+
+  const emailError = getFieldError('email') || errors.email?.message;
+  const passwordError = getFieldError('password') || errors.password?.message;
+
   return (
     <motion.div
       className="w-full max-w-[420px] mx-auto flex flex-col"
@@ -83,13 +110,13 @@ export const LoginForm = ({
               type="email"
               placeholder="Email Address"
               {...register('email')}
-              className={`w-full px-4 py-3.5 bg-gray-50 border ${errors.email ? 'border-red-300' : 'border-gray-200'
+              className={`w-full px-4 py-3.5 bg-gray-50 border ${emailError ? 'border-red-300' : 'border-gray-200'
                 } rounded-full text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600/10 focus:border-blue-400 transition-all`}
               autoFocus
             />
           </div>
-          {errors.email && (
-            <p className="mt-1.5 text-sm text-red-500">{errors.email.message}</p>
+          {emailError && (
+            <p className="mt-1.5 text-sm text-red-500">{emailError}</p>
           )}
         </motion.div>
 
@@ -102,7 +129,7 @@ export const LoginForm = ({
               type={showPassword ? 'text' : 'password'}
               placeholder="Password"
               {...register('password')}
-              className={`w-full px-4 py-3.5 pr-12 bg-gray-50 border ${errors.password ? 'border-red-300' : 'border-gray-200'
+              className={`w-full px-4 py-3.5 pr-12 bg-gray-50 border ${passwordError ? 'border-red-300' : 'border-gray-200'
                 } rounded-full text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600/10 focus:border-blue-400 transition-all`}
             />
             <button
@@ -117,9 +144,9 @@ export const LoginForm = ({
               )}
             </button>
           </div>
-          {errors.password && (
+          {passwordError && (
             <p className="mt-1.5 text-sm text-red-500">
-              {errors.password.message}
+              {passwordError}
             </p>
           )}
         </motion.div>
@@ -148,9 +175,9 @@ export const LoginForm = ({
           </Button>
         </motion.div>
 
-        {/* Error Message Display */}
+        {/* General Error Message Display (for non-field-specific errors) */}
         <AnimatePresence>
-          {error && (
+          {generalError && (
             <motion.div
               initial={{ opacity: 0, y: -10, height: 0 }}
               animate={{ opacity: 1, y: 0, height: 'auto' }}
@@ -159,7 +186,7 @@ export const LoginForm = ({
             >
               <div className="flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700">
                 <AlertCircle className="w-5 h-5 text-red-500 shrink-0" />
-                <p className="text-sm font-medium">{error}</p>
+                <p className="text-sm font-medium">{generalError}</p>
               </div>
             </motion.div>
           )}

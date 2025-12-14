@@ -1,6 +1,7 @@
 import { Users2, ArrowRight } from 'lucide-react';
 import { fleetOptions } from '../../pages/homeData';
 import { useAuthModal } from '@/features/auth';
+import { SlideInButton } from '@/components/ui';
 
 export function FleetSection() {
   const { openRegister } = useAuthModal();
@@ -93,14 +94,16 @@ export function FleetSection() {
 
         {/* View All Button */}
         <div className="text-center">
-          <button
+          <SlideInButton
+            text="View All Vehicles"
             onClick={openRegister}
-            className="px-6 py-2.5 sm:px-8 sm:py-3 rounded-full border-2 transition-all inline-flex items-center gap-2 font-medium text-sm sm:text-base group hover:bg-gray-50 cursor-pointer"
-            style={{ borderColor: '#e2e8f0', color: '#0f172a' }}
-          >
-            View All Vehicles
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </button>
+            defaultBgColor="#ffffff"
+            hoverBgColor="#2563eb"
+            defaultTextColor="#0f172a"
+            hoverTextColor="#ffffff"
+            className="border-2 border-gray-200 hover:border-transparent transition-all"
+            icon={<ArrowRight className="w-4 h-4" />}
+          />
         </div>
       </div>
     </section>

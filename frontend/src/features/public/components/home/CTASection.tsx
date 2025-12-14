@@ -1,5 +1,6 @@
 import { Car, Users, ArrowRight } from 'lucide-react';
 import { useAuthModal } from '@/features/auth';
+import { SlideInButton } from '@/components/ui';
 
 export function CTASection() {
   const { openRegister } = useAuthModal();
@@ -41,29 +42,16 @@ export function CTASection() {
               reliable, and comfortable rides.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-              <button
+              <SlideInButton
+                text="Book Your Ride Now"
                 onClick={openRegister}
-                className="px-6 py-3 sm:px-8 sm:py-3.5 rounded-xl font-semibold text-sm sm:text-base inline-flex items-center justify-center gap-2 group transition-all w-full sm:w-auto cursor-pointer"
-                style={{
-                  background:
-                    'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
-                  color: '#ffffff',
-                  boxShadow: '0 8px 30px rgba(37, 99, 235, 0.3)',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow =
-                    '0 12px 40px rgba(37, 99, 235, 0.4)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow =
-                    '0 8px 30px rgba(37, 99, 235, 0.3)';
-                }}
-              >
-                Book Your Ride Now
-                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
-              </button>
+                defaultBgColor="#ffffff"
+                hoverBgColor="#2563eb"
+                defaultTextColor="#2563eb"
+                hoverTextColor="#ffffff"
+                className="w-full sm:w-auto shadow-lg hover:shadow-xl transition-shadow"
+                icon={<ArrowRight className="w-5 h-5" />}
+              />
               <button
                 onClick={openRegister}
                 className="px-6 py-3 sm:px-8 sm:py-3.5 rounded-xl font-semibold text-sm sm:text-base w-full sm:w-auto transition-all cursor-pointer"

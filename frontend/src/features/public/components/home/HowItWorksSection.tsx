@@ -1,6 +1,7 @@
 import { Map, ArrowRight } from 'lucide-react';
 import { steps, StepItem } from '../../pages/homeData';
 import { useAuthModal } from '@/features/auth';
+import { SlideInButton } from '@/components/ui';
 
 export function HowItWorksSection() {
   const { openRegister } = useAuthModal();
@@ -90,37 +91,16 @@ export function HowItWorksSection() {
             animationFillMode: 'both',
           }}
         >
-          <button
+          <SlideInButton
+            text="Get Started Now"
             onClick={openRegister}
-            className="group relative px-6 py-3 sm:px-8 sm:py-4 lg:px-10 lg:py-5 text-white rounded-xl sm:rounded-2xl transition-all font-bold text-sm sm:text-base lg:text-lg inline-flex items-center gap-2 sm:gap-3 overflow-hidden cursor-pointer"
-            style={{
-              background: 'linear-gradient(135deg, #2563eb 0%, #0d9488 100%)',
-              boxShadow: '0 8px 30px rgba(37, 99, 235, 0.3)',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-3px) scale(1.05)';
-              e.currentTarget.style.boxShadow =
-                '0 15px 40px rgba(37, 99, 235, 0.4)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0) scale(1)';
-              e.currentTarget.style.boxShadow =
-                '0 8px 30px rgba(37, 99, 235, 0.3)';
-            }}
-          >
-            {/* Shimmer Effect */}
-            <div
-              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-              style={{
-                background:
-                  'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)',
-                backgroundSize: '200% 100%',
-                animation: 'shimmer 2s infinite',
-              }}
-            />
-            <span className="relative z-10">Get Started Now</span>
-            <ArrowRight className="relative z-10 w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-2" />
-          </button>
+            defaultBgColor="#ffffff"
+            hoverBgColor="#2563eb"
+            defaultTextColor="#2563eb"
+            hoverTextColor="#ffffff"
+            className="shadow-2xl hover:shadow-3xl transition-all px-10 py-5 text-lg font-bold"
+            icon={<ArrowRight className="w-5 h-5" />}
+          />
           <p
             className="mt-3 sm:mt-4 text-xs sm:text-sm"
             style={{ color: '#64748b' }}
