@@ -25,7 +25,7 @@ import { ROUTES } from '@/shared/constants';
 // Navigation items for customer
 const customerNavItems: NavItem[] = [
   { name: 'Dashboard', href: ROUTES.CUSTOMER.DASHBOARD, icon: Home },
-  { name: 'Book a Ride', href: ROUTES.CUSTOMER.BOOK, icon: Map },
+  { name: 'Book a Ride', href: ROUTES.CUSTOMER.BOOK_LOCATION, icon: Map, end: true },
   { name: 'Tracking', href: ROUTES.CUSTOMER.BOOK_TRACKING, icon: MapPin },
   { name: 'Rentals', href: ROUTES.CUSTOMER.RENTALS, icon: Car },
   { name: 'Trip History', href: ROUTES.CUSTOMER.TRIPS, icon: Clock },
@@ -330,7 +330,7 @@ export function CustomerLayout() {
       />
 
       {/* Main content area */}
-      <div className={sidebarExpanded ? 'lg:pl-64' : 'lg:pl-[72px]'}>
+      <div className={sidebarExpanded ? 'lg:pl-[280px]' : 'lg:pl-[80px]'}>
         <Navbar
           variant="dashboard"
           title={currentPageTitle}

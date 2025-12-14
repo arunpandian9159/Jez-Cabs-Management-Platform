@@ -85,7 +85,7 @@ export function DriverLayout() {
       />
 
       {/* Main content area */}
-      <div className="lg:pl-64">
+      <div className="lg:pl-[280px]">
         <Navbar
           variant="dashboard"
           title={currentPageTitle}
