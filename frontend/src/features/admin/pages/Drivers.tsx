@@ -1,23 +1,5 @@
 import { motion } from 'framer-motion';
-import {
-    Search,
-    UserPlus,
-    MoreVertical,
-    Mail,
-    Phone,
-    Car,
-    Star,
-    Calendar,
-    Ban,
-    CheckCircle,
-    Edit,
-    Trash2,
-    FileText,
-    CreditCard,
-    UserCheck,
-    Clock,
-    Users,
-} from 'lucide-react';
+import { Search, UserPlus, MoreVertical, Mail, Phone, Car, Star, Calendar, Ban, CheckCircle, Edit, Trash2, FileText, CreditCard, UserCheck, Clock, Users } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
@@ -26,226 +8,61 @@ import { Select } from '@/components/ui/Select';
 import { Modal } from '@/components/ui/Modal';
 import { Avatar } from '@/components/ui/Avatar';
 import { formatCurrency, formatDate } from '@/shared/utils';
-import { useAdminDrivers } from '../hooks/useAdminDrivers';
+import { useAdminDrivers, statusOptions, statusBadgeVariants } from '../hooks/useAdminDrivers';
 import { AdminPageHeader, AdminStatCard, AdminTableWrapper, tableStyles } from '../components';
 
+const StatusBadge = ({ status }: { status: string }) => (
+    <Badge variant={statusBadgeVariants[status] || 'secondary'}>{status.charAt(0).toUpperCase() + status.slice(1)}</Badge>
+);
+
+const StarRating = ({ rating }: { rating: number }) => (
+    <div className="flex items-center gap-1">
+        {[1, 2, 3, 4, 5].map((star) => (
+            <Star key={star} className={`w-4 h-4 ${star <= Math.floor(rating) ? 'fill-yellow-400 text-yellow-400' : 'fill-gray-200 text-gray-200'}`} />
+        ))}
+        <span className="text-sm font-medium ml-1">{rating.toFixed(1)}</span>
+    </div>
+);
+
 export function AdminDrivers() {
-    const {
-        searchQuery,
-        statusFilter,
-        selectedDriver,
-        showActionMenu,
-        filteredDrivers,
-        totalCount,
-        activeCount,
-        pendingCount,
-        inactiveCount,
-        setSearchQuery,
-        setStatusFilter,
-        setSelectedDriver,
-        toggleActionMenu,
-        closeModal,
-    } = useAdminDrivers();
-
-    const getStatusBadge = (status: string) => {
-        switch (status) {
-            case 'active':
-                return <Badge variant="success">Active</Badge>;
-            case 'pending':
-                return <Badge variant="warning">Pending</Badge>;
-            case 'inactive':
-                return <Badge variant="secondary">Inactive</Badge>;
-            case 'suspended':
-                return <Badge variant="error">Suspended</Badge>;
-            default:
-                return null;
-        }
-    };
-
-    const renderStars = (rating: number) => {
-        return (
-            <div className="flex items-center gap-1">
-                {[1, 2, 3, 4, 5].map((star) => (
-                    <Star
-                        key={star}
-                        className={`w-4 h-4 ${star <= Math.floor(rating)
-                                ? 'fill-yellow-400 text-yellow-400'
-                                : 'fill-gray-200 text-gray-200'
-                            }`}
-                    />
-                ))}
-                <span className="text-sm font-medium ml-1">{rating.toFixed(1)}</span>
-            </div>
-        );
-    };
+    const { searchQuery, statusFilter, selectedDriver, showActionMenu, filteredDrivers, totalCount, activeCount, pendingCount, inactiveCount, setSearchQuery, setStatusFilter, setSelectedDriver, toggleActionMenu, closeModal } = useAdminDrivers();
 
     return (
         <div className="space-y-6">
-            <AdminPageHeader
-                title="Driver Management"
-                subtitle="Manage driver accounts, vehicles, and verification"
-                icon={UserCheck}
-                iconColor="success"
-                action={
-                    <Button leftIcon={<UserPlus className="w-5 h-5" />}>Add Driver</Button>
-                }
-            />
+            <AdminPageHeader title="Driver Management" subtitle="Manage driver accounts, vehicles, and verification" icon={UserCheck} iconColor="success" action={<Button leftIcon={<UserPlus className="w-5 h-5" />}>Add Driver</Button>} />
 
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="grid grid-cols-4 gap-4"
-            >
-                <AdminStatCard
-                    label="Total Drivers"
-                    value={totalCount}
-                    icon={Users}
-                    color="primary"
-                    delay={0.1}
-                />
-                <AdminStatCard
-                    label="Active"
-                    value={activeCount}
-                    icon={UserCheck}
-                    color="success"
-                    delay={0.15}
-                />
-                <AdminStatCard
-                    label="Pending Verification"
-                    value={pendingCount}
-                    icon={Clock}
-                    color="warning"
-                    delay={0.2}
-                />
-                <AdminStatCard
-                    label="Inactive"
-                    value={inactiveCount}
-                    icon={Ban}
-                    color="gray"
-                    delay={0.25}
-                />
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="grid grid-cols-4 gap-4">
+                <AdminStatCard label="Total Drivers" value={totalCount} icon={Users} color="primary" delay={0.1} />
+                <AdminStatCard label="Active" value={activeCount} icon={UserCheck} color="success" delay={0.15} />
+                <AdminStatCard label="Pending Verification" value={pendingCount} icon={Clock} color="warning" delay={0.2} />
+                <AdminStatCard label="Inactive" value={inactiveCount} icon={Ban} color="gray" delay={0.25} />
             </motion.div>
 
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="flex items-center gap-4"
-            >
-                <Input
-                    placeholder="Search by name, email, phone, or vehicle..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    prefix={<Search className="w-4 h-4" />}
-                    className="w-80"
-                />
-                <Select
-                    options={[
-                        { value: 'all', label: 'All Status' },
-                        { value: 'active', label: 'Active' },
-                        { value: 'pending', label: 'Pending' },
-                        { value: 'inactive', label: 'Inactive' },
-                        { value: 'suspended', label: 'Suspended' },
-                    ]}
-                    value={statusFilter}
-                    onValueChange={setStatusFilter}
-                />
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="flex items-center gap-4">
+                <Input placeholder="Search by name, email, phone, or vehicle..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} prefix={<Search className="w-4 h-4" />} className="w-80" />
+                <Select options={statusOptions} value={statusFilter} onValueChange={setStatusFilter} />
             </motion.div>
 
-            <AdminTableWrapper
-                isEmpty={filteredDrivers.length === 0}
-                emptyState={{
-                    icon: UserCheck,
-                    title: 'No drivers found',
-                    description: 'Try adjusting your search or filter to find what you\'re looking for.',
-                }}
-            >
+            <AdminTableWrapper isEmpty={filteredDrivers.length === 0} emptyState={{ icon: UserCheck, title: 'No drivers found', description: "Try adjusting your search or filter to find what you're looking for." }}>
                 <table className={tableStyles.table}>
-                    <thead className={tableStyles.thead}>
-                        <tr>
-                            <th className={tableStyles.th}>Driver</th>
-                            <th className={tableStyles.th}>Vehicle</th>
-                            <th className={tableStyles.th}>Rating</th>
-                            <th className={tableStyles.th}>Trips</th>
-                            <th className={tableStyles.th}>Earnings</th>
-                            <th className={tableStyles.th}>Status</th>
-                            <th className={tableStyles.th}></th>
-                        </tr>
-                    </thead>
+                    <thead className={tableStyles.thead}><tr><th className={tableStyles.th}>Driver</th><th className={tableStyles.th}>Vehicle</th><th className={tableStyles.th}>Rating</th><th className={tableStyles.th}>Trips</th><th className={tableStyles.th}>Earnings</th><th className={tableStyles.th}>Status</th><th className={tableStyles.th}></th></tr></thead>
                     <tbody className={tableStyles.tbody}>
                         {filteredDrivers.map((driver, index) => (
-                            <motion.tr
-                                key={driver.id}
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: index * 0.05 }}
-                                className={tableStyles.tr}
-                            >
-                                <td className={tableStyles.td}>
-                                    <div
-                                        className="flex items-center gap-3 cursor-pointer"
-                                        onClick={() => setSelectedDriver(driver)}
-                                    >
-                                        <Avatar size="sm" name={driver.name} />
-                                        <div>
-                                            <p className="font-medium text-gray-900">
-                                                {driver.name}
-                                            </p>
-                                            <p className="text-xs text-gray-500">{driver.phone}</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td className={tableStyles.td}>
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-8 h-8 rounded-lg bg-primary-100 flex items-center justify-center">
-                                            <Car className="w-4 h-4 text-primary-600" />
-                                        </div>
-                                        <div>
-                                            <p className="text-sm text-gray-900">{driver.vehicleNumber}</p>
-                                            <p className="text-xs text-gray-500">{driver.vehicleType}</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td className={tableStyles.td}>{renderStars(driver.rating)}</td>
-                                <td className={`${tableStyles.td} ${tableStyles.tdBold}`}>
-                                    {driver.totalTrips.toLocaleString()}
-                                </td>
-                                <td className={`${tableStyles.td} ${tableStyles.tdBold}`}>
-                                    {formatCurrency(driver.totalEarnings)}
-                                </td>
-                                <td className={tableStyles.td}>{getStatusBadge(driver.status)}</td>
+                            <motion.tr key={driver.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: index * 0.05 }} className={tableStyles.tr}>
+                                <td className={tableStyles.td}><div className="flex items-center gap-3 cursor-pointer" onClick={() => setSelectedDriver(driver)}><Avatar size="sm" name={driver.name} /><div><p className="font-medium text-gray-900">{driver.name}</p><p className="text-xs text-gray-500">{driver.phone}</p></div></div></td>
+                                <td className={tableStyles.td}><div className="flex items-center gap-2"><div className="w-8 h-8 rounded-lg bg-primary-100 flex items-center justify-center"><Car className="w-4 h-4 text-primary-600" /></div><div><p className="text-sm text-gray-900">{driver.vehicleNumber}</p><p className="text-xs text-gray-500">{driver.vehicleType}</p></div></div></td>
+                                <td className={tableStyles.td}><StarRating rating={driver.rating} /></td>
+                                <td className={`${tableStyles.td} ${tableStyles.tdBold}`}>{driver.totalTrips.toLocaleString()}</td>
+                                <td className={`${tableStyles.td} ${tableStyles.tdBold}`}>{formatCurrency(driver.totalEarnings)}</td>
+                                <td className={tableStyles.td}><StatusBadge status={driver.status} /></td>
                                 <td className={`${tableStyles.td} relative`}>
-                                    <button
-                                        onClick={() => toggleActionMenu(driver.id)}
-                                        className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-                                    >
-                                        <MoreVertical className="w-4 h-4 text-gray-500" />
-                                    </button>
+                                    <button onClick={() => toggleActionMenu(driver.id)} className="p-2 rounded-lg hover:bg-gray-100 transition-colors"><MoreVertical className="w-4 h-4 text-gray-500" /></button>
                                     {showActionMenu === driver.id && (
-                                        <motion.div
-                                            initial={{ opacity: 0, scale: 0.95 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            className="absolute right-4 top-12 bg-white border border-gray-200 rounded-xl shadow-xl py-2 z-10 min-w-[160px]"
-                                        >
-                                            <button className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50">
-                                                <Edit className="w-4 h-4" /> Edit
-                                            </button>
-                                            <button className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50">
-                                                <FileText className="w-4 h-4" /> Documents
-                                            </button>
-                                            {driver.status === 'active' ? (
-                                                <button className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-error-600 hover:bg-error-50">
-                                                    <Ban className="w-4 h-4" /> Suspend
-                                                </button>
-                                            ) : (
-                                                <button className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-success-600 hover:bg-success-50">
-                                                    <CheckCircle className="w-4 h-4" /> Activate
-                                                </button>
-                                            )}
-                                            <button className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-error-600 hover:bg-error-50">
-                                                <Trash2 className="w-4 h-4" /> Delete
-                                            </button>
+                                        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="absolute right-4 top-12 bg-white border border-gray-200 rounded-xl shadow-xl py-2 z-10 min-w-[160px]">
+                                            <button className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50"><Edit className="w-4 h-4" /> Edit</button>
+                                            <button className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50"><FileText className="w-4 h-4" /> Documents</button>
+                                            {driver.status === 'active' ? <button className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-error-600 hover:bg-error-50"><Ban className="w-4 h-4" /> Suspend</button> : <button className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-success-600 hover:bg-success-50"><CheckCircle className="w-4 h-4" /> Activate</button>}
+                                            <button className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-error-600 hover:bg-error-50"><Trash2 className="w-4 h-4" /> Delete</button>
                                         </motion.div>
                                     )}
                                 </td>
@@ -255,116 +72,23 @@ export function AdminDrivers() {
                 </table>
             </AdminTableWrapper>
 
-            <Modal
-                open={!!selectedDriver}
-                onOpenChange={closeModal}
-                title="Driver Details"
-                size="md"
-            >
+            <Modal open={!!selectedDriver} onOpenChange={closeModal} title="Driver Details" size="md">
                 {selectedDriver && (
                     <div className="space-y-6">
-                        <div className="flex items-center gap-4">
-                            <Avatar size="xl" name={selectedDriver.name} />
-                            <div>
-                                <h2 className="text-xl font-semibold text-gray-900">
-                                    {selectedDriver.name}
-                                </h2>
-                                <div className="flex items-center gap-2 mt-1">
-                                    {getStatusBadge(selectedDriver.status)}
-                                    {renderStars(selectedDriver.rating)}
-                                </div>
-                            </div>
+                        <div className="flex items-center gap-4"><Avatar size="xl" name={selectedDriver.name} /><div><h2 className="text-xl font-semibold text-gray-900">{selectedDriver.name}</h2><div className="flex items-center gap-2 mt-1"><StatusBadge status={selectedDriver.status} /><StarRating rating={selectedDriver.rating} /></div></div></div>
+                        <div className="grid grid-cols-2 gap-4">
+                            {[{ icon: Mail, color: 'primary', label: 'Email', value: selectedDriver.email }, { icon: Phone, color: 'success', label: 'Phone', value: selectedDriver.phone }, { icon: Car, color: 'accent', label: 'Vehicle', value: `${selectedDriver.vehicleNumber} (${selectedDriver.vehicleType})` }, { icon: Calendar, color: 'warning', label: 'Joined', value: formatDate(selectedDriver.joinedAt) }, { icon: FileText, color: 'gray', label: 'License Number', value: selectedDriver.licenseNumber }, { icon: CreditCard, color: 'error', label: 'License Expiry', value: formatDate(selectedDriver.licenseExpiry) }].map(({ icon: Icon, color, label, value }) => (
+                                <div key={label} className="flex items-center gap-3 p-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl"><div className={`w-10 h-10 rounded-lg bg-${color}-100 flex items-center justify-center`}><Icon className={`w-5 h-5 text-${color}-600`} /></div><div><p className="text-xs text-gray-500">{label}</p><p className="text-sm text-gray-900">{value}</p></div></div>
+                            ))}
                         </div>
                         <div className="grid grid-cols-2 gap-4">
-                            <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl">
-                                <div className="w-10 h-10 rounded-lg bg-primary-100 flex items-center justify-center">
-                                    <Mail className="w-5 h-5 text-primary-600" />
-                                </div>
-                                <div>
-                                    <p className="text-xs text-gray-500">Email</p>
-                                    <p className="text-sm text-gray-900">{selectedDriver.email}</p>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl">
-                                <div className="w-10 h-10 rounded-lg bg-success-100 flex items-center justify-center">
-                                    <Phone className="w-5 h-5 text-success-600" />
-                                </div>
-                                <div>
-                                    <p className="text-xs text-gray-500">Phone</p>
-                                    <p className="text-sm text-gray-900">{selectedDriver.phone}</p>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl">
-                                <div className="w-10 h-10 rounded-lg bg-accent-100 flex items-center justify-center">
-                                    <Car className="w-5 h-5 text-accent-600" />
-                                </div>
-                                <div>
-                                    <p className="text-xs text-gray-500">Vehicle</p>
-                                    <p className="text-sm text-gray-900">
-                                        {selectedDriver.vehicleNumber} ({selectedDriver.vehicleType})
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl">
-                                <div className="w-10 h-10 rounded-lg bg-warning-100 flex items-center justify-center">
-                                    <Calendar className="w-5 h-5 text-warning-600" />
-                                </div>
-                                <div>
-                                    <p className="text-xs text-gray-500">Joined</p>
-                                    <p className="text-sm text-gray-900">
-                                        {formatDate(selectedDriver.joinedAt)}
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl">
-                                <div className="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center">
-                                    <FileText className="w-5 h-5 text-gray-600" />
-                                </div>
-                                <div>
-                                    <p className="text-xs text-gray-500">License Number</p>
-                                    <p className="text-sm text-gray-900">{selectedDriver.licenseNumber}</p>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl">
-                                <div className="w-10 h-10 rounded-lg bg-error-100 flex items-center justify-center">
-                                    <CreditCard className="w-5 h-5 text-error-600" />
-                                </div>
-                                <div>
-                                    <p className="text-xs text-gray-500">License Expiry</p>
-                                    <p className="text-sm text-gray-900">
-                                        {formatDate(selectedDriver.licenseExpiry)}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <Card padding="md" className="text-center bg-gradient-to-br from-primary-50 to-primary-100 border-primary-200">
-                                <p className="text-2xl font-bold text-primary-600">
-                                    {selectedDriver.totalTrips.toLocaleString()}
-                                </p>
-                                <p className="text-sm text-primary-600">Total Trips</p>
-                            </Card>
-                            <Card padding="md" className="text-center bg-gradient-to-br from-success-50 to-success-100 border-success-200">
-                                <p className="text-2xl font-bold text-success-600">
-                                    {formatCurrency(selectedDriver.totalEarnings)}
-                                </p>
-                                <p className="text-sm text-success-600">Total Earnings</p>
-                            </Card>
+                            <Card padding="md" className="text-center bg-gradient-to-br from-primary-50 to-primary-100 border-primary-200"><p className="text-2xl font-bold text-primary-600">{selectedDriver.totalTrips.toLocaleString()}</p><p className="text-sm text-primary-600">Total Trips</p></Card>
+                            <Card padding="md" className="text-center bg-gradient-to-br from-success-50 to-success-100 border-success-200"><p className="text-2xl font-bold text-success-600">{formatCurrency(selectedDriver.totalEarnings)}</p><p className="text-sm text-success-600">Total Earnings</p></Card>
                         </div>
                         <div className="flex gap-3 pt-4 border-t border-gray-100">
-                            <Button variant="outline" fullWidth>
-                                View Trips
-                            </Button>
-                            <Button variant="outline" fullWidth>
-                                View Documents
-                            </Button>
-                            {selectedDriver.status === 'active' ? (
-                                <Button variant="danger" fullWidth>
-                                    Suspend Driver
-                                </Button>
-                            ) : (
-                                <Button fullWidth>Activate Driver</Button>
-                            )}
+                            <Button variant="outline" fullWidth>View Trips</Button>
+                            <Button variant="outline" fullWidth>View Documents</Button>
+                            {selectedDriver.status === 'active' ? <Button variant="danger" fullWidth>Suspend Driver</Button> : <Button fullWidth>Activate Driver</Button>}
                         </div>
                     </div>
                 )}
