@@ -14,6 +14,7 @@ import {
     VerificationFilters,
     UserWithStats,
     UserStats,
+    DashboardStats,
 } from './admin.service';
 import { JwtAuthGuard } from '../iam/guards/jwt-auth.guard';
 import { RolesGuard } from '../iam/guards/roles.guard';
@@ -26,6 +27,13 @@ import { VerificationStatus, UserRole } from '../../common/enums';
 @Roles(UserRole.ADMIN, UserRole.SUPPORT)
 export class AdminController {
     constructor(private readonly adminService: AdminService) { }
+
+    // ==================== Dashboard Stats ====================
+
+    @Get('dashboard/stats')
+    async getDashboardStats(): Promise<DashboardStats> {
+        return this.adminService.getDashboardStats();
+    }
 
     // ==================== User Management ====================
 
