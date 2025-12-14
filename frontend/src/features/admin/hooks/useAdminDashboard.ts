@@ -73,7 +73,7 @@ export function useAdminDashboard() {
           customer: d.raised_by_user
             ? `${d.raised_by_user.first_name} ${d.raised_by_user.last_name}`
             : 'User',
-          issue: d.description?.substring(0, 50) || d.type,
+          issue: d.description?.substring(0, 50) || d.type || 'Issue',
           priority: 'medium',
           status: d.status,
         }));
