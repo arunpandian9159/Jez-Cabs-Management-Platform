@@ -136,8 +136,8 @@ const statColors = {
 
 // Animation variants
 const sidebarVariants = {
-  expanded: { width: 288 },
-  collapsed: { width: 80 },
+  expanded: { width: 256 },
+  collapsed: { width: 72 },
 };
 
 const textVariants = {
@@ -207,7 +207,7 @@ export function Sidebar({
           // Shadow
           'shadow-2xl lg:shadow-lg'
         )}
-        style={{ width: showExpanded ? 288 : 80 }}
+        style={{ width: showExpanded ? 256 : 72 }}
       >
         {/* Logo Section */}
         <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200/80">
@@ -364,7 +364,7 @@ export function Sidebar({
             const isActive = item.end
               ? location.pathname === item.href
               : location.pathname === item.href ||
-                location.pathname.startsWith(item.href + '/');
+              location.pathname.startsWith(item.href + '/');
             const Icon = item.icon;
 
             return (

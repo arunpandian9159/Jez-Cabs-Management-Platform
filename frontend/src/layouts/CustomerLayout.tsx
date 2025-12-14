@@ -66,6 +66,7 @@ const emergencyOptions = [
 
 export function CustomerLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarExpanded, setSidebarExpanded] = useState(true);
   const [showEmergencyPopup, setShowEmergencyPopup] = useState(false);
   const [countdown, setCountdown] = useState(10);
   const [isCountdownActive, setIsCountdownActive] = useState(false);
@@ -74,6 +75,30 @@ export function CustomerLayout() {
   );
   const location = useLocation();
   const { user, logout } = useAuth();
+
+  // Check if we're on the book location page
+  const isBookLocationPage = location.pathname.startsWith(ROUTES.CUSTOMER.BOOK_LOCATION);
+
+  // Auto-collapse sidebar on book location page when width >= 1800px
+  useEffect(() => {
+    const handleResize = () => {
+      if (isBookLocationPage) {
+        if (window.innerWidth <= 1800) {
+          setSidebarExpanded(false);
+        } else {
+          setSidebarExpanded(true);
+        }
+      } else {
+        setSidebarExpanded(true);
+      }
+    };
+
+    // Initial check
+    handleResize();
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isBookLocationPage]);
 
   // Get current page title
   const currentPageTitle =
@@ -178,8 +203,8 @@ export function CustomerLayout() {
                         key={option.id}
                         onClick={() => handleEmergencySelect(option.id)}
                         className={`w-full flex items-center gap-4 p-4 rounded-xl border-2 transition-all ${isSelected
-                            ? 'border-red-500 bg-red-50'
-                            : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                          ? 'border-red-500 bg-red-50'
+                          : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                           }`}
                         whileHover={{ scale: 1.01 }}
                         whileTap={{ scale: 0.99 }}
@@ -287,6 +312,8 @@ export function CustomerLayout() {
         dashboardPath={ROUTES.CUSTOMER.DASHBOARD}
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
+        isExpanded={sidebarExpanded}
+        onToggleExpand={() => setSidebarExpanded(!sidebarExpanded)}
         navigation={customerNavItems}
         user={user}
         onLogout={logout}
@@ -303,7 +330,7 @@ export function CustomerLayout() {
       />
 
       {/* Main content area */}
-      <div className="lg:pl-72">
+      <div className={sidebarExpanded ? 'lg:pl-64' : 'lg:pl-[72px]'}>
         <Navbar
           variant="dashboard"
           title={currentPageTitle}

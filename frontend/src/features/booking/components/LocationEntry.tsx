@@ -294,10 +294,6 @@ export function LocationEntry() {
   return (
     <section
       className="relative min-h-[calc(100vh-4rem)] flex items-center py-8 px-4 sm:px-6 lg:px-8"
-      style={{
-        background:
-          'linear-gradient(135deg, #f8fafc 0%, #eff6ff 25%, #ffffff 50%, #f0fdfa 75%, #f8fafc 100%)',
-      }}
     >
       {/* Animated Background Orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -348,9 +344,9 @@ export function LocationEntry() {
       />
 
       <div className="w-full max-w-7xl mx-auto relative z-10">
-        <div className="grid lg:grid-cols-2 lg:gap-2 items-start">
+        <div className="grid lg:grid-cols-2 lg:gap-20 px-12 items-start">
           {/* Left Content - Title and Animation */}
-          <div className="space-y-6 mb-8 lg:m-0">
+          <div className="space-y-6 mb-8 lg:-ml-32">
             {/* Badge with animation */}
             <motion.div
               initial={{ opacity: 0, y: -20 }}
@@ -378,9 +374,9 @@ export function LocationEntry() {
               className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight"
               style={{ color: '#0f172a' }}
             >
-              Where to
+              Your Journey
               <span className="block mt-2" style={{ color: '#2563eb' }}>
-                next?
+                Your Way
               </span>
             </motion.h1>
 
@@ -423,61 +419,63 @@ export function LocationEntry() {
                   className="w-full h-full drop-shadow-2xl"
                 />
               </div>
+            </div>
 
-              {/* Floating cards - Desktop only */}
-              <div className="relative hidden lg:block pt-8">
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.5 }}
-                  className="absolute top-4 right-0 p-4 rounded-2xl shadow-xl animate-float-subtle"
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.95)',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(255, 255, 255, 0.8)',
-                  }}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
-                      <CheckCircle className="w-5 h-5 text-white" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold" style={{ color: '#0f172a' }}>
-                        Safe Rides
-                      </p>
-                      <p className="text-xs" style={{ color: '#64748b' }}>
-                        Verified drivers only
-                      </p>
-                    </div>
+            {/* Floating cards - Desktop only */}
+            <div className="relative hidden lg:block">
+              {/* Safe Rides - Top Right */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.5 }}
+                className="absolute -top-96 right-0 p-4 rounded-2xl shadow-xl animate-float-subtle"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.95)',
+                  backdropFilter: 'blur(10px)',
+                  border: '1px solid rgba(255, 255, 255, 0.8)',
+                }}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center">
+                    <CheckCircle className="w-5 h-5 text-white" />
                   </div>
-                </motion.div>
+                  <div>
+                    <p className="text-sm font-semibold" style={{ color: '#0f172a' }}>
+                      Safe Rides
+                    </p>
+                    <p className="text-xs" style={{ color: '#64748b' }}>
+                      Verified drivers only
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
 
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.6 }}
-                  className="absolute bottom-0 left-0 p-4 rounded-2xl shadow-xl animate-float-subtle-delayed"
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.95)',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(255, 255, 255, 0.8)',
-                  }}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
-                      <Car className="w-5 h-5 text-white" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold" style={{ color: '#0f172a' }}>
-                        10+ Cabs
-                      </p>
-                      <p className="text-xs" style={{ color: '#64748b' }}>
-                        Available nearby
-                      </p>
-                    </div>
+              {/* 10+ Cabs - Bottom Left */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.6 }}
+                className="absolute -bottom-8 left-0 p-4 rounded-2xl shadow-xl animate-float-subtle-delayed"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.95)',
+                  backdropFilter: 'blur(10px)',
+                  border: '1px solid rgba(255, 255, 255, 0.8)',
+                }}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center">
+                    <Car className="w-5 h-5 text-white" />
                   </div>
-                </motion.div>
-              </div>
+                  <div>
+                    <p className="text-sm font-semibold" style={{ color: '#0f172a' }}>
+                      10+ Cabs
+                    </p>
+                    <p className="text-xs" style={{ color: '#64748b' }}>
+                      Available nearby
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
             </div>
           </div>
 
@@ -490,7 +488,7 @@ export function LocationEntry() {
           >
             {/* Booking Card */}
             <div
-              className="w-full max-w-sm p-5 sm:p-8 rounded-2xl sm:rounded-3xl animate-fade-in-up"
+              className="w-full min-w-sm max-w-sm p-5 sm:p-8 rounded-2xl sm:rounded-3xl animate-fade-in-up"
               style={{
                 background: 'rgba(255, 255, 255, 0.98)',
                 boxShadow: '0 4px 24px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04)',
