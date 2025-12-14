@@ -8,6 +8,7 @@ import {
   Settings,
   BarChart3,
   Shield,
+  Building2,
 } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '@/features/auth';
@@ -17,6 +18,7 @@ import { Navbar } from './Navbar';
 const navItems: NavItem[] = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard, end: true },
   { name: 'Users', href: '/admin/users', icon: Users },
+  { name: 'Cab Owners', href: '/admin/owners', icon: Building2 },
   { name: 'Drivers', href: '/admin/drivers', icon: Car },
   { name: 'Vehicles', href: '/admin/cabs', icon: Car },
   { name: 'Disputes', href: '/admin/disputes', icon: AlertTriangle, badge: 5 },

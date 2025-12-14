@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { tripsService } from '@/services';
+import { usersService, AdminUserDisplay } from '../services/users.service';
 
 export interface UserDisplay {
   id: string;
@@ -21,41 +21,62 @@ export function useAdminUsers() {
   const [showActionMenu, setShowActionMenu] = useState<string | null>(null);
   const [users, setUsers] = useState<UserDisplay[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [stats, setStats] = useState({
+    total: 0,
+    active: 0,
+    suspended: 0,
+    inactive: 0,
+  });
 
   const fetchUsers = useCallback(async () => {
     try {
       setIsLoading(true);
-      const trips = await tripsService.findAll({ limit: 100 });
-      const userMap = new Map<string, UserDisplay>();
 
-      trips.forEach((trip) => {
-        if (trip.customer && !userMap.has(trip.customer.id)) {
-          userMap.set(trip.customer.id, {
-            id: trip.customer.id,
-            name: `${trip.customer.first_name} ${trip.customer.last_name}`,
-            email: '',
-            phone: trip.customer.phone || '',
-            role: 'customer',
-            status: 'active',
-            location: 'Unknown',
-            joinedAt: new Date().toISOString(),
-            totalTrips: 0,
-            totalSpent: 0,
-          });
-        }
+      // Fetch users from admin API
+      const usersData = await usersService.getAdminUsers({
+        status: statusFilter !== 'all' ? statusFilter : undefined,
+        search: searchQuery || undefined,
+        limit: 100,
       });
 
-      setUsers(Array.from(userMap.values()));
+      // Map the response to UserDisplay format
+      const mappedUsers: UserDisplay[] = usersData.map((user: AdminUserDisplay) => ({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        role: user.role,
+        status: user.status,
+        location: user.location,
+        joinedAt: user.joinedAt,
+        totalTrips: user.totalTrips,
+        totalSpent: user.totalSpent,
+      }));
+
+      setUsers(mappedUsers);
     } catch (error) {
       console.error('Error fetching users:', error);
     } finally {
       setIsLoading(false);
+    }
+  }, [statusFilter, searchQuery]);
+
+  const fetchStats = useCallback(async () => {
+    try {
+      const statsData = await usersService.getAdminUserStats();
+      setStats(statsData);
+    } catch (error) {
+      console.error('Error fetching user stats:', error);
     }
   }, []);
 
   useEffect(() => {
     fetchUsers();
   }, [fetchUsers]);
+
+  useEffect(() => {
+    fetchStats();
+  }, [fetchStats]);
 
   const filteredUsers = users.filter((user) => {
     const matchesSearch =
@@ -75,11 +96,11 @@ export function useAdminUsers() {
     setSelectedUser(null);
   };
 
-  // Computed stats
-  const totalCount = users.length;
-  const activeCount = users.filter((u) => u.status === 'active').length;
-  const suspendedCount = users.filter((u) => u.status === 'suspended').length;
-  const inactiveCount = users.filter((u) => u.status === 'inactive').length;
+  // Use stats from API instead of computing from filtered users
+  const totalCount = stats.total;
+  const activeCount = stats.active;
+  const suspendedCount = stats.suspended;
+  const inactiveCount = stats.inactive;
 
   return {
     // State
@@ -101,5 +122,6 @@ export function useAdminUsers() {
     setSelectedUser,
     toggleActionMenu,
     closeModal,
+    refetch: fetchUsers,
   };
 }

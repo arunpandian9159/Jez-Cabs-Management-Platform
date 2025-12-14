@@ -12,6 +12,8 @@ import {
     AdminService,
     VerificationStats,
     VerificationFilters,
+    UserWithStats,
+    UserStats,
 } from './admin.service';
 import { JwtAuthGuard } from '../iam/guards/jwt-auth.guard';
 import { RolesGuard } from '../iam/guards/roles.guard';
@@ -24,6 +26,33 @@ import { VerificationStatus, UserRole } from '../../common/enums';
 @Roles(UserRole.ADMIN, UserRole.SUPPORT)
 export class AdminController {
     constructor(private readonly adminService: AdminService) { }
+
+    // ==================== User Management ====================
+
+    @Get('users')
+    async getUsers(
+        @Query('status') status?: string,
+        @Query('role') role?: string,
+        @Query('search') search?: string,
+        @Query('limit') limit?: string,
+        @Query('offset') offset?: string,
+    ): Promise<UserWithStats[]> {
+        const filters: any = {};
+        if (status) filters.status = status;
+        if (role) filters.role = role;
+        if (search) filters.search = search;
+        if (limit) filters.limit = parseInt(limit, 10);
+        if (offset) filters.offset = parseInt(offset, 10);
+
+        return this.adminService.getAllUsers(filters);
+    }
+
+    @Get('users/stats')
+    async getUserStats(): Promise<UserStats> {
+        return this.adminService.getUserStats();
+    }
+
+    // ==================== Verifications ====================
 
     @Get('verifications')
     async getVerifications(
