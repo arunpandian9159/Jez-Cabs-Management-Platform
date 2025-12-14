@@ -40,6 +40,13 @@ export interface VerificationStats {
   rejected: number;
 }
 
+export interface DashboardStats {
+  totalUsers: number;
+  totalTrips: number;
+  totalRevenue: number;
+  totalDisputes: number;
+}
+
 // Backend response types (snake_case) - matching document_verifications table
 interface BackendUser {
   id: string;
@@ -127,6 +134,11 @@ export const adminService = {
   // Get verification stats
   async getVerificationStats(): Promise<VerificationStats> {
     return apiClient.get<VerificationStats>('/admin/verifications/stats');
+  },
+
+  // Get dashboard stats (users, trips, revenue, disputes)
+  async getDashboardStats(): Promise<DashboardStats> {
+    return apiClient.get<DashboardStats>('/admin/dashboard/stats');
   },
 
   // Get a specific verification
