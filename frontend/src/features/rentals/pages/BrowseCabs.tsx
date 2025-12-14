@@ -112,7 +112,7 @@ export function BrowseCabs() {
                   { value: 'electric', label: 'Electric' },
                 ]}
                 value="any"
-                onValueChange={() => {}}
+                onValueChange={() => { }}
               />
               <Select
                 label="Transmission"
@@ -122,7 +122,7 @@ export function BrowseCabs() {
                   { value: 'automatic', label: 'Automatic' },
                 ]}
                 value="any"
-                onValueChange={() => {}}
+                onValueChange={() => { }}
               />
               <Select
                 label="Seats"
@@ -133,7 +133,7 @@ export function BrowseCabs() {
                   { value: '7', label: '7+ Seats' },
                 ]}
                 value="any"
-                onValueChange={() => {}}
+                onValueChange={() => { }}
               />
               <Select
                 label="Price Range"
@@ -144,7 +144,7 @@ export function BrowseCabs() {
                   { value: 'premium', label: 'Above ₹3000/day' },
                 ]}
                 value="any"
-                onValueChange={() => {}}
+                onValueChange={() => { }}
               />
             </motion.div>
           )}
@@ -191,7 +191,15 @@ function CabCard({
         )}
       >
         <div className="relative h-48 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-          <Car className="w-20 h-20 text-gray-400" />
+          {cab.image ? (
+            <img
+              src={cab.image}
+              alt={`${cab.make} ${cab.model}`}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <Car className="w-20 h-20 text-gray-400" />
+          )}
           <button
             onClick={() => toggleFavorite(cab.id)}
             className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 flex items-center justify-center shadow-sm hover:bg-white transition-colors"

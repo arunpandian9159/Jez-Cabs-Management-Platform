@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Home,
   Map,
   Car,
   Clock,
@@ -24,7 +23,6 @@ import { ROUTES } from '@/shared/constants';
 
 // Navigation items for customer
 const customerNavItems: NavItem[] = [
-  { name: 'Dashboard', href: ROUTES.CUSTOMER.DASHBOARD, icon: Home },
   { name: 'Book a Ride', href: ROUTES.CUSTOMER.BOOK_LOCATION, icon: Map, end: true },
   { name: 'Tracking', href: ROUTES.CUSTOMER.BOOK_TRACKING, icon: MapPin },
   { name: 'Rentals', href: ROUTES.CUSTOMER.RENTALS, icon: Car },
@@ -106,7 +104,7 @@ export function CustomerLayout() {
       (item) =>
         location.pathname === item.href ||
         location.pathname.startsWith(item.href + '/')
-    )?.name || 'Dashboard';
+    )?.name || 'Profile';
 
   // Handle emergency call
   const handleEmergencyCall = useCallback((phone: string) => {
@@ -309,7 +307,7 @@ export function CustomerLayout() {
       <Sidebar
         portalType="customer"
         portalLabel="Customer Portal"
-        dashboardPath={ROUTES.CUSTOMER.DASHBOARD}
+        dashboardPath={ROUTES.CUSTOMER.PROFILE}
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
         isExpanded={sidebarExpanded}

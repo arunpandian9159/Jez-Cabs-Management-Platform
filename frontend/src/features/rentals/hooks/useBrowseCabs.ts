@@ -60,7 +60,7 @@ export function useBrowseCabs() {
         ownerName: cab.owner
           ? `${cab.owner.first_name} ${cab.owner.last_name}`
           : 'Owner',
-        image: cab.images?.[0] || null,
+        image: cab.image_url || cab.images?.[0] || null,
         features: cab.features || [],
         available: true,
       }));
