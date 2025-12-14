@@ -1,3 +1,4 @@
+// Admin module added for verification management - v2
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -19,6 +20,7 @@ import { DisputesModule } from './modules/disputes/disputes.module';
 import { SafetyModule } from './modules/safety/safety.module';
 import { CommunityModule } from './modules/community/community.module';
 import { NotificationModule } from './modules/notification/notification.module';
+import { AdminModule } from './modules/admin/admin.module';
 import { SupabaseModule } from './common/supabase.module';
 import { HealthModule } from './health/health.module';
 
@@ -71,9 +73,10 @@ import { HealthModule } from './health/health.module';
     SafetyModule,
     CommunityModule,
     NotificationModule,
+    AdminModule,
     HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

@@ -4,9 +4,11 @@ export interface Dispute {
   id: string;
   trip_id: string;
   raised_by: string;
-  type: 'fare' | 'behavior' | 'safety' | 'service' | 'other';
+  type?: 'fare' | 'behavior' | 'safety' | 'service' | 'other';
+  issue_type?: string; // Backend uses issue_type instead of type
+  priority?: 'low' | 'medium' | 'high' | 'urgent';
   description: string;
-  status: 'pending' | 'in_progress' | 'resolved' | 'closed';
+  status: 'pending' | 'in_progress' | 'resolved' | 'closed' | 'open';
   resolution?: string;
   refund_amount?: number;
   created_at: string;
@@ -20,6 +22,13 @@ export interface Dispute {
     created_at: string;
   };
   raised_by_user?: {
+    id: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+  };
+  // TypeORM returns relations in camelCase
+  raisedByUser?: {
     id: string;
     first_name: string;
     last_name: string;
