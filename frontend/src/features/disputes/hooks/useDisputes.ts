@@ -7,7 +7,7 @@ export interface DisputeDisplay {
   type: string;
   subject: string;
   description: string;
-  status: 'open' | 'resolved' | 'closed';
+  status: 'open' | 'pending' | 'in_progress' | 'resolved' | 'closed';
   createdAt: string;
   resolvedAt?: string;
   closedAt?: string;
@@ -48,9 +48,9 @@ export function useDisputes() {
   ): DisputeDisplay => ({
     id: d.id,
     tripId: d.trip_id,
-    type: d.type,
-    subject: `${d.type.charAt(0).toUpperCase() + d.type.slice(1)} Issue`,
-    description: d.description,
+    type: d.type || 'other',
+    subject: `${(d.type || 'Unknown').charAt(0).toUpperCase() + (d.type || 'unknown').slice(1)} Issue`,
+    description: d.description || '',
     status:
       d.status === 'pending' || d.status === 'in_progress'
         ? 'open'
