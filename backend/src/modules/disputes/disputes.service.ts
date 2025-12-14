@@ -9,7 +9,7 @@ export class DisputesService {
   constructor(
     @InjectRepository(Dispute)
     private disputeRepository: Repository<Dispute>,
-  ) {}
+  ) { }
 
   private generateTicketNumber(): string {
     const prefix = 'DSP';
@@ -34,6 +34,7 @@ export class DisputesService {
     return this.disputeRepository.find({
       where,
       order: { created_at: 'DESC' },
+      relations: ['raisedByUser'],
     });
   }
 

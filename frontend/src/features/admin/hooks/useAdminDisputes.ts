@@ -60,36 +60,44 @@ export function useAdminDisputes() {
       setIsLoading(true);
       const disputesData = await disputesService.findAll();
       const formattedDisputes: DisputeDisplay[] = disputesData.map(
-        (d, idx) => ({
-          id: d.id,
-          ticketNo: `TKT-${String(idx + 1).padStart(6, '0')}`,
-          customer: {
-            name: d.raised_by_user
-              ? `${d.raised_by_user.first_name} ${d.raised_by_user.last_name}`
-              : 'Unknown',
-            phone: '',
-            email: d.raised_by_user?.email || '',
-          },
-          driver: {
-            name: 'Unknown Driver',
-            phone: '',
-            vehicleNo: '',
-          },
-          trip: {
-            id: d.trip_id,
-            from: d.trip?.pickup_address || 'Unknown',
-            to: d.trip?.destination_address || 'Unknown',
-            date: d.trip?.created_at || d.created_at,
-            fare: d.trip?.actual_fare || 0,
-          },
-          issue: d.type.charAt(0).toUpperCase() + d.type.slice(1),
-          description: d.description,
-          priority: 'medium',
-          status: d.status === 'pending' ? 'open' : d.status,
-          createdAt: d.created_at,
-          messages: [],
-          resolution: d.resolution,
-        })
+        (d, idx) => {
+          // Handle both camelCase and snake_case for the user relation
+          const user = d.raisedByUser || d.raised_by_user;
+          const issueType = d.type || d.issue_type;
+
+          return {
+            id: d.id,
+            ticketNo: `TKT-${String(idx + 1).padStart(6, '0')}`,
+            customer: {
+              name: user
+                ? `${user.first_name} ${user.last_name}`
+                : 'Unknown',
+              phone: '',
+              email: user?.email || '',
+            },
+            driver: {
+              name: 'Unknown Driver',
+              phone: '',
+              vehicleNo: '',
+            },
+            trip: {
+              id: d.trip_id,
+              from: d.trip?.pickup_address || 'Unknown',
+              to: d.trip?.destination_address || 'Unknown',
+              date: d.trip?.created_at || d.created_at,
+              fare: d.trip?.actual_fare || 0,
+            },
+            issue: issueType
+              ? issueType.charAt(0).toUpperCase() + issueType.slice(1)
+              : 'Other',
+            description: d.description,
+            priority: d.priority || 'medium',
+            status: d.status === 'pending' ? 'open' : d.status,
+            createdAt: d.created_at,
+            messages: [],
+            resolution: d.resolution,
+          };
+        }
       );
       setDisputes(formattedDisputes);
     } catch (error) {
