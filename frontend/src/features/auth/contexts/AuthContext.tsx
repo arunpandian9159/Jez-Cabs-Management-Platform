@@ -29,7 +29,7 @@ interface AuthContextType extends AuthState {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const roleHomePaths: Record<UserRole, string> = {
-  customer: ROUTES.CUSTOMER.DASHBOARD,
+  customer: ROUTES.CUSTOMER.BOOK_LOCATION,
   driver: ROUTES.DRIVER.DASHBOARD,
   cab_owner: ROUTES.OWNER.DASHBOARD,
   trip_planner: ROUTES.PLANNER.DASHBOARD,
