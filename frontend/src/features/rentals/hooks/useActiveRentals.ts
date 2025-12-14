@@ -8,6 +8,7 @@ export interface RentalDisplay {
     model: string;
     registrationNumber: string;
     color: string;
+    imageUrl?: string;
   };
   owner: { name: string; phone: string };
   startDate: string;
@@ -16,6 +17,7 @@ export interface RentalDisplay {
   totalAmount: number;
   paidAmount: number;
   daysRemaining?: number;
+  totalDays?: number;
   startOdometer?: number;
   currentOdometer?: number;
   rating?: number;
@@ -28,27 +30,37 @@ export function useActiveRentals() {
   const [pastRentals, setPastRentals] = useState<RentalDisplay[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const formatRental = (r: Rental): RentalDisplay => ({
-    id: r.id,
-    cab: {
-      make: r.cab?.make || '',
-      model: r.cab?.model || '',
-      registrationNumber: r.cab?.registration_number || '',
-      color: r.cab?.color || 'Black',
-    },
-    owner: { name: '', phone: '' },
-    startDate: r.start_date,
-    endDate: r.end_date,
-    status: r.status,
-    totalAmount: r.total_amount,
-    paidAmount: r.total_amount,
-    daysRemaining: Math.max(
-      0,
-      Math.ceil(
-        (new Date(r.end_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
-      )
-    ),
-  });
+  const formatRental = (r: Rental): RentalDisplay => {
+    const startDate = new Date(r.start_date);
+    const endDate = new Date(r.end_date);
+    const totalDays = Math.ceil(
+      (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
+
+    return {
+      id: r.id,
+      cab: {
+        make: r.cab?.make || '',
+        model: r.cab?.model || '',
+        registrationNumber: r.cab?.registration_number || '',
+        color: r.cab?.color || 'Black',
+        imageUrl: r.cab?.images?.[0],
+      },
+      owner: { name: '', phone: '' },
+      startDate: r.start_date,
+      endDate: r.end_date,
+      status: r.status,
+      totalAmount: r.total_amount,
+      paidAmount: r.total_amount,
+      totalDays,
+      daysRemaining: Math.max(
+        0,
+        Math.ceil(
+          (new Date(r.end_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+        )
+      ),
+    };
+  };
 
   const fetchRentals = useCallback(async () => {
     try {
