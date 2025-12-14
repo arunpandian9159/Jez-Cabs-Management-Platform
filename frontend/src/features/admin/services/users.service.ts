@@ -69,6 +69,35 @@ export interface UpdateAddressDto {
   is_default?: boolean;
 }
 
+// Admin-specific interfaces
+export interface AdminUserDisplay {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  role: string;
+  status: string;
+  location: string;
+  joinedAt: string;
+  totalTrips: number;
+  totalSpent: number;
+}
+
+export interface AdminUserStats {
+  total: number;
+  active: number;
+  suspended: number;
+  inactive: number;
+}
+
+export interface AdminUserFilters {
+  status?: string;
+  role?: string;
+  search?: string;
+  limit?: number;
+  offset?: number;
+}
+
 export const usersService = {
   // Get saved addresses
   async getSavedAddresses(): Promise<SavedAddress[]> {
@@ -138,6 +167,28 @@ export const usersService = {
   async getTransactions(limit?: number): Promise<Transaction[]> {
     const params = limit ? `?limit=${limit}` : '';
     return apiClient.get<Transaction[]>(`/users/transactions${params}`);
+  },
+
+  // ==================== Admin User Management ====================
+
+  // Get all users (admin only)
+  async getAdminUsers(filters?: AdminUserFilters): Promise<AdminUserDisplay[]> {
+    const params = new URLSearchParams();
+    if (filters?.status) params.append('status', filters.status);
+    if (filters?.role) params.append('role', filters.role);
+    if (filters?.search) params.append('search', filters.search);
+    if (filters?.limit) params.append('limit', filters.limit.toString());
+    if (filters?.offset) params.append('offset', filters.offset.toString());
+
+    const queryString = params.toString();
+    return apiClient.get<AdminUserDisplay[]>(
+      `/admin/users${queryString ? `?${queryString}` : ''}`
+    );
+  },
+
+  // Get user stats (admin only)
+  async getAdminUserStats(): Promise<AdminUserStats> {
+    return apiClient.get<AdminUserStats>('/admin/users/stats');
   },
 };
 

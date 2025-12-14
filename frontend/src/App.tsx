@@ -67,6 +67,11 @@ import {
   AdminDisputes,
   AdminUsers,
   AdminVerification,
+  AdminDrivers,
+  AdminVehicles,
+  AdminReports,
+  AdminSettings,
+  AdminOwners,
 } from '@/features/admin/pages';
 
 // Shared utilities
@@ -169,12 +174,13 @@ function App() {
                   <Route element={<AdminLayout />}>
                     <Route path="/admin" element={<AdminDashboard />} />
                     <Route path="/admin/users" element={<AdminUsers />} />
+                    <Route path="/admin/owners" element={<AdminOwners />} />
                     <Route path="/admin/disputes" element={<AdminDisputes />} />
                     <Route path="/admin/verification" element={<AdminVerification />} />
-                    <Route path="/admin/drivers" element={<PlaceholderPage title="Driver Management" />} />
-                    <Route path="/admin/cabs" element={<PlaceholderPage title="Vehicle Management" />} />
-                    <Route path="/admin/reports" element={<PlaceholderPage title="Reports" />} />
-                    <Route path="/admin/settings" element={<PlaceholderPage title="Admin Settings" />} />
+                    <Route path="/admin/drivers" element={<AdminDrivers />} />
+                    <Route path="/admin/cabs" element={<AdminVehicles />} />
+                    <Route path="/admin/reports" element={<AdminReports />} />
+                    <Route path="/admin/settings" element={<AdminSettings />} />
                   </Route>
                 </Route>
 
