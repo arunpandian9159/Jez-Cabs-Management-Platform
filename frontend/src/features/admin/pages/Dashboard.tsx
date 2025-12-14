@@ -1,10 +1,11 @@
 import { motion } from 'framer-motion';
-import { Clock, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { Clock, LayoutDashboard, TrendingUp, AlertTriangle } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Avatar } from '@/components/ui/Avatar';
 import { formatCurrency } from '@/shared/utils';
 import { useAdminDashboard } from '../hooks/useAdminDashboard';
+import { AdminPageHeader, AdminStatCard } from '../components';
 
 export function AdminDashboard() {
   const { stats, recentTrips, pendingVerifications, recentDisputes } =
@@ -38,17 +39,21 @@ export function AdminDashboard() {
     }
   };
 
+  const colorMap: Record<string, 'primary' | 'success' | 'warning' | 'error' | 'accent'> = {
+    primary: 'primary',
+    success: 'success',
+    accent: 'accent',
+    error: 'error',
+  };
+
   return (
     <div className="space-y-6">
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">Dashboard</h1>
-        <p className="text-gray-500">
-          Welcome back! Here's what's happening today.
-        </p>
-      </motion.div>
+      <AdminPageHeader
+        title="Dashboard"
+        subtitle="Welcome back! Here's what's happening today."
+        icon={LayoutDashboard}
+        iconColor="primary"
+      />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -58,53 +63,19 @@ export function AdminDashboard() {
       >
         {stats.map((stat, index) => {
           const IconComponent = stat.icon;
-          const bgColor =
-            stat.color === 'primary'
-              ? 'bg-primary-100'
-              : stat.color === 'success'
-                ? 'bg-success-100'
-                : stat.color === 'accent'
-                  ? 'bg-accent-100'
-                  : 'bg-error-100';
-          const iconColor =
-            stat.color === 'primary'
-              ? 'text-primary-600'
-              : stat.color === 'success'
-                ? 'text-success-600'
-                : stat.color === 'accent'
-                  ? 'text-accent-600'
-                  : 'text-error-600';
           return (
-            <motion.div
+            <AdminStatCard
               key={stat.label}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.1 + index * 0.05 }}
-            >
-              <Card padding="lg">
-                <div className="flex items-start justify-between mb-3">
-                  <div
-                    className={`w-12 h-12 rounded-lg ${bgColor} flex items-center justify-center`}
-                  >
-                    <IconComponent className={`w-6 h-6 ${iconColor}`} />
-                  </div>
-                  <div
-                    className={`flex items-center gap-1 text-sm ${stat.trending === 'up' ? 'text-success-600' : 'text-error-600'}`}
-                  >
-                    {stat.trending === 'up' ? (
-                      <ArrowUpRight className="w-4 h-4" />
-                    ) : (
-                      <ArrowDownRight className="w-4 h-4" />
-                    )}
-                    {stat.change}
-                  </div>
-                </div>
-                <p className="text-2xl font-bold text-gray-900 mb-1">
-                  {stat.value}
-                </p>
-                <p className="text-sm text-gray-500">{stat.label}</p>
-              </Card>
-            </motion.div>
+              label={stat.label}
+              value={stat.value}
+              icon={IconComponent}
+              color={colorMap[stat.color] || 'primary'}
+              trend={{
+                value: stat.change,
+                direction: stat.trending as 'up' | 'down',
+              }}
+              delay={0.1 + index * 0.05}
+            />
           );
         })}
       </motion.div>
@@ -116,39 +87,45 @@ export function AdminDashboard() {
           transition={{ delay: 0.3 }}
           className="col-span-2"
         >
-          <Card padding="lg">
+          <Card padding="lg" className="overflow-hidden">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-semibold text-gray-900">Recent Trips</h2>
-              <button className="text-sm text-primary-600 hover:underline">
+              <div className="flex items-center gap-2">
+                <TrendingUp className="w-5 h-5 text-primary-600" />
+                <h2 className="font-semibold text-gray-900">Recent Trips</h2>
+              </div>
+              <button className="text-sm text-primary-600 hover:underline font-medium">
                 View All
               </button>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-gray-200">
-                    <th className="text-left py-3 text-sm font-medium text-gray-500">
+                  <tr className="border-b border-gray-200 bg-gradient-to-r from-gray-50 to-transparent">
+                    <th className="text-left py-3 text-sm font-semibold text-gray-600 uppercase tracking-wider">
                       Customer
                     </th>
-                    <th className="text-left py-3 text-sm font-medium text-gray-500">
+                    <th className="text-left py-3 text-sm font-semibold text-gray-600 uppercase tracking-wider">
                       Driver
                     </th>
-                    <th className="text-left py-3 text-sm font-medium text-gray-500">
+                    <th className="text-left py-3 text-sm font-semibold text-gray-600 uppercase tracking-wider">
                       Fare
                     </th>
-                    <th className="text-left py-3 text-sm font-medium text-gray-500">
+                    <th className="text-left py-3 text-sm font-semibold text-gray-600 uppercase tracking-wider">
                       Status
                     </th>
-                    <th className="text-left py-3 text-sm font-medium text-gray-500">
+                    <th className="text-left py-3 text-sm font-semibold text-gray-600 uppercase tracking-wider">
                       Time
                     </th>
                   </tr>
                 </thead>
-                <tbody>
-                  {recentTrips.map((trip) => (
-                    <tr
+                <tbody className="divide-y divide-gray-100">
+                  {recentTrips.map((trip, index) => (
+                    <motion.tr
                       key={trip.id}
-                      className="border-b border-gray-100 last:border-0"
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.4 + index * 0.05 }}
+                      className="hover:bg-gradient-to-r hover:from-primary-50/50 hover:to-transparent transition-all duration-200"
                     >
                       <td className="py-3">
                         <div className="flex items-center gap-2">
@@ -168,7 +145,7 @@ export function AdminDashboard() {
                       <td className="py-3 text-sm text-gray-500">
                         {trip.time}
                       </td>
-                    </tr>
+                    </motion.tr>
                   ))}
                 </tbody>
               </table>
@@ -182,21 +159,32 @@ export function AdminDashboard() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
           >
-            <Card padding="lg">
+            <Card padding="lg" className="bg-gradient-to-br from-warning-50 to-orange-50 border-warning-200">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="font-semibold text-gray-900">
-                  Pending Verifications
-                </h2>
-                <Badge variant="warning">{pendingVerifications.length}</Badge>
+                <div className="flex items-center gap-2">
+                  <Clock className="w-5 h-5 text-warning-600" />
+                  <h2 className="font-semibold text-gray-900">
+                    Pending Verifications
+                  </h2>
+                </div>
+                <motion.div
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ repeat: Infinity, duration: 2 }}
+                >
+                  <Badge variant="warning">{pendingVerifications.length}</Badge>
+                </motion.div>
               </div>
               <div className="space-y-3">
-                {pendingVerifications.map((item) => (
-                  <div
+                {pendingVerifications.map((item, index) => (
+                  <motion.div
                     key={item.id}
-                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50"
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.5 + index * 0.1 }}
+                    className="flex items-center gap-3 p-2 rounded-lg bg-white/60 hover:bg-white transition-colors"
                   >
-                    <div className="w-10 h-10 rounded-full bg-warning-100 flex items-center justify-center">
-                      <Clock className="w-5 h-5 text-warning-600" />
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-warning-400 to-orange-500 flex items-center justify-center">
+                      <Clock className="w-5 h-5 text-white" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-gray-900 truncate">
@@ -206,7 +194,7 @@ export function AdminDashboard() {
                         {item.document} • {item.submitted}
                       </p>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </Card>
@@ -217,18 +205,24 @@ export function AdminDashboard() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
           >
-            <Card padding="lg">
+            <Card padding="lg" className="bg-gradient-to-br from-error-50 to-rose-50 border-error-200">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="font-semibold text-gray-900">Recent Disputes</h2>
-                <button className="text-sm text-primary-600 hover:underline">
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="w-5 h-5 text-error-600" />
+                  <h2 className="font-semibold text-gray-900">Recent Disputes</h2>
+                </div>
+                <button className="text-sm text-primary-600 hover:underline font-medium">
                   View All
                 </button>
               </div>
               <div className="space-y-3">
-                {recentDisputes.map((dispute) => (
-                  <div
+                {recentDisputes.map((dispute, index) => (
+                  <motion.div
                     key={dispute.id}
-                    className="p-3 rounded-lg border border-gray-200"
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.6 + index * 0.1 }}
+                    className="p-3 rounded-lg bg-white/60 border border-gray-200 hover:bg-white transition-colors"
                   >
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-sm font-medium text-gray-900">
@@ -237,7 +231,7 @@ export function AdminDashboard() {
                       {getPriorityBadge(dispute.priority)}
                     </div>
                     <p className="text-sm text-gray-500">{dispute.issue}</p>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </Card>
