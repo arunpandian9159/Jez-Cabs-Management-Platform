@@ -29,7 +29,7 @@ export function ProtectedRoute({
   if (allowedRoles && user && !allowedRoles.includes(user.role)) {
     // Redirect to user's appropriate dashboard
     const roleDashboards: Record<UserRole, string> = {
-      customer: ROUTES.CUSTOMER.DASHBOARD,
+      customer: ROUTES.CUSTOMER.BOOK_LOCATION,
       driver: ROUTES.DRIVER.DASHBOARD,
       cab_owner: ROUTES.OWNER.DASHBOARD,
       trip_planner: ROUTES.PLANNER.DASHBOARD,
@@ -56,7 +56,7 @@ export function PublicOnlyRoute({ redirectTo }: { redirectTo?: string }) {
     // Redirect to where they came from or their dashboard
     const from = location.state?.from?.pathname;
     const roleDashboards: Record<UserRole, string> = {
-      customer: ROUTES.CUSTOMER.DASHBOARD,
+      customer: ROUTES.CUSTOMER.BOOK_LOCATION,
       driver: ROUTES.DRIVER.DASHBOARD,
       cab_owner: ROUTES.OWNER.DASHBOARD,
       trip_planner: ROUTES.PLANNER.DASHBOARD,

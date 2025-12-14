@@ -41,6 +41,7 @@ export interface CabForRental {
   color: string;
   cab_type: 'sedan' | 'suv' | 'hatchback' | 'luxury' | 'van';
   images?: string[];
+  image_url?: string;
   daily_rate: number;
   weekly_rate?: number;
   monthly_rate?: number;

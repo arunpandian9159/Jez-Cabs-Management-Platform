@@ -20,7 +20,7 @@ import {
 import { Home } from '@/features/public';
 
 // Customer feature pages
-import { CustomerDashboard } from '@/features/customer/pages/Dashboard';
+import { CustomerProfile } from '@/features/customer/pages/Profile';
 import {
   LocationEntry,
   CabSelection,
@@ -119,10 +119,6 @@ function App() {
                 <Route element={<ProtectedRoute allowedRoles={['customer']} />}>
                   <Route element={<CustomerLayout />}>
                     <Route
-                      path={ROUTES.CUSTOMER.DASHBOARD}
-                      element={<CustomerDashboard />}
-                    />
-                    <Route
                       path={ROUTES.CUSTOMER.BOOK}
                       element={
                         <Navigate to={ROUTES.CUSTOMER.BOOK_LOCATION} replace />
@@ -198,7 +194,7 @@ function App() {
                     />
                     <Route
                       path={ROUTES.CUSTOMER.PROFILE}
-                      element={<PlaceholderPage title="Profile" />}
+                      element={<CustomerProfile />}
                     />
                   </Route>
                 </Route>
