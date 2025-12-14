@@ -42,7 +42,7 @@ export const ROUTES = {
 
   // Driver
   DRIVER: {
-    DASHBOARD: '/driver/dashboard',
+    DASHBOARD: '/driver',
     ONBOARDING: '/driver/onboarding',
     AVAILABILITY: '/driver/availability',
     REQUESTS: '/driver/requests',

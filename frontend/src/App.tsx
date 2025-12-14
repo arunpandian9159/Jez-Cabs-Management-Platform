@@ -48,6 +48,7 @@ import {
   Earnings,
   DriverProfile,
   DriverSettings,
+  DriverOnboarding,
 } from '@/features/driver/pages';
 
 // Owner feature pages
@@ -102,125 +103,52 @@ function App() {
                 <Route element={<PublicOnlyRoute />}>
                   <Route element={<PublicLayout />}>
                     <Route path={ROUTES.HOME} element={<Home />} />
-                    <Route
-                      path={ROUTES.DRIVER_REGISTER}
-                      element={<PlaceholderPage title="Driver Registration" />}
-                    />
-                    <Route
-                      path={ROUTES.OWNER_REGISTER}
-                      element={
-                        <PlaceholderPage title="Cab Owner Registration" />
-                      }
-                    />
+                    <Route path={ROUTES.DRIVER_REGISTER} element={<PlaceholderPage title="Driver Registration" />} />
+                    <Route path={ROUTES.OWNER_REGISTER} element={<PlaceholderPage title="Cab Owner Registration" />} />
                   </Route>
                 </Route>
 
                 {/* Customer routes */}
                 <Route element={<ProtectedRoute allowedRoles={['customer']} />}>
                   <Route element={<CustomerLayout />}>
-                    <Route
-                      path={ROUTES.CUSTOMER.BOOK}
-                      element={
-                        <Navigate to={ROUTES.CUSTOMER.BOOK_LOCATION} replace />
-                      }
-                    />
-                    <Route
-                      path={ROUTES.CUSTOMER.BOOK_LOCATION}
-                      element={<LocationEntry />}
-                    />
-                    <Route
-                      path={ROUTES.CUSTOMER.BOOK_SELECT_CAB}
-                      element={<CabSelection />}
-                    />
-                    <Route
-                      path={ROUTES.CUSTOMER.BOOK_SEARCHING}
-                      element={<DriverSearch />}
-                    />
-                    <Route
-                      path={ROUTES.CUSTOMER.BOOK_TRACKING}
-                      element={<LiveTracking />}
-                    />
-                    <Route
-                      path={ROUTES.CUSTOMER.BOOK_COMPLETE}
-                      element={<TripComplete />}
-                    />
-                    <Route
-                      path={ROUTES.CUSTOMER.RENTALS}
-                      element={
-                        <Navigate to={ROUTES.CUSTOMER.RENTALS_BROWSE} replace />
-                      }
-                    />
-                    <Route
-                      path={ROUTES.CUSTOMER.RENTALS_BROWSE}
-                      element={<BrowseCabs />}
-                    />
-                    <Route
-                      path={ROUTES.CUSTOMER.RENTALS_ACTIVE}
-                      element={<ActiveRentals />}
-                    />
-                    <Route
-                      path={ROUTES.CUSTOMER.TRIPS}
-                      element={<TripHistory />}
-                    />
+                    <Route path={ROUTES.CUSTOMER.BOOK} element={<Navigate to={ROUTES.CUSTOMER.BOOK_LOCATION} replace />} />
+                    <Route path={ROUTES.CUSTOMER.BOOK_LOCATION} element={<LocationEntry />} />
+                    <Route path={ROUTES.CUSTOMER.BOOK_SELECT_CAB} element={<CabSelection />} />
+                    <Route path={ROUTES.CUSTOMER.BOOK_SEARCHING} element={<DriverSearch />} />
+                    <Route path={ROUTES.CUSTOMER.BOOK_TRACKING} element={<LiveTracking />} />
+                    <Route path={ROUTES.CUSTOMER.BOOK_COMPLETE} element={<TripComplete />} />
+                    <Route path={ROUTES.CUSTOMER.RENTALS} element={<Navigate to={ROUTES.CUSTOMER.RENTALS_BROWSE} replace />} />
+                    <Route path={ROUTES.CUSTOMER.RENTALS_BROWSE} element={<BrowseCabs />} />
+                    <Route path={ROUTES.CUSTOMER.RENTALS_ACTIVE} element={<ActiveRentals />} />
+                    <Route path={ROUTES.CUSTOMER.TRIPS} element={<TripHistory />} />
                     <Route path="/customer/trips/plan" element={<PlanTrip />} />
-                    <Route
-                      path={ROUTES.CUSTOMER.PAYMENTS}
-                      element={<Payments />}
-                    />
-                    <Route
-                      path={ROUTES.CUSTOMER.DISPUTES}
-                      element={<Disputes />}
-                    />
+                    <Route path={ROUTES.CUSTOMER.PAYMENTS} element={<Payments />} />
+                    <Route path={ROUTES.CUSTOMER.DISPUTES} element={<Disputes />} />
                     <Route path="/customer/safety" element={<SafetyCenter />} />
-                    <Route
-                      path="/customer/safety/contacts"
-                      element={<EmergencyContacts />}
-                    />
-                    <Route
-                      path="/customer/safety/share"
-                      element={<ShareRide />}
-                    />
-                    <Route
-                      path="/customer/community"
-                      element={<TripExchange />}
-                    />
-                    <Route
-                      path="/customer/community/post"
-                      element={<PostTrip />}
-                    />
-                    <Route
-                      path="/customer/community/history"
-                      element={<ExchangeHistory />}
-                    />
-                    <Route
-                      path={ROUTES.CUSTOMER.PROFILE}
-                      element={<CustomerProfile />}
-                    />
+                    <Route path="/customer/safety/contacts" element={<EmergencyContacts />} />
+                    <Route path="/customer/safety/share" element={<ShareRide />} />
+                    <Route path="/customer/community" element={<TripExchange />} />
+                    <Route path="/customer/community/post" element={<PostTrip />} />
+                    <Route path="/customer/community/history" element={<ExchangeHistory />} />
+                    <Route path={ROUTES.CUSTOMER.PROFILE} element={<CustomerProfile />} />
                   </Route>
                 </Route>
 
                 {/* Driver routes */}
                 <Route element={<ProtectedRoute allowedRoles={['driver']} />}>
+                  <Route path="/driver/onboarding" element={<DriverOnboarding />} />
                   <Route element={<DriverLayout />}>
                     <Route path="/driver" element={<DriverDashboard />} />
                     <Route path="/driver/trip" element={<ActiveTrip />} />
-                    <Route
-                      path="/driver/trips"
-                      element={<DriverTripHistory />}
-                    />
+                    <Route path="/driver/trips" element={<DriverTripHistory />} />
                     <Route path="/driver/earnings" element={<Earnings />} />
                     <Route path="/driver/profile" element={<DriverProfile />} />
-                    <Route
-                      path="/driver/settings"
-                      element={<DriverSettings />}
-                    />
+                    <Route path="/driver/settings" element={<DriverSettings />} />
                   </Route>
                 </Route>
 
                 {/* Cab Owner routes */}
-                <Route
-                  element={<ProtectedRoute allowedRoles={['cab_owner']} />}
-                >
+                <Route element={<ProtectedRoute allowedRoles={['cab_owner']} />}>
                   <Route element={<CabOwnerLayout />}>
                     <Route path="/owner" element={<OwnerDashboard />} />
                     <Route path="/owner/cabs" element={<ManageCabs />} />
@@ -232,13 +160,8 @@ function App() {
                 </Route>
 
                 {/* Trip Planner routes - placeholder */}
-                <Route
-                  element={<ProtectedRoute allowedRoles={['trip_planner']} />}
-                >
-                  <Route
-                    path="/planner/*"
-                    element={<PlaceholderPage title="Trip Planner" />}
-                  />
+                <Route element={<ProtectedRoute allowedRoles={['trip_planner']} />}>
+                  <Route path="/planner/*" element={<PlaceholderPage title="Trip Planner" />} />
                 </Route>
 
                 {/* Admin routes */}
@@ -247,42 +170,21 @@ function App() {
                     <Route path="/admin" element={<AdminDashboard />} />
                     <Route path="/admin/users" element={<AdminUsers />} />
                     <Route path="/admin/disputes" element={<AdminDisputes />} />
-                    <Route
-                      path="/admin/verification"
-                      element={<AdminVerification />}
-                    />
-                    <Route
-                      path="/admin/drivers"
-                      element={<PlaceholderPage title="Driver Management" />}
-                    />
-                    <Route
-                      path="/admin/cabs"
-                      element={<PlaceholderPage title="Vehicle Management" />}
-                    />
-                    <Route
-                      path="/admin/reports"
-                      element={<PlaceholderPage title="Reports" />}
-                    />
-                    <Route
-                      path="/admin/settings"
-                      element={<PlaceholderPage title="Admin Settings" />}
-                    />
+                    <Route path="/admin/verification" element={<AdminVerification />} />
+                    <Route path="/admin/drivers" element={<PlaceholderPage title="Driver Management" />} />
+                    <Route path="/admin/cabs" element={<PlaceholderPage title="Vehicle Management" />} />
+                    <Route path="/admin/reports" element={<PlaceholderPage title="Reports" />} />
+                    <Route path="/admin/settings" element={<PlaceholderPage title="Admin Settings" />} />
                   </Route>
                 </Route>
 
                 {/* Support routes - placeholder */}
                 <Route element={<ProtectedRoute allowedRoles={['support']} />}>
-                  <Route
-                    path="/support/*"
-                    element={<PlaceholderPage title="Support Dashboard" />}
-                  />
+                  <Route path="/support/*" element={<PlaceholderPage title="Support Dashboard" />} />
                 </Route>
 
                 {/* 404 - Redirect to home */}
-                <Route
-                  path="*"
-                  element={<Navigate to={ROUTES.HOME} replace />}
-                />
+                <Route path="*" element={<Navigate to={ROUTES.HOME} replace />} />
               </Routes>
             </AuthProvider>
           </AuthModalProvider>

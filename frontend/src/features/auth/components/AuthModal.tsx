@@ -176,6 +176,7 @@ export function AuthModal({
     setError(null);
     try {
       await login(data);
+      onClose(); // Close modal after successful login
     } catch (err: any) {
       setError(err?.message || 'Login failed');
     }
@@ -186,6 +187,7 @@ export function AuthModal({
     try {
       const { confirmPassword, ...registerData } = data;
       await registerUser(registerData as any);
+      onClose(); // Close modal after successful registration
     } catch (err: any) {
       setError(err?.message || 'Registration failed');
     }

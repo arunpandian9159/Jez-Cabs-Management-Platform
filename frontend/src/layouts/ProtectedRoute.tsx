@@ -57,16 +57,19 @@ export function PublicOnlyRoute({ redirectTo }: { redirectTo?: string }) {
     const from = location.state?.from?.pathname;
     const roleDashboards: Record<UserRole, string> = {
       customer: ROUTES.CUSTOMER.BOOK_LOCATION,
-      driver: ROUTES.DRIVER.DASHBOARD,
-      cab_owner: ROUTES.OWNER.DASHBOARD,
+      driver: ROUTES.DRIVER.ONBOARDING,
+      cab_owner: ROUTES.OWNER.CABS_REGISTER,
       trip_planner: ROUTES.PLANNER.DASHBOARD,
       admin: ROUTES.ADMIN.DASHBOARD,
       support: ROUTES.SUPPORT.DASHBOARD,
     };
 
+    // Determine the redirect target
+    const target = from || redirectTo || roleDashboards[user.role as UserRole];
+
     return (
       <Navigate
-        to={from || redirectTo || roleDashboards[user.role as UserRole]}
+        to={target}
         replace
       />
     );

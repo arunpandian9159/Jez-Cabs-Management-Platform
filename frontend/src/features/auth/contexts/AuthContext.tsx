@@ -125,23 +125,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         storage.set(STORAGE_KEYS.AUTH_TOKEN, response.token);
         storage.set(STORAGE_KEYS.USER, response.user);
 
+        // Navigate FIRST before setting state to avoid race condition with PublicOnlyRoute
+        // The navigate must happen before isAuthenticated becomes true
+        if (data.role === 'driver') {
+          navigate(ROUTES.DRIVER.ONBOARDING, { replace: true });
+        } else if (data.role === 'cab_owner') {
+          navigate(ROUTES.OWNER.CABS_REGISTER, { replace: true });
+        } else {
+          // For customer and trip_planner, navigate to their dashboard
+          const homePath = roleHomePaths[data.role] || ROUTES.HOME;
+          navigate(homePath, { replace: true });
+        }
+
+        // Now set the authenticated state - the URL has already changed
         setState({
           user: response.user,
           token: response.token,
           isAuthenticated: true,
           isLoading: false,
         });
-
-        // Navigate to role-specific onboarding or dashboard
-        if (data.role === 'driver') {
-          navigate(ROUTES.DRIVER.ONBOARDING);
-        } else if (data.role === 'cab_owner') {
-          navigate(ROUTES.OWNER.CABS_REGISTER);
-        } else {
-          // For customer and trip_planner, navigate to their dashboard
-          const homePath = roleHomePaths[data.role] || ROUTES.HOME;
-          navigate(homePath);
-        }
       } catch (error) {
         setState((prev) => ({ ...prev, isLoading: false }));
         throw error;
