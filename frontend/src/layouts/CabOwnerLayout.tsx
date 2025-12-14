@@ -105,7 +105,7 @@ export function CabOwnerLayout() {
       />
 
       {/* Main content area */}
-      <div className="lg:pl-72">
+      <div className="lg:pl-64">
         <Navbar
           variant="dashboard"
           title={currentPageTitle}
