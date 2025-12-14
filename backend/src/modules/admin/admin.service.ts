@@ -5,7 +5,15 @@ import { Verification } from './entities/verification.entity';
 import { User, UserStatus } from '../iam/entities/user.entity';
 import { Trip } from '../trips/entities/trip.entity';
 import { Payment } from '../payments/entities/payment.entity';
-import { VerificationStatus, UserRole } from '../../common/enums';
+import { Dispute } from '../disputes/entities/dispute.entity';
+import { VerificationStatus, UserRole, PaymentStatus } from '../../common/enums';
+
+export interface DashboardStats {
+    totalUsers: number;
+    totalTrips: number;
+    totalRevenue: number;
+    totalDisputes: number;
+}
 
 export interface VerificationStats {
     total: number;
@@ -61,6 +69,8 @@ export class AdminService {
         private tripRepository: Repository<Trip>,
         @InjectRepository(Payment)
         private paymentRepository: Repository<Payment>,
+        @InjectRepository(Dispute)
+        private disputeRepository: Repository<Dispute>,
     ) { }
 
     // ==================== User Management ====================
@@ -257,5 +267,37 @@ export class AdminService {
     async createVerification(data: Partial<Verification>): Promise<Verification> {
         const verification = this.verificationRepository.create(data);
         return this.verificationRepository.save(verification);
+    }
+
+    // ==================== Dashboard Stats ====================
+
+    async getDashboardStats(): Promise<DashboardStats> {
+        // Get total users (customers only)
+        const totalUsers = await this.userRepository.count({
+            where: { role: UserRole.CUSTOMER },
+        });
+
+        // Get total trips
+        const totalTrips = await this.tripRepository.count();
+
+        // Calculate total revenue from completed payments
+        const completedPayments = await this.paymentRepository.find({
+            where: { status: PaymentStatus.COMPLETED },
+        });
+
+        const totalRevenue = completedPayments.reduce(
+            (sum, payment) => sum + Number(payment.amount || 0),
+            0,
+        );
+
+        // Get total disputes
+        const totalDisputes = await this.disputeRepository.count();
+
+        return {
+            totalUsers,
+            totalTrips,
+            totalRevenue,
+            totalDisputes,
+        };
     }
 }
