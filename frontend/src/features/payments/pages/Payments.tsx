@@ -42,6 +42,7 @@ export function Payments() {
     searchQuery,
     paymentMethods,
     walletBalance,
+    paymentStats,
     pendingTransactions,
     completedTransactions,
     setActiveTab,
@@ -229,11 +230,7 @@ export function Payments() {
                     This Month
                   </p>
                   <p className="text-2xl font-bold text-gray-900">
-                    {formatCurrency(
-                      completedTransactions
-                        .filter((tx) => tx.type === 'payment')
-                        .reduce((acc, tx) => acc + tx.amount, 0)
-                    )}
+                    {formatCurrency(paymentStats.thisMonth)}
                   </p>
                 </div>
                 <div className="w-10 h-10 rounded-xl bg-violet-50 flex items-center justify-center">

@@ -262,6 +262,95 @@ VALUES
     ('10000001-0000-0000-0000-000000000006', 'a1000001-0000-0000-0000-000000000001', true, true, true, true, true, true, true, false, 'en');
 
 -- =====================================================
+-- 17. PAYMENT METHODS (Cards, UPI, etc.)
+-- =====================================================
+
+INSERT INTO payment_methods (id, user_id, type, display_name, last_four, upi_id, is_default, expires_at)
+VALUES 
+    -- Rahul Kumar's payment methods
+    ('aa000001-0000-0000-0000-000000000001', 'c1000001-0000-0000-0000-000000000001', 'card', 'HDFC Credit Card', '4521', NULL, true, '2027-03-31'),
+    ('aa000001-0000-0000-0000-000000000002', 'c1000001-0000-0000-0000-000000000001', 'upi', 'Google Pay', NULL, 'rahul.kumar@okaxis', false, NULL),
+    ('aa000001-0000-0000-0000-000000000003', 'c1000001-0000-0000-0000-000000000001', 'card', 'ICICI Debit Card', '8734', NULL, false, '2026-08-15'),
+    
+    -- Priya Sharma's payment methods
+    ('aa000001-0000-0000-0000-000000000004', 'c1000001-0000-0000-0000-000000000002', 'upi', 'PhonePe', NULL, 'priya.sharma@ybl', true, NULL),
+    ('aa000001-0000-0000-0000-000000000005', 'c1000001-0000-0000-0000-000000000002', 'card', 'SBI Credit Card', '1256', NULL, false, '2028-01-20'),
+    
+    -- Amit Verma's payment methods
+    ('aa000001-0000-0000-0000-000000000006', 'c1000001-0000-0000-0000-000000000003', 'card', 'Axis Bank Credit Card', '9087', NULL, true, '2026-12-31'),
+    ('aa000001-0000-0000-0000-000000000007', 'c1000001-0000-0000-0000-000000000003', 'upi', 'Paytm', NULL, 'amit.verma@paytm', false, NULL),
+    ('aa000001-0000-0000-0000-000000000008', 'c1000001-0000-0000-0000-000000000003', 'netbanking', 'HDFC NetBanking', NULL, NULL, false, NULL),
+    
+    -- Sneha Patel's payment methods
+    ('aa000001-0000-0000-0000-000000000009', 'c1000001-0000-0000-0000-000000000004', 'upi', 'Amazon Pay', NULL, 'sneha.patel@apl', true, NULL),
+    ('aa000001-0000-0000-0000-000000000010', 'c1000001-0000-0000-0000-000000000004', 'card', 'Kotak Mahindra Credit Card', '6543', NULL, false, '2027-06-28'),
+    
+    -- Vivek Singh's payment methods
+    ('aa000001-0000-0000-0000-000000000011', 'c1000001-0000-0000-0000-000000000005', 'card', 'HDFC Regalia Credit Card', '2198', NULL, true, '2028-09-15'),
+    ('aa000001-0000-0000-0000-000000000012', 'c1000001-0000-0000-0000-000000000005', 'upi', 'BHIM UPI', NULL, 'vivek.singh@upi', false, NULL);
+
+-- =====================================================
+-- 18. WALLETS
+-- =====================================================
+
+INSERT INTO wallets (id, user_id, balance, currency)
+VALUES 
+    -- Customer wallets
+    ('ab000001-0000-0000-0000-000000000001', 'c1000001-0000-0000-0000-000000000001', 1250.50, 'INR'),
+    ('ab000001-0000-0000-0000-000000000002', 'c1000001-0000-0000-0000-000000000002', 850.00, 'INR'),
+    ('ab000001-0000-0000-0000-000000000003', 'c1000001-0000-0000-0000-000000000003', 2500.75, 'INR'),
+    ('ab000001-0000-0000-0000-000000000004', 'c1000001-0000-0000-0000-000000000004', 320.00, 'INR'),
+    ('ab000001-0000-0000-0000-000000000005', 'c1000001-0000-0000-0000-000000000005', 1800.25, 'INR'),
+    ('ab000001-0000-0000-0000-000000000006', 'c1000001-0000-0000-0000-000000000006', 0.00, 'INR'),
+    
+    -- Driver wallets
+    ('ab000001-0000-0000-0000-000000000007', 'd1000001-0000-0000-0000-000000000001', 5420.00, 'INR'),
+    ('ab000001-0000-0000-0000-000000000008', 'd1000001-0000-0000-0000-000000000002', 3850.50, 'INR'),
+    ('ab000001-0000-0000-0000-000000000009', 'd1000001-0000-0000-0000-000000000003', 2100.00, 'INR');
+
+-- =====================================================
+-- 19. TRANSACTIONS
+-- =====================================================
+
+INSERT INTO transactions (id, user_id, type, amount, description, status, payment_method, trip_id, created_at)
+VALUES 
+    -- Rahul Kumar's transactions
+    ('ac000001-0000-0000-0000-000000000001', 'c1000001-0000-0000-0000-000000000001', 'topup', 2000.00, 'Wallet top-up via HDFC Credit Card', 'completed', 'card', NULL, NOW() - INTERVAL '15 days'),
+    ('ac000001-0000-0000-0000-000000000002', 'c1000001-0000-0000-0000-000000000001', 'payment', 320.00, 'Trip payment - Koramangala to Whitefield', 'completed', 'wallet', 'f1000001-0000-0000-0000-000000000001', NOW() - INTERVAL '2 days'),
+    ('ac000001-0000-0000-0000-000000000003', 'c1000001-0000-0000-0000-000000000001', 'refund', 30.00, 'Fare dispute refund', 'completed', 'wallet', 'f1000001-0000-0000-0000-000000000001', NOW() - INTERVAL '1 day'),
+    ('ac000001-0000-0000-0000-000000000004', 'c1000001-0000-0000-0000-000000000001', 'payment', 2900.00, 'Outstation trip - Bangalore to Mysore', 'completed', 'card', 'f1000001-0000-0000-0000-000000000005', NOW() - INTERVAL '6 days'),
+    ('ac000001-0000-0000-0000-000000000005', 'c1000001-0000-0000-0000-000000000001', 'topup', 500.00, 'Wallet top-up via Google Pay', 'completed', 'upi', NULL, NOW() - INTERVAL '8 days'),
+    
+    -- Priya Sharma's transactions
+    ('ac000001-0000-0000-0000-000000000006', 'c1000001-0000-0000-0000-000000000002', 'topup', 1000.00, 'Wallet top-up via PhonePe', 'completed', 'upi', NULL, NOW() - INTERVAL '10 days'),
+    ('ac000001-0000-0000-0000-000000000007', 'c1000001-0000-0000-0000-000000000002', 'payment', 470.00, 'Trip payment - Indiranagar to Electronic City', 'completed', 'upi', 'f1000001-0000-0000-0000-000000000002', NOW() - INTERVAL '3 days'),
+    ('ac000001-0000-0000-0000-000000000008', 'c1000001-0000-0000-0000-000000000002', 'payment', 150.00, 'Community trip booking payment', 'completed', 'wallet', NULL, NOW() - INTERVAL '5 days'),
+    
+    -- Amit Verma's transactions
+    ('ac000001-0000-0000-0000-000000000009', 'c1000001-0000-0000-0000-000000000003', 'topup', 3000.00, 'Wallet top-up via Axis Bank Credit Card', 'completed', 'card', NULL, NOW() - INTERVAL '20 days'),
+    ('ac000001-0000-0000-0000-000000000010', 'c1000001-0000-0000-0000-000000000003', 'payment', 900.00, 'Trip payment - MG Road to Airport', 'completed', 'card', 'f1000001-0000-0000-0000-000000000003', NOW() - INTERVAL '1 day'),
+    ('ac000001-0000-0000-0000-000000000011', 'c1000001-0000-0000-0000-000000000003', 'topup', 500.00, 'Cashback reward credited', 'completed', 'wallet', NULL, NOW() - INTERVAL '12 days'),
+    ('ac000001-0000-0000-0000-000000000012', 'c1000001-0000-0000-0000-000000000003', 'payment', 220.00, 'Trip payment - Hebbal to Yelahanka (in progress)', 'pending', 'wallet', 'f1000001-0000-0000-0000-000000000007', NOW() - INTERVAL '30 minutes'),
+    
+    -- Sneha Patel's transactions
+    ('ac000001-0000-0000-0000-000000000013', 'c1000001-0000-0000-0000-000000000004', 'topup', 500.00, 'Wallet top-up via Amazon Pay', 'completed', 'upi', NULL, NOW() - INTERVAL '7 days'),
+    ('ac000001-0000-0000-0000-000000000014', 'c1000001-0000-0000-0000-000000000004', 'payment', 165.00, 'Trip payment - HSR to Marathahalli', 'completed', 'cash', 'f1000001-0000-0000-0000-000000000004', NOW() - INTERVAL '4 days'),
+    ('ac000001-0000-0000-0000-000000000015', 'c1000001-0000-0000-0000-000000000004', 'payment', 3500.00, 'Rental payment - 50% advance', 'completed', 'upi', NULL, NOW() - INTERVAL '3 days'),
+    ('ac000001-0000-0000-0000-000000000016', 'c1000001-0000-0000-0000-000000000004', 'payment', 3500.00, 'Rental payment - Balance due', 'pending', 'upi', NULL, NOW()),
+    
+    -- Vivek Singh's transactions
+    ('ac000001-0000-0000-0000-000000000017', 'c1000001-0000-0000-0000-000000000005', 'topup', 2000.00, 'Wallet top-up via HDFC Regalia Credit Card', 'completed', 'card', NULL, NOW() - INTERVAL '14 days'),
+    ('ac000001-0000-0000-0000-000000000018', 'c1000001-0000-0000-0000-000000000005', 'payment', 800.00, 'Community trip booking - Mysore trip', 'completed', 'wallet', NULL, NOW() - INTERVAL '2 days'),
+    ('ac000001-0000-0000-0000-000000000019', 'c1000001-0000-0000-0000-000000000005', 'topup', 1000.00, 'Referral bonus credited', 'completed', 'wallet', NULL, NOW() - INTERVAL '9 days'),
+    ('ac000001-0000-0000-0000-000000000020', 'c1000001-0000-0000-0000-000000000005', 'payment', 100.00, 'Trip cancellation fee', 'failed', 'wallet', 'f1000001-0000-0000-0000-000000000006', NOW() - INTERVAL '5 days'),
+    
+    -- Driver transactions (earnings withdrawals)
+    ('ac000001-0000-0000-0000-000000000021', 'd1000001-0000-0000-0000-000000000001', 'withdrawal', 5000.00, 'Weekly earnings withdrawal to bank account', 'completed', 'netbanking', NULL, NOW() - INTERVAL '7 days'),
+    ('ac000001-0000-0000-0000-000000000022', 'd1000001-0000-0000-0000-000000000002', 'withdrawal', 3500.00, 'Weekly earnings withdrawal to bank account', 'completed', 'netbanking', NULL, NOW() - INTERVAL '7 days'),
+    ('ac000001-0000-0000-0000-000000000023', 'd1000001-0000-0000-0000-000000000001', 'topup', 256.00, 'Trip earning credited - Koramangala to Whitefield', 'completed', 'wallet', 'f1000001-0000-0000-0000-000000000001', NOW() - INTERVAL '2 days'),
+    ('ac000001-0000-0000-0000-000000000024', 'd1000001-0000-0000-0000-000000000002', 'topup', 360.00, 'Trip earning credited - Indiranagar to Electronic City', 'completed', 'wallet', 'f1000001-0000-0000-0000-000000000002', NOW() - INTERVAL '3 days');
+
+-- =====================================================
 -- SUMMARY OF DUMMY DATA
 -- =====================================================
 -- Users:
@@ -279,6 +368,9 @@ VALUES
 -- Community Trips: 5 trips (all active)
 -- Document Verifications: 8 documents (5 approved, 3 pending)
 -- Notifications: 7 notifications (4 read, 3 unread)
+-- Payment Methods: 12 methods (cards, UPI, netbanking across 5 customers)
+-- Wallets: 9 wallets (6 customers + 3 drivers)
+-- Transactions: 24 transactions (payments, top-ups, refunds, withdrawals)
 -- =====================================================
 
 -- Verify data was inserted
@@ -308,4 +400,11 @@ SELECT 'Document Verifications', COUNT(*) FROM document_verifications
 UNION ALL
 SELECT 'Notifications', COUNT(*) FROM notifications
 UNION ALL
-SELECT 'User Settings', COUNT(*) FROM user_settings;
+SELECT 'User Settings', COUNT(*) FROM user_settings
+UNION ALL
+SELECT 'Payment Methods', COUNT(*) FROM payment_methods
+UNION ALL
+SELECT 'Wallets', COUNT(*) FROM wallets
+UNION ALL
+SELECT 'Transactions', COUNT(*) FROM transactions;
+
