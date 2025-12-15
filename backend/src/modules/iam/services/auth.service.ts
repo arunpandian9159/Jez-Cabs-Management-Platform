@@ -90,7 +90,7 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new UnauthorizedException('Email address not found');
+      throw new UnauthorizedException('Invalid email or password');
     }
 
     // Check if user is active
@@ -109,7 +109,7 @@ export class AuthService {
     );
 
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Incorrect password');
+      throw new UnauthorizedException('Invalid email or password');
     }
 
     // Generate JWT token
