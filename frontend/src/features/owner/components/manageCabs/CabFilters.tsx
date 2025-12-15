@@ -1,9 +1,10 @@
 import { motion } from 'framer-motion';
-import { Search, Plus } from 'lucide-react';
+import { Search, Plus, Car } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
+import { OwnerPageHeader } from '../OwnerPageHeader';
 
 interface CabFiltersProps {
   searchQuery: string;
@@ -22,28 +23,24 @@ export function CabFilters({
 }: CabFiltersProps) {
   return (
     <>
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex items-center justify-between"
-      >
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">Manage Cabs</h1>
-          <p className="text-gray-500">View and manage your fleet</p>
-        </div>
-        <Button leftIcon={<Plus className="w-5 h-5" />} onClick={onAddNew}>
-          Add New Cab
-        </Button>
-      </motion.div>
+      <OwnerPageHeader
+        title="Manage Cabs"
+        subtitle="View and manage your fleet"
+        icon={Car}
+        iconColor="accent"
+        action={
+          <Button leftIcon={<Plus className="w-5 h-5" />} onClick={onAddNew}>
+            Add New Cab
+          </Button>
+        }
+      />
 
-      {/* Filters */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
       >
-        <Card padding="md">
+        <Card padding="md" className="bg-gradient-to-r from-gray-50 to-white border-gray-200">
           <div className="flex gap-4">
             <div className="flex-1">
               <Input

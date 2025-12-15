@@ -2,10 +2,10 @@ import { motion } from 'framer-motion';
 import {
   Search,
   Calendar,
-  MoreVertical,
   User,
   FileText,
   Car,
+  ChevronRight,
 } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
@@ -51,7 +51,14 @@ export function ContractsList({
       case 'active':
         return <Badge variant="success">Active</Badge>;
       case 'expiring':
-        return <Badge variant="warning">Expiring Soon</Badge>;
+        return (
+          <motion.div
+            animate={{ scale: [1, 1.02, 1] }}
+            transition={{ repeat: Infinity, duration: 2 }}
+          >
+            <Badge variant="warning">Expiring Soon</Badge>
+          </motion.div>
+        );
       case 'expired':
         return <Badge variant="error">Expired</Badge>;
       case 'pending':
@@ -64,22 +71,22 @@ export function ContractsList({
   const getContractIcon = (type: string) => {
     switch (type) {
       case 'driver':
-        return <User className="w-6 h-6 text-primary-600" />;
+        return <User className="w-5 h-5 text-white" />;
       case 'platform':
-        return <FileText className="w-6 h-6 text-accent-600" />;
+        return <FileText className="w-5 h-5 text-white" />;
       default:
-        return <Car className="w-6 h-6 text-success-600" />;
+        return <Car className="w-5 h-5 text-white" />;
     }
   };
 
-  const getIconBgClass = (type: string) => {
+  const getIconGradient = (type: string) => {
     switch (type) {
       case 'driver':
-        return 'bg-primary-100';
+        return 'from-primary-500 to-primary-600';
       case 'platform':
-        return 'bg-accent-100';
+        return 'from-accent-500 to-accent-600';
       default:
-        return 'bg-success-100';
+        return 'from-success-500 to-success-600';
     }
   };
 
@@ -132,49 +139,55 @@ export function ContractsList({
                 key={contract.id}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.05 }}
+                transition={{ delay: 0.25 + index * 0.03 }}
+                whileHover={{ scale: 1.005 }}
               >
                 <Card
                   padding="md"
                   interactive
                   onClick={() => onContractSelect(contract)}
+                  className="hover:shadow-lg transition-all border-l-4 border-l-transparent hover:border-l-primary-500"
                 >
                   <div className="flex items-center gap-4">
-                    <div
-                      className={`w-12 h-12 rounded-lg flex items-center justify-center ${getIconBgClass(contract.type)}`}
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      className={`w-12 h-12 rounded-xl bg-gradient-to-br ${getIconGradient(contract.type)} flex items-center justify-center shadow-lg`}
                     >
                       {getContractIcon(contract.type)}
-                    </div>
+                    </motion.div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <p className="font-medium text-gray-900">
+                        <p className="font-semibold text-gray-900">
                           {contract.title}
                         </p>
                         {getStatusBadge(contract.status)}
                       </div>
                       <div className="flex items-center gap-3 text-sm text-gray-500">
-                        <span>{contract.partyName}</span>
+                        <span className="font-medium">{contract.partyName}</span>
                         <span>•</span>
                         <span>{contract.vehicleAssigned}</span>
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="flex items-center gap-1 text-sm text-gray-500 mb-1">
-                        <Calendar className="w-3 h-3" />
+                      <div className="flex items-center gap-1.5 text-sm text-gray-500 mb-1">
+                        <Calendar className="w-3.5 h-3.5" />
                         <span>
-                          {formatDate(contract.startDate)} -{' '}
+                          {formatDate(contract.startDate)} –{' '}
                           {formatDate(contract.endDate)}
                         </span>
                       </div>
                       {contract.commission && (
-                        <p className="text-sm font-medium text-gray-900">
+                        <p className="text-sm font-bold text-gray-900">
                           {contract.commission}% commission
                         </p>
                       )}
                     </div>
-                    <button className="p-2 hover:bg-gray-100 rounded-lg">
-                      <MoreVertical className="w-5 h-5 text-gray-400" />
-                    </button>
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
+                    >
+                      <ChevronRight className="w-5 h-5 text-gray-400" />
+                    </motion.button>
                   </div>
                 </Card>
               </motion.div>

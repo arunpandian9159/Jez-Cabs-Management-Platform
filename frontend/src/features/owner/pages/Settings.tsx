@@ -6,10 +6,9 @@ import {
   CreditCard,
   Building2,
   ChevronRight,
-  ToggleLeft,
-  ToggleRight,
   Car,
   AlertTriangle,
+  Settings as SettingsIcon,
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -18,6 +17,7 @@ import { Select } from '@/components/ui/Select';
 import { Modal } from '@/components/ui/Modal';
 import { PageLoader } from '@/components/ui/Loading';
 import { useOwnerSettings } from '../hooks/useOwnerSettings';
+import { OwnerPageHeader } from '../components/OwnerPageHeader';
 
 interface SettingToggleProps {
   label: string;
@@ -35,23 +35,47 @@ function SettingToggle({
   disabled,
 }: SettingToggleProps) {
   return (
-    <div className="flex items-center justify-between py-3">
+    <div className="flex items-center justify-between py-4 px-4 -mx-4 hover:bg-gray-50 rounded-xl transition-colors">
       <div className="flex-1">
         <p className="font-medium text-gray-900">{label}</p>
-        {description && <p className="text-sm text-gray-500">{description}</p>}
+        {description && <p className="text-sm text-gray-500 mt-0.5">{description}</p>}
       </div>
-      <button
+      <motion.button
         onClick={onToggle}
-        className="text-primary-600"
         disabled={disabled}
+        whileTap={{ scale: 0.95 }}
+        className={`relative w-12 h-6 rounded-full transition-colors duration-200 ${enabled ? 'bg-gradient-to-r from-primary-500 to-primary-600' : 'bg-gray-200'
+          }`}
       >
-        {enabled ? (
-          <ToggleRight className="w-10 h-6" />
-        ) : (
-          <ToggleLeft className="w-10 h-6 text-gray-400" />
-        )}
-      </button>
+        <motion.div
+          className="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow-md"
+          animate={{ x: enabled ? 24 : 0 }}
+          transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+        />
+      </motion.button>
     </div>
+  );
+}
+
+interface SettingRowProps {
+  label: string;
+  value?: string;
+  onClick?: () => void;
+}
+
+function SettingRow({ label, value, onClick }: SettingRowProps) {
+  return (
+    <motion.button
+      whileHover={{ x: 4 }}
+      onClick={onClick}
+      className="w-full flex items-center justify-between p-4 -mx-4 rounded-xl hover:bg-gray-50 transition-colors"
+    >
+      <div className="text-left">
+        <p className="font-medium text-gray-900">{label}</p>
+        {value && <p className="text-sm text-gray-500 mt-0.5">{value}</p>}
+      </div>
+      <ChevronRight className="w-5 h-5 text-gray-400" />
+    </motion.button>
   );
 }
 
@@ -79,7 +103,9 @@ export function OwnerSettings() {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center max-w-md">
-          <AlertTriangle className="w-12 h-12 text-error-500 mx-auto mb-4" />
+          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-error-100 to-error-200 flex items-center justify-center">
+            <AlertTriangle className="w-8 h-8 text-error-600" />
+          </div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">
             Error Loading Data
           </h3>
@@ -92,16 +118,12 @@ export function OwnerSettings() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">Settings</h1>
-        <p className="text-gray-500">
-          Manage your fleet and business preferences
-        </p>
-      </motion.div>
+      <OwnerPageHeader
+        title="Settings"
+        subtitle="Manage your fleet and business preferences"
+        icon={SettingsIcon}
+        iconColor="primary"
+      />
 
       {/* Business Information */}
       <motion.div
@@ -109,15 +131,18 @@ export function OwnerSettings() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
       >
-        <Card padding="md">
+        <Card padding="lg" className="overflow-hidden">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-primary-100 flex items-center justify-center">
-                <Building2 className="w-5 h-5 text-primary-600" />
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-lg">
+                <Building2 className="w-5 h-5 text-white" />
               </div>
-              <h2 className="font-semibold text-gray-900">
-                Business Information
-              </h2>
+              <div>
+                <h2 className="font-semibold text-gray-900">
+                  Business Information
+                </h2>
+                <p className="text-sm text-gray-500">Your company details</p>
+              </div>
             </div>
             <Button
               variant="outline"
@@ -127,24 +152,24 @@ export function OwnerSettings() {
               Edit
             </Button>
           </div>
-          <div className="grid md:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
+          <div className="grid md:grid-cols-2 gap-4 p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl">
             <div>
-              <p className="text-sm text-gray-500">Business Name</p>
-              <p className="font-medium text-gray-900">{businessInfo.name}</p>
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Business Name</p>
+              <p className="font-semibold text-gray-900">{businessInfo.name}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500">GST Number</p>
-              <p className="font-medium text-gray-900">
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">GST Number</p>
+              <p className="font-semibold text-gray-900">
                 {businessInfo.registrationNumber}
               </p>
             </div>
             <div>
-              <p className="text-sm text-gray-500">Contact Email</p>
-              <p className="font-medium text-gray-900">{businessInfo.email}</p>
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Contact Email</p>
+              <p className="font-semibold text-gray-900">{businessInfo.email}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500">Contact Phone</p>
-              <p className="font-medium text-gray-900">{businessInfo.phone}</p>
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">Contact Phone</p>
+              <p className="font-semibold text-gray-900">{businessInfo.phone}</p>
             </div>
           </div>
         </Card>
@@ -156,12 +181,15 @@ export function OwnerSettings() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
       >
-        <Card padding="md">
+        <Card padding="lg">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-lg bg-accent-100 flex items-center justify-center">
-              <Bell className="w-5 h-5 text-accent-600" />
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-accent-500 to-accent-600 flex items-center justify-center shadow-lg">
+              <Bell className="w-5 h-5 text-white" />
             </div>
-            <h2 className="font-semibold text-gray-900">Notifications</h2>
+            <div>
+              <h2 className="font-semibold text-gray-900">Notifications</h2>
+              <p className="text-sm text-gray-500">Manage your alerts</p>
+            </div>
           </div>
           <div className="divide-y divide-gray-100">
             <SettingToggle
@@ -204,12 +232,15 @@ export function OwnerSettings() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
       >
-        <Card padding="md">
+        <Card padding="lg">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-lg bg-success-100 flex items-center justify-center">
-              <CreditCard className="w-5 h-5 text-success-600" />
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-success-500 to-success-600 flex items-center justify-center shadow-lg">
+              <CreditCard className="w-5 h-5 text-white" />
             </div>
-            <h2 className="font-semibold text-gray-900">Payment Settings</h2>
+            <div>
+              <h2 className="font-semibold text-gray-900">Payment Settings</h2>
+              <p className="text-sm text-gray-500">Manage payments and payouts</p>
+            </div>
           </div>
           <div className="divide-y divide-gray-100">
             <SettingToggle
@@ -218,28 +249,14 @@ export function OwnerSettings() {
               enabled={settings.autoSettlement}
               onToggle={() => toggleSetting('autoSettlement')}
             />
-            <div className="py-3">
-              <button className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                <div>
-                  <p className="font-medium text-gray-900 text-left">
-                    Bank Account
-                  </p>
-                  <p className="text-sm text-gray-500">HDFC Bank ••••4567</p>
-                </div>
-                <ChevronRight className="w-5 h-5 text-gray-400" />
-              </button>
-            </div>
-            <div className="py-3">
-              <button className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                <div>
-                  <p className="font-medium text-gray-900 text-left">
-                    Payout Schedule
-                  </p>
-                  <p className="text-sm text-gray-500">Weekly (Every Friday)</p>
-                </div>
-                <ChevronRight className="w-5 h-5 text-gray-400" />
-              </button>
-            </div>
+            <SettingRow
+              label="Bank Account"
+              value="HDFC Bank ••••4567"
+            />
+            <SettingRow
+              label="Payout Schedule"
+              value="Weekly (Every Friday)"
+            />
           </div>
         </Card>
       </motion.div>
@@ -250,32 +267,20 @@ export function OwnerSettings() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
       >
-        <Card padding="md">
+        <Card padding="lg">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-lg bg-warning-100 flex items-center justify-center">
-              <Car className="w-5 h-5 text-warning-600" />
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-warning-500 to-warning-600 flex items-center justify-center shadow-lg">
+              <Car className="w-5 h-5 text-white" />
             </div>
-            <h2 className="font-semibold text-gray-900">Fleet Settings</h2>
+            <div>
+              <h2 className="font-semibold text-gray-900">Fleet Settings</h2>
+              <p className="text-sm text-gray-500">Vehicle and driver management</p>
+            </div>
           </div>
-          <div className="space-y-2">
-            <button className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
-              <span className="font-medium text-gray-900">
-                Driver Commission Rates
-              </span>
-              <ChevronRight className="w-5 h-5 text-gray-400" />
-            </button>
-            <button className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
-              <span className="font-medium text-gray-900">
-                Vehicle Maintenance Schedule
-              </span>
-              <ChevronRight className="w-5 h-5 text-gray-400" />
-            </button>
-            <button className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
-              <span className="font-medium text-gray-900">
-                Document Expiry Alerts
-              </span>
-              <ChevronRight className="w-5 h-5 text-gray-400" />
-            </button>
+          <div className="divide-y divide-gray-100">
+            <SettingRow label="Driver Commission Rates" />
+            <SettingRow label="Vehicle Maintenance Schedule" />
+            <SettingRow label="Document Expiry Alerts" />
           </div>
         </Card>
       </motion.div>
@@ -286,14 +291,17 @@ export function OwnerSettings() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
       >
-        <Card padding="md">
+        <Card padding="lg">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
-              <Globe className="w-5 h-5 text-gray-600" />
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-gray-500 to-gray-600 flex items-center justify-center shadow-lg">
+              <Globe className="w-5 h-5 text-white" />
             </div>
-            <h2 className="font-semibold text-gray-900">General</h2>
+            <div>
+              <h2 className="font-semibold text-gray-900">General</h2>
+              <p className="text-sm text-gray-500">App preferences</p>
+            </div>
           </div>
-          <div className="flex items-center justify-between py-3">
+          <div className="flex items-center justify-between py-4">
             <div>
               <p className="font-medium text-gray-900">Language</p>
               <p className="text-sm text-gray-500">
@@ -319,34 +327,21 @@ export function OwnerSettings() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
       >
-        <Card padding="md">
+        <Card padding="lg">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-lg bg-error-100 flex items-center justify-center">
-              <Shield className="w-5 h-5 text-error-600" />
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-error-500 to-error-600 flex items-center justify-center shadow-lg">
+              <Shield className="w-5 h-5 text-white" />
             </div>
-            <h2 className="font-semibold text-gray-900">Security & Legal</h2>
+            <div>
+              <h2 className="font-semibold text-gray-900">Security & Legal</h2>
+              <p className="text-sm text-gray-500">Account security settings</p>
+            </div>
           </div>
-          <div className="space-y-2">
-            <button className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
-              <span className="font-medium text-gray-900">Change Password</span>
-              <ChevronRight className="w-5 h-5 text-gray-400" />
-            </button>
-            <button className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
-              <span className="font-medium text-gray-900">
-                Two-Factor Authentication
-              </span>
-              <ChevronRight className="w-5 h-5 text-gray-400" />
-            </button>
-            <button className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
-              <span className="font-medium text-gray-900">
-                Terms of Service
-              </span>
-              <ChevronRight className="w-5 h-5 text-gray-400" />
-            </button>
-            <button className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
-              <span className="font-medium text-gray-900">Privacy Policy</span>
-              <ChevronRight className="w-5 h-5 text-gray-400" />
-            </button>
+          <div className="divide-y divide-gray-100">
+            <SettingRow label="Change Password" />
+            <SettingRow label="Two-Factor Authentication" />
+            <SettingRow label="Terms of Service" />
+            <SettingRow label="Privacy Policy" />
           </div>
         </Card>
       </motion.div>
@@ -386,7 +381,7 @@ export function OwnerSettings() {
             value={businessForm.address}
             onChange={(e) => updateBusinessForm('address', e.target.value)}
           />
-          <div className="flex gap-3 pt-4">
+          <div className="flex gap-3 pt-4 border-t">
             <Button
               variant="outline"
               fullWidth

@@ -1,11 +1,10 @@
-import { motion } from 'framer-motion';
-import { Plus } from 'lucide-react';
+import { Plus, LayoutDashboard } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { PageLoader } from '@/components/ui/Loading';
 import { useOwnerDashboard } from '../hooks/useOwnerDashboard';
+import { OwnerPageHeader } from '../components/OwnerPageHeader';
 import {
   StatsGrid,
-  RevenueCard,
   FleetOverview,
   AlertCards,
 } from '../components/dashboard';
@@ -16,7 +15,6 @@ export function OwnerDashboard() {
     cabs,
     isLoading,
     todaysEarnings,
-    activeCabsCount,
     handleAddNewCab,
   } = useOwnerDashboard();
 
@@ -26,32 +24,22 @@ export function OwnerDashboard() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex items-center justify-between"
-      >
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">
-            Welcome, Fleet Owner!
-          </h1>
-          <p className="text-gray-500">Manage your cabs and drivers</p>
-        </div>
-        <Button
-          leftIcon={<Plus className="w-5 h-5" />}
-          onClick={handleAddNewCab}
-        >
-          Add New Cab
-        </Button>
-      </motion.div>
-
-      <StatsGrid stats={ownerStats} />
-
-      <RevenueCard
-        todaysEarnings={todaysEarnings}
-        activeCabsCount={activeCabsCount}
+      <OwnerPageHeader
+        title="Welcome, Fleet Owner!"
+        subtitle="Manage your cabs and drivers"
+        icon={LayoutDashboard}
+        iconColor="primary"
+        action={
+          <Button
+            leftIcon={<Plus className="w-5 h-5" />}
+            onClick={handleAddNewCab}
+          >
+            Add New Cab
+          </Button>
+        }
       />
+
+      <StatsGrid stats={ownerStats} todaysEarnings={todaysEarnings} />
 
       <FleetOverview cabs={cabs} />
 

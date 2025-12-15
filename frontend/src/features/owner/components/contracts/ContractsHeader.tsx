@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion';
-import { CheckCircle, AlertCircle, Plus } from 'lucide-react';
-import { Card } from '@/components/ui/Card';
+import { CheckCircle, AlertCircle, Plus, FileText, XCircle } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { OwnerPageHeader } from '../OwnerPageHeader';
+import { OwnerStatCard } from '../OwnerStatCard';
 
 interface ContractsHeaderProps {
   stats: {
@@ -15,22 +16,17 @@ interface ContractsHeaderProps {
 export function ContractsHeader({ stats, onAddNew }: ContractsHeaderProps) {
   return (
     <>
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex items-center justify-between"
-      >
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">Contracts</h1>
-          <p className="text-gray-500">
-            Manage driver agreements and partnerships
-          </p>
-        </div>
-        <Button leftIcon={<Plus className="w-5 h-5" />} onClick={onAddNew}>
-          New Contract
-        </Button>
-      </motion.div>
+      <OwnerPageHeader
+        title="Contracts"
+        subtitle="Manage driver agreements and partnerships"
+        icon={FileText}
+        iconColor="primary"
+        action={
+          <Button leftIcon={<Plus className="w-5 h-5" />} onClick={onAddNew}>
+            New Contract
+          </Button>
+        }
+      />
 
       {/* Stats */}
       <motion.div
@@ -39,33 +35,27 @@ export function ContractsHeader({ stats, onAddNew }: ContractsHeaderProps) {
         transition={{ delay: 0.1 }}
         className="grid grid-cols-3 gap-4"
       >
-        <Card padding="md" className="text-center">
-          <div className="flex items-center justify-center gap-2 mb-1">
-            <CheckCircle className="w-5 h-5 text-success-600" />
-            <span className="text-2xl font-bold text-gray-900">
-              {stats.activeContracts}
-            </span>
-          </div>
-          <p className="text-sm text-gray-500">Active Contracts</p>
-        </Card>
-        <Card padding="md" className="text-center">
-          <div className="flex items-center justify-center gap-2 mb-1">
-            <AlertCircle className="w-5 h-5 text-warning-600" />
-            <span className="text-2xl font-bold text-warning-600">
-              {stats.expiringContracts}
-            </span>
-          </div>
-          <p className="text-sm text-gray-500">Expiring Soon</p>
-        </Card>
-        <Card padding="md" className="text-center">
-          <div className="flex items-center justify-center gap-2 mb-1">
-            <AlertCircle className="w-5 h-5 text-error-600" />
-            <span className="text-2xl font-bold text-error-600">
-              {stats.expiredContracts}
-            </span>
-          </div>
-          <p className="text-sm text-gray-500">Expired</p>
-        </Card>
+        <OwnerStatCard
+          label="Active Contracts"
+          value={stats.activeContracts}
+          icon={CheckCircle}
+          color="success"
+          delay={0.1}
+        />
+        <OwnerStatCard
+          label="Expiring Soon"
+          value={stats.expiringContracts}
+          icon={AlertCircle}
+          color="warning"
+          delay={0.15}
+        />
+        <OwnerStatCard
+          label="Expired"
+          value={stats.expiredContracts}
+          icon={XCircle}
+          color="error"
+          delay={0.2}
+        />
       </motion.div>
     </>
   );
