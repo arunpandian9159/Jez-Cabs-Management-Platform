@@ -13,7 +13,7 @@ export class TripsService {
   constructor(
     @InjectRepository(Trip)
     private tripRepository: Repository<Trip>,
-  ) {}
+  ) { }
 
   async create(data: Partial<Trip>): Promise<Trip> {
     // Generate OTP for trip verification
@@ -30,19 +30,28 @@ export class TripsService {
     if (role === 'customer') {
       return this.tripRepository.find({
         where: { customer_id: userId },
+        relations: ['customer', 'driver'],
         order: { created_at: 'DESC' },
       });
     } else if (role === 'driver') {
       return this.tripRepository.find({
         where: { driver_id: userId },
+        relations: ['customer', 'driver'],
         order: { created_at: 'DESC' },
       });
     }
-    return this.tripRepository.find({ order: { created_at: 'DESC' } });
+    // For admin users, return all trips with relations
+    return this.tripRepository.find({
+      relations: ['customer', 'driver'],
+      order: { created_at: 'DESC' },
+    });
   }
 
   async findOne(id: string): Promise<Trip> {
-    const trip = await this.tripRepository.findOne({ where: { id } });
+    const trip = await this.tripRepository.findOne({
+      where: { id },
+      relations: ['customer', 'driver'],
+    });
     if (!trip) {
       throw new NotFoundException('Trip not found');
     }

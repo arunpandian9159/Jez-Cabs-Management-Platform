@@ -9,6 +9,7 @@ import {
   Index,
 } from 'typeorm';
 import { TripStatus } from '../../../common/enums';
+import { User } from '../../iam/entities/user.entity';
 
 @Entity('trips')
 export class Trip {
@@ -19,9 +20,17 @@ export class Trip {
   @Index()
   customer_id: string;
 
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'customer_id' })
+  customer: User;
+
   @Column({ type: 'uuid', nullable: true })
   @Index()
   driver_id: string | null;
+
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'driver_id' })
+  driver: User;
 
   @Column({ type: 'uuid', nullable: true })
   cab_id: string | null;
