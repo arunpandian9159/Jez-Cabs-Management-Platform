@@ -86,9 +86,7 @@ export function DriverProfile() {
         animate={{ opacity: 1, y: 0 }}
       >
         <Card padding="lg" className="relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-28 bg-gradient-to-r from-primary-500 via-primary-600 to-accent-500" />
-          <div className="absolute top-0 left-0 right-0 h-28 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iYSIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVHJhbnNmb3JtPSJyb3RhdGUoNDUpIj48cGF0aCBkPSJNLTEwIDMwaDYwdjJoLTYweiIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2EpIi8+PC9zdmc+')] opacity-30" />
-
+          <div className="absolute top-0 left-0 right-0 h-48 bg-gradient-to-r from-primary-500 via-primary-600 to-accent-500" />
           <div className="relative pt-10 flex flex-col md:flex-row items-center md:items-end gap-4">
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
@@ -109,7 +107,7 @@ export function DriverProfile() {
             </motion.div>
             <div className="flex-1 text-center md:text-left">
               <div className="flex items-center justify-center md:justify-start gap-2 mb-1">
-                <h2 className="text-xl font-bold text-gray-900">
+                <h2 className="text-xl font-bold text-gray-700">
                   {driverProfile.name}
                 </h2>
                 {driverProfile.verificationStatus === 'verified' && (
