@@ -37,6 +37,13 @@ export interface Cab {
     phone: string;
     rating?: number;
   };
+  assigned_driver?: {
+    id: string;
+    first_name: string;
+    last_name: string;
+    phone: string;
+    rating?: number;
+  };
 }
 
 export interface CabPriceEstimate {

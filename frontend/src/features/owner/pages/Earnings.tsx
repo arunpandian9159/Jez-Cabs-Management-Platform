@@ -171,19 +171,19 @@ export function OwnerEarnings() {
           transition={{ delay: 0.25 }}
           whileHover={{ scale: 1.02, y: -2 }}
         >
-          <Card padding="md" className="bg-error-100 border-transparent overflow-hidden relative">
+          <Card padding="md" className="bg-accent-100 border-transparent overflow-hidden relative">
             <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-error-500 to-error-600 flex items-center justify-center shadow-lg">
-                <Wallet className="w-5 h-5 text-white" />
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-accent-500 to-accent-600 flex items-center justify-center shadow-lg">
+                <Car className="w-5 h-5 text-white" />
               </div>
               <div>
-                <p className="text-gray-600 text-xs font-medium">Platform Fees</p>
-                <p className="text-2xl font-bold text-error-700">
-                  {formatCurrency(earningsSummary.platformFee)}
+                <p className="text-gray-600 text-xs font-medium">Total Trips</p>
+                <p className="text-2xl font-bold text-accent-700">
+                  {cabEarnings.reduce((sum, cab) => sum + cab.trips, 0)}
                 </p>
               </div>
             </div>
-            <div className="absolute -right-4 -bottom-4 w-16 h-16 rounded-full bg-gradient-to-br from-error-500 to-error-600 opacity-20 blur-xl" />
+            <div className="absolute -right-4 -bottom-4 w-16 h-16 rounded-full bg-gradient-to-br from-accent-500 to-accent-600 opacity-20 blur-xl" />
           </Card>
         </motion.div>
       </motion.div>
@@ -265,11 +265,11 @@ export function OwnerEarnings() {
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full bg-gradient-to-r from-error-500 to-error-600" />
-                      <span className="text-gray-600">Platform Fee (15%)</span>
+                      <div className="w-3 h-3 rounded-full bg-gradient-to-r from-accent-500 to-accent-600" />
+                      <span className="text-gray-600">Driver Payments</span>
                     </div>
-                    <span className="font-medium text-error-600">
-                      -{formatCurrency(earningsSummary.platformFee)}
+                    <span className="font-medium text-accent-600">
+                      {formatCurrency(earningsSummary.month * 0.7)}
                     </span>
                   </div>
                   <div className="border-t border-gray-100 pt-4 flex items-center justify-between">

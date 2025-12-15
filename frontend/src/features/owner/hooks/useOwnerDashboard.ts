@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cabsService, type Cab } from '@/services';
+import { ownerService } from '@/services/owner.service';
 
 // Types for owner dashboard display
 export interface OwnerStatsDisplay {
@@ -41,6 +42,7 @@ export function useOwnerDashboard() {
     avgRating: 0,
   });
   const [cabs, setCabs] = useState<CabDisplay[]>([]);
+  const [todaysEarnings, setTodaysEarnings] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -50,39 +52,73 @@ export function useOwnerDashboard() {
       try {
         setIsLoading(true);
 
-        // Fetch cabs statistics
-        const stats = await cabsService.getStatistics();
+        // Fetch all data in parallel
+        const [cabStats, cabsResponse, drivers, earningsSummary] = await Promise.all([
+          cabsService.getStatistics(),
+          cabsService.findAll(),
+          ownerService.getDrivers().catch(() => []),
+          ownerService.getEarningsSummary('month').catch(() => ({
+            today: 0,
+            week: 0,
+            month: 0,
+            totalRevenue: 0,
+            pendingSettlements: 0,
+            platformFee: 0,
+            netEarnings: 0,
+          })),
+        ]);
+
+        // Calculate driver stats
+        const totalDrivers = drivers.length;
+        const activeDrivers = drivers.filter(d => d.status === 'active').length;
+
+        // Calculate average rating from drivers
+        const avgRating = drivers.length > 0
+          ? drivers.reduce((sum, d) => sum + (d.metrics?.rating || 0), 0) / drivers.length
+          : 0;
+
         setOwnerStats({
-          totalCabs: stats.total || 0,
-          activeCabs: (stats.available || 0) + (stats.onTrip || 0),
-          totalDrivers: 0,
-          activeDrivers: 0,
-          monthlyRevenue: 0,
-          pendingPayments: 0,
-          avgRating: 0,
+          totalCabs: cabStats.total || 0,
+          activeCabs: (cabStats.available || 0) + (cabStats.onTrip || 0),
+          totalDrivers,
+          activeDrivers,
+          monthlyRevenue: earningsSummary.month || 0,
+          pendingPayments: earningsSummary.pendingSettlements || 0,
+          avgRating: Number(avgRating.toFixed(1)) || 0,
         });
 
-        // Fetch cabs list - backend returns { data: cabs[], meta: {...} }
-        const cabsResponse = await cabsService.findAll();
+        // Set today's earnings from earnings summary
+        setTodaysEarnings(earningsSummary.today || 0);
+
+        // Format cabs list
         const cabsArray = Array.isArray(cabsResponse)
           ? cabsResponse
           : cabsResponse.data || [];
-        const formattedCabs: CabDisplay[] = cabsArray.map((c: Cab) => ({
-          id: c.id,
-          make: c.make,
-          model: c.model,
-          registrationNumber: c.registration_number,
-          status: c.status,
-          driver: c.driver
-            ? {
-                name: `${c.driver.first_name} ${c.driver.last_name}`,
-                rating: c.driver.rating || 4.5,
-                trips: 0,
+        const formattedCabs: CabDisplay[] = cabsArray.map((c: Cab) => {
+          // Check both driver and assigned_driver for compatibility
+          const driverData = c.driver || c.assigned_driver;
+          // Look up driver's total_trips from driver_profile via the drivers array
+          const driverProfile = driverData
+            ? drivers.find(d => d.id === driverData.id)
+            : null;
+          const driverTotalTrips = driverProfile?.metrics?.totalTrips || 0;
+          return {
+            id: c.id,
+            make: c.make,
+            model: c.model,
+            registrationNumber: c.registration_number,
+            status: c.status,
+            driver: driverData
+              ? {
+                name: `${driverData.first_name} ${driverData.last_name}`,
+                rating: driverProfile?.metrics?.rating || driverData.rating || 4.5,
+                trips: driverTotalTrips,
               }
-            : null,
-          todayEarnings: 0,
-          rating: c.rating || 4.5,
-        }));
+              : null,
+            todayEarnings: 0,
+            rating: c.rating || 4.5,
+          };
+        });
         setCabs(formattedCabs);
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
@@ -98,7 +134,6 @@ export function useOwnerDashboard() {
     navigate('/owner/cabs');
   };
 
-  const todaysEarnings = cabs.reduce((acc, c) => acc + c.todayEarnings, 0);
   const activeCabsCount = cabs.filter((c) => c.status === 'active').length;
 
   return {

@@ -25,9 +25,7 @@ export class OwnerService {
     private readonly cabOwnerProfileRepository: Repository<CabOwnerProfile>,
     @InjectRepository(Trip)
     private readonly tripRepository: Repository<Trip>,
-  ) {}
-
-  // ============= DRIVERS =============
+  ) { }
 
   /**
    * Get all drivers assigned to the owner's cabs
@@ -42,6 +40,10 @@ export class OwnerService {
     // Extract unique drivers from the cabs
     const driverMap = new Map();
 
+    // Calculate date ranges for earnings
+    const now = new Date();
+    const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+
     for (const cab of cabs) {
       if (cab.assigned_driver) {
         const driverId = cab.assigned_driver.id;
@@ -54,6 +56,36 @@ export class OwnerService {
 
           if (driverProfile) {
             const driver = cab.assigned_driver;
+
+            // Get this month's earnings for the driver
+            const thisMonthTrips = await this.tripRepository.find({
+              where: {
+                driver_id: driverId,
+                status: TripStatus.COMPLETED,
+                completed_at: Between(thisMonthStart, now),
+              },
+            });
+
+            // Get all completed trips for total earnings
+            const allTrips = await this.tripRepository.find({
+              where: {
+                driver_id: driverId,
+                status: TripStatus.COMPLETED,
+              },
+            });
+
+            // Calculate earnings
+            const calculateTotal = (trips: Trip[]) => {
+              return trips.reduce((sum, trip) => {
+                const fare = Number(trip.actual_fare) || 0;
+                const tip = Number(trip.tip_amount) || 0;
+                return sum + fare + tip;
+              }, 0);
+            };
+
+            const thisMonthEarnings = calculateTotal(thisMonthTrips);
+            const totalEarnings = calculateTotal(allTrips);
+
             driverMap.set(driverId, {
               id: driver.id,
               name: `${driver.first_name} ${driver.last_name}`,
@@ -71,8 +103,8 @@ export class OwnerService {
                 rating: Number(driverProfile.rating) || 0,
                 acceptanceRate: 0, // TODO: Calculate from trips
                 completionRate: 0, // TODO: Calculate from trips
-                thisMonthEarnings: 0, // TODO: Calculate from trips
-                totalEarnings: 0, // TODO: Calculate from trips
+                thisMonthEarnings: parseFloat(thisMonthEarnings.toFixed(2)),
+                totalEarnings: parseFloat(totalEarnings.toFixed(2)),
               },
               joinedDate: driver.created_at,
               lastActive: driverProfile.updated_at,
@@ -114,6 +146,39 @@ export class OwnerService {
 
     const driver = cab.assigned_driver;
 
+    // Calculate date ranges for earnings
+    const now = new Date();
+    const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+
+    // Get this month's earnings for the driver
+    const thisMonthTrips = await this.tripRepository.find({
+      where: {
+        driver_id: driverId,
+        status: TripStatus.COMPLETED,
+        completed_at: Between(thisMonthStart, now),
+      },
+    });
+
+    // Get all completed trips for total earnings
+    const allTrips = await this.tripRepository.find({
+      where: {
+        driver_id: driverId,
+        status: TripStatus.COMPLETED,
+      },
+    });
+
+    // Calculate earnings
+    const calculateTotal = (trips: Trip[]) => {
+      return trips.reduce((sum, trip) => {
+        const fare = Number(trip.actual_fare) || 0;
+        const tip = Number(trip.tip_amount) || 0;
+        return sum + fare + tip;
+      }, 0);
+    };
+
+    const thisMonthEarnings = calculateTotal(thisMonthTrips);
+    const totalEarnings = calculateTotal(allTrips);
+
     return {
       id: driver.id,
       name: `${driver.first_name} ${driver.last_name}`,
@@ -131,8 +196,8 @@ export class OwnerService {
         rating: Number(driverProfile.rating) || 0,
         acceptanceRate: 0, // TODO: Calculate from trips
         completionRate: 0, // TODO: Calculate from trips
-        thisMonthEarnings: 0, // TODO: Calculate from trips
-        totalEarnings: 0, // TODO: Calculate from trips
+        thisMonthEarnings: parseFloat(thisMonthEarnings.toFixed(2)),
+        totalEarnings: parseFloat(totalEarnings.toFixed(2)),
       },
       joinedDate: driver.created_at,
       lastActive: driverProfile.updated_at,
@@ -511,7 +576,7 @@ export class OwnerService {
       if (cab.insurance_expiry) {
         const daysToExpiry = Math.floor(
           (new Date(cab.insurance_expiry).getTime() - now.getTime()) /
-            (1000 * 60 * 60 * 24),
+          (1000 * 60 * 60 * 24),
         );
         let status = 'active';
         if (daysToExpiry < 0) status = 'expired';

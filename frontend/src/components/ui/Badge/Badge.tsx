@@ -30,8 +30,8 @@ const badgeVariants = cva(
 
 export interface BadgeProps
   extends
-    React.HTMLAttributes<HTMLSpanElement>,
-    VariantProps<typeof badgeVariants> {
+  React.HTMLAttributes<HTMLSpanElement>,
+  VariantProps<typeof badgeVariants> {
   dot?: boolean;
   dotColor?: string;
 }
@@ -113,7 +113,7 @@ const statusMap: Record<
   // Emergency statuses
   triggered: { variant: 'error' },
   confirmed: { variant: 'error' },
-  active: { variant: 'error' },
+  active: { variant: 'success' },
   contacting_services: { variant: 'warning', label: 'Contacting Services' },
   help_dispatched: { variant: 'info', label: 'Help Dispatched' },
   resolving: { variant: 'warning' },

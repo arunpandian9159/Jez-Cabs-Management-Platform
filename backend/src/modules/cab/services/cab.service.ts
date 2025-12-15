@@ -18,7 +18,7 @@ export class CabService {
     @InjectRepository(Cab)
     private readonly cabRepository: Repository<Cab>,
     private readonly eventEmitter: EventEmitter2,
-  ) {}
+  ) { }
 
   async create(createCabDto: CreateCabDto, currentUser: User): Promise<Cab> {
     // Check if registration number already exists
@@ -67,7 +67,9 @@ export class CabService {
       sort_order = 'DESC',
     } = filterDto;
 
-    const queryBuilder = this.cabRepository.createQueryBuilder('cab');
+    const queryBuilder = this.cabRepository
+      .createQueryBuilder('cab')
+      .leftJoinAndSelect('cab.assigned_driver', 'assigned_driver');
 
     // If cab owner, only show their cabs
     if (currentUser.role === 'cab_owner') {
@@ -165,6 +167,7 @@ export class CabService {
   async findByOwner(ownerId: string): Promise<Cab[]> {
     return this.cabRepository.find({
       where: { owner_id: ownerId },
+      relations: ['assigned_driver'],
       order: { created_at: 'DESC' },
     });
   }
