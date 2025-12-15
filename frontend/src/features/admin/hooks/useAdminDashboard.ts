@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Users, Car, DollarSign, AlertTriangle } from 'lucide-react';
-import { tripsService, disputesService } from '@/services';
+import { tripsService, disputesService, adminService } from '@/services';
 import { formatCurrency } from '@/shared/utils';
 
 export interface DashboardStatDisplay {
@@ -40,7 +40,7 @@ export interface RecentDisputeDisplay {
 export function useAdminDashboard() {
   const [stats, setStats] = useState<DashboardStatDisplay[]>([]);
   const [recentTrips, setRecentTrips] = useState<RecentTripDisplay[]>([]);
-  const [pendingVerifications] = useState<PendingVerificationDisplay[]>([]);
+  const [pendingVerifications, setPendingVerifications] = useState<PendingVerificationDisplay[]>([]);
   const [recentDisputes, setRecentDisputes] = useState<RecentDisputeDisplay[]>(
     []
   );
@@ -49,6 +49,9 @@ export function useAdminDashboard() {
   const fetchDashboardData = useCallback(async () => {
     try {
       setIsLoading(true);
+
+      // Fetch dashboard stats from the backend (revenue calculated from completed payments)
+      const dashboardStats = await adminService.getDashboardStats();
 
       const trips = await tripsService.findAll({ limit: 5 });
       const formattedTrips: RecentTripDisplay[] = trips.map((t) => ({
@@ -70,19 +73,31 @@ export function useAdminDashboard() {
         .slice(0, 3)
         .map((d) => ({
           id: d.id,
-          customer: d.raised_by_user
-            ? `${d.raised_by_user.first_name} ${d.raised_by_user.last_name}`
+          customer: d.raisedByUser
+            ? `${d.raisedByUser.first_name} ${d.raisedByUser.last_name}`
             : 'User',
           issue: d.description?.substring(0, 50) || d.type || 'Issue',
-          priority: 'medium',
+          priority: d.priority || 'medium',
           status: d.status,
         }));
       setRecentDisputes(formattedDisputes);
 
+      // Fetch pending verifications
+      const verifications = await adminService.getVerifications({ status: 'pending', limit: 5 });
+      const formattedVerifications: PendingVerificationDisplay[] = verifications.map((v) => ({
+        id: v.id,
+        name: v.applicant.name,
+        type: v.type === 'driver' ? 'Driver' : 'Cab Owner',
+        document: v.documentType,
+        submitted: new Date(v.submittedAt).toLocaleDateString(),
+      }));
+      setPendingVerifications(formattedVerifications);
+
+      // Use stats from backend API (revenue is calculated from completed payments in payments table)
       setStats([
         {
           label: 'Total Users',
-          value: trips.length.toString(),
+          value: dashboardStats.totalUsers.toString(),
           change: '+12%',
           trending: 'up',
           icon: Users,
@@ -90,7 +105,7 @@ export function useAdminDashboard() {
         },
         {
           label: 'Total Trips',
-          value: trips.length.toString(),
+          value: dashboardStats.totalTrips.toString(),
           change: '+8%',
           trending: 'up',
           icon: Car,
@@ -98,12 +113,7 @@ export function useAdminDashboard() {
         },
         {
           label: 'Revenue',
-          value: formatCurrency(
-            trips.reduce(
-              (sum, t) => sum + (t.actual_fare || t.estimated_fare),
-              0
-            )
-          ),
+          value: formatCurrency(dashboardStats.totalRevenue),
           change: '+15%',
           trending: 'up',
           icon: DollarSign,
@@ -111,7 +121,7 @@ export function useAdminDashboard() {
         },
         {
           label: 'Disputes',
-          value: disputes.length.toString(),
+          value: dashboardStats.totalDisputes.toString(),
           change: '-5%',
           trending: 'down',
           icon: AlertTriangle,
