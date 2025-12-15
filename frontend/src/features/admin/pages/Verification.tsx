@@ -303,8 +303,8 @@ export function AdminVerification() {
         transition={{ delay: 0.2 }}
       >
         <TabsRoot value={activeTab} onValueChange={setActiveTab}>
-          <div className="flex items-center justify-between mb-4">
-            <TabsList>
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-4">
+            <TabsList className="flex-wrap">
               <TabsTrigger value="all">All ({uniqueUsersCount})</TabsTrigger>
               <TabsTrigger value="pending">
                 Pending ({filteredGroupedVerifications.filter(g => g.overallStatus === 'pending' || g.documents.some(d => d.status === 'pending')).length})
@@ -316,13 +316,13 @@ export function AdminVerification() {
                 Rejected ({filteredGroupedVerifications.filter(g => g.overallStatus === 'rejected' || g.documents.some(d => d.status === 'rejected')).length})
               </TabsTrigger>
             </TabsList>
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
               <Input
                 placeholder="Search by name..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 prefix={<Search className="w-4 h-4" />}
-                className="w-64"
+                className="w-full sm:w-64"
               />
               <Select
                 options={[
@@ -336,7 +336,7 @@ export function AdminVerification() {
             </div>
           </div>
           <TabsContent value={activeTab}>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {filteredGroupedVerifications.map((group, index) =>
                 renderGroupCard(group, index)
               )}

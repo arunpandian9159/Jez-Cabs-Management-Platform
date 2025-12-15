@@ -21,7 +21,6 @@ import { Badge } from '@/components/ui/Badge';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Modal } from '@/components/ui/Modal';
-import { Avatar } from '@/components/ui/Avatar';
 import { formatDate } from '@/shared/utils';
 import { useAdminUsers } from '../hooks/useAdminUsers';
 import { AdminPageHeader, AdminStatCard, AdminTableWrapper, tableStyles } from '../components';
@@ -109,14 +108,14 @@ export function AdminUsers() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="flex items-center gap-4"
+        className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4"
       >
         <Input
           placeholder="Search by name, email, or phone..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           prefix={<Search className="w-4 h-4" />}
-          className="w-80"
+          className="w-full sm:w-80"
         />
         <Select
           options={[
@@ -161,14 +160,11 @@ export function AdminUsers() {
               >
                 <td className={tableStyles.td}>
                   <div
-                    className="flex items-center gap-3 cursor-pointer"
+                    className="cursor-pointer"
                     onClick={() => setSelectedUser(user)}
                   >
-                    <Avatar size="sm" name={user.name} />
-                    <div>
-                      <p className="font-medium text-gray-900">{user.name}</p>
-                      <p className="text-xs text-gray-500">{user.email}</p>
-                    </div>
+                    <p className="font-medium text-gray-900">{user.name}</p>
+                    <p className="text-xs text-gray-500">{user.email}</p>
                   </div>
                 </td>
                 <td className={`${tableStyles.td} ${tableStyles.tdText}`}>
@@ -230,7 +226,6 @@ export function AdminUsers() {
         {selectedUser && (
           <div className="space-y-6">
             <div className="flex items-center gap-4">
-              <Avatar size="xl" name={selectedUser.name} />
               <div>
                 <h2 className="text-xl font-semibold text-gray-900">
                   {selectedUser.name}

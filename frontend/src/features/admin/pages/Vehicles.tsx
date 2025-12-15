@@ -25,16 +25,16 @@ export function AdminVehicles() {
                     <motion.div key={item.type} initial={{ opacity: 0, y: 20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ delay: 0.1 + index * 0.05 }} whileHover={{ scale: 1.02 }}>
                         <Card padding="md" className={`bg-gradient-to-br ${typeColors[item.type].bg} border-transparent overflow-hidden relative`}>
                             <div className="flex items-center justify-between">
-                                <div><p className="text-sm font-medium text-gray-600 mb-1">{item.label}</p><p className={`text-3xl font-bold ${typeColors[item.type].text}`}>{item.value}</p></div>
-                                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${typeColors[item.type].gradient} flex items-center justify-center shadow-lg`}><Car className="w-6 h-6 text-white" /></div>
+                                <div><p className="text-xs sm:text-sm font-medium text-gray-600 mb-1">{item.label}</p><p className={`text-xl sm:text-2xl md:text-3xl font-bold ${typeColors[item.type].text}`}>{item.value}</p></div>
+                                <div className={`w-9 h-9 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br ${typeColors[item.type].gradient} flex items-center justify-center shadow-lg`}><Car className="w-4 h-4 sm:w-6 sm:h-6 text-white" /></div>
                             </div>
                         </Card>
                     </motion.div>
                 ))}
             </motion.div>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="flex items-center gap-4 p-3 bg-gradient-to-r from-gray-50 to-transparent rounded-xl">
-                <div className="flex items-center gap-4 text-sm">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="hidden sm:flex items-center gap-4 p-3 bg-gradient-to-r from-gray-50 to-transparent rounded-xl">
+                <div className="flex flex-wrap items-center gap-4 text-sm">
                     {[{ color: 'from-success-400 to-success-600', label: 'Active', value: activeCount }, { color: 'from-warning-400 to-warning-600', label: 'Maintenance', value: maintenanceCount }, { color: 'from-gray-300 to-gray-500', label: 'Inactive', value: inactiveCount }].map(({ color, label, value }) => (
                         <span key={label} className="flex items-center gap-2"><span className={`w-3 h-3 rounded-full bg-gradient-to-r ${color} shadow-sm`}></span><span className="font-medium">{label}: {value}</span></span>
                     ))}
@@ -42,28 +42,30 @@ export function AdminVehicles() {
                 </div>
             </motion.div>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="flex items-center gap-4">
-                <Input placeholder="Search by make, model, plate, or driver..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} prefix={<Search className="w-4 h-4" />} className="w-80" />
-                <Select options={typeOptions} value={typeFilter} onValueChange={setTypeFilter} />
-                <Select options={statusOptions} value={statusFilter} onValueChange={setStatusFilter} />
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
+                <Input placeholder="Search by make, model, plate, or driver..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} prefix={<Search className="w-4 h-4" />} className="w-full sm:w-80" />
+                <div className="flex gap-2">
+                    <Select options={typeOptions} value={typeFilter} onValueChange={setTypeFilter} />
+                    <Select options={statusOptions} value={statusFilter} onValueChange={setStatusFilter} />
+                </div>
             </motion.div>
 
             <AdminTableWrapper isEmpty={filteredVehicles.length === 0} emptyState={{ icon: Car, title: 'No vehicles found', description: "Try adjusting your search or filter to find what you're looking for." }}>
                 <table className={tableStyles.table}>
-                    <thead className={tableStyles.thead}><tr><th className={tableStyles.th}>Vehicle</th><th className={tableStyles.th}>Type</th><th className={tableStyles.th}>Driver</th><th className={tableStyles.th}>Trips</th><th className={tableStyles.th}>Last Service</th><th className={tableStyles.th}>Status</th><th className={tableStyles.th}></th></tr></thead>
+                    <thead className={tableStyles.thead}><tr><th className={tableStyles.th}>Vehicle</th><th className={tableStyles.th}>Type</th><th className={`${tableStyles.th} hidden md:table-cell`}>Driver</th><th className={tableStyles.th}>Trips</th><th className={`${tableStyles.th} hidden sm:table-cell`}>Last Service</th><th className={tableStyles.th}>Status</th><th className={tableStyles.th}></th></tr></thead>
                     <tbody className={tableStyles.tbody}>
                         {filteredVehicles.map((vehicle, index) => (
                             <motion.tr key={vehicle.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: index * 0.05 }} className={tableStyles.tr}>
                                 <td className={tableStyles.td}>
                                     <div className="flex items-center gap-3 cursor-pointer" onClick={() => setSelectedVehicle(vehicle)}>
-                                        <div className={`w-10 h-10 rounded-xl ${typeColors[vehicle.type]?.bg || 'bg-gray-100'} flex items-center justify-center`}><Car className={`w-5 h-5 ${typeColors[vehicle.type]?.text || 'text-gray-600'}`} /></div>
+                                        <div className={`w-10 h-10 rounded-xl ${typeColors[vehicle.type]?.bg || 'bg-gray-100'} hidden sm:flex items-center justify-center`}><Car className={`w-5 h-5 ${typeColors[vehicle.type]?.text || 'text-gray-600'}`} /></div>
                                         <div><p className="font-medium text-gray-900">{vehicle.make} {vehicle.model}</p><p className="text-xs text-gray-500">{vehicle.plateNumber}</p></div>
                                     </div>
                                 </td>
                                 <td className={tableStyles.td}><TypeBadge type={vehicle.type} /></td>
-                                <td className={tableStyles.td}>{vehicle.driverName ? <div className="flex items-center gap-2"><div className="w-8 h-8 rounded-lg bg-primary-100 flex items-center justify-center"><User className="w-4 h-4 text-primary-600" /></div><span className="text-sm text-gray-900">{vehicle.driverName}</span></div> : <span className="text-sm text-gray-400 italic">Unassigned</span>}</td>
+                                <td className={`${tableStyles.td} hidden md:table-cell`}>{vehicle.driverName ? <div className="flex items-center gap-2"><span className="text-sm text-gray-900">{vehicle.driverName}</span></div> : <span className="text-sm text-gray-400 italic">Unassigned</span>}</td>
                                 <td className={`${tableStyles.td} ${tableStyles.tdBold}`}>{vehicle.totalTrips.toLocaleString()}</td>
-                                <td className={`${tableStyles.td} ${tableStyles.tdText}`}>{formatDate(vehicle.lastService)}</td>
+                                <td className={`${tableStyles.td} ${tableStyles.tdText} hidden sm:table-cell`}>{formatDate(vehicle.lastService)}</td>
                                 <td className={tableStyles.td}><StatusBadge status={vehicle.status} /></td>
                                 <td className={`${tableStyles.td} relative`}>
                                     <button onClick={() => toggleActionMenu(vehicle.id)} className="p-2 rounded-lg hover:bg-gray-100 transition-colors"><MoreVertical className="w-4 h-4 text-gray-500" /></button>
