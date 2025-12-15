@@ -93,7 +93,7 @@ export const RegisterForm = ({
   };
 
   return (
-    <div className="w-full max-w-[480px] mx-auto h-full flex flex-col overflow-y-auto">
+    <div className="w-full max-w-[480px] mx-auto h-full flex flex-col overflow-y-auto px-1">
       {/* Header */}
       <motion.div
         className="mb-1"
@@ -101,21 +101,21 @@ export const RegisterForm = ({
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
       >
-        <h2 className="text-3xl md:text-4xl font-bold text-blue-600 mb-2">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-600 mb-2">
           Create an Account
         </h2>
       </motion.div>
 
       {/* Progress Indicator */}
       <motion.div
-        className="flex items-center justify-center gap-2 mb-4"
+        className="flex items-center justify-center gap-1.5 sm:gap-2 mb-3 sm:mb-4"
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.2 }}
       >
         <div className="flex items-center gap-1.5">
           <div
-            className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold ${step >= 1
+            className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-semibold ${step >= 1
               ? 'bg-blue-600 text-white'
               : 'bg-gray-200 text-gray-500'
               }`}
@@ -137,7 +137,7 @@ export const RegisterForm = ({
 
         <div className="flex items-center gap-1.5">
           <div
-            className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold ${step >= 2
+            className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-semibold ${step >= 2
               ? 'bg-blue-600 text-white'
               : 'bg-gray-200 text-gray-500'
               }`}
@@ -155,7 +155,7 @@ export const RegisterForm = ({
 
       {/* Form */}
       <div className="flex-1 overflow-y-auto">
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-3 sm:space-y-4">
           <AnimatePresence mode="wait">
             {step === 1 && (
               <motion.div
@@ -172,21 +172,20 @@ export const RegisterForm = ({
                 className="space-y-5"
                 variants={containerVariants}
               >
-                {/* First Name & Last Name */}
                 <motion.div
-                  className="grid grid-cols-2 gap-4"
+                  className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4"
                   variants={itemVariants}
                 >
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
                       First Name
                     </label>
                     <input
                       type="text"
                       placeholder="John"
                       {...register('firstName')}
-                      className={`w-full px-4 py-2.5 bg-gray-50 border ${errors.firstName ? 'border-red-300' : 'border-gray-200'
-                        } rounded-full text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-400 transition-all`}
+                      className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-gray-50 border ${errors.firstName ? 'border-red-300' : 'border-gray-200'
+                        } rounded-full text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-400 transition-all`}
                       autoFocus
                     />
                     {errors.firstName && (
@@ -196,15 +195,15 @@ export const RegisterForm = ({
                     )}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
                       Last Name
                     </label>
                     <input
                       type="text"
                       placeholder="Last Name"
                       {...register('lastName')}
-                      className={`w-full px-4 py-2.5 bg-gray-50 border ${errors.lastName ? 'border-red-300' : 'border-gray-200'
-                        } rounded-full text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600/10 focus:border-blue-400 transition-all`}
+                      className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-gray-50 border ${errors.lastName ? 'border-red-300' : 'border-gray-200'
+                        } rounded-full text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600/10 focus:border-blue-400 transition-all`}
                     />
                     {errors.lastName && (
                       <p className="mt-1.5 text-sm text-red-500">
@@ -223,8 +222,8 @@ export const RegisterForm = ({
                     type="email"
                     placeholder="Email Address"
                     {...register('email')}
-                    className={`w-full px-4 py-2.5 bg-gray-50 border ${errors.email ? 'border-red-300' : 'border-gray-200'
-                      } rounded-full text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600/10 focus:border-blue-400 transition-all`}
+                    className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-gray-50 border ${errors.email ? 'border-red-300' : 'border-gray-200'
+                      } rounded-full text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600/10 focus:border-blue-400 transition-all`}
                   />
                   {errors.email && (
                     <p className="mt-1.5 text-sm text-red-500">
@@ -242,8 +241,8 @@ export const RegisterForm = ({
                     type="tel"
                     placeholder="9876543210"
                     {...register('phone')}
-                    className={`w-full px-4 py-2.5 bg-gray-50 border ${errors.phone ? 'border-red-300' : 'border-gray-200'
-                      } rounded-full text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600/10 focus:border-blue-400 transition-all`}
+                    className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 bg-gray-50 border ${errors.phone ? 'border-red-300' : 'border-gray-200'
+                      } rounded-full text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600/10 focus:border-blue-400 transition-all`}
                   />
                   {errors.phone && (
                     <p className="mt-1.5 text-sm text-red-500">
@@ -259,7 +258,7 @@ export const RegisterForm = ({
                     fullWidth
                     size="lg"
                     onClick={handleNextStep}
-                    className="bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                    className="bg-blue-600 hover:bg-blue-700 text-white py-3 sm:py-4 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
                     rightIcon={<ArrowRight className="w-5 h-5" />}
                   >
                     Continue
@@ -280,7 +279,7 @@ export const RegisterForm = ({
                   stiffness: 300,
                   damping: 30,
                 }}
-                className="space-y-5"
+                className="space-y-3 sm:space-y-4"
                 variants={containerVariants}
               >
                 {/* Role Selection */}
@@ -304,8 +303,8 @@ export const RegisterForm = ({
                       type={showPassword ? 'text' : 'password'}
                       placeholder="Password"
                       {...register('password')}
-                      className={`w-full px-4 py-2.5 pr-12 bg-gray-50 border ${errors.password ? 'border-red-300' : 'border-gray-200'
-                        } rounded-full text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600/10 focus:border-blue-400 transition-all`}
+                      className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 pr-10 sm:pr-12 bg-gray-50 border ${errors.password ? 'border-red-300' : 'border-gray-200'
+                        } rounded-full text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600/10 focus:border-blue-400 transition-all`}
                     />
                     <button
                       type="button"
@@ -373,10 +372,10 @@ export const RegisterForm = ({
                       type={showConfirmPassword ? 'text' : 'password'}
                       placeholder="Confirm Password"
                       {...register('confirmPassword')}
-                      className={`w-full px-4 py-2.5 pr-12 bg-gray-50 border ${errors.confirmPassword
+                      className={`w-full px-3 sm:px-4 py-2 sm:py-2.5 pr-10 sm:pr-12 bg-gray-50 border ${errors.confirmPassword
                         ? 'border-red-300'
                         : 'border-gray-200'
-                        } rounded-full text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600/10 focus:border-blue-400 transition-all`}
+                        } rounded-full text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600/10 focus:border-blue-400 transition-all`}
                     />
                     <button
                       type="button"
@@ -407,11 +406,11 @@ export const RegisterForm = ({
                   <input
                     type="checkbox"
                     id="register-terms"
-                    className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-600 cursor-pointer"
+                    className="w-4 h-4 sm:w-5 sm:h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-600 cursor-pointer"
                   />
                   <label
                     htmlFor="register-terms"
-                    className="text-sm text-gray-600 cursor-pointer"
+                    className="text-xs sm:text-sm text-gray-600 cursor-pointer"
                   >
                     I agree to the{' '}
                     <a href="#" className="text-blue-600 font-semibold underline">
@@ -421,13 +420,13 @@ export const RegisterForm = ({
                 </motion.div>
 
                 {/* Action Buttons */}
-                <motion.div className="flex gap-3 pt-2" variants={itemVariants}>
+                <motion.div className="flex gap-2 sm:gap-3 pt-1 sm:pt-2" variants={itemVariants}>
                   <Button
                     type="button"
                     variant="outline"
                     size="lg"
                     onClick={handleBackStep}
-                    className="flex-1 border-2 border-blue-300 hover:border-blue-400 text-blue-700 hover:bg-blue-50 py-4 rounded-full font-semibold"
+                    className="flex-1 border-2 border-blue-300 hover:border-blue-400 text-blue-700 hover:bg-blue-50 py-3 sm:py-4 rounded-full font-semibold"
                     leftIcon={<ArrowLeft className="w-5 h-5" />}
                   >
                     Back
@@ -436,7 +435,7 @@ export const RegisterForm = ({
                     type="submit"
                     size="lg"
                     loading={isLoading}
-                    className="flex-[2] bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                    className="flex-[2] bg-blue-600 hover:bg-blue-700 text-white py-3 sm:py-4 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
                   >
                     Create Account
                   </Button>
@@ -462,18 +461,18 @@ export const RegisterForm = ({
             )}
           </AnimatePresence>
         </form>
-      </div>
+      </div >
 
 
 
       {/* Switch to Login */}
-      <motion.div
-        className="text-center mt-4"
+      < motion.div
+        className="text-center mt-3 sm:mt-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.45 }}
       >
-        <p className="text-gray-500">
+        <p className="text-sm text-gray-500">
           Already have an account?{' '}
           <button
             onClick={() => onSwitchModal('login')}
@@ -482,17 +481,17 @@ export const RegisterForm = ({
             Log in
           </button>
         </p>
-      </motion.div>
+      </motion.div >
 
       {/* Social Login */}
-      <motion.div
-        className="mt-6"
+      < motion.div
+        className="mt-4 sm:mt-6"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
       >
         <SocialLoginButtons />
-      </motion.div>
-    </div>
+      </motion.div >
+    </div >
   );
 };

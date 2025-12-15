@@ -216,13 +216,14 @@ export function DriverDashboard() {
             <Button
               variant={isOnline ? 'primary' : 'outline'}
               size="lg"
-              leftIcon={<Power className="w-5 h-5" />}
+              leftIcon={<Power className="w-5 h-5 md:mr-0" />}
               onClick={handleToggleOnline}
               className={cn(
+                'px-3 md:px-4',
                 isOnline && 'bg-gradient-to-r from-success-500 to-success-600 hover:from-success-600 hover:to-success-700 shadow-lg'
               )}
             >
-              {isOnline ? 'Online' : 'Go Online'}
+              <span className="hidden md:inline">{isOnline ? 'Online' : 'Go Online'}</span>
             </Button>
           </motion.div>
         }
@@ -503,7 +504,7 @@ export function DriverDashboard() {
                   <motion.div
                     whileHover={{ scale: 1.05 }}
                     className={cn(
-                      'w-9 h-9 rounded-xl flex items-center justify-center shadow-md',
+                      'w-9 h-9 rounded-lg flex items-center justify-center shadow-md flex-shrink-0',
                       trip.status === 'completed'
                         ? 'bg-gradient-to-br from-success-500 to-success-600'
                         : 'bg-gradient-to-br from-error-500 to-error-600'

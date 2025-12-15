@@ -70,22 +70,22 @@ export function DriverStatCard({
             transition={{ delay }}
             whileHover={{ scale: 1.02, y: -2 }}
         >
-            <Card padding="md" className={`${colors.bg} border-transparent overflow-hidden relative`}>
+            <Card padding="md" className={`${colors.bg} border-transparent overflow-hidden relative min-h-[80px]`}>
                 <div className="flex items-center gap-3">
                     {Icon && (
                         <motion.div
                             initial={{ rotate: -10, scale: 0.8 }}
                             animate={{ rotate: 0, scale: 1 }}
                             transition={{ delay: delay + 0.1 }}
-                            className={`w-11 h-11 rounded-xl ${colors.icon} flex items-center justify-center shadow-lg`}
+                            className={`w-9 h-9 sm:w-11 sm:h-11 rounded-xl ${colors.icon} flex items-center justify-center shadow-lg flex-shrink-0`}
                         >
-                            <Icon className="w-5 h-5 text-white" />
+                            <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                         </motion.div>
                     )}
                     <div className="flex-1">
                         <p className="text-sm font-medium text-gray-600 mb-0.5">{label}</p>
                         <div className="flex items-baseline gap-2">
-                            <p className={`text-2xl font-bold ${colors.value}`}>{value}</p>
+                            <p className={`text-xl sm:text-2xl font-bold ${colors.value}`}>{value}</p>
                             {trend && (
                                 <span
                                     className={`flex items-center text-xs font-medium ${trend.direction === 'up' ? 'text-success-600' : 'text-error-600'
