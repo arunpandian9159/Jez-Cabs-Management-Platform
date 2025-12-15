@@ -2,7 +2,7 @@ import { PageLoader } from '@/components/ui/Loading';
 import { useManageCabs } from '../hooks/useManageCabs';
 import {
   CabFilters,
-  CabsGrid,
+  CabsTable,
   CabDetailsModal,
   AddCabModal,
 } from '../components/manageCabs';
@@ -42,7 +42,7 @@ export function ManageCabs() {
         onAddNew={() => setShowNewCabModal(true)}
       />
 
-      <CabsGrid cabs={cabs} onViewDetails={setSelectedCab} />
+      <CabsTable cabs={cabs} onViewDetails={setSelectedCab} />
 
       <CabDetailsModal
         cab={selectedCab}

@@ -58,7 +58,7 @@ export function PublicOnlyRoute({ redirectTo }: { redirectTo?: string }) {
     const roleDashboards: Record<UserRole, string> = {
       customer: ROUTES.CUSTOMER.BOOK_LOCATION,
       driver: ROUTES.DRIVER.ONBOARDING,
-      cab_owner: ROUTES.OWNER.CABS_REGISTER,
+      cab_owner: ROUTES.OWNER.DASHBOARD,
       trip_planner: ROUTES.PLANNER.DASHBOARD,
       admin: ROUTES.ADMIN.DASHBOARD,
       support: ROUTES.SUPPORT.DASHBOARD,
