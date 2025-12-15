@@ -4,6 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MongooseModule } from '@nestjs/mongoose';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import databaseConfig from './config/database.config';
@@ -61,6 +62,12 @@ import { HealthModule } from './health/health.module';
       verboseMemoryLeak: false,
       ignoreErrors: false,
     }),
+
+    // Rate Limiting (Throttler)
+    ThrottlerModule.forRoot([{
+      ttl: 60000,  // 60 seconds
+      limit: 10,   // 10 requests per minute default
+    }]),
 
     // Feature Modules
     IamModule,

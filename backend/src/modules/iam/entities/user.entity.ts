@@ -4,7 +4,6 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToOne,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { UserRole } from '../../../common/enums';

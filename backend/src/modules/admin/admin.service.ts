@@ -76,8 +76,31 @@ export class AdminService {
     // ==================== User Management ====================
 
     async getAllUsers(filters?: UserFilters): Promise<UserWithStats[]> {
+        // Use a single query with LEFT JOINs and aggregation to avoid N+1 problem
         const queryBuilder = this.userRepository
             .createQueryBuilder('user')
+            .leftJoin('trips', 'trip', 'trip.customer_id = user.id')
+            .leftJoin('payments', 'payment', 'payment.payer_id = user.id')
+            .select([
+                'user.id AS id',
+                'user.first_name AS first_name',
+                'user.last_name AS last_name',
+                'user.email AS email',
+                'user.phone AS phone',
+                'user.role AS role',
+                'user.status AS status',
+                'user.created_at AS created_at',
+            ])
+            .addSelect('COUNT(DISTINCT trip.id)', 'trip_count')
+            .addSelect('COALESCE(SUM(payment.amount), 0)', 'total_spent')
+            .groupBy('user.id')
+            .addGroupBy('user.first_name')
+            .addGroupBy('user.last_name')
+            .addGroupBy('user.email')
+            .addGroupBy('user.phone')
+            .addGroupBy('user.role')
+            .addGroupBy('user.status')
+            .addGroupBy('user.created_at')
             .orderBy('user.created_at', 'DESC');
 
         // Only get customers by default (not admins/support)
@@ -99,48 +122,32 @@ export class AdminService {
         }
 
         if (filters?.limit) {
-            queryBuilder.take(filters.limit);
+            queryBuilder.limit(filters.limit);
         }
 
         if (filters?.offset) {
-            queryBuilder.skip(filters.offset);
+            queryBuilder.offset(filters.offset);
         }
 
-        const users = await queryBuilder.getMany();
+        const rawUsers = await queryBuilder.getRawMany();
 
-        // Get trip counts and total spent for each user
-        const usersWithStats: UserWithStats[] = await Promise.all(
-            users.map(async (user) => {
-                const tripCount = await this.tripRepository.count({
-                    where: { customer_id: user.id },
-                });
-
-                const payments = await this.paymentRepository.find({
-                    where: { payer_id: user.id },
-                });
-
-                const totalSpent = payments.reduce(
-                    (acc, payment) => acc + Number(payment.amount || 0),
-                    0,
-                );
-
-                return {
-                    id: user.id,
-                    name: `${user.first_name} ${user.last_name}`,
-                    email: user.email,
-                    phone: user.phone,
-                    role: user.role,
-                    status: user.status,
-                    location: 'India', // Default location, can be enhanced later
-                    joinedAt: user.created_at.toISOString(),
-                    totalTrips: tripCount,
-                    totalSpent,
-                };
-            }),
-        );
+        // Map raw results to UserWithStats interface
+        const usersWithStats: UserWithStats[] = rawUsers.map((raw) => ({
+            id: raw.id,
+            name: `${raw.first_name} ${raw.last_name}`,
+            email: raw.email,
+            phone: raw.phone,
+            role: raw.role,
+            status: raw.status,
+            location: 'India', // Default location, can be enhanced later
+            joinedAt: new Date(raw.created_at).toISOString(),
+            totalTrips: parseInt(raw.trip_count, 10) || 0,
+            totalSpent: parseFloat(raw.total_spent) || 0,
+        }));
 
         return usersWithStats;
     }
+
 
     async getUserStats(): Promise<UserStats> {
         const [total, active, suspended, inactive] = await Promise.all([
