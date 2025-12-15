@@ -60,7 +60,7 @@ function mapTripStatus(apiStatus: Trip['status']): CurrentTrip['status'] {
   switch (apiStatus) {
     case 'accepted':
       return 'heading_to_pickup';
-    case 'started':
+    case 'in_progress':
       return 'in_progress';
     case 'pending':
     case 'completed':
@@ -85,21 +85,21 @@ function transformTrip(apiTrip: Trip): CurrentTrip {
     },
     pickup: {
       address: apiTrip.pickup_address,
-      lat: apiTrip.pickup_lat,
-      lng: apiTrip.pickup_lng,
+      lat: Number(apiTrip.pickup_lat),
+      lng: Number(apiTrip.pickup_lng),
     },
     destination: {
-      address: apiTrip.destination_address,
-      lat: apiTrip.destination_lat,
-      lng: apiTrip.destination_lng,
+      address: apiTrip.dropoff_address,
+      lat: Number(apiTrip.dropoff_lat),
+      lng: Number(apiTrip.dropoff_lng),
     },
-    fare: apiTrip.estimated_fare,
-    distance: apiTrip.distance_km,
-    estimatedTime: apiTrip.estimated_duration_minutes,
+    fare: Number(apiTrip.estimated_fare),
+    distance: Number(apiTrip.distance_km),
+    estimatedTime: Number(apiTrip.estimated_duration_minutes),
     paymentMethod: 'Cash',
     driverLocation: {
-      lat: apiTrip.pickup_lat,
-      lng: apiTrip.pickup_lng,
+      lat: Number(apiTrip.pickup_lat),
+      lng: Number(apiTrip.pickup_lng),
     },
   };
 }
@@ -129,7 +129,8 @@ export function useActiveTrip() {
   const fetchActiveTrip = useCallback(async () => {
     try {
       setIsLoading(true);
-      const trips = await tripsService.findAll({ status: 'started' });
+      // First check for trips that are in progress
+      const trips = await tripsService.findAll({ status: 'in_progress' });
       if (trips.length > 0) {
         const transformed = transformTrip(trips[0]);
         if (isValidTrip(transformed)) {
@@ -138,6 +139,7 @@ export function useActiveTrip() {
           setTrip(null);
         }
       } else {
+        // Then check for accepted trips
         const acceptedTrips = await tripsService.findAll({
           status: 'accepted',
         });
@@ -215,10 +217,10 @@ export function useActiveTrip() {
   const driverLng = trip?.driverLocation?.lng ?? trip?.pickup.lng ?? 0;
   const routeCoords: [number, number][] = trip
     ? [
-        [driverLat, driverLng],
-        [trip.pickup.lat, trip.pickup.lng],
-        [trip.destination.lat, trip.destination.lng],
-      ]
+      [driverLat, driverLng],
+      [trip.pickup.lat, trip.pickup.lng],
+      [trip.destination.lat, trip.destination.lng],
+    ]
     : [];
   const statusConfig = trip ? tripStatuses[trip.status] : null;
 

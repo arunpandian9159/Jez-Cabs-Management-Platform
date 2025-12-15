@@ -96,7 +96,7 @@ export function useDriverDashboard() {
         const formattedTrips: RecentTripDisplay[] = trips.map((trip) => ({
           id: trip.id,
           pickup: trip.pickup_address,
-          destination: trip.destination_address,
+          destination: trip.dropoff_address,
           fare: trip.actual_fare || trip.estimated_fare,
           distance: trip.distance_km,
           time: new Date(trip.created_at).toLocaleString(),
