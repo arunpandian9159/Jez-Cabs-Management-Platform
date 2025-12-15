@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { cabsService, type Cab, type CreateCabDto } from '@/services';
+import { ownerService } from '@/services/owner.service';
 
 // Types for cab display
 export interface CabDriverDisplay {
@@ -75,42 +76,55 @@ export function useManageCabs() {
   const fetchCabs = useCallback(async () => {
     try {
       setIsLoading(true);
-      const cabsResponse = await cabsService.findAll();
+      // Fetch cabs and drivers in parallel
+      const [cabsResponse, drivers] = await Promise.all([
+        cabsService.findAll(),
+        ownerService.getDrivers().catch(() => []),
+      ]);
       const cabsArray = Array.isArray(cabsResponse)
         ? cabsResponse
         : cabsResponse.data || [];
-      const formattedCabs: CabDisplay[] = cabsArray.map((c: Cab) => ({
-        id: c.id,
-        make: c.make,
-        model: c.model,
-        year: c.year || 2023,
-        color: c.color,
-        registrationNumber: c.registration_number,
-        fuelType: c.fuel_type || 'petrol',
-        status: c.status,
-        driver: c.driver
-          ? {
-              id: c.driver.id,
-              name: `${c.driver.first_name} ${c.driver.last_name}`,
-              phone: c.driver.phone || '',
-              rating: c.driver.rating || 4.5,
-              trips: 0,
+      const formattedCabs: CabDisplay[] = cabsArray.map((c: Cab) => {
+        // Check both driver and assigned_driver for compatibility
+        const driverData = c.driver || c.assigned_driver;
+        // Look up driver's total_trips from driver_profile via the drivers array
+        const driverProfile = driverData
+          ? drivers.find(d => d.id === driverData.id)
+          : null;
+        const driverTotalTrips = driverProfile?.metrics?.totalTrips || 0;
+        return {
+          id: c.id,
+          make: c.make,
+          model: c.model,
+          year: c.year || 2023,
+          color: c.color,
+          registrationNumber: c.registration_number,
+          fuelType: c.fuel_type || 'petrol',
+          status: c.status,
+          driver: driverData
+            ? {
+              id: driverData.id,
+              name: `${driverData.first_name} ${driverData.last_name}`,
+              phone: driverData.phone || '',
+              rating: driverProfile?.metrics?.rating || driverData.rating || 4.5,
+              trips: driverTotalTrips,
             }
-          : null,
-        metrics: {
-          totalTrips: c.total_trips || 0,
-          totalEarnings: 0,
-          thisMonthEarnings: 0,
-          rating: c.rating || 4.5,
-        },
-        documents: {
-          registration: { status: 'valid', expiry: new Date().toISOString() },
-          insurance: { status: 'valid', expiry: new Date().toISOString() },
-          permit: { status: 'valid', expiry: new Date().toISOString() },
-        },
-        lastService: new Date().toISOString(),
-        nextService: new Date().toISOString(),
-      }));
+            : null,
+          metrics: {
+            totalTrips: c.total_trips || 0,
+            totalEarnings: driverProfile?.metrics?.totalEarnings || 0,
+            thisMonthEarnings: driverProfile?.metrics?.thisMonthEarnings || 0,
+            rating: c.rating || 4.5,
+          },
+          documents: {
+            registration: { status: 'valid', expiry: new Date().toISOString() },
+            insurance: { status: 'valid', expiry: new Date().toISOString() },
+            permit: { status: 'valid', expiry: new Date().toISOString() },
+          },
+          lastService: new Date().toISOString(),
+          nextService: new Date().toISOString(),
+        };
+      });
       setCabs(formattedCabs);
     } catch (error) {
       console.error('Error fetching cabs:', error);
