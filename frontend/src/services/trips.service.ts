@@ -8,10 +8,10 @@ export interface Trip {
   pickup_address: string;
   pickup_lat: number;
   pickup_lng: number;
-  destination_address: string;
-  destination_lat: number;
-  destination_lng: number;
-  status: 'pending' | 'accepted' | 'started' | 'completed' | 'cancelled';
+  dropoff_address: string;
+  dropoff_lat: number;
+  dropoff_lng: number;
+  status: 'pending' | 'accepted' | 'driver_arriving' | 'in_progress' | 'completed' | 'cancelled';
   estimated_fare: number;
   actual_fare?: number;
   distance_km: number;
@@ -58,9 +58,9 @@ export interface CreateTripDto {
   pickup_address: string;
   pickup_lat: number;
   pickup_lng: number;
-  destination_address: string;
-  destination_lat: number;
-  destination_lng: number;
+  dropoff_address: string;
+  dropoff_lat: number;
+  dropoff_lng: number;
   cab_type?: string;
   scheduled_at?: string;
 }
