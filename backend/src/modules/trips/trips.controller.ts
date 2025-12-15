@@ -5,6 +5,7 @@ import {
   Patch,
   Param,
   Body,
+  Query,
   UseGuards,
   Request,
 } from '@nestjs/common';
@@ -43,8 +44,11 @@ export class TripsController {
   }
 
   @Get()
-  async findAll(@Request() req: AuthenticatedRequest) {
-    return this.tripsService.findAll(req.user.id, req.user.role);
+  async findAll(
+    @Request() req: AuthenticatedRequest,
+    @Query('status') status?: string,
+  ) {
+    return this.tripsService.findAll(req.user.id, req.user.role, status);
   }
 
   @Get(':id')
