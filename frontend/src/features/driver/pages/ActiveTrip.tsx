@@ -82,7 +82,7 @@ export function ActiveTrip() {
 
   if (isLoading) {
     return (
-      <div className="h-[calc(100vh-4rem)]">
+      <div className="h-[calc(100vh-4rem-3rem)]">
         <PageLoader message="Loading trip..." />
       </div>
     );
@@ -90,7 +90,7 @@ export function ActiveTrip() {
 
   if (!trip) {
     return (
-      <div className="h-[calc(100vh-4rem)] flex flex-col items-center justify-center p-6">
+      <div className="h-[calc(100vh-4rem-3rem)] flex flex-col items-center justify-center p-6">
         <div className="text-center max-w-md">
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
@@ -113,7 +113,7 @@ export function ActiveTrip() {
   }
 
   return (
-    <div className="h-[calc(100vh-4rem)] flex flex-col">
+    <div className="h-[calc(100vh-4rem-3rem)] flex flex-col overflow-hidden">
       {/* Map */}
       <div className="flex-1 relative">
         <MapContainer
