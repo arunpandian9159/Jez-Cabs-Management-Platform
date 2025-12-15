@@ -1,7 +1,8 @@
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   DollarSign,
   TrendingUp,
+
   Download,
   Car,
   Users,
@@ -11,6 +12,18 @@ import {
   ArrowDownLeft,
   Clock,
   AlertTriangle,
+  Target,
+  Receipt,
+  Plus,
+  FileText,
+  Trash2,
+  Fuel,
+  Wrench,
+  Shield,
+  FileCheck,
+  BarChart3,
+  CheckCircle2,
+  Calendar,
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -22,9 +35,13 @@ import {
   TabsContent,
 } from '@/components/ui/Tabs';
 import { Select } from '@/components/ui/Select';
+import { Input } from '@/components/ui/Input';
+import { Modal } from '@/components/ui/Modal';
 import { PageLoader } from '@/components/ui/Loading';
+import { Avatar } from '@/components/ui/Avatar';
 import { formatCurrency, formatDate } from '@/shared/utils';
 import { useOwnerEarnings } from '../hooks/useOwnerEarnings';
+import { type CreateExpenseDto, type CreateGoalDto } from '@/services/owner.service';
 import { OwnerPageHeader } from '../components/OwnerPageHeader';
 
 export function OwnerEarnings() {
@@ -38,9 +55,69 @@ export function OwnerEarnings() {
     maxEarning,
     isLoading,
     error,
+    // New features
+    driverEarnings,
+    expenses,
+    goals,
+    totalExpenses,
+    netProfit,
+    // Expense modal
+    showAddExpenseModal,
+    newExpense,
+    isCreatingExpense,
+    expenseError,
+    // Goal modal
+    showAddGoalModal,
+    newGoal,
+    isCreatingGoal,
+    goalError,
+    // Export
+    isExporting,
+    // Actions
     setActiveTab,
     setDateFilter,
+    setShowAddExpenseModal,
+    setShowAddGoalModal,
+    updateNewExpense,
+    updateNewGoal,
+    handleAddExpense,
+    handleDeleteExpense,
+    handleAddGoal,
+    handleDeleteGoal,
+    handleExport,
   } = useOwnerEarnings();
+
+  const getCategoryIcon = (category: string) => {
+    switch (category) {
+      case 'fuel':
+        return <Fuel className="w-5 h-5 text-warning-600" />;
+      case 'maintenance':
+        return <Wrench className="w-5 h-5 text-primary-600" />;
+      case 'insurance':
+        return <Shield className="w-5 h-5 text-success-600" />;
+      case 'taxes':
+        return <FileCheck className="w-5 h-5 text-error-600" />;
+      case 'toll':
+        return <Receipt className="w-5 h-5 text-accent-600" />;
+      default:
+        return <Receipt className="w-5 h-5 text-gray-600" />;
+    }
+  };
+
+  const getGoalStatusColor = (status: string) => {
+    switch (status) {
+      case 'on_track':
+        return 'primary';
+      case 'ahead':
+        return 'success';
+      case 'behind':
+        return 'warning';
+      case 'completed':
+        return 'success';
+      default:
+        return 'default';
+    }
+  };
 
   if (isLoading) {
     return <PageLoader message="Loading earnings data..." />;
@@ -67,7 +144,7 @@ export function OwnerEarnings() {
     <div className="space-y-6">
       <OwnerPageHeader
         title="Fleet Earnings"
-        subtitle="Track revenue across your fleet"
+        subtitle="Track revenue, expenses, and analytics"
         icon={DollarSign}
         iconColor="success"
         action={
@@ -82,7 +159,12 @@ export function OwnerEarnings() {
               value={dateFilter}
               onValueChange={setDateFilter}
             />
-            <Button variant="outline" leftIcon={<Download className="w-4 h-4" />}>
+            <Button
+              variant="outline"
+              leftIcon={<Download className="w-4 h-4" />}
+              onClick={() => handleExport('csv')}
+              loading={isExporting}
+            >
               Export
             </Button>
           </div>
@@ -94,7 +176,7 @@ export function OwnerEarnings() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="grid grid-cols-2 md:grid-cols-4 gap-4"
+        className="grid grid-cols-2 md:grid-cols-5 gap-4"
       >
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
@@ -111,9 +193,9 @@ export function OwnerEarnings() {
                 <DollarSign className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-white/80 text-xs font-medium">Net Earnings</p>
+                <p className="text-white/80 text-xs font-medium">Gross Revenue</p>
                 <p className="text-2xl font-bold">
-                  {formatCurrency(earningsSummary.netEarnings)}
+                  {formatCurrency(earningsSummary.month)}
                 </p>
               </div>
             </div>
@@ -127,15 +209,37 @@ export function OwnerEarnings() {
           transition={{ delay: 0.15 }}
           whileHover={{ scale: 1.02, y: -2 }}
         >
+          <Card padding="md" className="bg-error-100 border-transparent overflow-hidden relative">
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-error-500 to-error-600 flex items-center justify-center shadow-lg">
+                <Receipt className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <p className="text-gray-600 text-xs font-medium">Expenses</p>
+                <p className="text-2xl font-bold text-error-700">
+                  {formatCurrency(totalExpenses)}
+                </p>
+              </div>
+            </div>
+            <div className="absolute -right-4 -bottom-4 w-16 h-16 rounded-full bg-gradient-to-br from-error-500 to-error-600 opacity-20 blur-xl" />
+          </Card>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2 }}
+          whileHover={{ scale: 1.02, y: -2 }}
+        >
           <Card padding="md" className="bg-primary-100 border-transparent overflow-hidden relative">
             <div className="flex items-center gap-3">
               <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-lg">
                 <TrendingUp className="w-5 h-5 text-white" />
               </div>
               <div>
-                <p className="text-gray-600 text-xs font-medium">Gross Revenue</p>
+                <p className="text-gray-600 text-xs font-medium">Net Profit</p>
                 <p className="text-2xl font-bold text-primary-700">
-                  {formatCurrency(earningsSummary.month)}
+                  {formatCurrency(netProfit)}
                 </p>
               </div>
             </div>
@@ -146,7 +250,7 @@ export function OwnerEarnings() {
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.25 }}
           whileHover={{ scale: 1.02, y: -2 }}
         >
           <Card padding="md" className="bg-warning-100 border-transparent overflow-hidden relative">
@@ -155,7 +259,7 @@ export function OwnerEarnings() {
                 <Clock className="w-5 h-5 text-white" />
               </div>
               <div>
-                <p className="text-gray-600 text-xs font-medium">Pending Settlements</p>
+                <p className="text-gray-600 text-xs font-medium">Pending</p>
                 <p className="text-2xl font-bold text-warning-700">
                   {formatCurrency(earningsSummary.pendingSettlements)}
                 </p>
@@ -168,7 +272,7 @@ export function OwnerEarnings() {
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.25 }}
+          transition={{ delay: 0.3 }}
           whileHover={{ scale: 1.02, y: -2 }}
         >
           <Card padding="md" className="bg-accent-100 border-transparent overflow-hidden relative">
@@ -192,16 +296,41 @@ export function OwnerEarnings() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
+        transition={{ delay: 0.4 }}
       >
         <TabsRoot value={activeTab} onValueChange={setActiveTab}>
-          <TabsList>
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="by-cab">By Vehicle</TabsTrigger>
-            <TabsTrigger value="transactions">Transactions</TabsTrigger>
-            <TabsTrigger value="payouts">Payouts</TabsTrigger>
+          <TabsList className="flex-wrap">
+            <TabsTrigger value="overview">
+              <BarChart3 className="w-4 h-4 mr-1.5" />
+              Overview
+            </TabsTrigger>
+            <TabsTrigger value="by-driver">
+              <Users className="w-4 h-4 mr-1.5" />
+              By Driver
+            </TabsTrigger>
+            <TabsTrigger value="by-cab">
+              <Car className="w-4 h-4 mr-1.5" />
+              By Vehicle
+            </TabsTrigger>
+            <TabsTrigger value="expenses">
+              <Receipt className="w-4 h-4 mr-1.5" />
+              Expenses
+            </TabsTrigger>
+            <TabsTrigger value="goals">
+              <Target className="w-4 h-4 mr-1.5" />
+              Goals
+            </TabsTrigger>
+            <TabsTrigger value="transactions">
+              <FileText className="w-4 h-4 mr-1.5" />
+              Transactions
+            </TabsTrigger>
+            <TabsTrigger value="payouts">
+              <Wallet className="w-4 h-4 mr-1.5" />
+              Payouts
+            </TabsTrigger>
           </TabsList>
 
+          {/* Overview Tab */}
           <TabsContent value="overview" className="mt-4">
             <div className="grid md:grid-cols-2 gap-4">
               <Card padding="md" className="overflow-hidden">
@@ -265,19 +394,28 @@ export function OwnerEarnings() {
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full bg-gradient-to-r from-error-500 to-error-600" />
+                      <span className="text-gray-600">Expenses</span>
+                    </div>
+                    <span className="font-medium text-error-600">
+                      -{formatCurrency(totalExpenses)}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
                       <div className="w-3 h-3 rounded-full bg-gradient-to-r from-accent-500 to-accent-600" />
                       <span className="text-gray-600">Driver Payments</span>
                     </div>
                     <span className="font-medium text-accent-600">
-                      {formatCurrency(earningsSummary.month * 0.7)}
+                      -{formatCurrency(earningsSummary.month * 0.7)}
                     </span>
                   </div>
                   <div className="border-t border-gray-100 pt-4 flex items-center justify-between">
                     <span className="font-semibold text-gray-900">
-                      Net Earnings
+                      Net Profit
                     </span>
                     <span className="font-bold text-success-600 text-lg">
-                      {formatCurrency(earningsSummary.netEarnings)}
+                      {formatCurrency(netProfit)}
                     </span>
                   </div>
                 </div>
@@ -285,6 +423,70 @@ export function OwnerEarnings() {
             </div>
           </TabsContent>
 
+          {/* By Driver Tab */}
+          <TabsContent value="by-driver" className="mt-4">
+            <div className="space-y-3">
+              {driverEarnings.map((driver, index) => (
+                <motion.div
+                  key={driver.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                  whileHover={{ scale: 1.005 }}
+                >
+                  <Card padding="md" interactive className="hover:shadow-lg transition-all">
+                    <div className="flex items-center gap-4">
+                      <Avatar size="lg" name={driver.driverName} />
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-gray-900">
+                          {driver.driverName}
+                        </p>
+                        <div className="flex items-center gap-2 text-sm text-gray-500">
+                          <span>{driver.driverPhone}</span>
+                          {driver.vehicleAssigned && (
+                            <>
+                              <span>•</span>
+                              <span className="flex items-center gap-1">
+                                <Car className="w-3 h-3" />
+                                {driver.vehicleAssigned}
+                              </span>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                      <div className="text-center px-3 py-2 bg-gray-50 rounded-xl">
+                        <p className="text-sm text-gray-500">Trips</p>
+                        <p className="font-bold text-gray-900">{driver.trips}</p>
+                      </div>
+                      <div className="text-center px-3 py-2 bg-accent-50 rounded-xl">
+                        <p className="text-sm text-accent-600">Commission</p>
+                        <p className="font-bold text-accent-700">
+                          {formatCurrency(driver.commission)}
+                        </p>
+                      </div>
+                      <div className="text-right min-w-[120px]">
+                        <p className="font-bold text-gray-900 text-lg">
+                          {formatCurrency(driver.thisMonthEarnings)}
+                        </p>
+                        <div
+                          className={`flex items-center justify-end gap-1 text-sm ${driver.growth >= 0 ? 'text-success-600' : 'text-error-600'}`}
+                        >
+                          {driver.growth >= 0 ? (
+                            <ArrowUpRight className="w-3 h-3" />
+                          ) : (
+                            <ArrowDownLeft className="w-3 h-3" />
+                          )}
+                          <span className="font-medium">{Math.abs(driver.growth)}%</span>
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          </TabsContent>
+
+          {/* By Vehicle Tab */}
           <TabsContent value="by-cab" className="mt-4">
             <div className="space-y-3">
               {cabEarnings.map((cab, index) => (
@@ -338,6 +540,177 @@ export function OwnerEarnings() {
             </div>
           </TabsContent>
 
+          {/* Expenses Tab */}
+          <TabsContent value="expenses" className="mt-4">
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <h3 className="font-semibold text-gray-900">Expense Tracking</h3>
+                <Button
+                  leftIcon={<Plus className="w-4 h-4" />}
+                  onClick={() => setShowAddExpenseModal(true)}
+                >
+                  Add Expense
+                </Button>
+              </div>
+
+              {/* Expense Categories Summary */}
+              <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+                {['fuel', 'maintenance', 'insurance', 'taxes', 'toll', 'other'].map((category) => {
+                  const categoryTotal = expenses
+                    .filter(e => e.category === category)
+                    .reduce((sum, e) => sum + e.amount, 0);
+                  return (
+                    <Card key={category} padding="sm" className="text-center">
+                      <div className="flex justify-center mb-2">
+                        {getCategoryIcon(category)}
+                      </div>
+                      <p className="text-xs text-gray-500 capitalize">{category}</p>
+                      <p className="font-bold text-gray-900">{formatCurrency(categoryTotal)}</p>
+                    </Card>
+                  );
+                })}
+              </div>
+
+              {/* Expense List */}
+              <Card padding="md">
+                <h4 className="font-medium text-gray-900 mb-4">Recent Expenses</h4>
+                <div className="space-y-3">
+                  {expenses.map((expense, index) => (
+                    <motion.div
+                      key={expense.id}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.03 }}
+                      className="flex items-center justify-between p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm">
+                          {getCategoryIcon(expense.category)}
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-900">{expense.description}</p>
+                          <div className="flex items-center gap-2 text-sm text-gray-500">
+                            <span className="capitalize">{expense.category}</span>
+                            {expense.vehicleName && (
+                              <>
+                                <span>•</span>
+                                <span>{expense.vehicleName}</span>
+                              </>
+                            )}
+                            <span>•</span>
+                            <span>{formatDate(expense.date)}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <p className="font-bold text-error-600">-{formatCurrency(expense.amount)}</p>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleDeleteExpense(expense.id)}
+                        >
+                          <Trash2 className="w-4 h-4 text-gray-400 hover:text-error-600" />
+                        </Button>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* Goals Tab */}
+          <TabsContent value="goals" className="mt-4">
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <h3 className="font-semibold text-gray-900">Earnings Goals</h3>
+                <Button
+                  leftIcon={<Plus className="w-4 h-4" />}
+                  onClick={() => setShowAddGoalModal(true)}
+                >
+                  Set Goal
+                </Button>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-4">
+                {goals.map((goal, index) => (
+                  <motion.div
+                    key={goal.id}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    <Card padding="lg" className="relative overflow-hidden">
+                      <div className="flex items-start justify-between mb-4">
+                        <div>
+                          <Badge variant={getGoalStatusColor(goal.status) as 'success' | 'warning' | 'primary' | 'default'} className="capitalize mb-2">
+                            {goal.status.replace('_', ' ')}
+                          </Badge>
+                          <h4 className="font-semibold text-gray-900 capitalize">
+                            {goal.type} Goal
+                          </h4>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleDeleteGoal(goal.id)}
+                        >
+                          <Trash2 className="w-4 h-4 text-gray-400" />
+                        </Button>
+                      </div>
+
+                      <div className="flex items-end justify-between mb-2">
+                        <div>
+                          <p className="text-sm text-gray-500">Progress</p>
+                          <p className="text-2xl font-bold text-gray-900">
+                            {formatCurrency(goal.currentAmount)}
+                          </p>
+                        </div>
+                        <p className="text-gray-500">
+                          of {formatCurrency(goal.targetAmount)}
+                        </p>
+                      </div>
+
+                      {/* Progress Bar */}
+                      <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${Math.min(goal.progress, 100)}%` }}
+                          transition={{ delay: 0.3, duration: 0.5 }}
+                          className={`h-full rounded-full ${goal.status === 'ahead' || goal.status === 'completed'
+                            ? 'bg-gradient-to-r from-success-400 to-success-500'
+                            : goal.status === 'behind'
+                              ? 'bg-gradient-to-r from-warning-400 to-warning-500'
+                              : 'bg-gradient-to-r from-primary-400 to-primary-500'
+                            }`}
+                        />
+                      </div>
+                      <p className="text-right text-sm text-gray-500 mt-1">{goal.progress}%</p>
+
+                      <div className="flex items-center gap-2 mt-3 text-sm text-gray-500">
+                        <Calendar className="w-4 h-4" />
+                        <span>
+                          {formatDate(goal.startDate)} - {formatDate(goal.endDate)}
+                        </span>
+                      </div>
+
+                      {/* Background decoration */}
+                      <div className="absolute -right-8 -bottom-8 w-32 h-32 rounded-full bg-gradient-to-br from-primary-100 to-accent-100 opacity-50 blur-2xl" />
+                    </Card>
+                  </motion.div>
+                ))}
+
+                {goals.length === 0 && (
+                  <div className="col-span-2 text-center py-12">
+                    <Target className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                    <p className="text-gray-500">No goals set yet. Set your first earnings goal!</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* Transactions Tab */}
           <TabsContent value="transactions" className="mt-4">
             <div className="space-y-3">
               {transactions.map((tx, index) => (
@@ -387,6 +760,7 @@ export function OwnerEarnings() {
             </div>
           </TabsContent>
 
+          {/* Payouts Tab */}
           <TabsContent value="payouts" className="mt-4">
             <div className="space-y-4">
               <Card padding="lg" className="bg-gradient-to-br from-primary-500 via-primary-600 to-accent-600 text-white overflow-hidden relative">
@@ -448,7 +822,10 @@ export function OwnerEarnings() {
                         </p>
                         <p className="text-sm text-gray-500">{payout.date}</p>
                       </div>
-                      <Badge variant="success">Completed</Badge>
+                      <Badge variant="success">
+                        <CheckCircle2 className="w-3 h-3 mr-1" />
+                        Completed
+                      </Badge>
                     </motion.div>
                   ))}
                 </div>
@@ -457,6 +834,144 @@ export function OwnerEarnings() {
           </TabsContent>
         </TabsRoot>
       </motion.div>
+
+      {/* Add Expense Modal */}
+      <Modal
+        open={showAddExpenseModal}
+        onOpenChange={setShowAddExpenseModal}
+        title="Add Expense"
+        description="Track your fleet expenses"
+        size="md"
+      >
+        <div className="space-y-4">
+          <AnimatePresence>
+            {expenseError && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="p-3 bg-error-50 border border-error-200 rounded-lg text-error-700 text-sm"
+              >
+                {expenseError}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <Select
+            label="Category *"
+            options={[
+              { value: 'fuel', label: 'Fuel' },
+              { value: 'maintenance', label: 'Maintenance' },
+              { value: 'insurance', label: 'Insurance' },
+              { value: 'taxes', label: 'Taxes' },
+              { value: 'toll', label: 'Toll' },
+              { value: 'other', label: 'Other' },
+            ]}
+            value={newExpense.category}
+            onValueChange={(value) => updateNewExpense('category', value as CreateExpenseDto['category'])}
+          />
+
+          <Input
+            label="Description *"
+            placeholder="e.g., Monthly fuel for Innova"
+            value={newExpense.description}
+            onChange={(e) => updateNewExpense('description', e.target.value)}
+          />
+
+          <Input
+            label="Amount (₹) *"
+            type="number"
+            placeholder="5000"
+            value={newExpense.amount.toString()}
+            onChange={(e) => updateNewExpense('amount', parseInt(e.target.value) || 0)}
+          />
+
+          <Input
+            label="Date *"
+            type="date"
+            value={newExpense.date}
+            onChange={(e) => updateNewExpense('date', e.target.value)}
+          />
+
+          <div className="flex gap-3 pt-4 border-t">
+            <Button
+              variant="outline"
+              fullWidth
+              onClick={() => setShowAddExpenseModal(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              fullWidth
+              onClick={handleAddExpense}
+              loading={isCreatingExpense}
+            >
+              Add Expense
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Add Goal Modal */}
+      <Modal
+        open={showAddGoalModal}
+        onOpenChange={setShowAddGoalModal}
+        title="Set Earnings Goal"
+        description="Define your earnings target"
+        size="md"
+      >
+        <div className="space-y-4">
+          <AnimatePresence>
+            {goalError && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="p-3 bg-error-50 border border-error-200 rounded-lg text-error-700 text-sm"
+              >
+                {goalError}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <Select
+            label="Goal Period *"
+            options={[
+              { value: 'daily', label: 'Daily' },
+              { value: 'weekly', label: 'Weekly' },
+              { value: 'monthly', label: 'Monthly' },
+              { value: 'yearly', label: 'Yearly' },
+            ]}
+            value={newGoal.type}
+            onValueChange={(value) => updateNewGoal('type', value as CreateGoalDto['type'])}
+          />
+
+          <Input
+            label="Target Amount (₹) *"
+            type="number"
+            placeholder="100000"
+            value={newGoal.targetAmount.toString()}
+            onChange={(e) => updateNewGoal('targetAmount', parseInt(e.target.value) || 0)}
+          />
+
+          <div className="flex gap-3 pt-4 border-t">
+            <Button
+              variant="outline"
+              fullWidth
+              onClick={() => setShowAddGoalModal(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              fullWidth
+              onClick={handleAddGoal}
+              loading={isCreatingGoal}
+            >
+              Set Goal
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

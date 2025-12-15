@@ -72,6 +72,90 @@ export interface MonthlyEarning {
   earnings: number;
 }
 
+// Driver earnings breakdown
+export interface DriverEarning {
+  id: string;
+  driverName: string;
+  driverPhone: string;
+  avatar: string | null;
+  vehicleAssigned: string | null;
+  totalEarnings: number;
+  thisMonthEarnings: number;
+  lastMonthEarnings: number;
+  trips: number;
+  commission: number;
+  commissionRate: number;
+  growth: number;
+}
+
+// Expense tracking
+export interface Expense {
+  id: string;
+  category: 'fuel' | 'maintenance' | 'insurance' | 'taxes' | 'toll' | 'other';
+  description: string;
+  amount: number;
+  date: string;
+  vehicleId?: string;
+  vehicleName?: string;
+  receipt?: string;
+}
+
+export interface CreateExpenseDto {
+  category: 'fuel' | 'maintenance' | 'insurance' | 'taxes' | 'toll' | 'other';
+  description: string;
+  amount: number;
+  date: string;
+  vehicleId?: string;
+  receipt?: string;
+}
+
+// Earnings goals
+export interface EarningsGoal {
+  id: string;
+  type: 'daily' | 'weekly' | 'monthly' | 'yearly';
+  targetAmount: number;
+  currentAmount: number;
+  startDate: string;
+  endDate: string;
+  progress: number;
+  status: 'on_track' | 'behind' | 'ahead' | 'completed';
+}
+
+export interface CreateGoalDto {
+  type: 'daily' | 'weekly' | 'monthly' | 'yearly';
+  targetAmount: number;
+}
+
+// Earnings insights/analytics
+export interface EarningsInsight {
+  id: string;
+  type: 'growth' | 'decline' | 'milestone' | 'recommendation' | 'warning';
+  title: string;
+  description: string;
+  value?: number;
+  percentageChange?: number;
+  date: string;
+}
+
+// Export options
+export interface ExportOptions {
+  format: 'csv' | 'pdf' | 'excel';
+  dateRange: {
+    start: string;
+    end: string;
+  };
+  includeTransactions?: boolean;
+  includeCabBreakdown?: boolean;
+  includeDriverBreakdown?: boolean;
+  includeExpenses?: boolean;
+}
+
+// Custom date range
+export interface DateRange {
+  start: string;
+  end: string;
+}
+
 // Types for owner drivers
 export interface OwnerDriver {
   id: string;
@@ -191,6 +275,109 @@ export const ownerService = {
   async getMonthlyEarnings(months?: number): Promise<MonthlyEarning[]> {
     const params = months ? `?months=${months}` : '';
     return apiClient.get<MonthlyEarning[]>(`/owner/earnings/monthly${params}`);
+  },
+
+  // Get earnings by driver
+  async getEarningsByDriver(): Promise<DriverEarning[]> {
+    return apiClient.get<DriverEarning[]>('/owner/earnings/by-driver');
+  },
+
+  // Get earnings with custom date range
+  async getEarningsWithDateRange(dateRange: DateRange): Promise<EarningsSummary> {
+    return apiClient.get<EarningsSummary>(
+      `/owner/earnings/summary?start=${dateRange.start}&end=${dateRange.end}`
+    );
+  },
+
+  // ============= EXPENSES =============
+
+  // Get all expenses
+  async getExpenses(filters?: {
+    category?: string;
+    vehicleId?: string;
+    startDate?: string;
+    endDate?: string;
+  }): Promise<Expense[]> {
+    const params = new URLSearchParams();
+    if (filters?.category) params.append('category', filters.category);
+    if (filters?.vehicleId) params.append('vehicleId', filters.vehicleId);
+    if (filters?.startDate) params.append('startDate', filters.startDate);
+    if (filters?.endDate) params.append('endDate', filters.endDate);
+
+    const query = params.toString();
+    return apiClient.get<Expense[]>(`/owner/expenses${query ? `?${query}` : ''}`);
+  },
+
+  // Create expense
+  async createExpense(data: CreateExpenseDto): Promise<Expense> {
+    return apiClient.post<Expense>('/owner/expenses', data);
+  },
+
+  // Update expense
+  async updateExpense(id: string, data: Partial<CreateExpenseDto>): Promise<Expense> {
+    return apiClient.patch<Expense>(`/owner/expenses/${id}`, data);
+  },
+
+  // Delete expense
+  async deleteExpense(id: string): Promise<void> {
+    return apiClient.delete(`/owner/expenses/${id}`);
+  },
+
+  // Get expense summary
+  async getExpenseSummary(period?: 'week' | 'month' | 'quarter' | 'year'): Promise<{
+    total: number;
+    byCategory: { category: string; amount: number }[];
+    byVehicle: { vehicleId: string; vehicleName: string; amount: number }[];
+  }> {
+    const params = period ? `?period=${period}` : '';
+    return apiClient.get(`/owner/expenses/summary${params}`);
+  },
+
+  // ============= GOALS =============
+
+  // Get earnings goals
+  async getGoals(): Promise<EarningsGoal[]> {
+    return apiClient.get<EarningsGoal[]>('/owner/goals');
+  },
+
+  // Create goal
+  async createGoal(data: CreateGoalDto): Promise<EarningsGoal> {
+    return apiClient.post<EarningsGoal>('/owner/goals', data);
+  },
+
+  // Update goal
+  async updateGoal(id: string, data: Partial<CreateGoalDto>): Promise<EarningsGoal> {
+    return apiClient.patch<EarningsGoal>(`/owner/goals/${id}`, data);
+  },
+
+  // Delete goal
+  async deleteGoal(id: string): Promise<void> {
+    return apiClient.delete(`/owner/goals/${id}`);
+  },
+
+  // ============= INSIGHTS =============
+
+  // Get earnings insights
+  async getInsights(): Promise<EarningsInsight[]> {
+    return apiClient.get<EarningsInsight[]>('/owner/earnings/insights');
+  },
+
+  // ============= EXPORT =============
+
+  // Export earnings data
+  async exportEarnings(options: ExportOptions): Promise<Blob> {
+    const response = await apiClient.post<Blob>('/owner/earnings/export', options, {
+      responseType: 'blob'
+    });
+    return response;
+  },
+
+  // Generate earnings report
+  async generateReport(period: 'week' | 'month' | 'quarter' | 'year'): Promise<{
+    reportUrl: string;
+    generatedAt: string;
+  }> {
+    return apiClient.post(`/owner/earnings/report`, { period });
   },
 
   // ============= DRIVERS =============
