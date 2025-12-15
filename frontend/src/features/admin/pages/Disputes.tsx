@@ -19,7 +19,6 @@ import { Badge } from '@/components/ui/Badge';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Modal } from '@/components/ui/Modal';
-import { Avatar } from '@/components/ui/Avatar';
 import {
   TabsRoot,
   TabsList,
@@ -149,24 +148,24 @@ export function AdminDisputes() {
         transition={{ delay: 0.2 }}
       >
         <TabsRoot value={activeTab} onValueChange={setActiveTab}>
-          <div className="flex items-center justify-between mb-4">
-            <TabsList>
-              <TabsTrigger value="all">All ({totalCount})</TabsTrigger>
-              <TabsTrigger value="open">Open ({openCount})</TabsTrigger>
-              <TabsTrigger value="in_progress">
-                In Progress ({inProgressCount})
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-4">
+            <TabsList className="flex-wrap">
+              <TabsTrigger value="all" className="text-[10px] sm:text-xs md:text-sm px-2 sm:px-3">All<span className="hidden sm:inline"> ({totalCount})</span></TabsTrigger>
+              <TabsTrigger value="open" className="text-[10px] sm:text-xs md:text-sm px-2 sm:px-3">Open<span className="hidden sm:inline"> ({openCount})</span></TabsTrigger>
+              <TabsTrigger value="in_progress" className="text-[10px] sm:text-xs md:text-sm px-2 sm:px-3">
+                <span className="sm:hidden">Progress</span><span className="hidden sm:inline">In Progress ({inProgressCount})</span>
               </TabsTrigger>
-              <TabsTrigger value="resolved">
-                Resolved ({resolvedCount})
+              <TabsTrigger value="resolved" className="text-[10px] sm:text-xs md:text-sm px-2 sm:px-3">
+                Resolved<span className="hidden sm:inline"> ({resolvedCount})</span>
               </TabsTrigger>
             </TabsList>
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
               <Input
                 placeholder="Search disputes..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 prefix={<Search className="w-4 h-4" />}
-                className="w-64"
+                className="w-full sm:w-64"
               />
               <Select
                 options={[
@@ -186,25 +185,25 @@ export function AdminDisputes() {
                 <table className="w-full">
                   <thead className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
                     <tr>
-                      <th className="text-left py-3.5 px-4 text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                      <th className="text-left py-3.5 px-4 text-xs sm:text-sm font-semibold text-gray-600 uppercase tracking-wider">
                         Ticket
                       </th>
-                      <th className="text-left py-3.5 px-4 text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                      <th className="text-left py-3.5 px-4 text-xs sm:text-sm font-semibold text-gray-600 uppercase tracking-wider">
                         Customer
                       </th>
-                      <th className="text-left py-3.5 px-4 text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                      <th className="text-left py-3.5 px-4 text-xs sm:text-sm font-semibold text-gray-600 uppercase tracking-wider hidden md:table-cell">
                         Issue
                       </th>
-                      <th className="text-left py-3.5 px-4 text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                      <th className="text-left py-3.5 px-4 text-xs sm:text-sm font-semibold text-gray-600 uppercase tracking-wider">
                         Priority
                       </th>
-                      <th className="text-left py-3.5 px-4 text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                      <th className="text-left py-3.5 px-4 text-xs sm:text-sm font-semibold text-gray-600 uppercase tracking-wider">
                         Status
                       </th>
-                      <th className="text-left py-3.5 px-4 text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                      <th className="text-left py-3.5 px-4 text-xs sm:text-sm font-semibold text-gray-600 uppercase tracking-wider hidden sm:table-cell">
                         Date
                       </th>
-                      <th className="text-left py-3.5 px-4 text-sm font-semibold text-gray-600 uppercase tracking-wider"></th>
+                      <th className="text-left py-3.5 px-4 text-xs sm:text-sm font-semibold text-gray-600 uppercase tracking-wider"></th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">
@@ -218,19 +217,16 @@ export function AdminDisputes() {
                         onClick={() => setSelectedDispute(dispute)}
                       >
                         <td className="py-4 px-4">
-                          <span className="font-medium text-primary-600">
+                          <span className="font-medium text-primary-600 text-xs sm:text-sm">
                             {dispute.ticketNo}
                           </span>
                         </td>
                         <td className="py-4 px-4">
-                          <div className="flex items-center gap-2">
-                            <Avatar size="xs" name={dispute.customer.name} />
-                            <span className="text-sm text-gray-900">
-                              {dispute.customer.name}
-                            </span>
-                          </div>
+                          <span className="text-sm text-gray-900">
+                            {dispute.customer.name}
+                          </span>
                         </td>
-                        <td className="py-4 px-4 text-sm text-gray-700 max-w-xs truncate">
+                        <td className="py-4 px-4 text-sm text-gray-700 max-w-xs truncate hidden md:table-cell">
                           {dispute.issue}
                         </td>
                         <td className="py-4 px-4">
@@ -239,7 +235,7 @@ export function AdminDisputes() {
                         <td className="py-4 px-4">
                           {getStatusBadge(dispute.status)}
                         </td>
-                        <td className="py-4 px-4 text-sm text-gray-500">
+                        <td className="py-4 px-4 text-sm text-gray-500 hidden sm:table-cell">
                           {formatDate(dispute.createdAt)}
                         </td>
                         <td className="py-4 px-4">

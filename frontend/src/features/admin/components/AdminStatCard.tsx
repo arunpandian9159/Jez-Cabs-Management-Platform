@@ -1,9 +1,10 @@
 import { motion } from 'framer-motion';
 import { LucideIcon, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
+import { ReactNode } from 'react';
 
 interface AdminStatCardProps {
-    label: string;
+    label: ReactNode;
     value: string | number;
     icon?: LucideIcon;
     trend?: {
@@ -76,17 +77,17 @@ export function AdminStatCard({
             >
                 <div className="flex items-start justify-between">
                     <div className="flex-1">
-                        <p className="text-sm font-medium text-gray-500 mb-1">{label}</p>
-                        <p className={`text-3xl font-bold ${styles.text}`}>{value}</p>
+                        <p className="text-xs sm:text-sm font-medium text-gray-500 mb-0.5 sm:mb-1">{label}</p>
+                        <p className={`text-xl sm:text-2xl md:text-3xl font-bold ${styles.text}`}>{value}</p>
                     </div>
                     {Icon && (
                         <motion.div
                             initial={{ rotate: -10 }}
                             animate={{ rotate: 0 }}
                             transition={{ delay: delay + 0.1 }}
-                            className={`w-10 h-10 rounded-lg ${styles.icon} flex items-center justify-center shadow-md`}
+                            className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg ${styles.icon} flex items-center justify-center shadow-md flex-shrink-0`}
                         >
-                            <Icon className="w-5 h-5 text-white" />
+                            <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                         </motion.div>
                     )}
                 </div>
@@ -95,8 +96,7 @@ export function AdminStatCard({
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: delay + 0.2 }}
-                        className={`flex items-center gap-1 mt-2 text-sm ${trend.direction === 'up' ? 'text-success-600' : 'text-error-600'
-                            }`}
+                        className={`flex items-center gap-1 mt-2 text-sm ${trend.direction === 'up' ? 'text-success-600' : 'text-error-600'}`}
                     >
                         {trend.direction === 'up' ? (
                             <ArrowUpRight className="w-4 h-4" />

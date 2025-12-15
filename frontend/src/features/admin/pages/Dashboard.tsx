@@ -2,7 +2,6 @@ import { motion } from 'framer-motion';
 import { Clock, LayoutDashboard, TrendingUp, AlertTriangle } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
-import { Avatar } from '@/components/ui/Avatar';
 import { formatCurrency } from '@/shared/utils';
 import { useAdminDashboard } from '../hooks/useAdminDashboard';
 import { AdminPageHeader, AdminStatCard } from '../components';
@@ -97,23 +96,23 @@ export function AdminDashboard() {
                 View All
               </button>
             </div>
-            <div className="overflow-x-auto">
-              <table className="w-full">
+            <div className="overflow-x-auto -mx-4 sm:mx-0">
+              <table className="w-full min-w-[400px]">
                 <thead>
                   <tr className="border-b border-gray-200 bg-gradient-to-r from-gray-50 to-transparent">
-                    <th className="text-left py-3 text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                    <th className="text-left py-2 sm:py-3 px-3 sm:px-4 text-xs sm:text-sm font-semibold text-gray-600 uppercase tracking-wider">
                       Customer
                     </th>
-                    <th className="text-left py-3 text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                    <th className="text-left py-2 sm:py-3 px-3 sm:px-4 text-xs sm:text-sm font-semibold text-gray-600 uppercase tracking-wider hidden sm:table-cell">
                       Driver
                     </th>
-                    <th className="text-left py-3 text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                    <th className="text-left py-2 sm:py-3 px-3 sm:px-4 text-xs sm:text-sm font-semibold text-gray-600 uppercase tracking-wider">
                       Fare
                     </th>
-                    <th className="text-left py-3 text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                    <th className="text-left py-2 sm:py-3 px-3 sm:px-4 text-xs sm:text-sm font-semibold text-gray-600 uppercase tracking-wider">
                       Status
                     </th>
-                    <th className="text-left py-3 text-sm font-semibold text-gray-600 uppercase tracking-wider">
+                    <th className="text-left py-2 sm:py-3 px-3 sm:px-4 text-xs sm:text-sm font-semibold text-gray-600 uppercase tracking-wider hidden md:table-cell">
                       Time
                     </th>
                   </tr>
@@ -127,22 +126,19 @@ export function AdminDashboard() {
                       transition={{ delay: 0.4 + index * 0.05 }}
                       className="hover:bg-gradient-to-r hover:from-primary-50/50 hover:to-transparent transition-all duration-200"
                     >
-                      <td className="py-3">
-                        <div className="flex items-center gap-2">
-                          <Avatar size="xs" name={trip.customer} />
-                          <span className="text-sm font-medium text-gray-900">
-                            {trip.customer}
-                          </span>
-                        </div>
+                      <td className="py-2 sm:py-3 px-3 sm:px-4">
+                        <span className="text-xs sm:text-sm font-medium text-gray-900 truncate">
+                          {trip.customer}
+                        </span>
                       </td>
-                      <td className="py-3 text-sm text-gray-600">
+                      <td className="py-2 sm:py-3 px-3 sm:px-4 text-xs sm:text-sm text-gray-600 hidden sm:table-cell">
                         {trip.driver}
                       </td>
-                      <td className="py-3 text-sm font-medium text-gray-900">
+                      <td className="py-2 sm:py-3 px-3 sm:px-4 text-xs sm:text-sm font-medium text-gray-900">
                         {formatCurrency(trip.fare)}
                       </td>
-                      <td className="py-3">{getStatusBadge(trip.status)}</td>
-                      <td className="py-3 text-sm text-gray-500">
+                      <td className="py-2 sm:py-3 px-3 sm:px-4">{getStatusBadge(trip.status)}</td>
+                      <td className="py-2 sm:py-3 px-3 sm:px-4 text-xs sm:text-sm text-gray-500 hidden md:table-cell">
                         {trip.time}
                       </td>
                     </motion.tr>
