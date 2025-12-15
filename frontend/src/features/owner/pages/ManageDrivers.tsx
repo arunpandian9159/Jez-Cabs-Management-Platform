@@ -5,7 +5,6 @@ import {
   Star,
   Phone,
   MessageSquare,
-  Mail,
   MoreVertical,
   Car,
   AlertTriangle,
@@ -20,12 +19,12 @@ import { StatusBadge } from '@/components/ui/Badge';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Avatar } from '@/components/ui/Avatar';
-import { Modal } from '@/components/ui/Modal';
 import { PageLoader } from '@/components/ui/Loading';
 import { formatCurrency } from '@/shared/utils';
 import { useManageDrivers } from '../hooks/useManageDrivers';
 import { OwnerPageHeader } from '../components/OwnerPageHeader';
 import { OwnerStatCard } from '../components/OwnerStatCard';
+import { DriverDetailsModal, AddDriverModal } from '../components/manageDrivers';
 
 export function ManageDrivers() {
   const {
@@ -236,182 +235,22 @@ export function ManageDrivers() {
       </div>
 
       {/* Driver Details Modal */}
-      <Modal
-        open={!!selectedDriver}
-        onOpenChange={() => setSelectedDriver(null)}
-        title={selectedDriver?.name || ''}
-        size="md"
-      >
-        {selectedDriver && (
-          <div className="space-y-6">
-            <div className="flex items-center gap-4">
-              <Avatar size="xl" name={selectedDriver.name} />
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900">
-                  {selectedDriver.name}
-                </h3>
-                <p className="text-gray-500">{selectedDriver.phone}</p>
-                <p className="text-sm text-gray-400">{selectedDriver.email}</p>
-              </div>
-            </div>
-            {selectedDriver.cab ? (
-              <div className="p-4 bg-gradient-to-r from-primary-50 to-primary-100 rounded-xl">
-                <p className="text-sm text-primary-600 mb-2 font-medium">Assigned Vehicle</p>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center">
-                    <Car className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-900">
-                      {selectedDriver.cab.make} {selectedDriver.cab.model}
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      {selectedDriver.cab.registrationNumber}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="p-4 bg-gradient-to-r from-warning-50 to-warning-100 rounded-xl text-center">
-                <p className="text-warning-700 font-medium">No vehicle assigned</p>
-                <Button variant="outline" size="sm" className="mt-2">
-                  Assign Vehicle
-                </Button>
-              </div>
-            )}
-            <div className="grid grid-cols-2 gap-4">
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl"
-              >
-                <p className="text-sm text-gray-500">Acceptance Rate</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {selectedDriver.metrics.acceptanceRate}%
-                </p>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.15 }}
-                className="p-4 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl"
-              >
-                <p className="text-sm text-gray-500">Completion Rate</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {selectedDriver.metrics.completionRate}%
-                </p>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="p-4 bg-gradient-to-br from-success-50 to-success-100 rounded-xl"
-              >
-                <p className="text-sm text-success-600">Total Earnings</p>
-                <p className="text-2xl font-bold text-success-700">
-                  {formatCurrency(selectedDriver.metrics.totalEarnings)}
-                </p>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.25 }}
-                className="p-4 bg-gradient-to-br from-primary-50 to-primary-100 rounded-xl"
-              >
-                <p className="text-sm text-primary-600">Total Trips</p>
-                <p className="text-2xl font-bold text-primary-700">
-                  {selectedDriver.metrics.totalTrips}
-                </p>
-              </motion.div>
-            </div>
-            <div className="flex gap-3 pt-4 border-t">
-              <Button
-                variant="outline"
-                fullWidth
-                leftIcon={<Phone className="w-4 h-4" />}
-              >
-                Call
-              </Button>
-              <Button
-                variant="outline"
-                fullWidth
-                leftIcon={<Mail className="w-4 h-4" />}
-              >
-                Email
-              </Button>
-            </div>
-          </div>
-        )}
-      </Modal>
+      <DriverDetailsModal
+        driver={selectedDriver}
+        onClose={() => setSelectedDriver(null)}
+      />
 
       {/* Add Driver Modal */}
-      <Modal
+      <AddDriverModal
         open={showAddDriverModal}
+        driver={newDriver}
+        isInviting={isInviting}
+        inviteError={inviteError}
+        inviteSuccess={inviteSuccess}
         onOpenChange={handleCloseAddDriverModal}
-        title="Invite New Driver"
-        size="md"
-      >
-        <div className="space-y-4">
-          {inviteError && (
-            <div className="p-3 bg-error-50 border border-error-200 rounded-lg text-error-700 text-sm">
-              {inviteError}
-            </div>
-          )}
-          {inviteSuccess && (
-            <div className="p-4 bg-gradient-to-r from-success-50 to-success-100 border border-success-200 rounded-xl text-success-700 text-sm">
-              Invitation sent successfully! The driver will receive an email
-              with instructions to join.
-            </div>
-          )}
-          {!inviteSuccess && (
-            <>
-              <p className="text-gray-500 text-sm">
-                Enter the driver's details below to send them an invitation to
-                join your fleet.
-              </p>
-              <Input
-                label="Full Name *"
-                placeholder="e.g., John Doe"
-                value={newDriver.name}
-                onChange={(e) => updateNewDriver('name', e.target.value)}
-              />
-              <Input
-                label="Phone Number *"
-                placeholder="e.g., 9876543210"
-                value={newDriver.phone}
-                onChange={(e) => updateNewDriver('phone', e.target.value)}
-              />
-              <Input
-                label="Email Address *"
-                type="email"
-                placeholder="e.g., driver@example.com"
-                value={newDriver.email}
-                onChange={(e) => updateNewDriver('email', e.target.value)}
-              />
-            </>
-          )}
-          <div className="flex gap-3 pt-4 border-t">
-            <Button
-              variant="outline"
-              fullWidth
-              onClick={() => handleCloseAddDriverModal(false)}
-            >
-              {inviteSuccess ? 'Close' : 'Cancel'}
-            </Button>
-            {!inviteSuccess && (
-              <Button
-                fullWidth
-                onClick={handleInviteDriver}
-                loading={isInviting}
-                disabled={isInviting}
-              >
-                Send Invitation
-              </Button>
-            )}
-          </div>
-        </div>
-      </Modal>
+        onFieldChange={updateNewDriver}
+        onSubmit={handleInviteDriver}
+      />
     </div>
   );
 }

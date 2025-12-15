@@ -119,8 +119,9 @@ export function ContractDetailsModal({
     <Modal
       open={!!contract}
       onOpenChange={() => onClose()}
-      title=""
-      size="lg"
+      title="Contract Details"
+      description={contract ? `Details for ${contract.title}` : ''}
+      size="md"
     >
       {contract && typeConfig && statusConfig && (
         <div className="space-y-6">

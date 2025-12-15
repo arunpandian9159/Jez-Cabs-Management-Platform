@@ -29,8 +29,9 @@ export function AddCabModal({
     <Modal
       open={open}
       onOpenChange={onOpenChange}
-      title=""
-      size="lg"
+      title="Add New Cab"
+      description="Register a new vehicle to your fleet"
+      size="md"
     >
       <div className="space-y-6">
         {/* Enhanced Header */}
