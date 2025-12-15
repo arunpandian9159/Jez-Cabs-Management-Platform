@@ -31,7 +31,7 @@ export function AdminDrivers() {
         <div className="space-y-6">
             <AdminPageHeader title="Driver Management" subtitle="Manage driver accounts, vehicles, and verification" icon={UserCheck} iconColor="success" action={<Button leftIcon={<UserPlus className="w-5 h-5" />}>Add Driver</Button>} />
 
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="grid grid-cols-4 gap-4">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <AdminStatCard label="Total Drivers" value={totalCount} icon={Users} color="primary" delay={0.1} />
                 <AdminStatCard label="Active" value={activeCount} icon={UserCheck} color="success" delay={0.15} />
                 <AdminStatCard label="Pending Verification" value={pendingCount} icon={Clock} color="warning" delay={0.2} />

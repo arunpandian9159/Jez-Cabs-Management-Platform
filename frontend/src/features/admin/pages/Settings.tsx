@@ -118,11 +118,11 @@ export function AdminSettings() {
                 }
             />
 
-            <div className="flex gap-6">
+            <div className="flex flex-col lg:flex-row gap-6">
                 <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    className="w-64 shrink-0"
+                    className="w-full lg:w-64 shrink-0"
                 >
                     <Card padding="sm" className="sticky top-6">
                         <nav className="space-y-1">
@@ -137,13 +137,13 @@ export function AdminSettings() {
                                         transition={{ delay: index * 0.05 }}
                                         onClick={() => setActiveTab(tab.id as typeof activeTab)}
                                         className={`w-full flex items-start gap-3 p-3 rounded-xl text-left transition-all ${isActive
-                                                ? 'bg-gradient-to-r from-primary-50 to-primary-100 border border-primary-200'
-                                                : 'hover:bg-gray-50'
+                                            ? 'bg-gradient-to-r from-primary-50 to-primary-100 border border-primary-200'
+                                            : 'hover:bg-gray-50'
                                             }`}
                                     >
                                         <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${isActive
-                                                ? 'bg-gradient-to-br from-primary-500 to-primary-600'
-                                                : 'bg-gray-100'
+                                            ? 'bg-gradient-to-br from-primary-500 to-primary-600'
+                                            : 'bg-gray-100'
                                             }`}>
                                             <Icon className={`w-5 h-5 ${isActive ? 'text-white' : 'text-gray-500'}`} />
                                         </div>
@@ -178,7 +178,7 @@ export function AdminSettings() {
                                     <p className="text-sm text-gray-500">Basic details about your business</p>
                                 </div>
                             </div>
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <Input
                                     label="Company Name"
                                     value={generalSettings.companyName}
@@ -411,7 +411,7 @@ export function AdminSettings() {
                                     />
                                 </div>
                             </div>
-                            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-100">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-gray-100">
                                 <Input
                                     label="Session Timeout (minutes)"
                                     type="number"

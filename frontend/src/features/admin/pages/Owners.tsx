@@ -80,7 +80,7 @@ export function AdminOwners() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="grid grid-cols-5 gap-4"
+                className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4"
             >
                 <AdminStatCard
                     label="Total Owners"
@@ -348,7 +348,7 @@ export function AdminOwners() {
                                 </div>
                             </div>
                         </div>
-                        <div className="grid grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             <Card padding="md" className="text-center bg-gradient-to-br from-primary-50 to-primary-100 border-primary-200">
                                 <p className="text-2xl font-bold text-primary-600">
                                     {selectedOwner.totalCabs}
