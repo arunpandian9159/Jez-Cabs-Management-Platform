@@ -93,16 +93,16 @@ export const LoginForm = ({
       animate="visible"
     >
       {/* Header */}
-      <motion.div className="mb-8" variants={itemVariants}>
-        <h2 className="text-3xl md:text-4xl font-bold text-blue-600 mb-2">
+      <motion.div className="mb-4 sm:mb-8" variants={itemVariants}>
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-600 mb-2">
           Welcome Back
         </h2>
       </motion.div>
 
       {/* Form */}
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-3 sm:space-y-5">
         <motion.div variants={itemVariants}>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
             Email Address
           </label>
           <div className="relative">
@@ -110,8 +110,8 @@ export const LoginForm = ({
               type="email"
               placeholder="Email Address"
               {...register('email')}
-              className={`w-full px-4 py-3.5 bg-gray-50 border ${emailError ? 'border-red-300' : 'border-gray-200'
-                } rounded-full text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600/10 focus:border-blue-400 transition-all`}
+              className={`w-full px-3 sm:px-4 py-2.5 sm:py-3.5 bg-gray-50 border ${emailError ? 'border-red-300' : 'border-gray-200'
+                } rounded-full text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600/10 focus:border-blue-400 transition-all`}
               autoFocus
             />
           </div>
@@ -121,7 +121,7 @@ export const LoginForm = ({
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5 sm:mb-2">
             Password
           </label>
           <div className="relative">
@@ -129,8 +129,8 @@ export const LoginForm = ({
               type={showPassword ? 'text' : 'password'}
               placeholder="Password"
               {...register('password')}
-              className={`w-full px-4 py-3.5 pr-12 bg-gray-50 border ${passwordError ? 'border-red-300' : 'border-gray-200'
-                } rounded-full text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600/10 focus:border-blue-400 transition-all`}
+              className={`w-full px-3 sm:px-4 py-2.5 sm:py-3.5 pr-10 sm:pr-12 bg-gray-50 border ${passwordError ? 'border-red-300' : 'border-gray-200'
+                } rounded-full text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600/10 focus:border-blue-400 transition-all`}
             />
             <button
               type="button"
@@ -169,7 +169,7 @@ export const LoginForm = ({
             fullWidth
             size="lg"
             loading={isLoading}
-            className="bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+            className="bg-blue-600 hover:bg-blue-700 text-white py-3 sm:py-4 rounded-full font-semibold text-sm sm:text-base shadow-lg hover:shadow-xl transition-all duration-300"
           >
             Sign In
           </Button>
@@ -197,11 +197,11 @@ export const LoginForm = ({
           <input
             type="checkbox"
             id="terms"
-            className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-600 cursor-pointer"
+            className="w-4 h-4 sm:w-5 sm:h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-600 cursor-pointer"
           />
           <label
             htmlFor="terms"
-            className="text-sm text-gray-600 cursor-pointer"
+            className="text-xs sm:text-sm text-gray-600 cursor-pointer"
           >
             I agree to the{' '}
             <a href="#" className="text-blue-600 font-semibold underline">
@@ -225,7 +225,7 @@ export const LoginForm = ({
       </form>
 
       {/* Social Login */}
-      <motion.div variants={itemVariants} className="mt-8">
+      <motion.div variants={itemVariants} className="mt-4 sm:mt-8">
         <SocialLoginButtons />
       </motion.div>
     </motion.div>

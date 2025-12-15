@@ -60,7 +60,7 @@ export function HeroSection() {
         }}
       />
 
-      <div className="mx-auto relative z-10">
+      <div className="mx-auto relative z-10 w-full max-w-7xl">
         <div className="grid lg:grid-cols-2 lg:gap-20 items-start">
           {/* Left Content - Title and Animation */}
           <div className="space-y-4 sm:space-y-6">
@@ -202,7 +202,7 @@ export function HeroSection() {
 
           {/* Right Content - Quick Booking Form */}
           <div
-            className="animate-fade-in-up mt-8 lg:mt-16 lg:ml-12"
+            className="animate-fade-in-up mt-8 lg:mt-16 lg:ml-12 w-full max-w-full overflow-hidden lg:shadow-2xl"
             style={{
               animationDelay: '0.3s',
               animationFillMode: 'both',

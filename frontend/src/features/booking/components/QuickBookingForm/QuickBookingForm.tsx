@@ -147,7 +147,7 @@ export function QuickBookingForm() {
 
   return (
     <div
-      className="w-full max-w-sm p-5 sm:p-8 rounded-2xl sm:rounded-3xl animate-fade-in-up"
+      className="w-full max-w-full sm:max-w-sm p-5 sm:p-8 rounded-2xl sm:rounded-3xl animate-fade-in-up box-border"
       style={{
         background: 'rgba(255, 255, 255, 0.98)',
         boxShadow:
@@ -160,7 +160,7 @@ export function QuickBookingForm() {
         Where to next?
       </h2>
       <div className="space-y-5">
-        <div className="flex gap-2 justify-center">
+        <div className="flex flex-wrap gap-2 justify-center">
           {tripTypeOptions.map((option) => {
             const isSelected = tripType === option.id;
             return (
@@ -169,7 +169,7 @@ export function QuickBookingForm() {
                 type="button"
                 onClick={() => setTripType(option.id)}
                 className={cn(
-                  'px-3 py-1.5 sm:px-5 sm:py-2 rounded-full text-sm font-medium transition-all duration-200 border',
+                  'flex-1 sm:flex-none px-3 py-1.5 sm:px-5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 border min-w-0',
                   isSelected
                     ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
                     : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-50'
@@ -196,7 +196,7 @@ export function QuickBookingForm() {
             variant="dropoff"
           />
         )}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div ref={calendarRef} className="relative">
             <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-2">
               Date
@@ -207,7 +207,7 @@ export function QuickBookingForm() {
               className={cn(
                 'flex items-center gap-2 px-4 py-3 rounded-xl transition-all duration-200 w-full text-left bg-gray-50/80 border border-gray-200',
                 showCalendar &&
-                  'ring-2 ring-blue-500/30 border-blue-300 bg-white'
+                'ring-2 ring-blue-500/30 border-blue-300 bg-white'
               )}
             >
               <CalendarIcon className="w-5 h-5 text-blue-600 flex-shrink-0" />
@@ -225,7 +225,10 @@ export function QuickBookingForm() {
               <div
                 className="absolute top-full left-0 mt-2 z-50 bg-white rounded-xl shadow-xl border border-gray-100 p-3"
                 style={{
-                  minWidth: needsRangeCalendar ? 'min(560px, 90vw)' : '280px',
+                  minWidth: needsRangeCalendar ? 'min(560px, calc(100vw - 40px))' : '260px',
+                  maxWidth: 'calc(100vw - 40px)',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
                   boxShadow: '0 20px 50px -15px rgba(0, 0, 0, 0.15)',
                 }}
               >
@@ -269,7 +272,7 @@ export function QuickBookingForm() {
               className={cn(
                 'flex items-center gap-2 px-4 py-3 rounded-xl transition-all duration-200 w-full text-left bg-gray-50/80 border border-gray-200',
                 showTimePicker &&
-                  'ring-2 ring-blue-500/30 border-blue-300 bg-white'
+                'ring-2 ring-blue-500/30 border-blue-300 bg-white'
               )}
             >
               <Clock className="w-5 h-5 text-blue-600 flex-shrink-0" />
@@ -318,7 +321,7 @@ export function QuickBookingForm() {
           Search Cabs
           <ArrowRight className="w-5 h-5" />
         </button>
-        <div className="flex items-center justify-center gap-8 pt-2">
+        <div className="flex items-center justify-center gap-4 sm:gap-8 pt-2">
           <button className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 transition-colors">
             <Bookmark className="w-4 h-4" />
             <span>Saved Places</span>

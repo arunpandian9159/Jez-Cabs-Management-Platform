@@ -224,7 +224,7 @@ export function AuthModal({
               whileHover={{ scale: 1.1, rotate: 90 }}
               whileTap={{ scale: 0.9 }}
               onClick={onClose}
-              className="absolute top-4 right-4 z-50 p-2 rounded-full bg-white/90 hover:bg-white shadow-lg hover:shadow-xl transition-all md:hidden"
+              className="absolute top-4 right-4 z-50 p-2 rounded-full bg-white/90 hover:bg-white shadow-lg hover:shadow-xl transition-all block md:hidden"
             >
               <X className="w-5 h-5 text-gray-600" />
             </motion.button>
@@ -369,27 +369,23 @@ export function AuthModal({
               </>
             )}
 
-            {/* Mobile Layout - Full Screen Form with Background */}
+            {/* Mobile Layout - Full Screen Form Only (No Image) */}
             {isMobile && (
               <div className="w-full h-full bg-white flex flex-col">
-                {/* Mobile Header with Background Image */}
-                <div className="relative h-40 shrink-0">
-                  <img
-                    src={
-                      isRegister
-                        ? '/Pink Urban Hustle.png'
-                        : '/Night City Taxi Scene.png'
-                    }
-                    alt="Auth background"
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 to-slate-900/80" />
-                  <div className="absolute top-4 left-4">
-                  </div>
+                {/* Close Button */}
+                <div className="flex justify-end p-4">
+                  <motion.button
+                    whileHover={{ scale: 1.1, rotate: 90 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={onClose}
+                    className="p-2 rounded-full hover:bg-gray-100 transition-all"
+                  >
+                    <X className="w-5 h-5 text-gray-600" />
+                  </motion.button>
                 </div>
 
-                {/* Mobile Form */}
-                <div className="flex-1 p-6 pt-8 overflow-y-auto">
+                {/* Mobile Form - Full Height */}
+                <div className="flex-1 px-5 pb-6 overflow-y-auto">
                   <AnimatePresence mode="wait">
                     {isRegister ? (
                       <motion.div
