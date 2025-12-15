@@ -20,7 +20,7 @@ export function AdminVehicles() {
         <div className="space-y-6">
             <AdminPageHeader title="Vehicle Management" subtitle="Manage fleet vehicles, maintenance, and assignments" icon={Car} iconColor="accent" action={<Button leftIcon={<Plus className="w-5 h-5" />}>Add Vehicle</Button>} />
 
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="grid grid-cols-4 gap-4">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {[{ label: 'Sedans', value: sedanCount, type: 'sedan' as const }, { label: 'SUVs', value: suvCount, type: 'suv' as const }, { label: 'Hatchbacks', value: hatchbackCount, type: 'hatchback' as const }, { label: 'Luxury', value: luxuryCount, type: 'luxury' as const }].map((item, index) => (
                     <motion.div key={item.type} initial={{ opacity: 0, y: 20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ delay: 0.1 + index * 0.05 }} whileHover={{ scale: 1.02 }}>
                         <Card padding="md" className={`bg-gradient-to-br ${typeColors[item.type].bg} border-transparent overflow-hidden relative`}>
