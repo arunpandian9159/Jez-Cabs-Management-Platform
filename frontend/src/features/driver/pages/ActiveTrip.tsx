@@ -72,6 +72,8 @@ export function ActiveTrip() {
     driverLat,
     driverLng,
     routeCoords,
+    routeDistance,
+    routeDuration,
     statusConfig,
     setShowCancelModal,
     setCancelReason,
@@ -162,7 +164,7 @@ export function ActiveTrip() {
                 }
                 className="px-3"
               >
-                {trip.distance} km • {trip.estimatedTime} min
+                {routeDistance ?? trip.distance} km • {routeDuration ?? trip.estimatedTime} min
               </Badge>
             </Card>
           </motion.div>

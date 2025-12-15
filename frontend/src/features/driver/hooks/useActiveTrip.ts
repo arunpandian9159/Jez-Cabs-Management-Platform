@@ -93,9 +93,9 @@ function transformTrip(apiTrip: Trip): CurrentTrip {
       lat: Number(apiTrip.dropoff_lat),
       lng: Number(apiTrip.dropoff_lng),
     },
-    fare: Number(apiTrip.estimated_fare),
-    distance: Number(apiTrip.distance_km),
-    estimatedTime: Number(apiTrip.estimated_duration_minutes),
+    fare: Number(apiTrip.estimated_fare) || 0,
+    distance: Number(apiTrip.distance_km) || 0,
+    estimatedTime: Number(apiTrip.estimated_duration_minutes) || 10,
     paymentMethod: 'Cash',
     driverLocation: {
       lat: Number(apiTrip.pickup_lat),
@@ -125,6 +125,9 @@ export function useActiveTrip() {
   const [isLoading, setIsLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
   const [cancelReason, setCancelReason] = useState('');
+  const [routeCoords, setRouteCoords] = useState<[number, number][]>([]);
+  const [routeDistance, setRouteDistance] = useState<number | null>(null);
+  const [routeDuration, setRouteDuration] = useState<number | null>(null);
 
   const fetchActiveTrip = useCallback(async () => {
     try {
@@ -215,14 +218,73 @@ export function useActiveTrip() {
   // Computed values
   const driverLat = trip?.driverLocation?.lat ?? trip?.pickup.lat ?? 0;
   const driverLng = trip?.driverLocation?.lng ?? trip?.pickup.lng ?? 0;
-  const routeCoords: [number, number][] = trip
-    ? [
-      [driverLat, driverLng],
-      [trip.pickup.lat, trip.pickup.lng],
-      [trip.destination.lat, trip.destination.lng],
-    ]
-    : [];
   const statusConfig = trip ? tripStatuses[trip.status] : null;
+
+  // Fetch route from OSRM when trip coordinates change
+  useEffect(() => {
+    if (!trip) {
+      setRouteCoords([]);
+      setRouteDistance(null);
+      setRouteDuration(null);
+      return;
+    }
+
+    const fetchRoute = async () => {
+      try {
+        // OSRM expects coordinates in lng,lat format (opposite of Leaflet)
+        const coordinates = [
+          `${driverLng},${driverLat}`,
+          `${trip.pickup.lng},${trip.pickup.lat}`,
+          `${trip.destination.lng},${trip.destination.lat}`,
+        ].join(';');
+
+        const response = await fetch(
+          `https://router.project-osrm.org/route/v1/driving/${coordinates}?overview=full&geometries=geojson`
+        );
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch route');
+        }
+
+        const data = await response.json();
+
+        if (data.routes && data.routes.length > 0) {
+          const route = data.routes[0];
+
+          // OSRM returns coordinates as [lng, lat], but Leaflet expects [lat, lng]
+          const routeGeometry = route.geometry.coordinates.map(
+            (coord: [number, number]) => [coord[1], coord[0]] as [number, number]
+          );
+          setRouteCoords(routeGeometry);
+
+          // OSRM returns distance in meters and duration in seconds
+          setRouteDistance(Math.round(route.distance / 1000 * 10) / 10); // Convert to km with 1 decimal
+          setRouteDuration(Math.round(route.duration / 60)); // Convert to minutes
+        } else {
+          // Fallback to straight line if no route found
+          setRouteCoords([
+            [driverLat, driverLng],
+            [trip.pickup.lat, trip.pickup.lng],
+            [trip.destination.lat, trip.destination.lng],
+          ]);
+          setRouteDistance(null);
+          setRouteDuration(null);
+        }
+      } catch (error) {
+        console.error('Error fetching route from OSRM:', error);
+        // Fallback to straight line on error
+        setRouteCoords([
+          [driverLat, driverLng],
+          [trip.pickup.lat, trip.pickup.lng],
+          [trip.destination.lat, trip.destination.lng],
+        ]);
+        setRouteDistance(null);
+        setRouteDuration(null);
+      }
+    };
+
+    fetchRoute();
+  }, [trip, driverLat, driverLng]);
 
   return {
     // State
@@ -235,6 +297,8 @@ export function useActiveTrip() {
     driverLat,
     driverLng,
     routeCoords,
+    routeDistance,
+    routeDuration,
     statusConfig,
     // Actions
     setShowCancelModal,
