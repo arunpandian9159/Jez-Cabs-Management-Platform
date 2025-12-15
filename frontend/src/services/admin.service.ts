@@ -40,6 +40,29 @@ export interface VerificationStats {
   rejected: number;
 }
 
+// A single document in a grouped verification
+export interface VerificationDocument {
+  id: string;
+  documentType: string;
+  documentNumber: string;
+  documentUrl: string;
+  status: 'pending' | 'approved' | 'rejected';
+  submittedAt: string;
+  notes: string;
+  approvedAt?: string;
+  rejectedAt?: string;
+}
+
+// Grouped verifications by user - one user with multiple documents
+export interface GroupedVerification {
+  userId: string;
+  applicant: VerificationApplicant;
+  type: 'driver' | 'cab_owner';
+  documents: VerificationDocument[];
+  overallStatus: 'pending' | 'approved' | 'rejected' | 'mixed';
+  latestSubmittedAt: string;
+}
+
 export interface DashboardStats {
   totalUsers: number;
   totalTrips: number;
@@ -174,5 +197,72 @@ export const adminService = {
     });
   },
 };
+
+// Utility function to group verifications by user
+export function groupVerificationsByUser(
+  verifications: Verification[]
+): GroupedVerification[] {
+  const userMap = new Map<string, GroupedVerification>();
+
+  for (const v of verifications) {
+    const userId = v.applicant.id;
+
+    if (!userMap.has(userId)) {
+      userMap.set(userId, {
+        userId,
+        applicant: v.applicant,
+        type: v.type,
+        documents: [],
+        overallStatus: 'pending',
+        latestSubmittedAt: v.submittedAt,
+      });
+    }
+
+    const group = userMap.get(userId)!;
+
+    // Add the document
+    group.documents.push({
+      id: v.id,
+      documentType: v.documentType,
+      documentNumber: v.documentNumber,
+      documentUrl: v.documentUrl,
+      status: v.status,
+      submittedAt: v.submittedAt,
+      notes: v.notes,
+      approvedAt: v.approvedAt,
+      rejectedAt: v.rejectedAt,
+    });
+
+    // Update latest submitted date
+    if (new Date(v.submittedAt) > new Date(group.latestSubmittedAt)) {
+      group.latestSubmittedAt = v.submittedAt;
+    }
+  }
+
+  // Calculate overall status for each user
+  for (const group of userMap.values()) {
+    const statuses = group.documents.map((d) => d.status);
+    const hasPending = statuses.includes('pending');
+    const hasRejected = statuses.includes('rejected');
+    const hasApproved = statuses.includes('approved');
+
+    if (hasPending) {
+      group.overallStatus = 'pending';
+    } else if (hasRejected && hasApproved) {
+      group.overallStatus = 'mixed';
+    } else if (hasRejected) {
+      group.overallStatus = 'rejected';
+    } else if (hasApproved && statuses.length > 0) {
+      group.overallStatus = 'approved';
+    }
+  }
+
+  // Sort by latest submission date (newest first)
+  return Array.from(userMap.values()).sort(
+    (a, b) =>
+      new Date(b.latestSubmittedAt).getTime() -
+      new Date(a.latestSubmittedAt).getTime()
+  );
+}
 
 export default adminService;
