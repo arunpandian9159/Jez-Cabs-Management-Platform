@@ -13,7 +13,6 @@ import {
 } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 import { Input } from '@/components/ui/Input';
-import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
 import type { CreateContractDto } from '@/services/owner.service';
 
@@ -65,25 +64,14 @@ export function AddContractModal({
     }
   };
 
-  const getContractTypeLabel = (type: string) => {
-    switch (type) {
-      case 'driver':
-        return 'Driver Agreement';
-      case 'platform':
-        return 'Platform Partnership';
-      case 'insurance':
-        return 'Insurance Policy';
-      default:
-        return 'Contract';
-    }
-  };
 
   return (
     <Modal
       open={open}
       onOpenChange={onOpenChange}
-      title=""
-      size="lg"
+      title="Create New Contract"
+      description="Set up a new agreement with partners"
+      size="md"
     >
       <div className="space-y-6">
         {/* Enhanced Header */}
@@ -156,15 +144,15 @@ export function AddContractModal({
                 whileTap={{ scale: 0.98 }}
                 onClick={() => onFieldChange('type', item.value as 'driver' | 'platform' | 'insurance')}
                 className={`p-4 rounded-xl border-2 transition-all ${contract.type === item.value
-                    ? `border-${item.color}-500 bg-${item.color}-50`
-                    : 'border-gray-200 hover:border-gray-300 bg-white'
+                  ? `border-${item.color}-500 bg-${item.color}-50`
+                  : 'border-gray-200 hover:border-gray-300 bg-white'
                   }`}
               >
                 <div className={`w-10 h-10 mx-auto mb-2 rounded-xl bg-gradient-to-br ${item.color === 'primary'
-                    ? 'from-primary-400 to-primary-500'
-                    : item.color === 'accent'
-                      ? 'from-accent-400 to-accent-500'
-                      : 'from-success-400 to-success-500'
+                  ? 'from-primary-400 to-primary-500'
+                  : item.color === 'accent'
+                    ? 'from-accent-400 to-accent-500'
+                    : 'from-success-400 to-success-500'
                   } flex items-center justify-center`}>
                   <item.icon className="w-5 h-5 text-white" />
                 </div>
