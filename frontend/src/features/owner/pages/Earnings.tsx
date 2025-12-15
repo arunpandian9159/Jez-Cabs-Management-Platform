@@ -25,6 +25,7 @@ import { Select } from '@/components/ui/Select';
 import { PageLoader } from '@/components/ui/Loading';
 import { formatCurrency, formatDate } from '@/shared/utils';
 import { useOwnerEarnings } from '../hooks/useOwnerEarnings';
+import { OwnerPageHeader } from '../components/OwnerPageHeader';
 
 export function OwnerEarnings() {
   const {
@@ -49,7 +50,9 @@ export function OwnerEarnings() {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center max-w-md">
-          <AlertTriangle className="w-12 h-12 text-error-500 mx-auto mb-4" />
+          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-error-100 to-error-200 flex items-center justify-center">
+            <AlertTriangle className="w-8 h-8 text-error-600" />
+          </div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">
             Error Loading Data
           </h3>
@@ -62,34 +65,29 @@ export function OwnerEarnings() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex items-center justify-between"
-      >
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">
-            Fleet Earnings
-          </h1>
-          <p className="text-gray-500">Track revenue across your fleet</p>
-        </div>
-        <div className="flex gap-3">
-          <Select
-            options={[
-              { value: 'week', label: 'This Week' },
-              { value: 'month', label: 'This Month' },
-              { value: 'quarter', label: 'This Quarter' },
-              { value: 'year', label: 'This Year' },
-            ]}
-            value={dateFilter}
-            onValueChange={setDateFilter}
-          />
-          <Button variant="outline" leftIcon={<Download className="w-4 h-4" />}>
-            Export
-          </Button>
-        </div>
-      </motion.div>
+      <OwnerPageHeader
+        title="Fleet Earnings"
+        subtitle="Track revenue across your fleet"
+        icon={DollarSign}
+        iconColor="success"
+        action={
+          <div className="flex gap-3">
+            <Select
+              options={[
+                { value: 'week', label: 'This Week' },
+                { value: 'month', label: 'This Month' },
+                { value: 'quarter', label: 'This Quarter' },
+                { value: 'year', label: 'This Year' },
+              ]}
+              value={dateFilter}
+              onValueChange={setDateFilter}
+            />
+            <Button variant="outline" leftIcon={<Download className="w-4 h-4" />}>
+              Export
+            </Button>
+          </div>
+        }
+      />
 
       {/* Summary Cards */}
       <motion.div
@@ -98,61 +96,96 @@ export function OwnerEarnings() {
         transition={{ delay: 0.1 }}
         className="grid grid-cols-2 md:grid-cols-4 gap-4"
       >
-        <Card
-          padding="md"
-          className="bg-gradient-to-br from-success-500 to-success-600 text-white"
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.1 }}
+          whileHover={{ scale: 1.02, y: -2 }}
         >
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
-              <DollarSign className="w-5 h-5" />
+          <Card
+            padding="md"
+            className="bg-gradient-to-br from-success-500 via-success-600 to-success-700 text-white overflow-hidden relative"
+          >
+            <div className="flex items-center gap-3 relative z-10">
+              <div className="w-11 h-11 rounded-xl bg-white/20 flex items-center justify-center">
+                <DollarSign className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-white/80 text-xs font-medium">Net Earnings</p>
+                <p className="text-2xl font-bold">
+                  {formatCurrency(earningsSummary.netEarnings)}
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="text-white/80 text-xs">Net Earnings</p>
-              <p className="text-xl font-bold">
-                {formatCurrency(earningsSummary.netEarnings)}
-              </p>
+            <div className="absolute -right-4 -bottom-4 w-20 h-20 rounded-full bg-white/10 blur-2xl" />
+          </Card>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.15 }}
+          whileHover={{ scale: 1.02, y: -2 }}
+        >
+          <Card padding="md" className="bg-primary-100 border-transparent overflow-hidden relative">
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-lg">
+                <TrendingUp className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <p className="text-gray-600 text-xs font-medium">Gross Revenue</p>
+                <p className="text-2xl font-bold text-primary-700">
+                  {formatCurrency(earningsSummary.month)}
+                </p>
+              </div>
             </div>
-          </div>
-        </Card>
-        <Card padding="md">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-primary-100 flex items-center justify-center">
-              <TrendingUp className="w-5 h-5 text-primary-600" />
+            <div className="absolute -right-4 -bottom-4 w-16 h-16 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 opacity-20 blur-xl" />
+          </Card>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2 }}
+          whileHover={{ scale: 1.02, y: -2 }}
+        >
+          <Card padding="md" className="bg-warning-100 border-transparent overflow-hidden relative">
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-warning-500 to-warning-600 flex items-center justify-center shadow-lg">
+                <Clock className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <p className="text-gray-600 text-xs font-medium">Pending Settlements</p>
+                <p className="text-2xl font-bold text-warning-700">
+                  {formatCurrency(earningsSummary.pendingSettlements)}
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="text-gray-500 text-xs">Gross Revenue</p>
-              <p className="text-xl font-bold text-gray-900">
-                {formatCurrency(earningsSummary.month)}
-              </p>
+            <div className="absolute -right-4 -bottom-4 w-16 h-16 rounded-full bg-gradient-to-br from-warning-500 to-warning-600 opacity-20 blur-xl" />
+          </Card>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.25 }}
+          whileHover={{ scale: 1.02, y: -2 }}
+        >
+          <Card padding="md" className="bg-error-100 border-transparent overflow-hidden relative">
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-error-500 to-error-600 flex items-center justify-center shadow-lg">
+                <Wallet className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <p className="text-gray-600 text-xs font-medium">Platform Fees</p>
+                <p className="text-2xl font-bold text-error-700">
+                  {formatCurrency(earningsSummary.platformFee)}
+                </p>
+              </div>
             </div>
-          </div>
-        </Card>
-        <Card padding="md">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-warning-100 flex items-center justify-center">
-              <Clock className="w-5 h-5 text-warning-600" />
-            </div>
-            <div>
-              <p className="text-gray-500 text-xs">Pending Settlements</p>
-              <p className="text-xl font-bold text-gray-900">
-                {formatCurrency(earningsSummary.pendingSettlements)}
-              </p>
-            </div>
-          </div>
-        </Card>
-        <Card padding="md">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-error-100 flex items-center justify-center">
-              <Wallet className="w-5 h-5 text-error-600" />
-            </div>
-            <div>
-              <p className="text-gray-500 text-xs">Platform Fees</p>
-              <p className="text-xl font-bold text-gray-900">
-                {formatCurrency(earningsSummary.platformFee)}
-              </p>
-            </div>
-          </div>
-        </Card>
+            <div className="absolute -right-4 -bottom-4 w-16 h-16 rounded-full bg-gradient-to-br from-error-500 to-error-600 opacity-20 blur-xl" />
+          </Card>
+        </motion.div>
       </motion.div>
 
       {/* Tabs */}
@@ -171,19 +204,23 @@ export function OwnerEarnings() {
 
           <TabsContent value="overview" className="mt-4">
             <div className="grid md:grid-cols-2 gap-4">
-              <Card padding="md">
-                <h3 className="font-semibold text-gray-900 mb-4">
+              <Card padding="md" className="overflow-hidden">
+                <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5 text-primary-600" />
                   Monthly Revenue
                 </h3>
                 <div className="flex items-end gap-3 h-48">
-                  {monthlyData.map((month) => {
+                  {monthlyData.map((month, index) => {
                     const heightPercent =
                       maxEarning > 0 ? (month.earnings / maxEarning) * 100 : 0;
                     const minHeightPx = month.earnings > 0 ? 8 : 4;
                     return (
-                      <div
+                      <motion.div
                         key={month.month}
-                        className="flex-1 flex flex-col items-center gap-1 h-full"
+                        initial={{ opacity: 0, scaleY: 0 }}
+                        animate={{ opacity: 1, scaleY: 1 }}
+                        transition={{ delay: 0.3 + index * 0.05 }}
+                        className="flex-1 flex flex-col items-center gap-1 h-full origin-bottom"
                       >
                         <p className="text-xs font-medium text-gray-900">
                           {month.earnings >= 1000
@@ -191,8 +228,9 @@ export function OwnerEarnings() {
                             : formatCurrency(month.earnings)}
                         </p>
                         <div className="flex-1 w-full flex items-end">
-                          <div
-                            className="w-full bg-gradient-to-t from-primary-500 to-accent-500 rounded-t transition-all hover:opacity-80"
+                          <motion.div
+                            whileHover={{ opacity: 0.8 }}
+                            className="w-full bg-gradient-to-t from-primary-600 via-primary-500 to-accent-400 rounded-t-lg shadow-md transition-all"
                             style={{
                               height:
                                 heightPercent > 0
@@ -205,19 +243,20 @@ export function OwnerEarnings() {
                         <span className="text-xs text-gray-500">
                           {month.month}
                         </span>
-                      </div>
+                      </motion.div>
                     );
                   })}
                 </div>
               </Card>
               <Card padding="md">
-                <h3 className="font-semibold text-gray-900 mb-4">
+                <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <DollarSign className="w-5 h-5 text-success-600" />
                   Revenue Breakdown
                 </h3>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full bg-success-500" />
+                      <div className="w-3 h-3 rounded-full bg-gradient-to-r from-success-500 to-success-600" />
                       <span className="text-gray-600">Gross Revenue</span>
                     </div>
                     <span className="font-medium text-gray-900">
@@ -226,7 +265,7 @@ export function OwnerEarnings() {
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full bg-error-500" />
+                      <div className="w-3 h-3 rounded-full bg-gradient-to-r from-error-500 to-error-600" />
                       <span className="text-gray-600">Platform Fee (15%)</span>
                     </div>
                     <span className="font-medium text-error-600">
@@ -237,7 +276,7 @@ export function OwnerEarnings() {
                     <span className="font-semibold text-gray-900">
                       Net Earnings
                     </span>
-                    <span className="font-bold text-success-600">
+                    <span className="font-bold text-success-600 text-lg">
                       {formatCurrency(earningsSummary.netEarnings)}
                     </span>
                   </div>
@@ -254,14 +293,15 @@ export function OwnerEarnings() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.05 }}
+                  whileHover={{ scale: 1.005 }}
                 >
-                  <Card padding="md" interactive>
+                  <Card padding="md" interactive className="hover:shadow-lg transition-all">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-lg bg-primary-100 flex items-center justify-center">
-                        <Car className="w-6 h-6 text-primary-600" />
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-md">
+                        <Car className="w-6 h-6 text-white" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-gray-900">
+                        <p className="font-semibold text-gray-900">
                           {cab.vehicle}
                         </p>
                         <div className="flex items-center gap-2 text-sm text-gray-500">
@@ -270,14 +310,14 @@ export function OwnerEarnings() {
                           <span>{cab.driver}</span>
                         </div>
                       </div>
-                      <div className="text-center">
+                      <div className="text-center px-3 py-2 bg-gray-50 rounded-xl">
                         <p className="text-sm text-gray-500">Trips</p>
-                        <p className="font-semibold text-gray-900">
+                        <p className="font-bold text-gray-900">
                           {cab.trips}
                         </p>
                       </div>
                       <div className="text-right min-w-[120px]">
-                        <p className="font-bold text-gray-900">
+                        <p className="font-bold text-gray-900 text-lg">
                           {formatCurrency(cab.thisMonth)}
                         </p>
                         <div
@@ -288,7 +328,7 @@ export function OwnerEarnings() {
                           ) : (
                             <ArrowDownLeft className="w-3 h-3" />
                           )}
-                          <span>{Math.abs(cab.growth)}%</span>
+                          <span className="font-medium">{Math.abs(cab.growth)}%</span>
                         </div>
                       </div>
                     </div>
@@ -307,19 +347,19 @@ export function OwnerEarnings() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.03 }}
                 >
-                  <Card padding="md" interactive>
+                  <Card padding="md" interactive className="hover:shadow-md transition-all">
                     <div className="flex items-center gap-4">
                       <div
-                        className={`w-10 h-10 rounded-full flex items-center justify-center ${tx.type === 'earning' ? 'bg-success-100' : tx.type === 'payout' ? 'bg-primary-100' : tx.type === 'settlement' ? 'bg-accent-100' : 'bg-error-100'}`}
+                        className={`w-11 h-11 rounded-xl flex items-center justify-center shadow-md ${tx.type === 'earning' ? 'bg-gradient-to-br from-success-500 to-success-600' : tx.type === 'payout' ? 'bg-gradient-to-br from-primary-500 to-primary-600' : tx.type === 'settlement' ? 'bg-gradient-to-br from-accent-500 to-accent-600' : 'bg-gradient-to-br from-error-500 to-error-600'}`}
                       >
                         {tx.type === 'earning' ? (
-                          <ArrowDownLeft className="w-5 h-5 text-success-600" />
+                          <ArrowDownLeft className="w-5 h-5 text-white" />
                         ) : tx.type === 'payout' ? (
-                          <Wallet className="w-5 h-5 text-primary-600" />
+                          <Wallet className="w-5 h-5 text-white" />
                         ) : tx.type === 'settlement' ? (
-                          <Users className="w-5 h-5 text-accent-600" />
+                          <Users className="w-5 h-5 text-white" />
                         ) : (
-                          <ArrowUpRight className="w-5 h-5 text-error-600" />
+                          <ArrowUpRight className="w-5 h-5 text-white" />
                         )}
                       </div>
                       <div className="flex-1">
@@ -331,7 +371,7 @@ export function OwnerEarnings() {
                         </p>
                       </div>
                       <p
-                        className={`font-semibold ${tx.type === 'earning' ? 'text-success-600' : 'text-gray-900'}`}
+                        className={`font-bold text-lg ${tx.type === 'earning' ? 'text-success-600' : 'text-gray-900'}`}
                       >
                         {tx.type === 'deduction' || tx.type === 'settlement'
                           ? '-'
@@ -349,29 +389,30 @@ export function OwnerEarnings() {
 
           <TabsContent value="payouts" className="mt-4">
             <div className="space-y-4">
-              <Card padding="lg" className="bg-primary-50 border-primary-200">
-                <div className="flex items-center justify-between">
+              <Card padding="lg" className="bg-gradient-to-br from-primary-500 via-primary-600 to-accent-600 text-white overflow-hidden relative">
+                <div className="flex items-center justify-between relative z-10">
                   <div>
-                    <p className="text-sm text-primary-600 mb-1">Next Payout</p>
-                    <p className="text-2xl font-bold text-primary-900">
+                    <p className="text-white/80 text-sm mb-1">Next Payout</p>
+                    <p className="text-3xl font-bold">
                       {formatCurrency(earningsSummary.pendingSettlements)}
                     </p>
-                    <p className="text-sm text-primary-600 mt-1">
+                    <p className="text-white/70 text-sm mt-1">
                       Estimated: Dec 12, 2025
                     </p>
                   </div>
-                  <div className="w-16 h-16 rounded-full bg-primary-100 flex items-center justify-center">
-                    <Wallet className="w-8 h-8 text-primary-600" />
+                  <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                    <Wallet className="w-8 h-8" />
                   </div>
                 </div>
+                <div className="absolute -right-8 -bottom-8 w-32 h-32 rounded-full bg-white/10 blur-2xl" />
               </Card>
               <Card padding="md">
                 <h3 className="font-semibold text-gray-900 mb-4">
                   Payment Method
                 </h3>
-                <div className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
-                  <div className="w-12 h-8 rounded bg-gray-200 flex items-center justify-center">
-                    <CreditCard className="w-5 h-5 text-gray-600" />
+                <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl">
+                  <div className="w-12 h-10 rounded-lg bg-gradient-to-br from-gray-600 to-gray-700 flex items-center justify-center">
+                    <CreditCard className="w-5 h-5 text-white" />
                   </div>
                   <div className="flex-1">
                     <p className="font-medium text-gray-900">
@@ -394,9 +435,12 @@ export function OwnerEarnings() {
                     { amount: 52000, date: 'Nov 28, 2025' },
                     { amount: 48500, date: 'Nov 21, 2025' },
                   ].map((payout, index) => (
-                    <div
+                    <motion.div
                       key={index}
-                      className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50"
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                      className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition-colors"
                     >
                       <div>
                         <p className="font-medium text-gray-900">
@@ -405,7 +449,7 @@ export function OwnerEarnings() {
                         <p className="text-sm text-gray-500">{payout.date}</p>
                       </div>
                       <Badge variant="success">Completed</Badge>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </Card>
