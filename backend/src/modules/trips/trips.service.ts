@@ -8,6 +8,10 @@ import { Repository } from 'typeorm';
 import { Trip } from './entities/trip.entity';
 import { TripStatus } from '../../common/enums';
 
+// OTP Configuration Constants
+const OTP_MIN = 100000;
+const OTP_MAX = 999999;
+
 @Injectable()
 export class TripsService {
   constructor(
@@ -16,8 +20,8 @@ export class TripsService {
   ) { }
 
   async create(data: Partial<Trip>): Promise<Trip> {
-    // Generate OTP for trip verification
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    // Generate 6-digit OTP for trip verification
+    const otp = Math.floor(OTP_MIN + Math.random() * (OTP_MAX - OTP_MIN + 1)).toString();
     const trip = this.tripRepository.create({
       ...data,
       otp,
