@@ -229,10 +229,10 @@ export function AdminDisputes() {
                         <td className="py-4 px-4 text-sm text-gray-700 max-w-xs truncate hidden md:table-cell">
                           {dispute.issue}
                         </td>
-                        <td className="py-4 px-4">
+                        <td className="py-4 px-4 text-[10px] sm:text-xs md:text-sm">
                           {getPriorityBadge(dispute.priority)}
                         </td>
-                        <td className="py-4 px-4">
+                        <td className="py-4 px-4 text-[10px] sm:text-xs md:text-sm">
                           {getStatusBadge(dispute.status)}
                         </td>
                         <td className="py-4 px-4 text-sm text-gray-500 hidden sm:table-cell">

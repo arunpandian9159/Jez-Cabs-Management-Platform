@@ -25,7 +25,6 @@ import { Badge } from '@/components/ui/Badge';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Modal } from '@/components/ui/Modal';
-import { Avatar } from '@/components/ui/Avatar';
 import { formatCurrency, formatDate } from '@/shared/utils';
 import { useAdminOwners } from '../hooks/useAdminOwners';
 import { AdminPageHeader, AdminStatCard, AdminTableWrapper, tableStyles } from '../components';
@@ -110,27 +109,29 @@ export function AdminOwners() {
                     color="accent"
                     delay={0.25}
                 />
-                <AdminStatCard
-                    label="Total Revenue"
-                    value={formatCurrency(totalRevenue)}
-                    icon={TrendingUp}
-                    color="success"
-                    delay={0.3}
-                />
+                <div className="hidden sm:block">
+                    <AdminStatCard
+                        label="Total Revenue"
+                        value={formatCurrency(totalRevenue)}
+                        icon={TrendingUp}
+                        color="success"
+                        delay={0.3}
+                    />
+                </div>
             </motion.div>
 
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="flex items-center gap-4"
+                className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4"
             >
                 <Input
                     placeholder="Search by name, email, phone, or company..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     prefix={<Search className="w-4 h-4" />}
-                    className="w-96"
+                    className="w-full sm:w-96"
                 />
                 <Select
                     options={[
@@ -157,10 +158,10 @@ export function AdminOwners() {
                     <thead className={tableStyles.thead}>
                         <tr>
                             <th className={tableStyles.th}>Owner</th>
-                            <th className={tableStyles.th}>Company</th>
+                            <th className={`${tableStyles.th} hidden md:table-cell`}>Company</th>
                             <th className={tableStyles.th}>Cabs</th>
-                            <th className={tableStyles.th}>Drivers</th>
-                            <th className={tableStyles.th}>Earnings</th>
+                            <th className={`${tableStyles.th} hidden sm:table-cell`}>Drivers</th>
+                            <th className={`${tableStyles.th} hidden sm:table-cell`}>Earnings</th>
                             <th className={tableStyles.th}>Status</th>
                             <th className={tableStyles.th}></th>
                         </tr>
@@ -176,22 +177,19 @@ export function AdminOwners() {
                             >
                                 <td className={tableStyles.td}>
                                     <div
-                                        className="flex items-center gap-3 cursor-pointer"
+                                        className="cursor-pointer"
                                         onClick={() => setSelectedOwner(owner)}
                                     >
-                                        <Avatar size="sm" name={owner.name} />
-                                        <div>
-                                            <p className="font-medium text-gray-900">
-                                                {owner.name}
-                                            </p>
-                                            <p className="text-xs text-gray-500">{owner.phone}</p>
-                                        </div>
+                                        <p className="font-medium text-gray-900">
+                                            {owner.name}
+                                        </p>
+                                        <p className="text-xs text-gray-500">{owner.phone}</p>
                                     </div>
                                 </td>
-                                <td className={tableStyles.td}>
+                                <td className={`${tableStyles.td} hidden md:table-cell`}>
                                     {owner.companyName ? (
                                         <div className="flex items-center gap-2">
-                                            <div className="w-8 h-8 rounded-lg bg-accent-100 flex items-center justify-center">
+                                            <div className="w-8 h-8 rounded-lg bg-accent-100 hidden lg:flex items-center justify-center">
                                                 <Building2 className="w-4 h-4 text-accent-600" />
                                             </div>
                                             <span className="text-sm text-gray-900">{owner.companyName}</span>
@@ -202,21 +200,21 @@ export function AdminOwners() {
                                 </td>
                                 <td className={tableStyles.td}>
                                     <div className="flex items-center gap-2">
-                                        <div className="w-8 h-8 rounded-lg bg-primary-100 flex items-center justify-center">
+                                        <div className="w-8 h-8 rounded-lg bg-primary-100 items-center justify-center hidden sm:flex">
                                             <Car className="w-4 h-4 text-primary-600" />
                                         </div>
                                         <span className="text-sm font-medium text-gray-900">{owner.totalCabs}</span>
                                     </div>
                                 </td>
-                                <td className={tableStyles.td}>
+                                <td className={`${tableStyles.td} hidden sm:table-cell`}>
                                     <div className="flex items-center gap-2">
-                                        <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center">
+                                        <div className="w-8 h-8 rounded-lg bg-gray-100 items-center justify-center hidden lg:flex">
                                             <Users className="w-4 h-4 text-gray-600" />
                                         </div>
                                         <span className="text-sm text-gray-900">{owner.totalDrivers}</span>
                                     </div>
                                 </td>
-                                <td className={`${tableStyles.td} ${tableStyles.tdBold}`}>
+                                <td className={`${tableStyles.td} ${tableStyles.tdBold} hidden sm:table-cell`}>
                                     {formatCurrency(owner.totalEarnings)}
                                 </td>
                                 <td className={tableStyles.td}>{getStatusBadge(owner.status)}</td>
@@ -274,8 +272,7 @@ export function AdminOwners() {
             >
                 {selectedOwner && (
                     <div className="space-y-6">
-                        <div className="flex items-center gap-4">
-                            <Avatar size="xl" name={selectedOwner.name} />
+                        <div className="flex items-center gap-4">                           
                             <div>
                                 <h2 className="text-xl font-semibold text-gray-900">
                                     {selectedOwner.name}
