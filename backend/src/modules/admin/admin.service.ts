@@ -246,7 +246,42 @@ export class AdminService {
         verification.verified_by = adminId;
         verification.verified_at = new Date();
 
-        return this.verificationRepository.save(verification);
+        const savedVerification = await this.verificationRepository.save(verification);
+
+        // Check if this is a driver document and if all driver documents are now approved
+        const user = await this.userRepository.findOne({
+            where: { id: verification.user_id },
+        });
+
+        if (user && user.role === UserRole.DRIVER) {
+            await this.checkAndUpdateDriverVerificationStatus(verification.user_id);
+        }
+
+        return savedVerification;
+    }
+
+    /**
+     * Check if all driver documents are approved and update the user status
+     * We derive verification status from document_verifications table
+     */
+    private async checkAndUpdateDriverVerificationStatus(userId: string): Promise<void> {
+        // Get all verifications for this driver
+        const verifications = await this.verificationRepository.find({
+            where: { user_id: userId },
+        });
+
+        // Check if there are any pending or rejected documents
+        const hasPendingOrRejected = verifications.some(
+            (v) => v.status === VerificationStatus.PENDING || v.status === VerificationStatus.REJECTED,
+        );
+
+        if (!hasPendingOrRejected && verifications.length > 0) {
+            // All documents are approved - update user status to active
+            await this.userRepository.update(
+                { id: userId },
+                { status: UserStatus.ACTIVE, is_verified: true },
+            );
+        }
     }
 
     async rejectVerification(
@@ -261,6 +296,8 @@ export class AdminService {
         verification.verified_at = new Date();
         verification.rejection_reason = reason;
 
+        // The verification status in document_verifications is now updated
+        // The driver's overall verification status is derived from all their document statuses
         return this.verificationRepository.save(verification);
     }
 

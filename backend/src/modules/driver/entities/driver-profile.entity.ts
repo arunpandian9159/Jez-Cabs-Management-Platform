@@ -34,6 +34,24 @@ export class DriverProfile {
   @Column({ type: 'text', nullable: true })
   address: string | null;
 
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  city: string | null;
+
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  state: string | null;
+
+  @Column({ type: 'varchar', length: 20, nullable: true })
+  pincode: string | null;
+
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  emergency_contact_name: string | null;
+
+  @Column({ type: 'varchar', length: 20, nullable: true })
+  emergency_contact_phone: string | null;
+
+  @Column({ type: 'int', nullable: true })
+  years_of_experience: number | null;
+
   @Column({
     type: 'enum',
     enum: DriverStatus,
