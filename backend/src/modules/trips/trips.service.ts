@@ -30,22 +30,30 @@ export class TripsService {
     return this.tripRepository.save(trip);
   }
 
-  async findAll(userId: string, role: string): Promise<Trip[]> {
+  async findAll(userId: string, role: string, status?: string): Promise<Trip[]> {
+    const whereClause: Record<string, unknown> = {};
+
+    // Add status filter if provided
+    if (status) {
+      whereClause.status = status;
+    }
+
     if (role === 'customer') {
       return this.tripRepository.find({
-        where: { customer_id: userId },
+        where: { ...whereClause, customer_id: userId },
         relations: ['customer', 'driver'],
         order: { created_at: 'DESC' },
       });
     } else if (role === 'driver') {
       return this.tripRepository.find({
-        where: { driver_id: userId },
+        where: { ...whereClause, driver_id: userId },
         relations: ['customer', 'driver'],
         order: { created_at: 'DESC' },
       });
     }
     // For admin users, return all trips with relations
     return this.tripRepository.find({
+      where: Object.keys(whereClause).length > 0 ? whereClause : undefined,
       relations: ['customer', 'driver'],
       order: { created_at: 'DESC' },
     });
