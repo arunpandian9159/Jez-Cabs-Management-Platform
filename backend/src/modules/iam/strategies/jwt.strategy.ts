@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { User, UserStatus } from '../entities/user.entity';
 
@@ -27,8 +27,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: JwtPayload): Promise<User> {
+    // Allow ACTIVE and PENDING_VERIFICATION users to authenticate
+    // Suspended and Inactive users should not be able to authenticate
     const user = await this.userRepository.findOne({
-      where: { id: payload.sub, status: UserStatus.ACTIVE },
+      where: {
+        id: payload.sub,
+        status: In([UserStatus.ACTIVE, UserStatus.PENDING_VERIFICATION]),
+      },
     });
 
     if (!user) {
@@ -38,3 +43,4 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     return user;
   }
 }
+

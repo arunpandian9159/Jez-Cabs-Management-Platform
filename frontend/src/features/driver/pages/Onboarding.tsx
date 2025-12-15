@@ -21,6 +21,7 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { ROUTES } from '@/shared/constants';
+import { apiClient } from '@/shared/api';
 
 // Step types
 type OnboardingStep = 'personal' | 'license' | 'vehicle' | 'documents' | 'review';
@@ -134,18 +135,75 @@ export function DriverOnboarding() {
         }
     };
 
+    const [submitError, setSubmitError] = useState<string | null>(null);
+
     const handleSubmit = async () => {
         setIsSubmitting(true);
+        setSubmitError(null);
 
         try {
-            // TODO: Submit all data to the backend API
-            // For now, simulate API call
-            await new Promise((resolve) => setTimeout(resolve, 2000));
+            // Build FormData with all onboarding data
+            const formData = new FormData();
+
+            // Add personal info
+            formData.append('date_of_birth', personalInfo.dateOfBirth);
+            formData.append('address', personalInfo.address);
+            formData.append('city', personalInfo.city);
+            formData.append('state', personalInfo.state);
+            formData.append('pincode', personalInfo.pincode);
+            formData.append('emergency_contact', personalInfo.emergencyContact);
+            formData.append('emergency_phone', personalInfo.emergencyPhone);
+
+            // Add license info
+            formData.append('license_number', licenseInfo.licenseNumber);
+            formData.append('license_type', licenseInfo.licenseType);
+            formData.append('license_expiry', licenseInfo.licenseExpiry);
+            formData.append('years_of_experience', licenseInfo.yearsOfExperience);
+
+            // Add vehicle info
+            formData.append('owns_cab', String(vehicleInfo.ownsCab));
+            if (vehicleInfo.ownsCab) {
+                formData.append('vehicle_make', vehicleInfo.vehicleMake);
+                formData.append('vehicle_model', vehicleInfo.vehicleModel);
+                formData.append('vehicle_year', vehicleInfo.vehicleYear);
+                formData.append('vehicle_color', vehicleInfo.vehicleColor);
+                formData.append('registration_number', vehicleInfo.registrationNumber);
+                formData.append('insurance_expiry', vehicleInfo.insuranceExpiry);
+            }
+
+            // Add documents
+            if (documents.licenseFront) {
+                formData.append('license_front', documents.licenseFront);
+            }
+            if (documents.licenseBack) {
+                formData.append('license_back', documents.licenseBack);
+            }
+            if (documents.aadhaarFront) {
+                formData.append('aadhaar_front', documents.aadhaarFront);
+            }
+            if (documents.aadhaarBack) {
+                formData.append('aadhaar_back', documents.aadhaarBack);
+            }
+            if (documents.policeClearance) {
+                formData.append('police_clearance', documents.policeClearance);
+            }
+            if (vehicleInfo.ownsCab) {
+                if (documents.vehicleRC) {
+                    formData.append('vehicle_rc', documents.vehicleRC);
+                }
+                if (documents.vehicleInsurance) {
+                    formData.append('vehicle_insurance', documents.vehicleInsurance);
+                }
+            }
+
+            // Submit to backend
+            await apiClient.upload('/drivers/onboarding', formData);
 
             // Navigate to driver dashboard after successful submission
             navigate(ROUTES.DRIVER.DASHBOARD);
-        } catch (error) {
+        } catch (error: any) {
             console.error('Failed to submit onboarding:', error);
+            setSubmitError(error?.message || 'Failed to submit onboarding. Please try again.');
         } finally {
             setIsSubmitting(false);
         }
@@ -732,6 +790,17 @@ export function DriverOnboarding() {
                     <AnimatePresence mode="wait">{renderStepContent()}</AnimatePresence>
                 </Card>
 
+                {/* Error Display */}
+                {submitError && (
+                    <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
+                        <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+                        <div>
+                            <p className="font-medium text-red-800">Submission Failed</p>
+                            <p className="text-sm text-red-600 mt-1">{submitError}</p>
+                        </div>
+                    </div>
+                )}
+
                 {/* Navigation Buttons */}
                 <div className="flex justify-between">
                     <Button
@@ -745,6 +814,7 @@ export function DriverOnboarding() {
 
                     {currentStep === 'review' ? (
                         <Button
+                            type="button"
                             onClick={handleSubmit}
                             disabled={isSubmitting}
                             leftIcon={
@@ -759,6 +829,7 @@ export function DriverOnboarding() {
                         </Button>
                     ) : (
                         <Button
+                            type="button"
                             rightIcon={<ChevronRight className="w-4 h-4" />}
                             onClick={handleNext}
                         >
