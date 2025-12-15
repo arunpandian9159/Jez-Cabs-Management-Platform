@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   Car,
@@ -10,6 +10,9 @@ import {
   TrendingUp,
   CheckCircle,
   XCircle,
+  AlertCircle,
+  FileText,
+  Shield,
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -18,6 +21,7 @@ import { Avatar } from '@/components/ui/Avatar';
 import { PageLoader } from '@/components/ui/Loading';
 import { cn, formatCurrency } from '@/shared/utils';
 import { useDriverDashboard } from '../hooks/useDriverDashboard';
+import { ROUTES } from '@/shared/constants';
 
 export function DriverDashboard() {
   const {
@@ -28,12 +32,20 @@ export function DriverDashboard() {
     isLoading,
     error,
     currentRequest,
+    verificationStatus,
+    isVerified,
+    onboardingRequired,
     setShowTripRequest,
     handleToggleOnline,
   } = useDriverDashboard();
 
   if (isLoading) {
     return <PageLoader message="Loading dashboard..." />;
+  }
+
+  // Redirect to onboarding if profile is not submitted
+  if (onboardingRequired) {
+    return <Navigate to={ROUTES.DRIVER.ONBOARDING} replace />;
   }
 
   if (error) {
@@ -49,6 +61,125 @@ export function DriverDashboard() {
           <p className="text-gray-500 mb-4">{error}</p>
           <Button onClick={() => window.location.reload()}>Try Again</Button>
         </div>
+      </div>
+    );
+  }
+
+  // Show pending verification message if not verified
+  if (!isVerified && verificationStatus) {
+    return (
+      <div className="max-w-2xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <Card padding="lg" className="text-center">
+            {/* Status Icon */}
+            <div className="mb-6">
+              {verificationStatus.status === 'pending' && (
+                <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center">
+                  <Clock className="w-12 h-12 text-white" />
+                </div>
+              )}
+              {verificationStatus.status === 'rejected' && (
+                <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-red-400 to-red-500 flex items-center justify-center">
+                  <XCircle className="w-12 h-12 text-white" />
+                </div>
+              )}
+            </div>
+
+            {/* Title and Message */}
+            <h1 className="text-2xl font-bold text-gray-900 mb-3">
+              {verificationStatus.status === 'pending'
+                ? 'Verification in Progress'
+                : 'Verification Rejected'}
+            </h1>
+
+            <p className="text-gray-600 mb-6 max-w-md mx-auto">
+              {verificationStatus.status === 'pending'
+                ? 'Your profile and documents are being reviewed by our team. This usually takes 24-48 hours. You will be able to accept rides once your verification is complete.'
+                : 'Unfortunately, your verification was not approved. Please review the feedback below and resubmit your documents.'}
+            </p>
+
+            {/* Status Badge */}
+            <div className="flex justify-center mb-6">
+              <Badge
+                variant={verificationStatus.status === 'pending' ? 'warning' : 'error'}
+                size="md"
+                className="px-4 py-2"
+              >
+                <Shield className="w-4 h-4 mr-2" />
+                {verificationStatus.status === 'pending'
+                  ? 'Pending Verification'
+                  : 'Verification Rejected'}
+              </Badge>
+            </div>
+
+            {/* Pending Documents */}
+            {verificationStatus.pendingDocuments.length > 0 && verificationStatus.status === 'pending' && (
+              <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 text-left">
+                <div className="flex items-center gap-2 mb-3">
+                  <FileText className="w-5 h-5 text-amber-600" />
+                  <h3 className="font-semibold text-amber-900">Documents Under Review</h3>
+                </div>
+                <ul className="space-y-2">
+                  {verificationStatus.pendingDocuments.map((doc) => (
+                    <li key={doc} className="flex items-center gap-2 text-sm text-amber-800">
+                      <Clock className="w-4 h-4" />
+                      <span className="capitalize">{doc.replace(/_/g, ' ')}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Rejected Documents */}
+            {verificationStatus.rejectedDocuments.length > 0 && (
+              <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 text-left">
+                <div className="flex items-center gap-2 mb-3">
+                  <AlertCircle className="w-5 h-5 text-red-600" />
+                  <h3 className="font-semibold text-red-900">Documents Rejected</h3>
+                </div>
+                <ul className="space-y-3">
+                  {verificationStatus.rejectedDocuments.map((doc) => (
+                    <li key={doc.type} className="text-sm">
+                      <div className="font-medium text-red-800 capitalize">{doc.type.replace(/_/g, ' ')}</div>
+                      <div className="text-red-600">{doc.reason}</div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              {verificationStatus.status === 'rejected' && (
+                <Link to={ROUTES.DRIVER.ONBOARDING}>
+                  <Button>
+                    <FileText className="w-4 h-4 mr-2" />
+                    Resubmit Documents
+                  </Button>
+                </Link>
+              )}
+              <Button variant="outline" onClick={() => window.location.reload()}>
+                <TrendingUp className="w-4 h-4 mr-2" />
+                Refresh Status
+              </Button>
+            </div>
+
+            {/* Info Box */}
+            <div className="mt-8 p-4 bg-blue-50 rounded-xl flex items-start gap-3 text-left">
+              <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-medium text-blue-900">Need Help?</p>
+                <p className="text-sm text-blue-700 mt-1">
+                  If you have any questions about the verification process, please contact our support team at{' '}
+                  <a href="mailto:support@jezcabs.com" className="underline">support@jezcabs.com</a>
+                </p>
+              </div>
+            </div>
+          </Card>
+        </motion.div>
       </div>
     );
   }

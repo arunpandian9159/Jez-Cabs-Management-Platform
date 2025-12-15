@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { driverService, tripsService } from '@/services';
+import type { VerificationStatusResponse } from '@/services/driver.service';
 
 // Types for driver dashboard
 export interface DriverStatsDisplay {
@@ -57,6 +58,11 @@ export function useDriverDashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Verification status
+  const [verificationStatus, setVerificationStatus] = useState<VerificationStatusResponse | null>(null);
+  const [isVerified, setIsVerified] = useState(false);
+  const [onboardingRequired, setOnboardingRequired] = useState(false);
+
   const fetchDashboardData = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -64,30 +70,46 @@ export function useDriverDashboard() {
 
       // Fetch driver profile to get online status
       const profile = await driverService.getProfile();
+
+      // Check if onboarding is required
+      if ('onboarding_required' in profile && profile.onboarding_required) {
+        setOnboardingRequired(true);
+        setIsLoading(false);
+        return;
+      }
+
       setIsOnline(profile.is_online || false);
 
-      // Fetch driver stats
-      const stats = await driverService.getDashboardStats();
-      setDriverStats(stats);
+      // Fetch verification status
+      const verificationResponse = await driverService.getVerificationStatus();
+      setVerificationStatus(verificationResponse);
+      setIsVerified(verificationResponse.verified);
 
-      // Fetch recent trips
-      const trips = await tripsService.findAll({ limit: 3 });
-      const formattedTrips: RecentTripDisplay[] = trips.map((trip) => ({
-        id: trip.id,
-        pickup: trip.pickup_address,
-        destination: trip.destination_address,
-        fare: trip.actual_fare || trip.estimated_fare,
-        distance: trip.distance_km,
-        time: new Date(trip.created_at).toLocaleString(),
-        rating: trip.customer_rating || null,
-        status: trip.status,
-      }));
-      setRecentTrips(formattedTrips);
+      // Only fetch full dashboard data if verified
+      if (verificationResponse.verified) {
+        // Fetch driver stats
+        const stats = await driverService.getDashboardStats();
+        setDriverStats(stats);
 
-      // Fetch pending trip requests
-      const requests = await driverService.getTripRequests();
-      setPendingRequests(requests);
-      setShowTripRequest(requests.length > 0);
+        // Fetch recent trips
+        const trips = await tripsService.findAll({ limit: 3 });
+        const formattedTrips: RecentTripDisplay[] = trips.map((trip) => ({
+          id: trip.id,
+          pickup: trip.pickup_address,
+          destination: trip.destination_address,
+          fare: trip.actual_fare || trip.estimated_fare,
+          distance: trip.distance_km,
+          time: new Date(trip.created_at).toLocaleString(),
+          rating: trip.customer_rating || null,
+          status: trip.status,
+        }));
+        setRecentTrips(formattedTrips);
+
+        // Fetch pending trip requests
+        const requests = await driverService.getTripRequests();
+        setPendingRequests(requests);
+        setShowTripRequest(requests.length > 0);
+      }
     } catch (err: any) {
       console.error('Error fetching driver dashboard data:', err);
       setError(err?.message || 'Failed to load dashboard data');
@@ -101,6 +123,11 @@ export function useDriverDashboard() {
   }, [fetchDashboardData]);
 
   const handleToggleOnline = async () => {
+    // Don't allow going online if not verified
+    if (!isVerified) {
+      return;
+    }
+
     try {
       if (isOnline) {
         await driverService.goOffline();
@@ -125,6 +152,10 @@ export function useDriverDashboard() {
     isLoading,
     error,
     currentRequest,
+    // Verification
+    verificationStatus,
+    isVerified,
+    onboardingRequired,
     // Actions
     setShowTripRequest,
     handleToggleOnline,

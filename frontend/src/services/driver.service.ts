@@ -81,10 +81,17 @@ export interface UpdateProfileDto {
   vehicle_type_expertise?: string[];
 }
 
+export interface VerificationStatusResponse {
+  verified: boolean;
+  status: 'pending' | 'approved' | 'rejected';
+  pendingDocuments: string[];
+  rejectedDocuments: { type: string; reason: string }[];
+}
+
 export const driverService = {
   // Get driver profile
-  async getProfile(): Promise<DriverProfile> {
-    return apiClient.get<DriverProfile>('/drivers/profile');
+  async getProfile(): Promise<DriverProfile & { onboarding_required?: boolean }> {
+    return apiClient.get<DriverProfile & { onboarding_required?: boolean }>('/drivers/profile');
   },
 
   // Update driver profile
@@ -100,6 +107,11 @@ export const driverService = {
   // Get driver earnings
   async getEarnings(): Promise<DriverEarnings> {
     return apiClient.get<DriverEarnings>('/drivers/earnings');
+  },
+
+  // Get driver verification status
+  async getVerificationStatus(): Promise<VerificationStatusResponse> {
+    return apiClient.get<VerificationStatusResponse>('/drivers/verification-status');
   },
 
   // Update driver location
