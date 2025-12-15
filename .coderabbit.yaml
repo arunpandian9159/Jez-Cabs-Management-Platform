@@ -1,0 +1,124 @@
+# CodeRabbit Configuration for Jez Cabs Management Platform
+# Documentation: https://docs.coderabbit.ai/guides/configure-coderabbit
+
+language: "en-US"
+
+# Review settings
+reviews:
+  # Enable automatic reviews on PRs
+  auto_review:
+    enabled: true
+    drafts: false  # Don't review draft PRs
+    base_branches:
+      - main
+      - develop
+
+  # Request changes on high severity issues
+  request_changes_workflow: true
+
+  # High-level review summary
+  high_level_summary: true
+  high_level_summary_placeholder: "@coderabbitai summary"
+
+  # Review profile (chill, assertive, or default)
+  profile: "default"
+
+  # Poem in review summary (fun feature!)
+  poem: true
+
+  # Path-based review instructions
+  path_instructions:
+    - path: "backend/**/*.ts"
+      instructions: |
+        Review NestJS backend code for:
+        - Proper use of dependency injection
+        - Correct decorator usage (@Controller, @Injectable, @Get, @Post, etc.)
+        - DTOs with class-validator decorators
+        - Proper error handling with NestJS exceptions
+        - TypeORM entity definitions and relations
+        - Security best practices (authentication, authorization)
+        - SQL injection prevention
+
+    - path: "backend/**/*.controller.ts"
+      instructions: |
+        For controllers, ensure:
+        - Proper HTTP method decorators
+        - Input validation using DTOs
+        - Consistent response formats
+        - Proper use of guards and interceptors
+
+    - path: "backend/**/*.service.ts"
+      instructions: |
+        For services, ensure:
+        - Business logic is properly encapsulated
+        - Database operations use transactions where needed
+        - Proper error handling and custom exceptions
+        - No controller-specific logic leaking into services
+
+    - path: "frontend/**/*.tsx"
+      instructions: |
+        Review React/TypeScript frontend code for:
+        - Proper TypeScript types and interfaces
+        - React hooks best practices (useEffect dependencies, custom hooks)
+        - Component composition and reusability
+        - State management patterns
+        - Proper error handling in async operations
+        - Accessibility (a11y) considerations
+
+    - path: "frontend/**/hooks/**/*.ts"
+      instructions: |
+        For custom hooks, ensure:
+        - Proper naming convention (use prefix)
+        - Correct dependency arrays in useEffect/useMemo/useCallback
+        - Clean separation of concerns
+        - Proper TypeScript return types
+
+    - path: "frontend/**/*.css"
+      instructions: |
+        For CSS files, check:
+        - Consistent naming conventions
+        - Use of CSS variables for theming
+        - Responsive design patterns
+        - No inline !important unless necessary
+
+    - path: "**/*.sql"
+      instructions: |
+        For SQL files, review:
+        - Proper indexing strategies
+        - Foreign key constraints
+        - Data type appropriateness
+        - Security considerations
+
+# Chat settings for interactive reviews
+chat:
+  auto_reply: true
+
+# Early access features
+early_access: false
+
+# Tone of reviews
+tone_instructions: |
+  Be helpful and constructive. Focus on:
+  - Security vulnerabilities (critical)
+  - Performance issues (important)
+  - Code quality and maintainability (moderate)
+  - Best practices and conventions (suggestions)
+  Provide specific examples and code snippets when suggesting improvements.
+
+# Knowledge base (learns from your codebase)
+knowledge_base:
+  opt_out: false
+  learnings:
+    scope: "auto"
+
+# Ignore patterns (files not to review)
+path_filters:
+  - "!**/*.lock"
+  - "!**/package-lock.json"
+  - "!**/node_modules/**"
+  - "!**/.git/**"
+  - "!**/dist/**"
+  - "!**/build/**"
+  - "!**/*.min.js"
+  - "!**/*.min.css"
+  - "!**/coverage/**"
