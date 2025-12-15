@@ -40,7 +40,7 @@ export function useTripHistory() {
           id: trip.id,
           date: trip.created_at,
           pickup: trip.pickup_address,
-          destination: trip.destination_address,
+          destination: trip.dropoff_address,
           customer: {
             name: trip.customer
               ? `${trip.customer.first_name} ${trip.customer.last_name}`
@@ -85,7 +85,7 @@ export function useTripHistory() {
   const avgRating =
     completedTrips.length > 0
       ? completedTrips.reduce((acc, t) => acc + (t.rating || 0), 0) /
-        completedTrips.length
+      completedTrips.length
       : 0;
 
   return {
