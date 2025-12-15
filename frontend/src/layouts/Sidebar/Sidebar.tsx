@@ -447,30 +447,27 @@ export function Sidebar({
                       transition={{ delay: index * 0.1 }}
                       whileHover={{ scale: 1.03, y: -2 }}
                       className={cn(
-                        'p-4 rounded-2xl bg-gradient-to-br border backdrop-blur-sm cursor-default',
+                        'p-2 rounded-2xl bg-gradient-to-br border backdrop-blur-sm cursor-default',
                         statColor.bg,
                         statColor.border
                       )}
                     >
-                      <div className="flex items-center gap-2.5 mb-2">
+                      <div className="flex items-center gap-1 mb-0">
                         <div
                           className={cn(
-                            'w-8 h-8 rounded-xl flex items-center justify-center bg-white/60 shadow-sm',
+                            'w-8 h-8 flex items-center justify-center',
                             statColor.icon
                           )}
                         >
                           <Icon className="w-4 h-4" />
                         </div>
                         <span
-                          className={cn(
-                            'text-xs font-semibold uppercase tracking-wide',
-                            statColor.label
-                          )}
+                          className={cn('text-[10px] font-semibold uppercase tracking-wide leading-tight', statColor.label)}
                         >
                           {stat.label}
                         </span>
                       </div>
-                      <p className={cn('text-2xl font-bold', statColor.value)}>
+                      <p className={cn('text-2xl flex items-center justify-center font-bold', statColor.value)}>
                         {stat.value}
                       </p>
                     </motion.div>

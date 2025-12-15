@@ -130,7 +130,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (data.role === 'driver') {
           navigate(ROUTES.DRIVER.ONBOARDING, { replace: true });
         } else if (data.role === 'cab_owner') {
-          navigate(ROUTES.OWNER.CABS_REGISTER, { replace: true });
+          // Redirect to owner dashboard - CABS_REGISTER route doesn't exist yet
+          navigate(ROUTES.OWNER.DASHBOARD, { replace: true });
         } else {
           // For customer and trip_planner, navigate to their dashboard
           const homePath = roleHomePaths[data.role] || ROUTES.HOME;
