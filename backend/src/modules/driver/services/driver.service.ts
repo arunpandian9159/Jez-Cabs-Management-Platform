@@ -367,52 +367,51 @@ export class DriverService {
     }
 
     // Create document verification entries
+    // Always create required document entries, even if files weren't uploaded
     const documentTypes = [
-      { type: 'license_front', url: documentUrls.license_front, number: data.license_number },
-      { type: 'license_back', url: documentUrls.license_back, number: data.license_number },
-      { type: 'aadhaar_front', url: documentUrls.aadhaar_front, number: null },
-      { type: 'aadhaar_back', url: documentUrls.aadhaar_back, number: null },
-      { type: 'police_clearance', url: documentUrls.police_clearance, number: null },
+      { type: 'license_front', url: documentUrls.license_front || 'pending_upload', number: data.license_number },
+      { type: 'license_back', url: documentUrls.license_back || 'pending_upload', number: data.license_number },
+      { type: 'aadhaar_front', url: documentUrls.aadhaar_front || 'pending_upload', number: null },
+      { type: 'aadhaar_back', url: documentUrls.aadhaar_back || 'pending_upload', number: null },
+      { type: 'police_clearance', url: documentUrls.police_clearance || 'pending_upload', number: null },
     ];
 
     // Add vehicle documents if driver owns a cab
     if (data.owns_cab === 'true') {
       documentTypes.push(
-        { type: 'vehicle_rc', url: documentUrls.vehicle_rc, number: data.registration_number || null },
-        { type: 'vehicle_insurance', url: documentUrls.vehicle_insurance, number: null },
+        { type: 'vehicle_rc', url: documentUrls.vehicle_rc || 'pending_upload', number: data.registration_number || null },
+        { type: 'vehicle_insurance', url: documentUrls.vehicle_insurance || 'pending_upload', number: null },
       );
     }
 
     // Create verification entries for each document
     for (const doc of documentTypes) {
-      if (doc.url) {
-        // Check if verification already exists
-        const existingVerification = await this.verificationRepository.findOne({
-          where: {
-            user_id: userId,
-            document_type: doc.type,
-          },
-        });
+      // Check if verification already exists
+      const existingVerification = await this.verificationRepository.findOne({
+        where: {
+          user_id: userId,
+          document_type: doc.type,
+        },
+      });
 
-        if (existingVerification) {
-          // Update existing verification
-          existingVerification.document_url = doc.url;
-          existingVerification.document_number = doc.number;
-          existingVerification.status = VerificationStatus.PENDING;
-          existingVerification.submitted_at = new Date();
-          await this.verificationRepository.save(existingVerification);
-        } else {
-          // Create new verification
-          const verification = this.verificationRepository.create({
-            user_id: userId,
-            document_type: doc.type,
-            document_url: doc.url,
-            document_number: doc.number,
-            status: VerificationStatus.PENDING,
-            submitted_at: new Date(),
-          });
-          await this.verificationRepository.save(verification);
-        }
+      if (existingVerification) {
+        // Update existing verification
+        existingVerification.document_url = doc.url;
+        existingVerification.document_number = doc.number;
+        existingVerification.status = VerificationStatus.PENDING;
+        existingVerification.submitted_at = new Date();
+        await this.verificationRepository.save(existingVerification);
+      } else {
+        // Create new verification
+        const verification = this.verificationRepository.create({
+          user_id: userId,
+          document_type: doc.type,
+          document_url: doc.url,
+          document_number: doc.number,
+          status: VerificationStatus.PENDING,
+          submitted_at: new Date(),
+        });
+        await this.verificationRepository.save(verification);
       }
     }
 
