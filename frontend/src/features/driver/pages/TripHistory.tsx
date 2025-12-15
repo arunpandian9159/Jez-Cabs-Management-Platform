@@ -7,6 +7,9 @@ import {
   Download,
   CheckCircle,
   XCircle,
+  History,
+  MapPin,
+  TrendingUp,
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -26,6 +29,8 @@ import {
   formatDuration,
 } from '@/shared/utils';
 import { useTripHistory } from '../hooks/useTripHistory';
+import { DriverPageHeader } from '../components/DriverPageHeader';
+import { DriverStatCard } from '../components/DriverStatCard';
 
 export function TripHistory() {
   const {
@@ -50,54 +55,75 @@ export function TripHistory() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex items-center justify-between"
-      >
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">
-            Trip History
-          </h1>
-          <p className="text-gray-500">View and manage your completed trips</p>
-        </div>
-        <Button variant="outline" leftIcon={<Download className="w-4 h-4" />}>
-          Export
-        </Button>
-      </motion.div>
+      <DriverPageHeader
+        title="Trip History"
+        subtitle="View and manage your completed trips"
+        icon={History}
+        iconColor="accent"
+        action={
+          <Button variant="outline" leftIcon={<Download className="w-4 h-4" />}>
+            Export
+          </Button>
+        }
+      />
 
       {/* Stats */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="grid grid-cols-4 gap-4"
+        className="grid grid-cols-2 md:grid-cols-4 gap-4"
       >
-        <Card padding="md" className="text-center">
-          <p className="text-2xl font-bold text-gray-900">{completedCount}</p>
-          <p className="text-sm text-gray-500">Trips</p>
-        </Card>
-        <Card padding="md" className="text-center">
-          <p className="text-2xl font-bold text-success-600">
-            {formatCurrency(totalEarnings)}
-          </p>
-          <p className="text-sm text-gray-500">Earnings</p>
-        </Card>
-        <Card padding="md" className="text-center">
-          <p className="text-2xl font-bold text-gray-900">
-            {totalDistance.toFixed(1)} km
-          </p>
-          <p className="text-sm text-gray-500">Distance</p>
-        </Card>
-        <Card padding="md" className="text-center">
-          <div className="flex items-center justify-center gap-1">
-            <Star className="w-5 h-5 text-warning-500 fill-warning-500" />
-            <p className="text-2xl font-bold text-gray-900">
-              {avgRating.toFixed(1)}
-            </p>
-          </div>
-          <p className="text-sm text-gray-500">Avg Rating</p>
-        </Card>
+        <DriverStatCard
+          label="Total Trips"
+          value={completedCount}
+          icon={CheckCircle}
+          color="primary"
+          delay={0.1}
+        />
+        <DriverStatCard
+          label="Earnings"
+          value={formatCurrency(totalEarnings)}
+          icon={TrendingUp}
+          color="success"
+          delay={0.15}
+        />
+        <DriverStatCard
+          label="Distance"
+          value={`${totalDistance.toFixed(1)} km`}
+          icon={MapPin}
+          color="accent"
+          delay={0.2}
+        />
+        <motion.div
+          initial={{ opacity: 0, y: 20, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ delay: 0.25 }}
+          whileHover={{ scale: 1.02, y: -2 }}
+        >
+          <Card padding="md" className="bg-warning-100 border-transparent overflow-hidden relative">
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-warning-500 to-warning-600 flex items-center justify-center shadow-lg">
+                <Star className="w-5 h-5 text-white fill-white" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-medium text-gray-600 mb-0.5">Avg Rating</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-2xl font-bold text-warning-700">{avgRating.toFixed(1)}</p>
+                  <div className="flex gap-0.5">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star
+                        key={star}
+                        className={`w-3 h-3 ${star <= Math.round(avgRating) ? 'text-warning-500 fill-warning-500' : 'text-gray-300'}`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="absolute -right-4 -bottom-4 w-16 h-16 rounded-full bg-gradient-to-br from-warning-500 to-warning-600 opacity-20 blur-xl" />
+          </Card>
+        </motion.div>
       </motion.div>
 
       {/* Filters */}
@@ -109,11 +135,16 @@ export function TripHistory() {
         <TabsRoot value={activeTab} onValueChange={setActiveTab}>
           <div className="flex items-center justify-between">
             <TabsList>
-              <TabsTrigger value="all">All ({totalTrips})</TabsTrigger>
+              <TabsTrigger value="all">
+                <History className="w-4 h-4 mr-1.5" />
+                All ({totalTrips})
+              </TabsTrigger>
               <TabsTrigger value="completed">
+                <CheckCircle className="w-4 h-4 mr-1.5" />
                 Completed ({completedCount})
               </TabsTrigger>
               <TabsTrigger value="cancelled">
+                <XCircle className="w-4 h-4 mr-1.5" />
                 Cancelled ({cancelledCount})
               </TabsTrigger>
             </TabsList>
@@ -136,32 +167,34 @@ export function TripHistory() {
                   key={trip.id}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05 }}
+                  transition={{ delay: 0.25 + index * 0.03 }}
+                  whileHover={{ scale: 1.005 }}
                 >
-                  <Card padding="md" interactive>
+                  <Card padding="md" interactive className="hover:shadow-lg transition-all">
                     <div className="flex items-start gap-4">
-                      <div
-                        className={`w-12 h-12 rounded-lg flex items-center justify-center ${trip.status === 'completed' ? 'bg-success-100' : 'bg-error-100'}`}
+                      <motion.div
+                        whileHover={{ scale: 1.05 }}
+                        className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-lg ${trip.status === 'completed' ? 'bg-gradient-to-br from-success-500 to-success-600' : 'bg-gradient-to-br from-error-500 to-error-600'}`}
                       >
                         {trip.status === 'completed' ? (
-                          <CheckCircle className="w-6 h-6 text-success-600" />
+                          <CheckCircle className="w-6 h-6 text-white" />
                         ) : (
-                          <XCircle className="w-6 h-6 text-error-600" />
+                          <XCircle className="w-6 h-6 text-white" />
                         )}
-                      </div>
+                      </motion.div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between mb-2">
                           <div>
-                            <p className="font-medium text-gray-900">
+                            <p className="font-semibold text-gray-900">
                               {trip.pickup} → {trip.destination}
                             </p>
                             <div className="flex items-center gap-3 text-sm text-gray-500 mt-1">
                               <span className="flex items-center gap-1">
-                                <Calendar className="w-3 h-3" />
+                                <Calendar className="w-3.5 h-3.5" />
                                 {formatDate(trip.date)}
                               </span>
                               <span className="flex items-center gap-1">
-                                <Clock className="w-3 h-3" />
+                                <Clock className="w-3.5 h-3.5" />
                                 {formatTime(trip.date)}
                               </span>
                             </div>
@@ -170,44 +203,39 @@ export function TripHistory() {
                         </div>
                         {trip.status === 'completed' ? (
                           <div className="flex items-center gap-4 text-sm">
-                            <span className="text-gray-600">
+                            <span className="px-2 py-1 bg-gray-100 rounded-lg text-gray-600 font-medium">
                               {trip.customer.name}
                             </span>
-                            <span className="text-gray-400">•</span>
                             <span className="text-gray-600">
                               {trip.distance} km
                             </span>
-                            <span className="text-gray-400">•</span>
                             <span className="text-gray-600">
                               {formatDuration(trip.duration)}
                             </span>
                             {trip.rating && (
-                              <>
-                                <span className="text-gray-400">•</span>
-                                <span className="flex items-center gap-1">
-                                  <Star className="w-3 h-3 text-warning-500 fill-warning-500" />
-                                  {trip.rating}
-                                </span>
-                              </>
+                              <span className="flex items-center gap-1 px-2 py-1 bg-warning-50 rounded-lg">
+                                <Star className="w-3.5 h-3.5 text-warning-500 fill-warning-500" />
+                                <span className="font-medium text-warning-700">{trip.rating}</span>
+                              </span>
                             )}
                           </div>
                         ) : (
-                          <p className="text-sm text-error-600">
+                          <p className="text-sm text-error-600 bg-error-50 px-2 py-1 rounded-lg inline-block">
                             {trip.cancellationReason}
                           </p>
                         )}
                       </div>
                       {trip.status === 'completed' && (
                         <div className="text-right">
-                          <p className="font-bold text-gray-900">
+                          <p className="text-lg font-bold text-gray-900">
                             {formatCurrency(trip.fare)}
                           </p>
                           {(trip.tip ?? 0) > 0 && (
-                            <p className="text-xs text-success-600">
+                            <p className="text-xs font-medium text-success-600 bg-success-50 px-2 py-0.5 rounded-full inline-block">
                               +{formatCurrency(trip.tip ?? 0)} tip
                             </p>
                           )}
-                          <p className="text-xs text-gray-500">
+                          <p className="text-xs text-gray-500 mt-1">
                             {trip.paymentMethod}
                           </p>
                         </div>
