@@ -92,7 +92,6 @@ export class DriverService {
 
       // Query actual trips from database
       // trips.driver_id stores the user's ID, not the driver_profile ID
-      console.log('Fetching earnings for user_id:', userId);
 
       const completedTrips = await this.driverRepository.manager.query(
         `
@@ -111,7 +110,6 @@ export class DriverService {
         [userId],
       );
 
-      console.log('Found completed trips:', completedTrips.length);
 
       // Calculate date boundaries
       const now = new Date();
@@ -126,7 +124,6 @@ export class DriverService {
       const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
       const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
-      console.log('Date boundaries:', { todayStart, weekAgo, monthAgo });
 
       // Calculate earnings
       let todayEarnings = 0;
@@ -151,8 +148,6 @@ export class DriverService {
         const tripTotal = fare + tip;
         const completedAt = new Date(trip.completed_at);
 
-        console.log('Processing trip:', { fare, tip, tripTotal, completedAt });
-
         totalEarnings += tripTotal;
 
         // Check if trip is from today
@@ -176,13 +171,6 @@ export class DriverService {
         if (completedAt >= monthAgo) {
           monthEarnings += tripTotal;
         }
-      });
-
-      console.log('Earnings calculated:', {
-        todayEarnings,
-        weekEarnings,
-        monthEarnings,
-        totalEarnings,
       });
 
       return {
