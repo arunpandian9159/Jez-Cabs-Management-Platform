@@ -92,7 +92,7 @@ export function ManageDrivers() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="grid grid-cols-2 md:grid-cols-4 gap-4"
+        className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4"
       >
         <OwnerStatCard
           label="Total Drivers"
@@ -130,11 +130,11 @@ export function ManageDrivers() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
       >
-        <Card padding="md" className="bg-gradient-to-r from-gray-50 to-white">
-          <div className="flex gap-4">
+        <Card padding="sm" className="bg-gradient-to-r from-gray-50 to-white sm:p-4">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
             <div className="flex-1">
               <Input
-                placeholder="Search by name or phone..."
+                placeholder="Search..."
                 prefix={<Search className="w-4 h-4" />}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -142,7 +142,7 @@ export function ManageDrivers() {
             </div>
             <Select
               options={[
-                { value: 'all', label: 'All Status' },
+                { value: 'all', label: 'All' },
                 { value: 'active', label: 'Active' },
                 { value: 'inactive', label: 'Inactive' },
                 { value: 'pending', label: 'Pending' },
@@ -155,7 +155,7 @@ export function ManageDrivers() {
       </motion.div>
 
       {/* Drivers List */}
-      <div className="space-y-3">
+      <div className="space-y-2 sm:space-y-3">
         {drivers.map((driver, index) => (
           <motion.div
             key={driver.id}
@@ -165,59 +165,60 @@ export function ManageDrivers() {
             whileHover={{ scale: 1.005 }}
           >
             <Card
-              padding="md"
+              padding="sm"
               interactive
               onClick={() => setSelectedDriver(driver)}
-              className="hover:shadow-lg transition-all border-l-4 border-l-transparent hover:border-l-primary-500"
+              className="hover:shadow-lg transition-all border-l-4 border-l-transparent hover:border-l-primary-500 sm:p-4"
             >
-              <div className="flex items-center gap-4">
-                <Avatar size="lg" name={driver.name} />
+              <div className="flex items-center gap-2 sm:gap-4">
+                <Avatar size="md" name={driver.name} className="sm:w-12 sm:h-12" />
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-semibold text-gray-900">
+                  <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5 sm:mb-1">
+                    <h3 className="font-semibold text-gray-900 text-xs sm:text-base truncate">
                       {driver.name}
                     </h3>
                     <StatusBadge status={driver.status} />
                   </div>
-                  <div className="flex items-center gap-4 text-sm text-gray-500">
-                    <span>{driver.phone}</span>
+                  <div className="flex items-center gap-2 sm:gap-4 text-[10px] sm:text-sm text-gray-500">
+                    <span className="truncate">{driver.phone}</span>
                     {driver.cab && (
-                      <>
-                        <span>•</span>
-                        <span className="flex items-center gap-1">
-                          <Car className="w-3 h-3" />
-                          {driver.cab.make} {driver.cab.model}
-                        </span>
-                      </>
+                      <span className="hidden sm:flex items-center gap-1">
+                        <Car className="w-3 h-3" />
+                        {driver.cab.make} {driver.cab.model}
+                      </span>
                     )}
                   </div>
                 </div>
                 {driver.status === 'active' && (
-                  <div className="flex items-center gap-6 text-sm">
-                    <div className="text-center px-3 py-2 bg-warning-50 rounded-xl">
-                      <div className="flex items-center gap-1 justify-center">
-                        <Star className="w-4 h-4 text-warning-500 fill-warning-500" />
-                        <span className="font-bold text-warning-700">
+                  <div className="flex items-center gap-2 sm:gap-6 text-sm">
+                    {/* Rating - always visible */}
+                    <div className="text-center px-2 sm:px-3 py-1.5 sm:py-2 bg-warning-50 rounded-lg sm:rounded-xl">
+                      <div className="flex items-center gap-0.5 sm:gap-1 justify-center">
+                        <Star className="w-3 h-3 sm:w-4 sm:h-4 text-warning-500 fill-warning-500" />
+                        <span className="font-bold text-warning-700 text-xs sm:text-base">
                           {driver.metrics.rating}
                         </span>
                       </div>
-                      <p className="text-xs text-warning-600 mt-0.5">Rating</p>
+                      <p className="hidden sm:block text-xs text-warning-600 mt-0.5">Rating</p>
                     </div>
-                    <div className="text-center px-3 py-2 bg-primary-50 rounded-xl">
+                    {/* Trips - hidden on mobile */}
+                    <div className="hidden md:block text-center px-3 py-2 bg-primary-50 rounded-xl">
                       <p className="font-bold text-primary-700">
                         {driver.metrics.totalTrips}
                       </p>
                       <p className="text-xs text-primary-600 mt-0.5">Trips</p>
                     </div>
-                    <div className="text-center px-3 py-2 bg-success-50 rounded-xl">
-                      <p className="font-bold text-success-700">
+                    {/* Earnings - compact on mobile */}
+                    <div className="text-center px-2 sm:px-3 py-1.5 sm:py-2 bg-success-50 rounded-lg sm:rounded-xl">
+                      <p className="font-bold text-success-700 text-xs sm:text-base">
                         {formatCurrency(driver.metrics.thisMonthEarnings)}
                       </p>
-                      <p className="text-xs text-success-600 mt-0.5">This Month</p>
+                      <p className="hidden sm:block text-xs text-success-600 mt-0.5">This Month</p>
                     </div>
                   </div>
                 )}
-                <div className="flex gap-2">
+                {/* Action buttons - hidden on mobile, show more button */}
+                <div className="hidden sm:flex gap-2">
                   <Button variant="ghost" size="icon">
                     <Phone className="w-4 h-4" />
                   </Button>
@@ -228,6 +229,7 @@ export function ManageDrivers() {
                     <MoreVertical className="w-4 h-4" />
                   </Button>
                 </div>
+                <MoreVertical className="w-4 h-4 text-gray-400 sm:hidden flex-shrink-0" />
               </div>
             </Card>
           </motion.div>

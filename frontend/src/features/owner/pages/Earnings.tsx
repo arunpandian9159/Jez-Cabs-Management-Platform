@@ -176,25 +176,26 @@ export function OwnerEarnings() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="grid grid-cols-2 md:grid-cols-5 gap-4"
+        className="grid grid-cols-2 md:grid-cols-5 gap-3 sm:gap-4"
       >
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.1 }}
           whileHover={{ scale: 1.02, y: -2 }}
+          className="h-full"
         >
           <Card
-            padding="md"
-            className="bg-gradient-to-br from-success-500 via-success-600 to-success-700 text-white overflow-hidden relative"
+            padding="sm"
+            className="bg-gradient-to-br from-success-500 via-success-600 to-success-700 text-white overflow-hidden relative h-full sm:p-4"
           >
-            <div className="flex items-center gap-3 relative z-10">
-              <div className="w-11 h-11 rounded-xl bg-white/20 flex items-center justify-center">
-                <DollarSign className="w-5 h-5" />
+            <div className="flex items-center gap-2 sm:gap-3 relative z-10">
+              <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
+                <DollarSign className="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
-              <div>
-                <p className="text-white/80 text-xs font-medium">Gross Revenue</p>
-                <p className="text-2xl font-bold">
+              <div className="min-w-0 flex-1">
+                <p className="text-white/80 text-[10px] sm:text-xs font-medium">Revenue</p>
+                <p className="text-lg sm:text-xl md:text-2xl font-bold truncate">
                   {formatCurrency(earningsSummary.month)}
                 </p>
               </div>
@@ -208,15 +209,16 @@ export function OwnerEarnings() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.15 }}
           whileHover={{ scale: 1.02, y: -2 }}
+          className="h-full"
         >
-          <Card padding="md" className="bg-error-100 border-transparent overflow-hidden relative">
-            <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-error-500 to-error-600 flex items-center justify-center shadow-lg">
-                <Receipt className="w-5 h-5 text-white" />
+          <Card padding="sm" className="bg-error-100 border-transparent overflow-hidden relative h-full sm:p-4">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-error-500 to-error-600 flex items-center justify-center shadow-lg flex-shrink-0">
+                <Receipt className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
-              <div>
-                <p className="text-gray-600 text-xs font-medium">Expenses</p>
-                <p className="text-2xl font-bold text-error-700">
+              <div className="min-w-0 flex-1">
+                <p className="text-gray-600 text-[10px] sm:text-xs font-medium">Expenses</p>
+                <p className="text-lg sm:text-xl md:text-2xl font-bold text-error-700 truncate">
                   {formatCurrency(totalExpenses)}
                 </p>
               </div>
@@ -230,15 +232,16 @@ export function OwnerEarnings() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2 }}
           whileHover={{ scale: 1.02, y: -2 }}
+          className="h-full"
         >
-          <Card padding="md" className="bg-primary-100 border-transparent overflow-hidden relative">
-            <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-lg">
-                <TrendingUp className="w-5 h-5 text-white" />
+          <Card padding="sm" className="bg-primary-100 border-transparent overflow-hidden relative h-full sm:p-4">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-lg flex-shrink-0">
+                <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
-              <div>
-                <p className="text-gray-600 text-xs font-medium">Net Profit</p>
-                <p className="text-2xl font-bold text-primary-700">
+              <div className="min-w-0 flex-1">
+                <p className="text-gray-600 text-[10px] sm:text-xs font-medium">Profit</p>
+                <p className="text-lg sm:text-xl md:text-2xl font-bold text-primary-700 truncate">
                   {formatCurrency(netProfit)}
                 </p>
               </div>
@@ -252,15 +255,16 @@ export function OwnerEarnings() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.25 }}
           whileHover={{ scale: 1.02, y: -2 }}
+          className="h-full"
         >
-          <Card padding="md" className="bg-warning-100 border-transparent overflow-hidden relative">
-            <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-warning-500 to-warning-600 flex items-center justify-center shadow-lg">
-                <Clock className="w-5 h-5 text-white" />
+          <Card padding="sm" className="bg-warning-100 border-transparent overflow-hidden relative h-full sm:p-4">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-warning-500 to-warning-600 flex items-center justify-center shadow-lg flex-shrink-0">
+                <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
-              <div>
-                <p className="text-gray-600 text-xs font-medium">Pending</p>
-                <p className="text-2xl font-bold text-warning-700">
+              <div className="min-w-0 flex-1">
+                <p className="text-gray-600 text-[10px] sm:text-xs font-medium">Pending</p>
+                <p className="text-lg sm:text-xl md:text-2xl font-bold text-warning-700 truncate">
                   {formatCurrency(earningsSummary.pendingSettlements)}
                 </p>
               </div>
@@ -274,15 +278,16 @@ export function OwnerEarnings() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3 }}
           whileHover={{ scale: 1.02, y: -2 }}
+          className="h-full hidden sm:block col-span-2 md:col-span-1"
         >
-          <Card padding="md" className="bg-accent-100 border-transparent overflow-hidden relative">
-            <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-accent-500 to-accent-600 flex items-center justify-center shadow-lg">
-                <Car className="w-5 h-5 text-white" />
+          <Card padding="sm" className="bg-accent-100 border-transparent overflow-hidden relative h-full sm:p-4">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-accent-500 to-accent-600 flex items-center justify-center shadow-lg flex-shrink-0">
+                <Car className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
-              <div>
-                <p className="text-gray-600 text-xs font-medium">Total Trips</p>
-                <p className="text-2xl font-bold text-accent-700">
+              <div className="min-w-0 flex-1">
+                <p className="text-gray-600 text-[10px] sm:text-xs font-medium">Trips</p>
+                <p className="text-lg sm:text-xl md:text-2xl font-bold text-accent-700">
                   {cabEarnings.reduce((sum, cab) => sum + cab.trips, 0)}
                 </p>
               </div>
@@ -297,41 +302,42 @@ export function OwnerEarnings() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
+        className="relative z-10"
       >
         <TabsRoot value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="flex-wrap">
-            <TabsTrigger value="overview">
-              <BarChart3 className="w-4 h-4 mr-1.5" />
-              Overview
+          <TabsList className="flex-wrap gap-1">
+            <TabsTrigger value="overview" className="text-xs sm:text-sm px-2 sm:px-3">
+              <BarChart3 className="w-3.5 h-3.5 sm:w-4 sm:h-4 sm:mr-1.5" />
+              <span className="hidden sm:inline">Overview</span>
             </TabsTrigger>
-            <TabsTrigger value="by-driver">
-              <Users className="w-4 h-4 mr-1.5" />
-              By Driver
+            <TabsTrigger value="by-driver" className="text-xs sm:text-sm px-2 sm:px-3">
+              <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4 sm:mr-1.5" />
+              <span className="hidden sm:inline">By Driver</span>
             </TabsTrigger>
-            <TabsTrigger value="by-cab">
-              <Car className="w-4 h-4 mr-1.5" />
-              By Vehicle
+            <TabsTrigger value="by-cab" className="text-xs sm:text-sm px-2 sm:px-3">
+              <Car className="w-3.5 h-3.5 sm:w-4 sm:h-4 sm:mr-1.5" />
+              <span className="hidden sm:inline">Vehicle</span>
             </TabsTrigger>
-            <TabsTrigger value="expenses">
-              <Receipt className="w-4 h-4 mr-1.5" />
-              Expenses
+            <TabsTrigger value="expenses" className="text-xs sm:text-sm px-2 sm:px-3">
+              <Receipt className="w-3.5 h-3.5 sm:w-4 sm:h-4 sm:mr-1.5" />
+              <span className="hidden sm:inline">Expenses</span>
             </TabsTrigger>
-            <TabsTrigger value="goals">
-              <Target className="w-4 h-4 mr-1.5" />
-              Goals
+            <TabsTrigger value="goals" className="text-xs sm:text-sm px-2 sm:px-3">
+              <Target className="w-3.5 h-3.5 sm:w-4 sm:h-4 sm:mr-1.5" />
+              <span className="hidden sm:inline">Goals</span>
             </TabsTrigger>
-            <TabsTrigger value="transactions">
-              <FileText className="w-4 h-4 mr-1.5" />
-              Transactions
+            <TabsTrigger value="transactions" className="text-xs sm:text-sm px-2 sm:px-3">
+              <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 sm:mr-1.5" />
+              <span className="hidden sm:inline">Txns</span>
             </TabsTrigger>
-            <TabsTrigger value="payouts">
-              <Wallet className="w-4 h-4 mr-1.5" />
-              Payouts
+            <TabsTrigger value="payouts" className="text-xs sm:text-sm px-2 sm:px-3">
+              <Wallet className="w-3.5 h-3.5 sm:w-4 sm:h-4 sm:mr-1.5" />
+              <span className="hidden sm:inline">Payouts</span>
             </TabsTrigger>
           </TabsList>
 
           {/* Overview Tab */}
-          <TabsContent value="overview" className="mt-4">
+          <TabsContent value="overview" className="mt-3 sm:mt-4">
             <div className="grid md:grid-cols-2 gap-4">
               <Card padding="md" className="overflow-hidden">
                 <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
@@ -424,8 +430,8 @@ export function OwnerEarnings() {
           </TabsContent>
 
           {/* By Driver Tab */}
-          <TabsContent value="by-driver" className="mt-4">
-            <div className="space-y-3">
+          <TabsContent value="by-driver" className="mt-3 sm:mt-4">
+            <div className="space-y-2 sm:space-y-3">
               {driverEarnings.map((driver, index) => (
                 <motion.div
                   key={driver.id}
@@ -434,42 +440,41 @@ export function OwnerEarnings() {
                   transition={{ delay: index * 0.05 }}
                   whileHover={{ scale: 1.005 }}
                 >
-                  <Card padding="md" interactive className="hover:shadow-lg transition-all">
-                    <div className="flex items-center gap-4">
-                      <Avatar size="lg" name={driver.driverName} />
+                  <Card padding="sm" interactive className="hover:shadow-lg transition-all sm:p-4">
+                    <div className="flex items-center gap-2 sm:gap-4">
+                      <Avatar size="md" name={driver.driverName} className="sm:w-12 sm:h-12" />
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-gray-900">
+                        <p className="font-semibold text-gray-900 text-xs sm:text-base truncate">
                           {driver.driverName}
                         </p>
-                        <div className="flex items-center gap-2 text-sm text-gray-500">
-                          <span>{driver.driverPhone}</span>
+                        <div className="flex items-center gap-2 text-[10px] sm:text-sm text-gray-500">
+                          <span className="truncate">{driver.driverPhone}</span>
                           {driver.vehicleAssigned && (
-                            <>
-                              <span>•</span>
-                              <span className="flex items-center gap-1">
-                                <Car className="w-3 h-3" />
-                                {driver.vehicleAssigned}
-                              </span>
-                            </>
+                            <span className="hidden sm:flex items-center gap-1">
+                              <Car className="w-3 h-3" />
+                              {driver.vehicleAssigned}
+                            </span>
                           )}
                         </div>
                       </div>
-                      <div className="text-center px-3 py-2 bg-gray-50 rounded-xl">
+                      {/* Trips - hidden on mobile */}
+                      <div className="hidden sm:block text-center px-3 py-2 bg-gray-50 rounded-xl">
                         <p className="text-sm text-gray-500">Trips</p>
                         <p className="font-bold text-gray-900">{driver.trips}</p>
                       </div>
-                      <div className="text-center px-3 py-2 bg-accent-50 rounded-xl">
+                      {/* Commission - hidden on mobile */}
+                      <div className="hidden md:block text-center px-3 py-2 bg-accent-50 rounded-xl">
                         <p className="text-sm text-accent-600">Commission</p>
                         <p className="font-bold text-accent-700">
                           {formatCurrency(driver.commission)}
                         </p>
                       </div>
-                      <div className="text-right min-w-[120px]">
-                        <p className="font-bold text-gray-900 text-lg">
+                      <div className="text-right min-w-[70px] sm:min-w-[120px]">
+                        <p className="font-bold text-gray-900 text-xs sm:text-lg">
                           {formatCurrency(driver.thisMonthEarnings)}
                         </p>
                         <div
-                          className={`flex items-center justify-end gap-1 text-sm ${driver.growth >= 0 ? 'text-success-600' : 'text-error-600'}`}
+                          className={`flex items-center justify-end gap-0.5 sm:gap-1 text-[10px] sm:text-sm ${driver.growth >= 0 ? 'text-success-600' : 'text-error-600'}`}
                         >
                           {driver.growth >= 0 ? (
                             <ArrowUpRight className="w-3 h-3" />
@@ -487,8 +492,8 @@ export function OwnerEarnings() {
           </TabsContent>
 
           {/* By Vehicle Tab */}
-          <TabsContent value="by-cab" className="mt-4">
-            <div className="space-y-3">
+          <TabsContent value="by-cab" className="mt-3 sm:mt-4">
+            <div className="space-y-2 sm:space-y-3">
               {cabEarnings.map((cab, index) => (
                 <motion.div
                   key={cab.id}
@@ -497,33 +502,34 @@ export function OwnerEarnings() {
                   transition={{ delay: index * 0.05 }}
                   whileHover={{ scale: 1.005 }}
                 >
-                  <Card padding="md" interactive className="hover:shadow-lg transition-all">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-md">
-                        <Car className="w-6 h-6 text-white" />
+                  <Card padding="sm" interactive className="hover:shadow-lg transition-all sm:p-4">
+                    <div className="flex items-center gap-2 sm:gap-4">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-md flex-shrink-0">
+                        <Car className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-gray-900">
+                        <p className="font-semibold text-gray-900 text-xs sm:text-base truncate">
                           {cab.vehicle}
                         </p>
-                        <div className="flex items-center gap-2 text-sm text-gray-500">
+                        <div className="flex items-center gap-2 text-[10px] sm:text-sm text-gray-500">
                           <span>{cab.registration}</span>
-                          <span>•</span>
-                          <span>{cab.driver}</span>
+                          <span className="hidden sm:inline">•</span>
+                          <span className="hidden sm:inline">{cab.driver}</span>
                         </div>
                       </div>
-                      <div className="text-center px-3 py-2 bg-gray-50 rounded-xl">
+                      {/* Trips - hidden on mobile */}
+                      <div className="hidden sm:block text-center px-3 py-2 bg-gray-50 rounded-xl">
                         <p className="text-sm text-gray-500">Trips</p>
                         <p className="font-bold text-gray-900">
                           {cab.trips}
                         </p>
                       </div>
-                      <div className="text-right min-w-[120px]">
-                        <p className="font-bold text-gray-900 text-lg">
+                      <div className="text-right min-w-[70px] sm:min-w-[120px]">
+                        <p className="font-bold text-gray-900 text-xs sm:text-lg">
                           {formatCurrency(cab.thisMonth)}
                         </p>
                         <div
-                          className={`flex items-center justify-end gap-1 text-sm ${cab.growth >= 0 ? 'text-success-600' : 'text-error-600'}`}
+                          className={`flex items-center justify-end gap-0.5 sm:gap-1 text-[10px] sm:text-sm ${cab.growth >= 0 ? 'text-success-600' : 'text-error-600'}`}
                         >
                           {cab.growth >= 0 ? (
                             <ArrowUpRight className="w-3 h-3" />
@@ -541,75 +547,72 @@ export function OwnerEarnings() {
           </TabsContent>
 
           {/* Expenses Tab */}
-          <TabsContent value="expenses" className="mt-4">
-            <div className="space-y-4">
+          <TabsContent value="expenses" className="mt-3 sm:mt-4">
+            <div className="space-y-3 sm:space-y-4">
               <div className="flex justify-between items-center">
-                <h3 className="font-semibold text-gray-900">Expense Tracking</h3>
+                <h3 className="font-semibold text-gray-900 text-sm sm:text-base">Expenses</h3>
                 <Button
                   leftIcon={<Plus className="w-4 h-4" />}
                   onClick={() => setShowAddExpenseModal(true)}
+                  className="text-xs sm:text-sm"
                 >
-                  Add Expense
+                  <span className="hidden sm:inline">Add Expense</span>
+                  <span className="sm:hidden">Add</span>
                 </Button>
               </div>
 
               {/* Expense Categories Summary */}
-              <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+              <div className="grid grid-cols-3 md:grid-cols-6 gap-2 sm:gap-3">
                 {['fuel', 'maintenance', 'insurance', 'taxes', 'toll', 'other'].map((category) => {
                   const categoryTotal = expenses
                     .filter(e => e.category === category)
                     .reduce((sum, e) => sum + e.amount, 0);
                   return (
                     <Card key={category} padding="sm" className="text-center">
-                      <div className="flex justify-center mb-2">
+                      <div className="flex justify-center mb-1 sm:mb-2">
                         {getCategoryIcon(category)}
                       </div>
-                      <p className="text-xs text-gray-500 capitalize">{category}</p>
-                      <p className="font-bold text-gray-900">{formatCurrency(categoryTotal)}</p>
+                      <p className="text-[10px] sm:text-xs text-gray-500 capitalize truncate">{category}</p>
+                      <p className="font-bold text-gray-900 text-xs sm:text-base truncate">{formatCurrency(categoryTotal)}</p>
                     </Card>
                   );
                 })}
               </div>
 
               {/* Expense List */}
-              <Card padding="md">
-                <h4 className="font-medium text-gray-900 mb-4">Recent Expenses</h4>
-                <div className="space-y-3">
+              <Card padding="sm" className="sm:p-4">
+                <h4 className="font-medium text-gray-900 mb-3 sm:mb-4 text-sm sm:text-base">Recent</h4>
+                <div className="space-y-2 sm:space-y-3">
                   {expenses.map((expense, index) => (
                     <motion.div
                       key={expense.id}
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.03 }}
-                      className="flex items-center justify-between p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
+                      className="flex items-center justify-between p-2 sm:p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
                     >
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm">
+                      <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-white flex items-center justify-center shadow-sm flex-shrink-0">
                           {getCategoryIcon(expense.category)}
                         </div>
-                        <div>
-                          <p className="font-medium text-gray-900">{expense.description}</p>
-                          <div className="flex items-center gap-2 text-sm text-gray-500">
+                        <div className="min-w-0 flex-1">
+                          <p className="font-medium text-gray-900 text-xs sm:text-base truncate">{expense.description}</p>
+                          <div className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-sm text-gray-500">
                             <span className="capitalize">{expense.category}</span>
-                            {expense.vehicleName && (
-                              <>
-                                <span>•</span>
-                                <span>{expense.vehicleName}</span>
-                              </>
-                            )}
-                            <span>•</span>
-                            <span>{formatDate(expense.date)}</span>
+                            <span className="hidden sm:inline">•</span>
+                            <span className="hidden sm:inline">{formatDate(expense.date)}</span>
                           </div>
                         </div>
                       </div>
-                      <div className="flex items-center gap-3">
-                        <p className="font-bold text-error-600">-{formatCurrency(expense.amount)}</p>
+                      <div className="flex items-center gap-1 sm:gap-3 flex-shrink-0">
+                        <p className="font-bold text-error-600 text-xs sm:text-base">-{formatCurrency(expense.amount)}</p>
                         <Button
                           variant="ghost"
                           size="icon"
                           onClick={() => handleDeleteExpense(expense.id)}
+                          className="h-7 w-7 sm:h-8 sm:w-8"
                         >
-                          <Trash2 className="w-4 h-4 text-gray-400 hover:text-error-600" />
+                          <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 hover:text-error-600" />
                         </Button>
                       </div>
                     </motion.div>
@@ -711,8 +714,8 @@ export function OwnerEarnings() {
           </TabsContent>
 
           {/* Transactions Tab */}
-          <TabsContent value="transactions" className="mt-4">
-            <div className="space-y-3">
+          <TabsContent value="transactions" className="mt-3 sm:mt-4">
+            <div className="space-y-2 sm:space-y-3">
               {transactions.map((tx, index) => (
                 <motion.div
                   key={tx.id}
@@ -720,31 +723,31 @@ export function OwnerEarnings() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.03 }}
                 >
-                  <Card padding="md" interactive className="hover:shadow-md transition-all">
-                    <div className="flex items-center gap-4">
+                  <Card padding="sm" interactive className="hover:shadow-md transition-all sm:p-4">
+                    <div className="flex items-center gap-2 sm:gap-4">
                       <div
-                        className={`w-11 h-11 rounded-xl flex items-center justify-center shadow-md ${tx.type === 'earning' ? 'bg-gradient-to-br from-success-500 to-success-600' : tx.type === 'payout' ? 'bg-gradient-to-br from-primary-500 to-primary-600' : tx.type === 'settlement' ? 'bg-gradient-to-br from-accent-500 to-accent-600' : 'bg-gradient-to-br from-error-500 to-error-600'}`}
+                        className={`w-9 h-9 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center shadow-md flex-shrink-0 ${tx.type === 'earning' ? 'bg-gradient-to-br from-success-500 to-success-600' : tx.type === 'payout' ? 'bg-gradient-to-br from-primary-500 to-primary-600' : tx.type === 'settlement' ? 'bg-gradient-to-br from-accent-500 to-accent-600' : 'bg-gradient-to-br from-error-500 to-error-600'}`}
                       >
                         {tx.type === 'earning' ? (
-                          <ArrowDownLeft className="w-5 h-5 text-white" />
+                          <ArrowDownLeft className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                         ) : tx.type === 'payout' ? (
-                          <Wallet className="w-5 h-5 text-white" />
+                          <Wallet className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                         ) : tx.type === 'settlement' ? (
-                          <Users className="w-5 h-5 text-white" />
+                          <Users className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                         ) : (
-                          <ArrowUpRight className="w-5 h-5 text-white" />
+                          <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                         )}
                       </div>
-                      <div className="flex-1">
-                        <p className="font-medium text-gray-900">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-gray-900 text-xs sm:text-base truncate">
                           {tx.description}
                         </p>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-[10px] sm:text-sm text-gray-500">
                           {formatDate(tx.date)}
                         </p>
                       </div>
                       <p
-                        className={`font-bold text-lg ${tx.type === 'earning' ? 'text-success-600' : 'text-gray-900'}`}
+                        className={`font-bold text-xs sm:text-lg flex-shrink-0 ${tx.type === 'earning' ? 'text-success-600' : 'text-gray-900'}`}
                       >
                         {tx.type === 'deduction' || tx.type === 'settlement'
                           ? '-'
@@ -761,49 +764,49 @@ export function OwnerEarnings() {
           </TabsContent>
 
           {/* Payouts Tab */}
-          <TabsContent value="payouts" className="mt-4">
-            <div className="space-y-4">
-              <Card padding="lg" className="bg-gradient-to-br from-primary-500 via-primary-600 to-accent-600 text-white overflow-hidden relative">
+          <TabsContent value="payouts" className="mt-3 sm:mt-4">
+            <div className="space-y-3 sm:space-y-4">
+              <Card padding="md" className="bg-gradient-to-br from-primary-500 via-primary-600 to-accent-600 text-white overflow-hidden relative sm:p-6">
                 <div className="flex items-center justify-between relative z-10">
                   <div>
-                    <p className="text-white/80 text-sm mb-1">Next Payout</p>
-                    <p className="text-3xl font-bold">
+                    <p className="text-white/80 text-[10px] sm:text-sm mb-0.5 sm:mb-1">Next Payout</p>
+                    <p className="text-xl sm:text-3xl font-bold">
                       {formatCurrency(earningsSummary.pendingSettlements)}
                     </p>
-                    <p className="text-white/70 text-sm mt-1">
-                      Estimated: Dec 12, 2025
+                    <p className="text-white/70 text-[10px] sm:text-sm mt-0.5 sm:mt-1">
+                      Est: Dec 12, 2025
                     </p>
                   </div>
-                  <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                    <Wallet className="w-8 h-8" />
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                    <Wallet className="w-6 h-6 sm:w-8 sm:h-8" />
                   </div>
                 </div>
                 <div className="absolute -right-8 -bottom-8 w-32 h-32 rounded-full bg-white/10 blur-2xl" />
               </Card>
-              <Card padding="md">
-                <h3 className="font-semibold text-gray-900 mb-4">
+              <Card padding="sm" className="sm:p-4">
+                <h3 className="font-semibold text-gray-900 mb-3 sm:mb-4 text-sm sm:text-base">
                   Payment Method
                 </h3>
-                <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl">
-                  <div className="w-12 h-10 rounded-lg bg-gradient-to-br from-gray-600 to-gray-700 flex items-center justify-center">
-                    <CreditCard className="w-5 h-5 text-white" />
+                <div className="flex items-center gap-2 sm:gap-4 p-3 sm:p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl">
+                  <div className="w-10 h-8 sm:w-12 sm:h-10 rounded-lg bg-gradient-to-br from-gray-600 to-gray-700 flex items-center justify-center flex-shrink-0">
+                    <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                   </div>
-                  <div className="flex-1">
-                    <p className="font-medium text-gray-900">
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-gray-900 text-xs sm:text-base truncate">
                       HDFC Bank ••••4567
                     </p>
-                    <p className="text-sm text-gray-500">Current Account</p>
+                    <p className="text-[10px] sm:text-sm text-gray-500">Current Account</p>
                   </div>
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" className="text-xs sm:text-sm">
                     Change
                   </Button>
                 </div>
               </Card>
-              <Card padding="md">
-                <h3 className="font-semibold text-gray-900 mb-4">
+              <Card padding="sm" className="sm:p-4">
+                <h3 className="font-semibold text-gray-900 mb-3 sm:mb-4 text-sm sm:text-base">
                   Payout History
                 </h3>
-                <div className="space-y-3">
+                <div className="space-y-2 sm:space-y-3">
                   {[
                     { amount: 45000, date: 'Dec 5, 2025' },
                     { amount: 52000, date: 'Nov 28, 2025' },
@@ -814,17 +817,17 @@ export function OwnerEarnings() {
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.05 }}
-                      className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition-colors"
+                      className="flex items-center justify-between p-2 sm:p-3 rounded-xl hover:bg-gray-50 transition-colors"
                     >
                       <div>
-                        <p className="font-medium text-gray-900">
+                        <p className="font-medium text-gray-900 text-xs sm:text-base">
                           {formatCurrency(payout.amount)}
                         </p>
-                        <p className="text-sm text-gray-500">{payout.date}</p>
+                        <p className="text-[10px] sm:text-sm text-gray-500">{payout.date}</p>
                       </div>
-                      <Badge variant="success">
-                        <CheckCircle2 className="w-3 h-3 mr-1" />
-                        Completed
+                      <Badge variant="success" className="text-[10px] sm:text-xs">
+                        <CheckCircle2 className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-0.5 sm:mr-1" />
+                        Done
                       </Badge>
                     </motion.div>
                   ))}

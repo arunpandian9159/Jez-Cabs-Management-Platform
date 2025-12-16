@@ -41,13 +41,13 @@ export function AddContractModal({
   const getContractTypeIcon = (type: string) => {
     switch (type) {
       case 'driver':
-        return <User className="w-6 h-6 text-white" />;
+        return <User className="w-5 h-5 sm:w-6 sm:h-6 text-white" />;
       case 'platform':
-        return <Handshake className="w-6 h-6 text-white" />;
+        return <Handshake className="w-5 h-5 sm:w-6 sm:h-6 text-white" />;
       case 'insurance':
-        return <Shield className="w-6 h-6 text-white" />;
+        return <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-white" />;
       default:
-        return <FileText className="w-6 h-6 text-white" />;
+        return <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-white" />;
     }
   };
 
@@ -73,16 +73,16 @@ export function AddContractModal({
       description="Set up a new agreement with partners"
       size="md"
     >
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         {/* Enhanced Header */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-4 pb-4 border-b border-gray-100"
+          className="flex items-center gap-3 sm:gap-4 pb-3 sm:pb-4 border-b border-gray-100"
         >
-          <div className="relative">
+          <div className="relative flex-shrink-0">
             <motion.div
-              className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${getContractTypeGradient(contract.type)} flex items-center justify-center shadow-lg`}
+              className={`w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-gradient-to-br ${getContractTypeGradient(contract.type)} flex items-center justify-center shadow-lg`}
               animate={{
                 boxShadow: contract.type === 'driver'
                   ? '0 10px 25px -5px rgba(99, 102, 241, 0.4)'
@@ -97,14 +97,14 @@ export function AddContractModal({
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2 }}
-              className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-br from-accent-400 to-accent-500 rounded-full flex items-center justify-center"
+              className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-gradient-to-br from-accent-400 to-accent-500 rounded-full flex items-center justify-center"
             >
-              <Sparkles className="w-3 h-3 text-white" />
+              <Sparkles className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" />
             </motion.div>
           </div>
-          <div>
-            <h2 className="text-xl font-bold text-gray-900">Create New Contract</h2>
-            <p className="text-sm text-gray-500">Set up a new agreement with partners</p>
+          <div className="min-w-0">
+            <h2 className="text-base sm:text-xl font-bold text-gray-900">New Contract</h2>
+            <p className="text-xs sm:text-sm text-gray-500 truncate">Set up a new agreement</p>
           </div>
         </motion.div>
 
@@ -115,12 +115,12 @@ export function AddContractModal({
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="flex items-center gap-3 p-4 bg-gradient-to-r from-error-50 to-error-100/50 border border-error-200 rounded-xl"
+              className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-gradient-to-r from-error-50 to-error-100/50 border border-error-200 rounded-xl"
             >
-              <div className="w-10 h-10 rounded-full bg-error-100 flex items-center justify-center flex-shrink-0">
-                <AlertCircle className="w-5 h-5 text-error-600" />
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-error-100 flex items-center justify-center flex-shrink-0">
+                <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-error-600" />
               </div>
-              <p className="text-error-700 text-sm font-medium">{createError}</p>
+              <p className="text-error-700 text-xs sm:text-sm font-medium">{createError}</p>
             </motion.div>
           )}
         </AnimatePresence>
@@ -131,8 +131,8 @@ export function AddContractModal({
           animate={{ opacity: 1 }}
           transition={{ delay: 0.1 }}
         >
-          <label className="block text-sm font-medium text-gray-700 mb-3">Contract Type *</label>
-          <div className="grid grid-cols-3 gap-3">
+          <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2 sm:mb-3">Type *</label>
+          <div className="grid grid-cols-3 gap-2 sm:gap-3">
             {[
               { value: 'driver', label: 'Driver', icon: User, color: 'primary' },
               { value: 'platform', label: 'Platform', icon: Handshake, color: 'accent' },
@@ -143,20 +143,20 @@ export function AddContractModal({
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => onFieldChange('type', item.value as 'driver' | 'platform' | 'insurance')}
-                className={`p-4 rounded-xl border-2 transition-all ${contract.type === item.value
+                className={`p-2 sm:p-4 rounded-xl border-2 transition-all ${contract.type === item.value
                   ? `border-${item.color}-500 bg-${item.color}-50`
                   : 'border-gray-200 hover:border-gray-300 bg-white'
                   }`}
               >
-                <div className={`w-10 h-10 mx-auto mb-2 rounded-xl bg-gradient-to-br ${item.color === 'primary'
+                <div className={`w-8 h-8 sm:w-10 sm:h-10 mx-auto mb-1 sm:mb-2 rounded-xl bg-gradient-to-br ${item.color === 'primary'
                   ? 'from-primary-400 to-primary-500'
                   : item.color === 'accent'
                     ? 'from-accent-400 to-accent-500'
                     : 'from-success-400 to-success-500'
                   } flex items-center justify-center`}>
-                  <item.icon className="w-5 h-5 text-white" />
+                  <item.icon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                 </div>
-                <p className={`text-sm font-medium ${contract.type === item.value ? 'text-gray-900' : 'text-gray-600'
+                <p className={`text-[10px] sm:text-sm font-medium ${contract.type === item.value ? 'text-gray-900' : 'text-gray-600'
                   }`}>{item.label}</p>
               </motion.button>
             ))}
@@ -168,15 +168,15 @@ export function AddContractModal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="space-y-4"
+          className="space-y-3 sm:space-y-4"
         >
-          <div className="flex items-center gap-2 mb-3">
-            <FileText className="w-4 h-4 text-primary-600" />
-            <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Contract Details</h3>
+          <div className="flex items-center gap-2 mb-2 sm:mb-3">
+            <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary-600" />
+            <h3 className="text-xs sm:text-sm font-semibold text-gray-700 uppercase tracking-wide">Details</h3>
           </div>
 
           <Input
-            label="Contract Title *"
+            label="Title *"
             placeholder="e.g., Driver Employment Agreement"
             value={contract.title}
             onChange={(e) => onFieldChange('title', e.target.value)}
@@ -195,22 +195,22 @@ export function AddContractModal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="space-y-4 pt-4 border-t border-gray-100"
+          className="space-y-3 sm:space-y-4 pt-3 sm:pt-4 border-t border-gray-100"
         >
-          <div className="flex items-center gap-2 mb-3">
-            <Calendar className="w-4 h-4 text-accent-600" />
-            <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Duration</h3>
+          <div className="flex items-center gap-2 mb-2 sm:mb-3">
+            <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-accent-600" />
+            <h3 className="text-xs sm:text-sm font-semibold text-gray-700 uppercase tracking-wide">Duration</h3>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 p-4 bg-gradient-to-br from-gray-50 to-gray-100/50 rounded-xl">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 p-3 sm:p-4 bg-gradient-to-br from-gray-50 to-gray-100/50 rounded-xl">
             <Input
-              label="Start Date *"
+              label="Start *"
               type="date"
               value={contract.startDate}
               onChange={(e) => onFieldChange('startDate', e.target.value)}
             />
             <Input
-              label="End Date *"
+              label="End *"
               type="date"
               value={contract.endDate}
               onChange={(e) => onFieldChange('endDate', e.target.value)}
@@ -226,17 +226,17 @@ export function AddContractModal({
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="space-y-4 pt-4 border-t border-gray-100"
+              className="space-y-3 sm:space-y-4 pt-3 sm:pt-4 border-t border-gray-100"
             >
-              <div className="flex items-center gap-2 mb-3">
-                <Target className="w-4 h-4 text-success-600" />
-                <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Driver Terms</h3>
+              <div className="flex items-center gap-2 mb-2 sm:mb-3">
+                <Target className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-success-600" />
+                <h3 className="text-xs sm:text-sm font-semibold text-gray-700 uppercase tracking-wide">Driver Terms</h3>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 p-4 bg-gradient-to-br from-primary-50 to-primary-100/30 rounded-xl border border-primary-100">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4 p-3 sm:p-4 bg-gradient-to-br from-primary-50 to-primary-100/30 rounded-xl border border-primary-100">
                 <div className="relative">
                   <Input
-                    label="Commission Rate (%)"
+                    label="Commission (%)"
                     type="number"
                     placeholder="15"
                     value={contract.commission?.toString() || ''}
@@ -244,11 +244,11 @@ export function AddContractModal({
                       onFieldChange('commission', parseInt(e.target.value) || 0)
                     }
                   />
-                  <Percent className="absolute right-3 top-9 w-4 h-4 text-primary-400" />
+                  <Percent className="absolute right-3 top-8 sm:top-9 w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary-400" />
                 </div>
                 <div className="relative">
                   <Input
-                    label="Monthly Target (₹)"
+                    label="Target (₹)"
                     type="number"
                     placeholder="50000"
                     value={contract.monthlyTarget?.toString() || ''}
@@ -256,7 +256,7 @@ export function AddContractModal({
                       onFieldChange('monthlyTarget', parseInt(e.target.value) || 0)
                     }
                   />
-                  <Target className="absolute right-3 top-9 w-4 h-4 text-primary-400" />
+                  <Target className="absolute right-3 top-8 sm:top-9 w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary-400" />
                 </div>
               </div>
             </motion.div>
@@ -268,17 +268,17 @@ export function AddContractModal({
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="space-y-4 pt-4 border-t border-gray-100"
+              className="space-y-3 sm:space-y-4 pt-3 sm:pt-4 border-t border-gray-100"
             >
-              <div className="flex items-center gap-2 mb-3">
-                <Shield className="w-4 h-4 text-success-600" />
-                <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Insurance Terms</h3>
+              <div className="flex items-center gap-2 mb-2 sm:mb-3">
+                <Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-success-600" />
+                <h3 className="text-xs sm:text-sm font-semibold text-gray-700 uppercase tracking-wide">Insurance</h3>
               </div>
 
-              <div className="p-4 bg-gradient-to-br from-success-50 to-success-100/30 rounded-xl border border-success-100">
+              <div className="p-3 sm:p-4 bg-gradient-to-br from-success-50 to-success-100/30 rounded-xl border border-success-100">
                 <div className="relative">
                   <Input
-                    label="Premium Amount (₹)"
+                    label="Premium (₹)"
                     type="number"
                     placeholder="25000"
                     value={contract.premium?.toString() || ''}
@@ -286,7 +286,7 @@ export function AddContractModal({
                       onFieldChange('premium', parseInt(e.target.value) || 0)
                     }
                   />
-                  <IndianRupee className="absolute right-3 top-9 w-4 h-4 text-success-400" />
+                  <IndianRupee className="absolute right-3 top-8 sm:top-9 w-3.5 h-3.5 sm:w-4 sm:h-4 text-success-400" />
                 </div>
               </div>
             </motion.div>
@@ -298,14 +298,14 @@ export function AddContractModal({
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="flex gap-3 pt-4 border-t border-gray-100"
+          className="flex gap-2 sm:gap-3 pt-3 sm:pt-4 border-t border-gray-100"
         >
           <Button
             variant="outline"
             fullWidth
             onClick={() => onOpenChange(false)}
             disabled={isCreating}
-            className="hover:bg-gray-50"
+            className="hover:bg-gray-50 text-xs sm:text-sm"
           >
             Cancel
           </Button>
@@ -314,13 +314,14 @@ export function AddContractModal({
             onClick={onSubmit}
             loading={isCreating}
             disabled={isCreating}
-            className={`bg-gradient-to-r ${getContractTypeGradient(contract.type)} hover:opacity-90 shadow-lg`}
+            className={`bg-gradient-to-r ${getContractTypeGradient(contract.type)} hover:opacity-90 shadow-lg text-xs sm:text-sm`}
           >
-            <FileText className="w-4 h-4 mr-2" />
-            Create Contract
+            <FileText className="w-4 h-4 mr-1 sm:mr-2" />
+            Create
           </Button>
         </motion.div>
       </div>
     </Modal>
   );
 }
+
