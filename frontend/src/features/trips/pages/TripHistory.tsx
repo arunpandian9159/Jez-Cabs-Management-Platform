@@ -113,7 +113,7 @@ export function TripHistory() {
           }}
         />
 
-        <div className="relative p-8">
+        <div className="relative p-4 sm:p-6 md:p-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <div className="flex items-center gap-2 mb-2">
@@ -121,25 +121,26 @@ export function TripHistory() {
                   animate={{ rotate: [0, 10, -10, 0] }}
                   transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
                 >
-                  <Sparkles className="w-5 h-5 text-emerald-200" />
+                  <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-200" />
                 </motion.div>
-                <span className="text-white/80 text-sm font-medium">
+                <span className="text-white/80 text-xs sm:text-sm font-medium">
                   Your Journey Log
                 </span>
               </div>
-              <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-1 sm:mb-2">
                 Trip History
               </h1>
-              <p className="text-white/70 text-lg">
+              <p className="text-white/70 text-sm sm:text-base md:text-lg">
                 View and manage all your past trips
               </p>
             </div>
             <Button
               variant="secondary"
               leftIcon={<Download className="w-4 h-4" />}
-              className="bg-white/10 hover:bg-white/20 text-white border-white/20 backdrop-blur-sm"
+              className="bg-white/10 hover:bg-white/20 text-white border-white/20 backdrop-blur-sm text-xs sm:text-sm"
             >
-              Export Report
+              <span className="hidden sm:inline">Export Report</span>
+              <span className="sm:hidden">Export</span>
             </Button>
           </div>
         </div>
@@ -155,23 +156,23 @@ export function TripHistory() {
             transition={{ delay: 0.1 }}
             className="relative group"
           >
-            <div className="bg-white rounded-2xl p-5 border-l-4 border-emerald-400 shadow-sm hover:shadow-md transition-all duration-300">
-              <div className="flex items-start justify-between mb-3">
+            <div className="bg-white rounded-2xl p-3 sm:p-4 md:p-5 border-l-4 border-emerald-400 shadow-sm hover:shadow-md transition-all duration-300">
+              <div className="flex items-start justify-between mb-2 sm:mb-3">
                 <div>
-                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+                  <p className="text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wide mb-1 sm:mb-2">
                     Total Trips
                   </p>
-                  <p className="text-3xl font-bold text-gray-900">
+                  <p className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
                     {completedCount}
                   </p>
                 </div>
-                <div className="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center">
-                  <Route className="w-6 h-6 text-emerald-500" />
+                <div className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-xl bg-emerald-50 flex items-center justify-center">
+                  <Route className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-emerald-500" />
                 </div>
               </div>
-              <div className="flex items-center gap-1 text-sm">
-                <CheckCircle className="w-4 h-4 text-emerald-500" />
-                <span className="text-gray-500 text-xs">Completed rides</span>
+              <div className="flex items-center gap-1 text-xs sm:text-sm">
+                <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-emerald-500" />
+                <span className="text-gray-500 text-[10px] sm:text-xs">Completed rides</span>
               </div>
             </div>
           </motion.div>
@@ -260,24 +261,26 @@ export function TripHistory() {
             </div>
           </motion.div>
         </div>
-      </motion.div>
+      </motion.div >
 
       {/* Tabs Section */}
-      <motion.div variants={itemVariants}>
+      < motion.div variants={itemVariants} >
         <Card className="bg-white/80 backdrop-blur-sm border-gray-200/50 shadow-sm overflow-hidden">
           <TabsRoot value={activeTab} onValueChange={setActiveTab}>
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 border-b border-gray-100 bg-gray-50/50">
-              <TabsList className="bg-gray-100/80">
-                <TabsTrigger value="all" className="data-[state=active]:bg-white">
-                  All ({totalCount})
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 p-3 sm:p-4 md:p-5 border-b border-gray-100 bg-gray-50/50">
+              <TabsList className="bg-gray-100/80 flex-wrap">
+                <TabsTrigger value="all" className="data-[state=active]:bg-white text-[10px] sm:text-xs md:text-sm px-2 sm:px-3">
+                  All<span className="hidden sm:inline"> ({totalCount})</span>
                 </TabsTrigger>
-                <TabsTrigger value="completed" className="data-[state=active]:bg-white">
-                  <CheckCircle className="w-4 h-4 mr-1" />
-                  Completed ({completedCount})
+                <TabsTrigger value="completed" className="data-[state=active]:bg-white text-[10px] sm:text-xs md:text-sm px-2 sm:px-3">
+                  <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-1" />
+                  <span className="hidden sm:inline">Completed ({completedCount})</span>
+                  <span className="sm:hidden">{completedCount}</span>
                 </TabsTrigger>
-                <TabsTrigger value="cancelled" className="data-[state=active]:bg-white">
-                  <XCircle className="w-4 h-4 mr-1" />
-                  Cancelled ({cancelledCount})
+                <TabsTrigger value="cancelled" className="data-[state=active]:bg-white text-[10px] sm:text-xs md:text-sm px-2 sm:px-3">
+                  <XCircle className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-1" />
+                  <span className="hidden sm:inline">Cancelled ({cancelledCount})</span>
+                  <span className="sm:hidden">{cancelledCount}</span>
                 </TabsTrigger>
               </TabsList>
               <Select

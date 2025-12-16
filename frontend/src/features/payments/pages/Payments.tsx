@@ -113,8 +113,8 @@ export function Payments() {
           }}
         />
 
-        <div className="relative p-8">
-          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+        <div className="relative p-4 sm:p-6 md:p-8">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 sm:gap-6">
             {/* Left side - Title */}
             <div>
               <div className="flex items-center gap-2 mb-2">
@@ -122,16 +122,16 @@ export function Payments() {
                   animate={{ rotate: [0, 10, -10, 0] }}
                   transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
                 >
-                  <Sparkles className="w-5 h-5 text-violet-200" />
+                  <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-violet-200" />
                 </motion.div>
-                <span className="text-white/80 text-sm font-medium">
+                <span className="text-white/80 text-xs sm:text-sm font-medium">
                   Your Wallet
                 </span>
               </div>
-              <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-1 sm:mb-2">
                 Payments & Wallet
               </h1>
-              <p className="text-white/70 text-lg">
+              <p className="text-white/70 text-sm sm:text-base md:text-lg">
                 Manage your payments and transactions
               </p>
             </div>
@@ -143,37 +143,38 @@ export function Payments() {
               transition={{ delay: 0.3 }}
               className="lg:flex-shrink-0"
             >
-              <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 min-w-[320px]">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
-                      <Wallet className="w-6 h-6 text-white" />
+              <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 border border-white/20 min-w-0 sm:min-w-[280px] md:min-w-[320px]">
+                <div className="flex items-center justify-between mb-3 sm:mb-4">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-white/20 flex items-center justify-center">
+                      <Wallet className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                     </div>
                     <div>
-                      <p className="text-white/70 text-sm">Available Balance</p>
-                      <p className="text-3xl font-bold text-white">
+                      <p className="text-white/70 text-xs sm:text-sm">Available Balance</p>
+                      <p className="text-xl sm:text-2xl md:text-3xl font-bold text-white">
                         {formatCurrency(walletBalance)}
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-emerald-500/20 text-emerald-200 text-xs font-medium">
-                    <TrendingUp className="w-3 h-3" />
+                  <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-emerald-500/20 text-emerald-200 text-[10px] sm:text-xs font-medium">
+                    <TrendingUp className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                     +12%
                   </div>
                 </div>
-                <div className="flex gap-3">
+                <div className="flex gap-2 sm:gap-3">
                   <Button
                     size="sm"
-                    className="bg-white text-violet-600 hover:bg-white/90 flex-1"
-                    leftIcon={<Plus className="w-4 h-4" />}
+                    className="bg-white text-violet-600 hover:bg-white/90 flex-1 text-xs sm:text-sm"
+                    leftIcon={<Plus className="w-3 h-3 sm:w-4 sm:h-4" />}
                   >
-                    Add Money
+                    <span className="hidden sm:inline">Add Money</span>
+                    <span className="sm:hidden">Add</span>
                   </Button>
                   <Button
                     size="sm"
                     variant="outline"
-                    className="border-white/30 text-white hover:bg-white/10 flex-1"
-                    leftIcon={<ArrowUpRight className="w-4 h-4" />}
+                    className="border-white/30 text-white hover:bg-white/10 flex-1 text-xs sm:text-sm"
+                    leftIcon={<ArrowUpRight className="w-3 h-3 sm:w-4 sm:h-4" />}
                   >
                     Withdraw
                   </Button>
@@ -194,24 +195,24 @@ export function Payments() {
             transition={{ delay: 0.1 }}
             className="relative group"
           >
-            <div className="bg-white rounded-2xl p-5 border-l-4 border-warning-400 shadow-sm hover:shadow-md transition-all duration-300">
-              <div className="flex items-start justify-between mb-3">
+            <div className="bg-white rounded-2xl p-3 sm:p-4 md:p-5 border-l-4 border-warning-400 shadow-sm hover:shadow-md transition-all duration-300">
+              <div className="flex items-start justify-between mb-2 sm:mb-3">
                 <div>
-                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+                  <p className="text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wide mb-1 sm:mb-2">
                     Pending
                   </p>
-                  <p className="text-2xl font-bold text-gray-900">
+                  <p className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">
                     {formatCurrency(
                       pendingTransactions.reduce((acc, tx) => acc + tx.amount, 0)
                     )}
                   </p>
                 </div>
-                <div className="w-10 h-10 rounded-xl bg-warning-50 flex items-center justify-center">
-                  <Clock className="w-5 h-5 text-warning-500" />
+                <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-xl bg-warning-50 flex items-center justify-center">
+                  <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-warning-500" />
                 </div>
               </div>
-              <p className="text-xs text-gray-500">
-                {pendingTransactions.length} pending transaction(s)
+              <p className="text-[10px] sm:text-xs text-gray-500">
+                {pendingTransactions.length} pending
               </p>
             </div>
           </motion.div>
@@ -301,24 +302,26 @@ export function Payments() {
       <motion.div variants={itemVariants}>
         <Card className="bg-white/80 backdrop-blur-sm border-gray-200/50 shadow-sm overflow-hidden">
           <TabsRoot value={activeTab} onValueChange={setActiveTab}>
-            <div className="flex items-center justify-between p-5 border-b border-gray-100 bg-gray-50/50">
-              <TabsList className="bg-gray-100/80">
-                <TabsTrigger value="transactions" className="data-[state=active]:bg-white">
-                  <Zap className="w-4 h-4 mr-2" />
-                  Transactions
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 p-3 sm:p-4 md:p-5 border-b border-gray-100 bg-gray-50/50">
+              <TabsList className="bg-gray-100/80 flex-wrap">
+                <TabsTrigger value="transactions" className="data-[state=active]:bg-white text-[10px] sm:text-xs md:text-sm px-2 sm:px-3">
+                  <Zap className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Transactions</span>
                 </TabsTrigger>
-                <TabsTrigger value="methods" className="data-[state=active]:bg-white">
-                  <CreditCard className="w-4 h-4 mr-2" />
-                  Payment Methods
+                <TabsTrigger value="methods" className="data-[state=active]:bg-white text-[10px] sm:text-xs md:text-sm px-2 sm:px-3">
+                  <CreditCard className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Payment Methods</span>
+                  <span className="sm:hidden">Methods</span>
                 </TabsTrigger>
               </TabsList>
               <Button
                 variant="outline"
                 size="sm"
-                leftIcon={<Download className="w-4 h-4" />}
-                className="border-violet-200 text-violet-600 hover:border-violet-300 hover:bg-violet-50"
+                leftIcon={<Download className="w-3 h-3 sm:w-4 sm:h-4" />}
+                className="border-violet-200 text-violet-600 hover:border-violet-300 hover:bg-violet-50 text-[10px] sm:text-xs md:text-sm"
               >
-                Download Statement
+                <span className="hidden sm:inline">Download Statement</span>
+                <span className="sm:hidden">Download</span>
               </Button>
             </div>
 

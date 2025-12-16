@@ -76,7 +76,7 @@ export function useDisputes() {
       setTripOptions(
         trips.map((t) => ({
           value: t.id,
-          label: `${t.pickup_address} → ${t.destination_address} (${new Date(t.created_at).toLocaleDateString()})`,
+          label: `${t.pickup_address} → ${t.dropoff_address} (${new Date(t.created_at).toLocaleDateString()})`,
         }))
       );
     } catch (error) {

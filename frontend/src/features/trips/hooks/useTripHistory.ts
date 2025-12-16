@@ -41,20 +41,20 @@ export function useTripHistory() {
         id: trip.id,
         type: trip.scheduled_at ? 'planned' : 'instant',
         pickup: trip.pickup_address,
-        destination: trip.destination_address,
+        destination: trip.dropoff_address,
         date: trip.created_at,
         driver: trip.driver
           ? {
-              name: `${trip.driver.first_name} ${trip.driver.last_name}`,
-              rating: trip.driver.rating || 4.5,
-            }
+            name: `${trip.driver.first_name} ${trip.driver.last_name}`,
+            rating: trip.driver.rating || 4.5,
+          }
           : null,
         cab: trip.cab
           ? {
-              make: trip.cab.make,
-              model: trip.cab.model,
-              registrationNumber: trip.cab.registration_number,
-            }
+            make: trip.cab.make,
+            model: trip.cab.model,
+            registrationNumber: trip.cab.registration_number,
+          }
           : null,
         status: trip.status,
         fare: Number(trip.actual_fare) || Number(trip.estimated_fare) || 0,

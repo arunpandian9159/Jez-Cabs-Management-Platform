@@ -172,7 +172,7 @@ export function CustomerProfile() {
                     (trip) => ({
                         id: trip.id,
                         pickup: trip.pickup_address,
-                        destination: trip.destination_address,
+                        destination: trip.dropoff_address,
                         date: trip.created_at,
                         fare: Number(trip.actual_fare) || Number(trip.estimated_fare) || 0,
                         status: trip.status,
@@ -305,28 +305,28 @@ export function CustomerProfile() {
                     }}
                 />
 
-                <div className="relative p-8 flex items-center justify-between">
+                <div className="relative p-4 sm:p-6 md:p-8 flex items-center justify-between">
                     <div className="flex-1">
                         <motion.div
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.2 }}
                         >
-                            <div className="flex items-center gap-2 mb-2">
+                            <div className="flex items-center gap-2 mb-1 sm:mb-2">
                                 <motion.div
                                     animate={{ rotate: [0, 10, -10, 0] }}
                                     transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
                                 >
-                                    <Sparkles className="w-5 h-5 text-warning-300" />
+                                    <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-warning-300" />
                                 </motion.div>
-                                <span className="text-white/80 text-sm font-medium">
+                                <span className="text-white/80 text-xs sm:text-sm font-medium">
                                     Welcome to Jez Cabs
                                 </span>
                             </div>
-                            <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
+                            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-1 sm:mb-2">
                                 {getGreeting()}, {user?.firstName}! 👋
                             </h1>
-                            <p className="text-white/70 text-lg">
+                            <p className="text-white/70 text-sm sm:text-base md:text-lg">
                                 Where would you like to go today?
                             </p>
                         </motion.div>
@@ -416,23 +416,23 @@ export function CustomerProfile() {
                         transition={{ delay: 0.1 }}
                         className="relative group"
                     >
-                        <div className="bg-white rounded-2xl p-5 border-l-4 border-blue-400 shadow-sm hover:shadow-md transition-all duration-300">
-                            <div className="flex items-start justify-between mb-3">
+                        <div className="bg-white rounded-2xl p-3 sm:p-4 md:p-5 border-l-4 border-blue-400 shadow-sm hover:shadow-md transition-all duration-300">
+                            <div className="flex items-start justify-between mb-2 sm:mb-3">
                                 <div>
-                                    <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+                                    <p className="text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wide mb-1 sm:mb-2">
                                         Total Trips
                                     </p>
-                                    <p className="text-3xl font-bold text-gray-900">
+                                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
                                         {stats.totalTrips}
                                     </p>
                                 </div>
-                                <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center">
-                                    <Car className="w-6 h-6 text-blue-500" />
+                                <div className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-xl bg-blue-50 flex items-center justify-center">
+                                    <Car className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-blue-500" />
                                 </div>
                             </div>
-                            <div className="flex items-center gap-1 text-sm">
-                                <Route className="w-4 h-4 text-blue-500" />
-                                <span className="text-gray-500 text-xs">All time bookings</span>
+                            <div className="flex items-center gap-1 text-xs sm:text-sm">
+                                <Route className="w-3 h-3 sm:w-4 sm:h-4 text-blue-500" />
+                                <span className="text-gray-500 text-[10px] sm:text-xs">All time bookings</span>
                             </div>
                         </div>
                     </motion.div>
@@ -556,10 +556,10 @@ export function CustomerProfile() {
                                     }}
                                 >
                                     {/* Icon container */}
-                                    <div className="relative mb-4">
+                                    <div className="relative mb-3 sm:mb-4">
                                         <div
                                             className={cn(
-                                                'w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300',
+                                                'w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center transition-all duration-300',
                                                 'bg-gradient-to-br',
                                                 action.bgGradient,
                                                 'group-hover:scale-110 group-hover:rotate-3'
@@ -567,7 +567,7 @@ export function CustomerProfile() {
                                         >
                                             <action.icon
                                                 className={cn(
-                                                    'w-8 h-8 transition-colors',
+                                                    'w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 transition-colors',
                                                     action.iconColor
                                                 )}
                                             />
@@ -576,10 +576,10 @@ export function CustomerProfile() {
 
                                     {/* Content */}
                                     <div className="relative">
-                                        <h3 className="font-bold text-gray-900 mb-2 text-lg group-hover:text-gray-900">
+                                        <h3 className="font-bold text-gray-900 mb-1 sm:mb-2 text-sm sm:text-base md:text-lg group-hover:text-gray-900">
                                             {action.title}
                                         </h3>
-                                        <p className="text-sm text-gray-500 leading-relaxed group-hover:text-gray-600">
+                                        <p className="text-xs sm:text-sm text-gray-500 leading-relaxed group-hover:text-gray-600 hidden sm:block">
                                             {action.description}
                                         </p>
                                     </div>
