@@ -31,7 +31,6 @@ import {
   formatCurrency,
   formatDate,
   formatTime,
-  formatDuration,
   cn,
 } from '@/shared/utils';
 import { useTripHistory, type TripDisplay } from '../hooks/useTripHistory';
@@ -148,7 +147,7 @@ export function TripHistory() {
 
       {/* Stats Cards */}
       <motion.div variants={itemVariants}>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {/* Total Trips */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -156,9 +155,9 @@ export function TripHistory() {
             transition={{ delay: 0.1 }}
             className="relative group"
           >
-            <div className="bg-white rounded-2xl p-3 sm:p-4 md:p-5 border-l-4 border-emerald-400 shadow-sm hover:shadow-md transition-all duration-300">
+            <div className="bg-white rounded-2xl p-3 sm:p-4 md:p-5 border-l-4 border-emerald-400 shadow-sm hover:shadow-md transition-all duration-300 h-full">
               <div className="flex items-start justify-between mb-2 sm:mb-3">
-                <div>
+                <div className="min-w-0 flex-1">
                   <p className="text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wide mb-1 sm:mb-2">
                     Total Trips
                   </p>
@@ -166,13 +165,13 @@ export function TripHistory() {
                     {completedCount}
                   </p>
                 </div>
-                <div className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-xl bg-emerald-50 flex items-center justify-center">
+                <div className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-xl bg-emerald-50 flex items-center justify-center flex-shrink-0">
                   <Route className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-emerald-500" />
                 </div>
               </div>
               <div className="flex items-center gap-1 text-xs sm:text-sm">
                 <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-emerald-500" />
-                <span className="text-gray-500 text-[10px] sm:text-xs">Completed rides</span>
+                <span className="text-gray-500 text-[10px] sm:text-xs">Completed</span>
               </div>
             </div>
           </motion.div>
@@ -184,23 +183,23 @@ export function TripHistory() {
             transition={{ delay: 0.2 }}
             className="relative group"
           >
-            <div className="bg-white rounded-2xl p-5 border-l-4 border-purple-400 shadow-sm hover:shadow-md transition-all duration-300">
-              <div className="flex items-start justify-between mb-3">
-                <div>
-                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+            <div className="bg-white rounded-2xl p-3 sm:p-4 md:p-5 border-l-4 border-purple-400 shadow-sm hover:shadow-md transition-all duration-300 h-full">
+              <div className="flex items-start justify-between mb-2 sm:mb-3">
+                <div className="min-w-0 flex-1">
+                  <p className="text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wide mb-1 sm:mb-2">
                     Total Spent
                   </p>
-                  <p className="text-3xl font-bold text-gray-900">
+                  <p className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
                     {formatCurrency(totalSpent)}
                   </p>
                 </div>
-                <div className="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center">
-                  <Wallet className="w-6 h-6 text-purple-500" />
+                <div className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-xl bg-purple-50 flex items-center justify-center flex-shrink-0">
+                  <Wallet className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-purple-500" />
                 </div>
               </div>
-              <div className="flex items-center gap-1 text-sm">
-                <TrendingUp className="w-4 h-4 text-purple-500" />
-                <span className="text-gray-500 text-xs">All time spending</span>
+              <div className="flex items-center gap-1 text-xs sm:text-sm">
+                <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 text-purple-500" />
+                <span className="text-gray-500 text-[10px] sm:text-xs">All time</span>
               </div>
             </div>
           </motion.div>
@@ -212,23 +211,23 @@ export function TripHistory() {
             transition={{ delay: 0.3 }}
             className="relative group"
           >
-            <div className="bg-white rounded-2xl p-5 border-l-4 border-blue-400 shadow-sm hover:shadow-md transition-all duration-300">
-              <div className="flex items-start justify-between mb-3">
-                <div>
-                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
-                    Distance Traveled
+            <div className="bg-white rounded-2xl p-3 sm:p-4 md:p-5 border-l-4 border-blue-400 shadow-sm hover:shadow-md transition-all duration-300 h-full">
+              <div className="flex items-start justify-between mb-2 sm:mb-3">
+                <div className="min-w-0 flex-1">
+                  <p className="text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wide mb-1 sm:mb-2">
+                    Distance
                   </p>
-                  <p className="text-3xl font-bold text-gray-900">
+                  <p className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
                     {(totalDistance || 0).toFixed(0)} km
                   </p>
                 </div>
-                <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center">
-                  <Navigation className="w-6 h-6 text-blue-500" />
+                <div className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
+                  <Navigation className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-blue-500" />
                 </div>
               </div>
-              <div className="flex items-center gap-1 text-sm">
-                <MapPin className="w-4 h-4 text-blue-500" />
-                <span className="text-gray-500 text-xs">Total kilometers</span>
+              <div className="flex items-center gap-1 text-xs sm:text-sm">
+                <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-blue-500" />
+                <span className="text-gray-500 text-[10px] sm:text-xs">Total km</span>
               </div>
             </div>
           </motion.div>
@@ -240,31 +239,31 @@ export function TripHistory() {
             transition={{ delay: 0.4 }}
             className="relative group"
           >
-            <div className="bg-white rounded-2xl p-5 border-l-4 border-orange-400 shadow-sm hover:shadow-md transition-all duration-300">
-              <div className="flex items-start justify-between mb-3">
-                <div>
-                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+            <div className="bg-white rounded-2xl p-3 sm:p-4 md:p-5 border-l-4 border-orange-400 shadow-sm hover:shadow-md transition-all duration-300 h-full">
+              <div className="flex items-start justify-between mb-2 sm:mb-3">
+                <div className="min-w-0 flex-1">
+                  <p className="text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wide mb-1 sm:mb-2">
                     Cancelled
                   </p>
-                  <p className="text-3xl font-bold text-gray-900">
+                  <p className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
                     {cancelledCount}
                   </p>
                 </div>
-                <div className="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center">
-                  <XCircle className="w-6 h-6 text-orange-500" />
+                <div className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-xl bg-orange-50 flex items-center justify-center flex-shrink-0">
+                  <XCircle className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-orange-500" />
                 </div>
               </div>
-              <div className="flex items-center gap-1 text-sm">
-                <Filter className="w-4 h-4 text-orange-500" />
-                <span className="text-gray-500 text-xs">Total cancellations</span>
+              <div className="flex items-center gap-1 text-xs sm:text-sm">
+                <Filter className="w-3 h-3 sm:w-4 sm:h-4 text-orange-500" />
+                <span className="text-gray-500 text-[10px] sm:text-xs">Cancellations</span>
               </div>
             </div>
           </motion.div>
         </div>
-      </motion.div >
+      </motion.div>
 
       {/* Tabs Section */}
-      < motion.div variants={itemVariants} >
+      <motion.div variants={itemVariants}>
         <Card className="bg-white/80 backdrop-blur-sm border-gray-200/50 shadow-sm overflow-hidden">
           <TabsRoot value={activeTab} onValueChange={setActiveTab}>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 p-3 sm:p-4 md:p-5 border-b border-gray-100 bg-gray-50/50">
@@ -345,9 +344,9 @@ function TripCard({ trip, index }: { trip: TripDisplay; index: number }) {
       transition={{ delay: index * 0.05 }}
       className="group"
     >
-      <div className="flex items-start gap-4 p-5 hover:bg-gray-50/80 transition-all duration-300 cursor-pointer">
-        {/* Status Icon */}
-        <div className="relative">
+      <div className="flex items-start gap-2 sm:gap-4 p-3 sm:p-5 hover:bg-gray-50/80 transition-all duration-300 cursor-pointer">
+        {/* Status Icon - Hidden on mobile */}
+        <div className="relative flex-shrink-0 hidden sm:block">
           <div
             className={cn(
               'w-14 h-14 rounded-2xl flex items-center justify-center transition-transform duration-300 group-hover:scale-105',
@@ -379,9 +378,30 @@ function TripCard({ trip, index }: { trip: TripDisplay; index: number }) {
 
         {/* Trip Details */}
         <div className="flex-1 min-w-0">
-          <div className="flex items-start justify-between gap-4 mb-2">
+          <div className="flex items-start justify-between gap-2 sm:gap-4 mb-1 sm:mb-2">
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1 flex-wrap">
+              {/* Mobile: Stack locations vertically with status dot */}
+              <div className="sm:hidden mb-1">
+                <div className="flex items-center gap-1.5 mb-0.5">
+                  <div
+                    className={cn(
+                      'w-2 h-2 rounded-full flex-shrink-0',
+                      isCompleted ? 'bg-emerald-500' : 'bg-red-500'
+                    )}
+                  />
+                  <p className="text-xs font-semibold text-gray-900 truncate">
+                    {trip.pickup}
+                  </p>
+                </div>
+                <div className="flex items-center gap-1 text-gray-400 ml-3.5">
+                  <ArrowRight className="w-3 h-3" />
+                  <p className="text-xs font-semibold text-gray-900 truncate">
+                    {trip.destination}
+                  </p>
+                </div>
+              </div>
+              {/* Desktop: Horizontal layout */}
+              <div className="hidden sm:flex items-center gap-2 mb-1 flex-wrap">
                 <span className="font-semibold text-gray-900 truncate">
                   {trip.pickup}
                 </span>
@@ -390,22 +410,23 @@ function TripCard({ trip, index }: { trip: TripDisplay; index: number }) {
                   {trip.destination}
                 </span>
               </div>
-              <div className="flex items-center gap-3 text-sm text-gray-500">
+              <div className="flex items-center gap-2 sm:gap-3 text-[10px] sm:text-sm text-gray-500">
                 <span className="flex items-center gap-1">
-                  <Calendar className="w-3.5 h-3.5" />
+                  <Calendar className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                   {formatDate(trip.date)}
                 </span>
                 <span className="flex items-center gap-1">
-                  <Clock className="w-3.5 h-3.5" />
+                  <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                   {formatTime(trip.date)}
                 </span>
               </div>
             </div>
-            <div className="flex flex-col items-end gap-1">
+            <div className="flex flex-col items-end gap-1 flex-shrink-0">
               <StatusBadge status={trip.status} />
               <Badge
                 variant={trip.type === 'instant' ? 'primary' : 'info'}
                 size="sm"
+                className="text-[10px] sm:text-xs"
               >
                 {trip.type === 'instant' ? 'Instant' : 'Planned'}
               </Badge>
@@ -414,36 +435,34 @@ function TripCard({ trip, index }: { trip: TripDisplay; index: number }) {
 
           {/* Completed Trip Details */}
           {isCompleted && trip.driver && (
-            <div className="flex items-center gap-4 text-sm bg-gray-50 rounded-xl p-3 mt-3">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-100 to-accent-100 flex items-center justify-center">
-                  <span className="text-xs font-semibold text-primary-600">
+            <div className="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm bg-gray-50 rounded-lg sm:rounded-xl p-2 sm:p-3 mt-2 sm:mt-3 flex-wrap">
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-primary-100 to-accent-100 flex items-center justify-center">
+                  <span className="text-[10px] sm:text-xs font-semibold text-primary-600">
                     {trip.driver.name.charAt(0)}
                   </span>
                 </div>
-                <span className="text-gray-700 font-medium">{trip.driver.name}</span>
+                <span className="text-gray-700 font-medium text-xs sm:text-sm">{trip.driver.name}</span>
               </div>
-              <span className="w-1 h-1 rounded-full bg-gray-300" />
+              <span className="w-1 h-1 rounded-full bg-gray-300 hidden sm:block" />
               <span className="flex items-center gap-1">
-                <Star className="w-4 h-4 text-warning-500 fill-warning-500" />
-                <span className="font-medium">{trip.rating}</span>
+                <Star className="w-3 h-3 sm:w-4 sm:h-4 text-warning-500 fill-warning-500" />
+                <span className="font-medium text-xs sm:text-sm">{trip.rating}</span>
               </span>
-              <span className="w-1 h-1 rounded-full bg-gray-300" />
-              <span className="text-gray-600">{trip.distance} km</span>
-              <span className="w-1 h-1 rounded-full bg-gray-300" />
-              <span className="text-gray-600">{formatDuration(trip.duration)}</span>
+              <span className="w-1 h-1 rounded-full bg-gray-300 hidden sm:block" />
+              <span className="text-gray-600 text-xs sm:text-sm">{trip.distance} km</span>
             </div>
           )}
 
           {/* Cancelled Trip Details */}
           {trip.status === 'cancelled' && (
-            <div className="flex items-center gap-2 mt-3 p-3 bg-red-50 rounded-xl">
-              <XCircle className="w-4 h-4 text-red-500 flex-shrink-0" />
-              <span className="text-sm text-red-600">
+            <div className="flex items-center gap-1.5 sm:gap-2 mt-2 sm:mt-3 p-2 sm:p-3 bg-red-50 rounded-lg sm:rounded-xl">
+              <XCircle className="w-3 h-3 sm:w-4 sm:h-4 text-red-500 flex-shrink-0" />
+              <span className="text-[10px] sm:text-sm text-red-600 truncate">
                 {trip.cancellationReason}
                 {trip.refundAmount && (
-                  <span className="text-emerald-600 font-medium ml-2">
-                    (Refund: {formatCurrency(trip.refundAmount)})
+                  <span className="text-emerald-600 font-medium ml-1 sm:ml-2">
+                    (+{formatCurrency(trip.refundAmount)})
                   </span>
                 )}
               </span>
@@ -452,13 +471,13 @@ function TripCard({ trip, index }: { trip: TripDisplay; index: number }) {
         </div>
 
         {/* Fare */}
-        <div className="flex flex-col items-end gap-2">
+        <div className="flex flex-col items-end gap-1 sm:gap-2 flex-shrink-0">
           {isCompleted && (
-            <p className="text-xl font-bold text-gray-900">
+            <p className="text-sm sm:text-xl font-bold text-gray-900">
               {formatCurrency(trip.fare)}
             </p>
           )}
-          <ChevronRight className="w-5 h-5 text-gray-400 group-hover:translate-x-1 transition-transform duration-300" />
+          <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 group-hover:translate-x-1 transition-transform duration-300" />
         </div>
       </div>
     </motion.div>
