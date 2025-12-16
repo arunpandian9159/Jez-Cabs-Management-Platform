@@ -52,7 +52,7 @@ The platform supports real-time trip booking, vehicle rentals, community ride-sh
 
 ### 🔑 Vehicle Rentals
 
-- **Self-Drive & Chauffeur-Driven**: Flexible rental options
+- **Chauffeur-Driven**: Flexible rental options
 - **Browse Available Cabs**: Filter by type, availability, and features
 - **Active Rental Management**: Track ongoing rentals with daily rates
 
