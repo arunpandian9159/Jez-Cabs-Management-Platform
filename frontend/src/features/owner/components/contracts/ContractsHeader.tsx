@@ -18,12 +18,13 @@ export function ContractsHeader({ stats, onAddNew }: ContractsHeaderProps) {
     <>
       <OwnerPageHeader
         title="Contracts"
-        subtitle="Manage driver agreements and partnerships"
+        subtitle="Manage driver agreements"
         icon={FileText}
         iconColor="primary"
         action={
-          <Button leftIcon={<Plus className="w-5 h-5" />} onClick={onAddNew}>
-            New Contract
+          <Button leftIcon={<Plus className="w-4 h-4 sm:w-5 sm:h-5" />} onClick={onAddNew} className="text-xs sm:text-sm">
+            <span className="hidden sm:inline">New Contract</span>
+            <span className="sm:hidden">New</span>
           </Button>
         }
       />
@@ -33,17 +34,17 @@ export function ContractsHeader({ stats, onAddNew }: ContractsHeaderProps) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="grid grid-cols-3 gap-4"
+        className="grid grid-cols-3 gap-2 sm:gap-4"
       >
         <OwnerStatCard
-          label="Active Contracts"
+          label="Active"
           value={stats.activeContracts}
           icon={CheckCircle}
           color="success"
           delay={0.1}
         />
         <OwnerStatCard
-          label="Expiring Soon"
+          label="Expiring"
           value={stats.expiringContracts}
           icon={AlertCircle}
           color="warning"
@@ -60,3 +61,4 @@ export function ContractsHeader({ stats, onAddNew }: ContractsHeaderProps) {
     </>
   );
 }
+
