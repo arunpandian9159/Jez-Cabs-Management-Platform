@@ -1,7 +1,6 @@
 // Features barrel export - Import from specific features for tree-shaking
 export * as auth from './auth';
 export * as booking from './booking';
-export * as trips from './trips';
 export * as rentals from './rentals';
 export * as payments from './payments';
 export * as disputes from './disputes';

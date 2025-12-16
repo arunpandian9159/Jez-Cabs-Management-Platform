@@ -69,9 +69,10 @@ export function DriverStatCard({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ delay }}
             whileHover={{ scale: 1.02, y: -2 }}
+            className="h-full"
         >
-            <Card padding="md" className={`${colors.bg} border-transparent overflow-hidden relative min-h-[80px]`}>
-                <div className="flex items-center gap-3">
+            <Card padding="sm" className={`${colors.bg} border-transparent overflow-hidden relative h-full sm:p-4`}>
+                <div className="flex items-center gap-2 sm:gap-3">
                     {Icon && (
                         <motion.div
                             initial={{ rotate: -10, scale: 0.8 }}
@@ -82,13 +83,13 @@ export function DriverStatCard({
                             <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                         </motion.div>
                     )}
-                    <div className="flex-1">
-                        <p className="text-sm font-medium text-gray-600 mb-0.5">{label}</p>
-                        <div className="flex items-baseline gap-2">
-                            <p className={`text-xl sm:text-2xl font-bold ${colors.value}`}>{value}</p>
+                    <div className="flex-1 min-w-0">
+                        <p className="text-[10px] sm:text-sm font-medium text-gray-600 mb-0.5 truncate">{label}</p>
+                        <div className="flex items-baseline gap-1 sm:gap-2">
+                            <p className={`text-lg sm:text-xl md:text-2xl font-bold ${colors.value} truncate`}>{value}</p>
                             {trend && (
                                 <span
-                                    className={`flex items-center text-xs font-medium ${trend.direction === 'up' ? 'text-success-600' : 'text-error-600'
+                                    className={`flex items-center text-[10px] sm:text-xs font-medium flex-shrink-0 ${trend.direction === 'up' ? 'text-success-600' : 'text-error-600'
                                         }`}
                                 >
                                     {trend.direction === 'up' ? (

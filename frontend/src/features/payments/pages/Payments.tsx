@@ -28,7 +28,7 @@ import {
   TabsContent,
 } from '@/components/ui/Tabs';
 import { Modal } from '@/components/ui/Modal';
-import { formatCurrency, formatDate, formatTime, cn } from '@/shared/utils';
+import { formatCurrency, formatDate, cn } from '@/shared/utils';
 import {
   usePayments,
   type TransactionDisplay,
@@ -187,7 +187,7 @@ export function Payments() {
 
       {/* Quick Stats */}
       <motion.div variants={itemVariants}>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {/* Pending Amount */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -195,20 +195,20 @@ export function Payments() {
             transition={{ delay: 0.1 }}
             className="relative group"
           >
-            <div className="bg-white rounded-2xl p-3 sm:p-4 md:p-5 border-l-4 border-warning-400 shadow-sm hover:shadow-md transition-all duration-300">
+            <div className="bg-white rounded-2xl p-3 sm:p-4 md:p-5 border-l-4 border-warning-400 shadow-sm hover:shadow-md transition-all duration-300 h-full">
               <div className="flex items-start justify-between mb-2 sm:mb-3">
-                <div>
+                <div className="min-w-0 flex-1">
                   <p className="text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wide mb-1 sm:mb-2">
                     Pending
                   </p>
-                  <p className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">
+                  <p className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
                     {formatCurrency(
                       pendingTransactions.reduce((acc, tx) => acc + tx.amount, 0)
                     )}
                   </p>
                 </div>
-                <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-xl bg-warning-50 flex items-center justify-center">
-                  <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-warning-500" />
+                <div className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-xl bg-warning-50 flex items-center justify-center flex-shrink-0">
+                  <Clock className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-warning-500" />
                 </div>
               </div>
               <p className="text-[10px] sm:text-xs text-gray-500">
@@ -224,21 +224,21 @@ export function Payments() {
             transition={{ delay: 0.2 }}
             className="relative group"
           >
-            <div className="bg-white rounded-2xl p-5 border-l-4 border-violet-400 shadow-sm hover:shadow-md transition-all duration-300">
-              <div className="flex items-start justify-between mb-3">
-                <div>
-                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+            <div className="bg-white rounded-2xl p-3 sm:p-4 md:p-5 border-l-4 border-violet-400 shadow-sm hover:shadow-md transition-all duration-300 h-full">
+              <div className="flex items-start justify-between mb-2 sm:mb-3">
+                <div className="min-w-0 flex-1">
+                  <p className="text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wide mb-1 sm:mb-2">
                     This Month
                   </p>
-                  <p className="text-2xl font-bold text-gray-900">
+                  <p className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
                     {formatCurrency(paymentStats.thisMonth)}
                   </p>
                 </div>
-                <div className="w-10 h-10 rounded-xl bg-violet-50 flex items-center justify-center">
-                  <ArrowUpRight className="w-5 h-5 text-violet-500" />
+                <div className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-xl bg-violet-50 flex items-center justify-center flex-shrink-0">
+                  <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-violet-500" />
                 </div>
               </div>
-              <p className="text-xs text-gray-500">Total payments made</p>
+              <p className="text-[10px] sm:text-xs text-gray-500">Total payments</p>
             </div>
           </motion.div>
 
@@ -249,13 +249,13 @@ export function Payments() {
             transition={{ delay: 0.3 }}
             className="relative group"
           >
-            <div className="bg-white rounded-2xl p-5 border-l-4 border-emerald-400 shadow-sm hover:shadow-md transition-all duration-300">
-              <div className="flex items-start justify-between mb-3">
-                <div>
-                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+            <div className="bg-white rounded-2xl p-3 sm:p-4 md:p-5 border-l-4 border-emerald-400 shadow-sm hover:shadow-md transition-all duration-300 h-full">
+              <div className="flex items-start justify-between mb-2 sm:mb-3">
+                <div className="min-w-0 flex-1">
+                  <p className="text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wide mb-1 sm:mb-2">
                     Refunds
                   </p>
-                  <p className="text-2xl font-bold text-gray-900">
+                  <p className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
                     {formatCurrency(
                       completedTransactions
                         .filter((tx) => tx.type === 'refund')
@@ -263,11 +263,11 @@ export function Payments() {
                     )}
                   </p>
                 </div>
-                <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
-                  <ArrowDownLeft className="w-5 h-5 text-emerald-500" />
+                <div className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-xl bg-emerald-50 flex items-center justify-center flex-shrink-0">
+                  <ArrowDownLeft className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-emerald-500" />
                 </div>
               </div>
-              <p className="text-xs text-gray-500">Total refunds received</p>
+              <p className="text-[10px] sm:text-xs text-gray-500">Total refunds</p>
             </div>
           </motion.div>
 
@@ -278,21 +278,21 @@ export function Payments() {
             transition={{ delay: 0.4 }}
             className="relative group"
           >
-            <div className="bg-white rounded-2xl p-5 border-l-4 border-blue-400 shadow-sm hover:shadow-md transition-all duration-300">
-              <div className="flex items-start justify-between mb-3">
-                <div>
-                  <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
-                    Saved Methods
+            <div className="bg-white rounded-2xl p-3 sm:p-4 md:p-5 border-l-4 border-blue-400 shadow-sm hover:shadow-md transition-all duration-300 h-full">
+              <div className="flex items-start justify-between mb-2 sm:mb-3">
+                <div className="min-w-0 flex-1">
+                  <p className="text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wide mb-1 sm:mb-2">
+                    Methods
                   </p>
-                  <p className="text-2xl font-bold text-gray-900">
+                  <p className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
                     {paymentMethods.length}
                   </p>
                 </div>
-                <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
-                  <CreditCard className="w-5 h-5 text-blue-500" />
+                <div className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
+                  <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-blue-500" />
                 </div>
               </div>
-              <p className="text-xs text-gray-500">Cards and UPI linked</p>
+              <p className="text-[10px] sm:text-xs text-gray-500">Cards & UPI</p>
             </div>
           </motion.div>
         </div>
@@ -418,39 +418,39 @@ function PendingSection({
   transactions: TransactionDisplay[];
 }) {
   return (
-    <div className="p-5 border-b border-gray-100">
-      <div className="flex items-center gap-2 mb-4">
+    <div className="p-3 sm:p-5 border-b border-gray-100">
+      <div className="flex items-center gap-2 mb-3 sm:mb-4">
         <div className="w-2 h-2 rounded-full bg-warning-500 animate-pulse" />
-        <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
+        <h3 className="text-xs sm:text-sm font-semibold text-gray-700 uppercase tracking-wide">
           Pending Payments
         </h3>
       </div>
-      <div className="space-y-3">
+      <div className="space-y-2 sm:space-y-3">
         {transactions.map((tx) => (
           <motion.div
             key={tx.id}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="bg-gradient-to-r from-warning-50 to-orange-50 rounded-xl p-4 border border-warning-200"
+            className="bg-gradient-to-r from-warning-50 to-orange-50 rounded-xl p-3 sm:p-4 border border-warning-200"
           >
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-warning-100 flex items-center justify-center">
-                <Clock className="w-6 h-6 text-warning-600" />
+            <div className="flex items-center gap-2 sm:gap-4">
+              <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-xl bg-warning-100 flex items-center justify-center flex-shrink-0">
+                <Clock className="w-4 h-4 sm:w-6 sm:h-6 text-warning-600" />
               </div>
-              <div className="flex-1">
-                <p className="font-medium text-gray-900">{tx.description}</p>
-                <p className="text-sm text-gray-500">
+              <div className="flex-1 min-w-0">
+                <p className="font-medium text-gray-900 text-xs sm:text-base truncate">{tx.description}</p>
+                <p className="text-[10px] sm:text-sm text-gray-500 truncate">
                   Due: {formatDate(tx.date)} • {tx.paymentMethod}
                 </p>
               </div>
-              <div className="text-right">
-                <p className="text-lg font-bold text-gray-900">
+              <div className="text-right flex-shrink-0">
+                <p className="text-sm sm:text-lg font-bold text-gray-900">
                   {formatCurrency(tx.amount)}
                 </p>
                 <StatusBadge status="pending" />
               </div>
-              <Button size="sm" className="bg-warning-500 hover:bg-warning-600">
-                Pay Now
+              <Button size="sm" className="bg-warning-500 hover:bg-warning-600 text-xs sm:text-sm px-2 sm:px-3">
+                Pay
               </Button>
             </div>
           </motion.div>
@@ -466,19 +466,19 @@ function HistorySection({
   transactions: TransactionDisplay[];
 }) {
   return (
-    <div className="p-5">
-      <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-4">
+    <div className="p-3 sm:p-5">
+      <h3 className="text-xs sm:text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3 sm:mb-4">
         Transaction History
       </h3>
       {transactions.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-12">
-          <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
-            <Zap className="w-8 h-8 text-gray-400" />
+        <div className="flex flex-col items-center justify-center py-8 sm:py-12">
+          <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-gray-100 flex items-center justify-center mb-3 sm:mb-4">
+            <Zap className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400" />
           </div>
-          <p className="text-gray-500">No transactions yet</p>
+          <p className="text-gray-500 text-sm">No transactions yet</p>
         </div>
       ) : (
-        <div className="space-y-2">
+        <div className="space-y-1 sm:space-y-2">
           {transactions.map((tx, index) => (
             <motion.div
               key={tx.id}
@@ -487,39 +487,39 @@ function HistorySection({
               transition={{ delay: index * 0.03 }}
               className="group"
             >
-              <div className="flex items-center gap-4 p-4 rounded-xl hover:bg-gray-50 transition-all duration-300 cursor-pointer">
+              <div className="flex items-center gap-2 sm:gap-4 p-2 sm:p-4 rounded-xl hover:bg-gray-50 transition-all duration-300 cursor-pointer">
                 <div
                   className={cn(
-                    'w-12 h-12 rounded-xl flex items-center justify-center',
+                    'w-9 h-9 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center flex-shrink-0',
                     tx.type === 'payment'
                       ? 'bg-gradient-to-br from-red-100 to-orange-100'
                       : 'bg-gradient-to-br from-emerald-100 to-teal-100'
                   )}
                 >
                   {tx.type === 'payment' ? (
-                    <ArrowUpRight className="w-6 h-6 text-red-600" />
+                    <ArrowUpRight className="w-4 h-4 sm:w-6 sm:h-6 text-red-600" />
                   ) : (
-                    <ArrowDownLeft className="w-6 h-6 text-emerald-600" />
+                    <ArrowDownLeft className="w-4 h-4 sm:w-6 sm:h-6 text-emerald-600" />
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-gray-900 truncate">
+                  <p className="font-medium text-gray-900 truncate text-xs sm:text-base">
                     {tx.description}
                   </p>
-                  <p className="text-sm text-gray-500">
-                    {formatDate(tx.date)} at {formatTime(tx.date)} • {tx.paymentMethod}
+                  <p className="text-[10px] sm:text-sm text-gray-500 truncate">
+                    {formatDate(tx.date)} • {tx.paymentMethod}
                   </p>
                 </div>
                 <p
                   className={cn(
-                    'text-lg font-bold',
+                    'text-sm sm:text-lg font-bold flex-shrink-0',
                     tx.type === 'payment' ? 'text-gray-900' : 'text-emerald-600'
                   )}
                 >
                   {tx.type === 'refund' ? '+' : '-'}
                   {formatCurrency(tx.amount)}
                 </p>
-                <ChevronRight className="w-5 h-5 text-gray-400 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300" />
+                <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 hidden sm:block" />
               </div>
             </motion.div>
           ))}

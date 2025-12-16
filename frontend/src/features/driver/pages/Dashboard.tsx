@@ -339,17 +339,17 @@ export function DriverDashboard() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="grid grid-cols-2 md:grid-cols-4 gap-4"
+        className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4"
       >
         <DriverStatCard
-          label="Today's Earnings"
+          label="Earnings"
           value={formatCurrency(driverStats.todayEarnings)}
           icon={DollarSign}
           color="success"
           delay={0.1}
         />
         <DriverStatCard
-          label="Total Trips"
+          label="Trips"
           value={driverStats.totalTrips}
           icon={Car}
           color="primary"
@@ -363,7 +363,7 @@ export function DriverDashboard() {
           delay={0.2}
         />
         <DriverStatCard
-          label="Online Today"
+          label="Online"
           value={`${driverStats.onlineHours}h`}
           icon={Clock}
           color="accent"

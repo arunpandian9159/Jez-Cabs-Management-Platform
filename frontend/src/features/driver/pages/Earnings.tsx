@@ -66,25 +66,26 @@ export function Earnings() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="grid grid-cols-2 md:grid-cols-4 gap-4"
+        className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4"
       >
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.1 }}
           whileHover={{ scale: 1.02, y: -2 }}
+          className="h-full"
         >
           <Card
-            padding="md"
-            className="bg-gradient-to-br from-success-500 via-success-600 to-success-700 text-white overflow-hidden relative"
+            padding="sm"
+            className="bg-gradient-to-br from-success-500 via-success-600 to-success-700 text-white overflow-hidden relative h-full sm:p-4"
           >
-            <div className="flex items-center gap-3 relative z-10">
-              <div className="w-11 h-11 rounded-xl bg-white/20 flex items-center justify-center">
-                <DollarSign className="w-5 h-5" />
+            <div className="flex items-center gap-2 sm:gap-3 relative z-10">
+              <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
+                <DollarSign className="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
-              <div>
-                <p className="text-white/80 text-xs font-medium">Today</p>
-                <p className="text-2xl font-bold">
+              <div className="min-w-0 flex-1">
+                <p className="text-white/80 text-[10px] sm:text-xs font-medium">Today</p>
+                <p className="text-lg sm:text-xl md:text-2xl font-bold truncate">
                   {formatCurrency(earningsSummary.today)}
                 </p>
               </div>
@@ -98,15 +99,16 @@ export function Earnings() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.15 }}
           whileHover={{ scale: 1.02, y: -2 }}
+          className="h-full"
         >
-          <Card padding="md" className="bg-primary-100 border-transparent overflow-hidden relative">
-            <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-lg">
-                <TrendingUp className="w-5 h-5 text-white" />
+          <Card padding="sm" className="bg-primary-100 border-transparent overflow-hidden relative h-full sm:p-4">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-lg flex-shrink-0">
+                <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
-              <div>
-                <p className="text-gray-600 text-xs font-medium">This Week</p>
-                <p className="text-2xl font-bold text-primary-700">
+              <div className="min-w-0 flex-1">
+                <p className="text-gray-600 text-[10px] sm:text-xs font-medium">This Week</p>
+                <p className="text-lg sm:text-xl md:text-2xl font-bold text-primary-700 truncate">
                   {formatCurrency(earningsSummary.week)}
                 </p>
               </div>
@@ -120,15 +122,16 @@ export function Earnings() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2 }}
           whileHover={{ scale: 1.02, y: -2 }}
+          className="h-full"
         >
-          <Card padding="md" className="bg-accent-100 border-transparent overflow-hidden relative">
-            <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-accent-500 to-accent-600 flex items-center justify-center shadow-lg">
-                <Calendar className="w-5 h-5 text-white" />
+          <Card padding="sm" className="bg-accent-100 border-transparent overflow-hidden relative h-full sm:p-4">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-accent-500 to-accent-600 flex items-center justify-center shadow-lg flex-shrink-0">
+                <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
-              <div>
-                <p className="text-gray-600 text-xs font-medium">This Month</p>
-                <p className="text-2xl font-bold text-accent-700">
+              <div className="min-w-0 flex-1">
+                <p className="text-gray-600 text-[10px] sm:text-xs font-medium">This Month</p>
+                <p className="text-lg sm:text-xl md:text-2xl font-bold text-accent-700 truncate">
                   {formatCurrency(earningsSummary.month)}
                 </p>
               </div>
@@ -142,15 +145,16 @@ export function Earnings() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.25 }}
           whileHover={{ scale: 1.02, y: -2 }}
+          className="h-full"
         >
-          <Card padding="md" className="bg-warning-100 border-transparent overflow-hidden relative">
-            <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-warning-500 to-warning-600 flex items-center justify-center shadow-lg">
-                <Clock className="w-5 h-5 text-white" />
+          <Card padding="sm" className="bg-warning-100 border-transparent overflow-hidden relative h-full sm:p-4">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-warning-500 to-warning-600 flex items-center justify-center shadow-lg flex-shrink-0">
+                <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
-              <div>
-                <p className="text-gray-600 text-xs font-medium">Pending Payout</p>
-                <p className="text-2xl font-bold text-warning-700">
+              <div className="min-w-0 flex-1">
+                <p className="text-gray-600 text-[10px] sm:text-xs font-medium">Pending</p>
+                <p className="text-lg sm:text-xl md:text-2xl font-bold text-warning-700 truncate">
                   {formatCurrency(earningsSummary.pendingPayout)}
                 </p>
               </div>

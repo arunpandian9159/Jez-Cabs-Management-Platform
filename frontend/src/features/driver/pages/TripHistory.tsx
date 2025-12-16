@@ -72,10 +72,10 @@ export function TripHistory() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="grid grid-cols-2 md:grid-cols-4 gap-4"
+        className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4"
       >
         <DriverStatCard
-          label="Total Trips"
+          label="Trips"
           value={completedCount}
           icon={CheckCircle}
           color="primary"
@@ -90,7 +90,7 @@ export function TripHistory() {
         />
         <DriverStatCard
           label="Distance"
-          value={`${totalDistance.toFixed(1)} km`}
+          value={`${totalDistance.toFixed(0)} km`}
           icon={MapPin}
           color="accent"
           delay={0.2}
@@ -100,17 +100,18 @@ export function TripHistory() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ delay: 0.25 }}
           whileHover={{ scale: 1.02, y: -2 }}
+          className="h-full"
         >
-          <Card padding="md" className="bg-warning-100 border-transparent overflow-hidden relative">
-            <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-warning-500 to-warning-600 flex items-center justify-center shadow-lg">
-                <Star className="w-5 h-5 text-white fill-white" />
+          <Card padding="sm" className="bg-warning-100 border-transparent overflow-hidden relative h-full sm:p-4">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-warning-500 to-warning-600 flex items-center justify-center shadow-lg flex-shrink-0">
+                <Star className="w-4 h-4 sm:w-5 sm:h-5 text-white fill-white" />
               </div>
-              <div className="flex-1">
-                <p className="text-sm font-medium text-gray-600 mb-0.5">Avg Rating</p>
-                <div className="flex items-center gap-2">
-                  <p className="text-2xl font-bold text-warning-700">{avgRating.toFixed(1)}</p>
-                  <div className="flex gap-0.5">
+              <div className="flex-1 min-w-0">
+                <p className="text-[10px] sm:text-sm font-medium text-gray-600 mb-0.5">Rating</p>
+                <div className="flex items-center gap-1 sm:gap-2">
+                  <p className="text-lg sm:text-xl md:text-2xl font-bold text-warning-700">{avgRating.toFixed(1)}</p>
+                  <div className="hidden sm:flex gap-0.5">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <Star
                         key={star}
@@ -133,19 +134,19 @@ export function TripHistory() {
         transition={{ delay: 0.2 }}
       >
         <TabsRoot value={activeTab} onValueChange={setActiveTab}>
-          <div className="flex items-center justify-between">
-            <TabsList>
-              <TabsTrigger value="all">
-                <History className="w-4 h-4 mr-1.5" />
-                All ({totalTrips})
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <TabsList className="flex-wrap">
+              <TabsTrigger value="all" className="text-xs sm:text-sm px-2 sm:px-3">
+                <History className="w-3.5 h-3.5 sm:w-4 sm:h-4 sm:mr-1.5" />
+                <span className="hidden sm:inline">All</span> ({totalTrips})
               </TabsTrigger>
-              <TabsTrigger value="completed">
-                <CheckCircle className="w-4 h-4 mr-1.5" />
-                Completed ({completedCount})
+              <TabsTrigger value="completed" className="text-xs sm:text-sm px-2 sm:px-3">
+                <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 sm:mr-1.5" />
+                <span className="hidden sm:inline">Completed</span> ({completedCount})
               </TabsTrigger>
-              <TabsTrigger value="cancelled">
-                <XCircle className="w-4 h-4 mr-1.5" />
-                Cancelled ({cancelledCount})
+              <TabsTrigger value="cancelled" className="text-xs sm:text-sm px-2 sm:px-3">
+                <XCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 sm:mr-1.5" />
+                <span className="hidden sm:inline">Cancelled</span> ({cancelledCount})
               </TabsTrigger>
             </TabsList>
             <Select
@@ -160,8 +161,8 @@ export function TripHistory() {
             />
           </div>
 
-          <TabsContent value={activeTab} className="mt-4">
-            <div className="space-y-3">
+          <TabsContent value={activeTab} className="mt-3 sm:mt-4">
+            <div className="space-y-2 sm:space-y-3">
               {filteredTrips.map((trip, index) => (
                 <motion.div
                   key={trip.id}
@@ -170,11 +171,12 @@ export function TripHistory() {
                   transition={{ delay: 0.25 + index * 0.03 }}
                   whileHover={{ scale: 1.005 }}
                 >
-                  <Card padding="md" interactive className="hover:shadow-lg transition-all">
-                    <div className="flex items-start gap-4">
+                  <Card padding="sm" interactive className="hover:shadow-lg transition-all sm:p-4">
+                    <div className="flex items-start gap-2 sm:gap-4">
+                      {/* Status icon - hidden on mobile */}
                       <motion.div
                         whileHover={{ scale: 1.05 }}
-                        className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-lg ${trip.status === 'completed' ? 'bg-gradient-to-br from-success-500 to-success-600' : 'bg-gradient-to-br from-error-500 to-error-600'}`}
+                        className={`hidden sm:flex w-12 h-12 rounded-xl items-center justify-center shadow-lg ${trip.status === 'completed' ? 'bg-gradient-to-br from-success-500 to-success-600' : 'bg-gradient-to-br from-error-500 to-error-600'}`}
                       >
                         {trip.status === 'completed' ? (
                           <CheckCircle className="w-6 h-6 text-white" />
@@ -183,18 +185,26 @@ export function TripHistory() {
                         )}
                       </motion.div>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between mb-2">
-                          <div>
-                            <p className="font-semibold text-gray-900">
+                        <div className="flex items-start justify-between gap-2 mb-1 sm:mb-2">
+                          <div className="min-w-0 flex-1">
+                            {/* Mobile: with status dot */}
+                            <div className="sm:hidden flex items-center gap-1.5 mb-0.5">
+                              <div className={`w-2 h-2 rounded-full flex-shrink-0 ${trip.status === 'completed' ? 'bg-success-500' : 'bg-error-500'}`} />
+                              <p className="font-semibold text-gray-900 text-xs truncate">
+                                {trip.pickup} → {trip.destination}
+                              </p>
+                            </div>
+                            {/* Desktop */}
+                            <p className="hidden sm:block font-semibold text-gray-900">
                               {trip.pickup} → {trip.destination}
                             </p>
-                            <div className="flex items-center gap-3 text-sm text-gray-500 mt-1">
+                            <div className="flex items-center gap-2 sm:gap-3 text-[10px] sm:text-sm text-gray-500 mt-0.5 sm:mt-1">
                               <span className="flex items-center gap-1">
-                                <Calendar className="w-3.5 h-3.5" />
+                                <Calendar className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                                 {formatDate(trip.date)}
                               </span>
                               <span className="flex items-center gap-1">
-                                <Clock className="w-3.5 h-3.5" />
+                                <Clock className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                                 {formatTime(trip.date)}
                               </span>
                             </div>
@@ -202,45 +212,45 @@ export function TripHistory() {
                           <StatusBadge status={trip.status} />
                         </div>
                         {trip.status === 'completed' ? (
-                          <div className="flex items-center gap-4 text-sm">
-                            <span className="px-2 py-1 bg-gray-100 rounded-lg text-gray-600 font-medium">
+                          <div className="flex items-center gap-2 sm:gap-4 text-[10px] sm:text-sm flex-wrap">
+                            <span className="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-gray-100 rounded-lg text-gray-600 font-medium truncate max-w-[80px] sm:max-w-none">
                               {trip.customer.name}
                             </span>
                             <span className="text-gray-600">
                               {trip.distance} km
                             </span>
-                            <span className="text-gray-600">
+                            <span className="hidden sm:inline text-gray-600">
                               {formatDuration(trip.duration)}
                             </span>
                             {trip.rating && (
-                              <span className="flex items-center gap-1 px-2 py-1 bg-warning-50 rounded-lg">
-                                <Star className="w-3.5 h-3.5 text-warning-500 fill-warning-500" />
+                              <span className="flex items-center gap-0.5 sm:gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 bg-warning-50 rounded-lg">
+                                <Star className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-warning-500 fill-warning-500" />
                                 <span className="font-medium text-warning-700">{trip.rating}</span>
                               </span>
                             )}
                           </div>
                         ) : (
-                          <p className="text-sm text-error-600 bg-error-50 px-2 py-1 rounded-lg inline-block">
+                          <p className="text-[10px] sm:text-sm text-error-600 bg-error-50 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-lg inline-block truncate max-w-full">
                             {trip.cancellationReason}
                           </p>
                         )}
                       </div>
                       {trip.status === 'completed' && (
-                        <div className="text-right">
-                          <p className="text-lg font-bold text-gray-900">
+                        <div className="text-right flex-shrink-0">
+                          <p className="text-sm sm:text-lg font-bold text-gray-900">
                             {formatCurrency(trip.fare)}
                           </p>
                           {(trip.tip ?? 0) > 0 && (
-                            <p className="text-xs font-medium text-success-600 bg-success-50 px-2 py-0.5 rounded-full inline-block">
-                              +{formatCurrency(trip.tip ?? 0)} tip
+                            <p className="text-[10px] sm:text-xs font-medium text-success-600 bg-success-50 px-1.5 sm:px-2 py-0.5 rounded-full inline-block">
+                              +{formatCurrency(trip.tip ?? 0)}
                             </p>
                           )}
-                          <p className="text-xs text-gray-500 mt-1">
+                          <p className="hidden sm:block text-xs text-gray-500 mt-1">
                             {trip.paymentMethod}
                           </p>
                         </div>
                       )}
-                      <ChevronRight className="w-5 h-5 text-gray-400" />
+                      <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 flex-shrink-0" />
                     </div>
                   </Card>
                 </motion.div>
