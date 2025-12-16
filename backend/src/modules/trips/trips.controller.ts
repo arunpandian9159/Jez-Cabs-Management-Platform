@@ -9,6 +9,14 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+  ApiParam,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { TripsService } from './trips.service';
 import { JwtAuthGuard } from '../iam/guards/jwt-auth.guard';
 import {
@@ -27,12 +35,18 @@ interface AuthenticatedRequest {
   };
 }
 
+@ApiTags('Trips')
 @Controller('trips')
 @UseGuards(JwtAuthGuard)
+@ApiBearerAuth('JWT-auth')
 export class TripsController {
   constructor(private readonly tripsService: TripsService) { }
 
   @Post()
+  @ApiOperation({ summary: 'Create a new trip booking' })
+  @ApiResponse({ status: 201, description: 'Trip created successfully with OTP' })
+  @ApiResponse({ status: 400, description: 'Invalid trip data' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async create(
     @Body() createTripDto: CreateTripDto,
     @Request() req: AuthenticatedRequest,
@@ -44,6 +58,9 @@ export class TripsController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Get all trips for the current user' })
+  @ApiQuery({ name: 'status', required: false, description: 'Filter by trip status' })
+  @ApiResponse({ status: 200, description: 'List of trips returned' })
   async findAll(
     @Request() req: AuthenticatedRequest,
     @Query('status') status?: string,
@@ -52,11 +69,20 @@ export class TripsController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get a specific trip by ID' })
+  @ApiParam({ name: 'id', description: 'Trip UUID' })
+  @ApiResponse({ status: 200, description: 'Trip details returned' })
+  @ApiResponse({ status: 404, description: 'Trip not found' })
   async findOne(@Param('id') id: string) {
     return this.tripsService.findOne(id);
   }
 
   @Patch(':id/accept')
+  @ApiOperation({ summary: 'Accept a pending trip (Driver only)' })
+  @ApiParam({ name: 'id', description: 'Trip UUID' })
+  @ApiResponse({ status: 200, description: 'Trip accepted successfully' })
+  @ApiResponse({ status: 400, description: 'Trip cannot be accepted' })
+  @ApiResponse({ status: 404, description: 'Trip not found' })
   async accept(
     @Param('id') id: string,
     @Body() acceptTripDto: AcceptTripDto,
@@ -66,6 +92,11 @@ export class TripsController {
   }
 
   @Patch(':id/start')
+  @ApiOperation({ summary: 'Start a trip with OTP verification' })
+  @ApiParam({ name: 'id', description: 'Trip UUID' })
+  @ApiResponse({ status: 200, description: 'Trip started successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid OTP or trip cannot be started' })
+  @ApiResponse({ status: 404, description: 'Trip not found' })
   async start(
     @Param('id') id: string,
     @Body() startTripDto: StartTripDto,
@@ -74,6 +105,11 @@ export class TripsController {
   }
 
   @Patch(':id/complete')
+  @ApiOperation({ summary: 'Complete a trip and calculate final fare' })
+  @ApiParam({ name: 'id', description: 'Trip UUID' })
+  @ApiResponse({ status: 200, description: 'Trip completed successfully' })
+  @ApiResponse({ status: 400, description: 'Trip cannot be completed' })
+  @ApiResponse({ status: 404, description: 'Trip not found' })
   async complete(
     @Param('id') id: string,
     @Body() completeTripDto: CompleteTripDto,
@@ -82,6 +118,11 @@ export class TripsController {
   }
 
   @Patch(':id/cancel')
+  @ApiOperation({ summary: 'Cancel a trip' })
+  @ApiParam({ name: 'id', description: 'Trip UUID' })
+  @ApiResponse({ status: 200, description: 'Trip cancelled successfully' })
+  @ApiResponse({ status: 400, description: 'Trip cannot be cancelled' })
+  @ApiResponse({ status: 404, description: 'Trip not found' })
   async cancel(
     @Param('id') id: string,
     @Body() cancelTripDto: CancelTripDto,
@@ -91,6 +132,11 @@ export class TripsController {
   }
 
   @Post(':id/rate')
+  @ApiOperation({ summary: 'Rate a completed trip' })
+  @ApiParam({ name: 'id', description: 'Trip UUID' })
+  @ApiResponse({ status: 200, description: 'Rating submitted successfully' })
+  @ApiResponse({ status: 400, description: 'Trip cannot be rated' })
+  @ApiResponse({ status: 404, description: 'Trip not found' })
   async rate(
     @Param('id') id: string,
     @Body() rateTripDto: RateTripDto,
