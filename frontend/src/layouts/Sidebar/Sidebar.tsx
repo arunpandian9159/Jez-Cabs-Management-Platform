@@ -267,8 +267,8 @@ export function Sidebar({
         {/* Content wrapper */}
         <div className="relative flex flex-col h-full z-10">
           {/* Logo Section - Enhanced */}
-          <div className="flex items-center justify-between h-20 px-5 border-b border-gray-200/60">
-            <Link to={dashboardPath} className="flex items-center gap-4 group">
+          <div className="flex items-center justify-between h-16 sm:h-20 px-3 sm:px-5 border-b border-gray-200/60">
+            <Link to={dashboardPath} className="flex items-center gap-3 sm:gap-4 group">
               {/* Logo with enhanced glow effect */}
               <motion.div
                 className="relative"
@@ -278,7 +278,7 @@ export function Sidebar({
                 {/* Animated glow ring */}
                 <motion.div
                   className={cn(
-                    'absolute -inset-1 rounded-2xl bg-gradient-to-br opacity-0 group-hover:opacity-100 blur-lg transition-opacity duration-500',
+                    'absolute -inset-1 rounded-xl sm:rounded-2xl bg-gradient-to-br opacity-0 group-hover:opacity-100 blur-lg transition-opacity duration-500',
                     colors.primary
                   )}
                   animate={{
@@ -293,7 +293,7 @@ export function Sidebar({
                 {/* Logo container */}
                 <div
                   className={cn(
-                    'relative w-12 h-12 rounded-2xl flex items-center justify-center overflow-hidden',
+                    'relative w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl flex items-center justify-center overflow-hidden',
                     'bg-gradient-to-br shadow-lg',
                     colors.primary,
                     colors.accentGlow
@@ -302,7 +302,7 @@ export function Sidebar({
                   <img
                     src="/logo.svg"
                     alt="Jez Cabs"
-                    className="w-8 h-8 object-contain drop-shadow-lg"
+                    className="w-6 h-6 sm:w-8 sm:h-8 object-contain drop-shadow-lg"
                   />
                   {/* Shine effect */}
                   <motion.div
@@ -328,13 +328,13 @@ export function Sidebar({
                     transition={{ duration: 0.2 }}
                     className="flex flex-col"
                   >
-                    <h1 className="font-bold text-xl text-gray-900 tracking-tight">
+                    <h1 className="font-bold text-lg sm:text-xl text-gray-900 tracking-tight">
                       Jez Cabs
                     </h1>
                     <div className="flex items-center gap-2">
                       <span
                         className={cn(
-                          'text-xs font-medium px-2 py-0.5 rounded-full bg-gradient-to-r text-white',
+                          'text-[10px] sm:text-xs font-medium px-1.5 sm:px-2 py-0.5 rounded-full bg-gradient-to-r text-white',
                           colors.primary
                         )}
                       >
@@ -351,11 +351,11 @@ export function Sidebar({
               {/* Mobile close button */}
               <motion.button
                 onClick={onClose}
-                className="lg:hidden p-2.5 rounded-xl transition-colors bg-gray-100/80 hover:bg-gray-200/80 text-gray-600"
+                className="lg:hidden p-2 sm:p-2.5 rounded-xl transition-colors bg-gray-100/80 hover:bg-gray-200/80 text-gray-600"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4 sm:w-5 sm:h-5" />
               </motion.button>
 
               {/* Desktop expand/collapse toggle */}
@@ -378,11 +378,11 @@ export function Sidebar({
 
           {/* Online Status Toggle - Driver Portal - Enhanced */}
           {showOnlineToggle && onToggleOnline && (
-            <div className="p-4 border-b border-gray-200/60">
+            <div className="p-3 sm:p-4 border-b border-gray-200/60">
               <motion.button
                 onClick={onToggleOnline}
                 className={cn(
-                  'relative w-full flex items-center justify-between px-4 py-3.5 rounded-2xl font-medium transition-all duration-300 overflow-hidden',
+                  'relative w-full flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl font-medium transition-all duration-300 overflow-hidden',
                   isOnline
                     ? 'bg-gradient-to-r from-success-50 to-success-100/80 text-success-700 border-2 border-success-200/80'
                     : 'bg-gradient-to-r from-gray-50 to-gray-100/80 text-gray-600 border-2 border-gray-200/80',
@@ -401,13 +401,13 @@ export function Sidebar({
                 )}
                 <span
                   className={cn(
-                    'relative flex items-center gap-3',
+                    'relative flex items-center gap-2 sm:gap-3',
                     !showExpanded && 'gap-0'
                   )}
                 >
-                  <Power className="w-5 h-5" />
+                  <Power className="w-4 h-4 sm:w-5 sm:h-5" />
                   {showExpanded && (
-                    <span className="font-semibold">
+                    <span className="font-semibold text-sm sm:text-base">
                       {isOnline ? 'Online' : 'Offline'}
                     </span>
                   )}
@@ -415,7 +415,7 @@ export function Sidebar({
                 {showExpanded && (
                   <span
                     className={cn(
-                      'relative w-3 h-3 rounded-full',
+                      'relative w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full',
                       isOnline ? 'bg-success-500' : 'bg-gray-400'
                     )}
                   >
@@ -434,8 +434,8 @@ export function Sidebar({
 
           {/* Quick Stats - Owner Portal - Enhanced */}
           {quickStats && quickStats.length > 0 && showExpanded && (
-            <div className="p-4 border-b border-gray-200/60">
-              <div className="grid grid-cols-2 gap-3">
+            <div className="p-3 sm:p-4 border-b border-gray-200/60">
+              <div className="grid grid-cols-2 gap-2 sm:gap-3">
                 {quickStats.map((stat, index) => {
                   const statColor = statColors[stat.color];
                   const Icon = stat.icon;
@@ -447,7 +447,7 @@ export function Sidebar({
                       transition={{ delay: index * 0.1 }}
                       whileHover={{ scale: 1.03, y: -2 }}
                       className={cn(
-                        'p-2 rounded-2xl bg-gradient-to-br border backdrop-blur-sm cursor-default',
+                        'p-1.5 sm:p-2 rounded-xl sm:rounded-2xl bg-gradient-to-br border backdrop-blur-sm cursor-default',
                         statColor.bg,
                         statColor.border
                       )}
@@ -455,19 +455,19 @@ export function Sidebar({
                       <div className="flex items-center gap-1 mb-0">
                         <div
                           className={cn(
-                            'w-8 h-8 flex items-center justify-center',
+                            'w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center',
                             statColor.icon
                           )}
                         >
-                          <Icon className="w-4 h-4" />
+                          <Icon className="w-3 h-3 sm:w-4 sm:h-4" />
                         </div>
                         <span
-                          className={cn('text-[10px] font-semibold uppercase tracking-wide leading-tight', statColor.label)}
+                          className={cn('text-[8px] sm:text-[10px] font-semibold uppercase tracking-wide leading-tight', statColor.label)}
                         >
                           {stat.label}
                         </span>
                       </div>
-                      <p className={cn('text-2xl flex items-center justify-center font-bold', statColor.value)}>
+                      <p className={cn('text-xl sm:text-2xl flex items-center justify-center font-bold', statColor.value)}>
                         {stat.value}
                       </p>
                     </motion.div>
@@ -478,13 +478,13 @@ export function Sidebar({
           )}
 
           {/* Navigation - Enhanced */}
-          <nav className="flex-1 px-4 py-5 space-y-1.5 overflow-y-auto scrollbar-hide">
+          <nav className="flex-1 px-3 sm:px-4 py-4 sm:py-5 space-y-1 sm:space-y-1.5 overflow-y-auto scrollbar-hide">
             {/* Main Navigation Label */}
             {showExpanded && (
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4"
+                className="px-3 text-[10px] sm:text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 sm:mb-4"
               >
                 Navigation
               </motion.p>
@@ -511,7 +511,7 @@ export function Sidebar({
                     whileHover="hover"
                     transition={{ delay: index * 0.03, duration: 0.2 }}
                     className={cn(
-                      'group relative flex items-center gap-3.5 px-4 py-3 rounded-2xl text-sm font-medium transition-all duration-300',
+                      'group relative flex items-center gap-2.5 sm:gap-3.5 px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl text-sm font-medium transition-all duration-300',
                       // Only apply active background styles in expanded mode
                       showExpanded && isActive
                         ? cn(
@@ -528,7 +528,7 @@ export function Sidebar({
                       <motion.div
                         layoutId="activeNavIndicator"
                         className={cn(
-                          'absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 rounded-r-full bg-gradient-to-b',
+                          'absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 sm:h-8 rounded-r-full bg-gradient-to-b',
                           colors.borderGradient
                         )}
                         transition={{
@@ -542,7 +542,7 @@ export function Sidebar({
                     {/* Icon container with enhanced styling */}
                     <motion.div
                       className={cn(
-                        'relative flex items-center justify-center flex-shrink-0 transition-all duration-300 w-9 h-9 rounded-xl',
+                        'relative flex items-center justify-center flex-shrink-0 transition-all duration-300 w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl',
                         isActive
                           ? cn(
                             'bg-gradient-to-br text-white shadow-md',
@@ -553,7 +553,7 @@ export function Sidebar({
                       whileHover={{ rotate: [0, -5, 5, 0] }}
                       transition={{ duration: 0.3 }}
                     >
-                      <Icon className="w-[18px] h-[18px]" />
+                      <Icon className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
                       {/* Icon glow effect when active - only show in expanded mode */}
                       {isActive && showExpanded && (
                         <motion.div
@@ -574,7 +574,7 @@ export function Sidebar({
                           initial="hidden"
                           animate="visible"
                           exit="hidden"
-                          className="flex-1 font-medium"
+                          className="flex-1 font-medium text-sm"
                         >
                           {item.name}
                         </motion.span>
@@ -601,28 +601,28 @@ export function Sidebar({
             {/* Quick Actions Section */}
             {showExpanded && (
               <>
-                <div className="pt-6 pb-2">
-                  <p className="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                <div className="pt-4 sm:pt-6 pb-2">
+                  <p className="px-3 text-[10px] sm:text-xs font-semibold text-gray-400 uppercase tracking-wider">
                     Quick Actions
                   </p>
                 </div>
                 <motion.button
                   whileHover={{ scale: 1.02, x: 4 }}
-                  className="w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-sm font-medium text-gray-600 hover:bg-gray-100/80 transition-all"
+                  className="w-full flex items-center gap-2.5 sm:gap-3.5 px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl text-sm font-medium text-gray-600 hover:bg-gray-100/80 transition-all"
                 >
-                  <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-gray-100/80 text-gray-500">
-                    <HelpCircle className="w-[18px] h-[18px]" />
+                  <div className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-gray-100/80 text-gray-500">
+                    <HelpCircle className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
                   </div>
-                  <span>Help & Support</span>
+                  <span className="text-sm">Help & Support</span>
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.02, x: 4 }}
-                  className="w-full flex items-center gap-3.5 px-4 py-3 rounded-2xl text-sm font-medium text-gray-600 hover:bg-gray-100/80 transition-all"
+                  className="w-full flex items-center gap-2.5 sm:gap-3.5 px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl text-sm font-medium text-gray-600 hover:bg-gray-100/80 transition-all"
                 >
-                  <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-gray-100/80 text-gray-500">
-                    <Settings className="w-[18px] h-[18px]" />
+                  <div className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-gray-100/80 text-gray-500">
+                    <Settings className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
                   </div>
-                  <span>Settings</span>
+                  <span className="text-sm">Settings</span>
                 </motion.button>
               </>
             )}
@@ -630,17 +630,17 @@ export function Sidebar({
 
           {/* Footer Content (e.g., Emergency SOS) */}
           {footerContent && showExpanded && (
-            <div className="px-4 py-4 border-t border-gray-200/60">
+            <div className="px-3 sm:px-4 py-3 sm:py-4 border-t border-gray-200/60">
               {footerContent}
             </div>
           )}
 
           {/* User Section - Enhanced */}
-          <div className="p-4 border-t border-gray-200/60 bg-gradient-to-t from-gray-50/50 to-transparent">
+          <div className="p-3 sm:p-4 border-t border-gray-200/60 bg-gradient-to-t from-gray-50/50 to-transparent">
             <motion.div
               className={cn(
-                'flex items-center gap-4 p-3 rounded-2xl transition-all duration-300',
-                showExpanded ? 'mb-3 hover:bg-white/60' : 'flex-col',
+                'flex items-center gap-3 sm:gap-4 p-2 sm:p-3 rounded-xl sm:rounded-2xl transition-all duration-300',
+                showExpanded ? 'mb-2 sm:mb-3 hover:bg-white/60' : 'flex-col',
                 showExpanded && 'cursor-pointer'
               )}
               whileHover={showExpanded ? { scale: 1.01 } : {}}
@@ -661,13 +661,13 @@ export function Sidebar({
                 />
                 <div className="relative">
                   <Avatar
-                    size={showExpanded ? 'md' : 'sm'}
+                    size={showExpanded ? 'sm' : 'sm'}
                     src={user?.avatar}
                     name={getUserDisplayName()}
-                    className="ring-2 ring-white shadow-md"
+                    className="ring-2 ring-white shadow-md sm:w-10 sm:h-10"
                   />
                   {/* Online indicator */}
-                  <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-success-500 rounded-full border-2 border-white" />
+                  <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 bg-success-500 rounded-full border-2 border-white" />
                 </div>
               </div>
 
@@ -680,10 +680,10 @@ export function Sidebar({
                     exit="hidden"
                     className="flex-1 min-w-0"
                   >
-                    <p className="font-semibold truncate text-gray-900">
+                    <p className="font-semibold truncate text-gray-900 text-sm sm:text-base">
                       {getUserDisplayName()}
                     </p>
-                    <p className="text-xs truncate text-gray-500">
+                    <p className="text-[10px] sm:text-xs truncate text-gray-500">
                       {user?.email}
                     </p>
                   </motion.div>
@@ -691,8 +691,8 @@ export function Sidebar({
               </AnimatePresence>
 
               {showExpanded && (
-                <motion.div whileHover={{ rotate: 90 }} className="p-2">
-                  <Sparkles className="w-4 h-4 text-gray-400" />
+                <motion.div whileHover={{ rotate: 90 }} className="p-1 sm:p-2">
+                  <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400" />
                 </motion.div>
               )}
             </motion.div>
@@ -701,7 +701,7 @@ export function Sidebar({
             <motion.button
               onClick={onLogout}
               className={cn(
-                'group flex items-center gap-3 px-4 py-3 w-full rounded-2xl text-sm font-medium transition-all duration-300',
+                'group flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 w-full rounded-xl sm:rounded-2xl text-sm font-medium transition-all duration-300',
                 'text-gray-600 hover:text-error-600 hover:bg-error-50/80',
                 !showExpanded && 'justify-center'
               )}
@@ -711,11 +711,11 @@ export function Sidebar({
               <motion.div
                 className={cn(
                   'flex items-center justify-center flex-shrink-0 bg-gray-100/80 group-hover:bg-error-100 text-gray-500 group-hover:text-error-600 transition-colors',
-                  showExpanded ? 'w-9 h-9 rounded-xl' : 'w-10 h-10 rounded-full'
+                  showExpanded ? 'w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl' : 'w-9 h-9 sm:w-10 sm:h-10 rounded-full'
                 )}
                 whileHover={{ rotate: -15 }}
               >
-                <LogOut className="w-[18px] h-[18px]" />
+                <LogOut className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
               </motion.div>
               <AnimatePresence>
                 {showExpanded && (
@@ -724,7 +724,7 @@ export function Sidebar({
                     initial="hidden"
                     animate="visible"
                     exit="hidden"
-                    className="font-medium"
+                    className="font-medium text-sm"
                   >
                     Sign Out
                   </motion.span>
