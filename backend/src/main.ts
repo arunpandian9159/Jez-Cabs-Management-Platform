@@ -48,10 +48,36 @@ async function bootstrap() {
         configService.get('SWAGGER_TITLE', 'Jez Cabs Management Platform API'),
       )
       .setDescription(
-        configService.get(
-          'SWAGGER_DESCRIPTION',
-          'Comprehensive API for multi-tenant cab rental management',
-        ),
+        `## Jez Cabs Management Platform API
+
+A comprehensive REST API for multi-tenant cab rental and ride-hailing management.
+
+### Features
+- **Authentication**: JWT-based auth with role-based access control
+- **Trip Management**: Complete trip lifecycle from booking to completion
+- **Fleet Management**: Vehicle CRUD, status updates, driver assignments
+- **Driver Operations**: Onboarding, document verification, earnings
+- **Owner Portal**: Fleet oversight, contracts, analytics
+- **Admin Dashboard**: User management, verifications, reports
+- **Safety**: Emergency contacts, SOS alerts
+- **Community**: Ride-sharing and trip exchange
+
+### Authentication
+All protected endpoints require a JWT token in the Authorization header:
+\`Authorization: Bearer <your_jwt_token>\`
+
+### Rate Limiting
+- Registration: 3 requests/minute
+- Login: 5 requests/minute
+- General API: 10 requests/minute
+
+### User Roles
+- \`customer\`: Book rides, manage profile
+- \`driver\`: Accept trips, manage earnings
+- \`cab_owner\`: Manage fleet and drivers
+- \`admin\`: Full platform access
+- \`support\`: Handle disputes and queries
+`,
       )
       .setVersion(configService.get('SWAGGER_VERSION', '1.0'))
       .addBearerAuth(
@@ -69,15 +95,18 @@ async function bootstrap() {
         'Authentication',
         'User authentication and authorization endpoints',
       )
-      .addTag('Companies', 'Company management endpoints')
-      .addTag('Users', 'User management endpoints')
+      .addTag('Users', 'User profile, addresses, wallet, and payment methods')
       .addTag('Cabs', 'Vehicle fleet management endpoints')
-      .addTag('Drivers', 'Driver management endpoints')
-      .addTag('Bookings', 'Booking and rental management endpoints')
-      .addTag('Checklists', 'Maintenance checklist endpoints')
-      .addTag('Invoices', 'Invoice and payment endpoints')
-      .addTag('Telematics', 'GPS tracking and telematics endpoints')
-      .addTag('Analytics', 'Analytics and reporting endpoints')
+      .addTag('Drivers', 'Driver profile, onboarding, and operations')
+      .addTag('Owner', 'Cab owner portal - fleet, drivers, contracts, earnings')
+      .addTag('Trips', 'Trip booking, tracking, and lifecycle management')
+      .addTag('Rentals', 'Vehicle rental booking and management')
+      .addTag('Disputes', 'Dispute filing and resolution')
+      .addTag('Safety', 'Emergency contacts and SOS features')
+      .addTag('Community', 'Community ride-sharing and trip exchange')
+      .addTag('Admin', 'Administrative dashboard and verification')
+      .addTag('Notifications', 'Push notifications and alerts')
+      .addTag('Health', 'API health check endpoints')
       .build();
 
     const document = SwaggerModule.createDocument(app, config);
