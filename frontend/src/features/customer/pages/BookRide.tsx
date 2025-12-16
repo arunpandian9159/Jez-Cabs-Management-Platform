@@ -153,12 +153,12 @@ function LocationInput({
 
   return (
     <div ref={containerRef} className="relative">
-      <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-2">
+      <label className="block text-[10px] sm:text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5 sm:mb-2">
         {label}
       </label>
       <div
         className={cn(
-          'flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 cursor-text bg-gray-50/80 border border-gray-200',
+          'flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl transition-all duration-200 cursor-text bg-gray-50/80 border border-gray-200',
           (isOpen || isActive) && 'ring-2 ring-blue-500/30 border-blue-300 bg-white'
         )}
         onClick={() => {
@@ -168,9 +168,9 @@ function LocationInput({
         }}
       >
         {variant === 'pickup' ? (
-          <CircleDot className="w-5 h-5 text-blue-600 flex-shrink-0" />
+          <CircleDot className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 flex-shrink-0" />
         ) : (
-          <MapPin className="w-5 h-5 text-blue-600 flex-shrink-0" />
+          <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 flex-shrink-0" />
         )}
         <input
           ref={inputRef}
@@ -182,10 +182,10 @@ function LocationInput({
             setIsOpen(true);
             onFocus();
           }}
-          className="bg-transparent flex-1 outline-none text-sm font-medium placeholder:text-gray-400 text-gray-800 min-w-0"
+          className="bg-transparent flex-1 outline-none text-xs sm:text-sm font-medium placeholder:text-gray-400 text-gray-800 min-w-0"
         />
         {variant === 'pickup' && (
-          <Crosshair className="w-4 h-4 text-gray-400 flex-shrink-0 hover:text-blue-500 cursor-pointer transition-colors" />
+          <Crosshair className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 flex-shrink-0 hover:text-blue-500 cursor-pointer transition-colors" />
         )}
       </div>
       {isOpen && (
@@ -344,15 +344,15 @@ export function LocationEntry() {
       />
 
       <div className="w-full max-w-7xl mx-auto relative z-10">
-        <div className="grid lg:grid-cols-2 lg:gap-20 px-12 items-start">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-20 px-0 sm:px-4 lg:px-12 items-start">
           {/* Left Content - Title and Animation */}
-          <div className="space-y-6 mb-8 lg:-ml-32">
+          <div className="space-y-4 sm:space-y-6 mb-6 lg:mb-8 lg:-ml-32">
             {/* Badge with animation */}
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold shadow-md"
+              className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-semibold shadow-md"
               style={{
                 background: 'linear-gradient(135deg, #dbeafe 0%, #e0f2fe 100%)',
                 color: '#1d4ed8',
@@ -371,21 +371,21 @@ export function LocationEntry() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight"
+              className="text-4xl sm:text-5xl lg:text-5xl xl:text-6xl font-extrabold leading-tight"
               style={{ color: '#0f172a' }}
             >
               Your Journey
-              <span className="block mt-2" style={{ color: '#2563eb' }}>
+              <span className="block mt-1 sm:mt-2 text-[#2563eb]">
                 Your Way
               </span>
             </motion.h1>
 
-            {/* Subheading */}
+            {/* Subheading - Hidden on very small screens */}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="text-base sm:text-lg text-gray-600 max-w-md"
+              className="text-sm sm:text-base lg:text-lg text-gray-600 max-w-md hidden sm:block"
             >
               Book instant rides, rent cabs for any duration, or plan trips with
               complete transparency and safety.
@@ -484,11 +484,11 @@ export function LocationEntry() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="relative"
+            className="relative w-full"
           >
             {/* Booking Card */}
             <div
-              className="w-full min-w-sm max-w-sm p-5 sm:p-8 rounded-2xl sm:rounded-3xl animate-fade-in-up"
+              className="w-full max-w-sm mx-auto lg:mx-0 p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl animate-fade-in-up"
               style={{
                 background: 'rgba(255, 255, 255, 0.98)',
                 boxShadow: '0 4px 24px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04)',
@@ -496,11 +496,11 @@ export function LocationEntry() {
                 animationFillMode: 'both',
               }}
             >
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-4 sm:mb-6">
                 Where to next?
               </h2>
 
-              <div className="space-y-5">
+              <div className="space-y-4 sm:space-y-5">
                 {/* Trip Type Selection */}
                 <div className="flex gap-2 justify-center">
                   {tripTypeOptions.map((option) => {
@@ -511,7 +511,7 @@ export function LocationEntry() {
                         type="button"
                         onClick={() => setTripType(option.id)}
                         className={cn(
-                          'px-3 py-1.5 sm:px-5 sm:py-2 rounded-full text-sm font-medium transition-all duration-200 border',
+                          'px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 border',
                           isSelected
                             ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
                             : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-50'
@@ -548,27 +548,27 @@ export function LocationEntry() {
                 )}
 
                 {/* Date and Time */}
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-2 sm:gap-3">
                   {/* Date Picker */}
                   <div ref={calendarRef} className="relative">
-                    <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-2">
+                    <label className="block text-[10px] sm:text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5 sm:mb-2">
                       Date
                     </label>
                     <button
                       type="button"
                       onClick={() => setShowCalendar(!showCalendar)}
                       className={cn(
-                        'flex items-center gap-2 px-4 py-3 rounded-xl transition-all duration-200 w-full text-left bg-gray-50/80 border border-gray-200',
+                        'flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-2.5 sm:py-3 rounded-xl transition-all duration-200 w-full text-left bg-gray-50/80 border border-gray-200',
                         showCalendar && 'ring-2 ring-blue-500/30 border-blue-300 bg-white'
                       )}
                     >
-                      <CalendarIcon className="w-5 h-5 text-blue-600 flex-shrink-0" />
-                      <span className="text-sm font-medium text-gray-800 flex-1 truncate">
+                      <CalendarIcon className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 flex-shrink-0" />
+                      <span className="text-xs sm:text-sm font-medium text-gray-800 flex-1 truncate">
                         {getDateDisplayText()}
                       </span>
                       <ChevronDown
                         className={cn(
-                          'w-4 h-4 text-gray-400 transition-transform',
+                          'w-3 h-3 sm:w-4 sm:h-4 text-gray-400 transition-transform',
                           showCalendar && 'rotate-180'
                         )}
                       />
@@ -614,24 +614,24 @@ export function LocationEntry() {
 
                   {/* Time Picker */}
                   <div ref={timeRef} className="relative">
-                    <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-2">
+                    <label className="block text-[10px] sm:text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5 sm:mb-2">
                       Time
                     </label>
                     <button
                       type="button"
                       onClick={() => setShowTimePicker(!showTimePicker)}
                       className={cn(
-                        'flex items-center gap-2 px-4 py-3 rounded-xl transition-all duration-200 w-full text-left bg-gray-50/80 border border-gray-200',
+                        'flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-2.5 sm:py-3 rounded-xl transition-all duration-200 w-full text-left bg-gray-50/80 border border-gray-200',
                         showTimePicker && 'ring-2 ring-blue-500/30 border-blue-300 bg-white'
                       )}
                     >
-                      <Clock className="w-5 h-5 text-blue-600 flex-shrink-0" />
-                      <span className="text-sm font-medium text-gray-800 flex-1">
+                      <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 flex-shrink-0" />
+                      <span className="text-xs sm:text-sm font-medium text-gray-800 flex-1">
                         {selectedTime}
                       </span>
                       <ChevronDown
                         className={cn(
-                          'w-4 h-4 text-gray-400 transition-transform',
+                          'w-3 h-3 sm:w-4 sm:h-4 text-gray-400 transition-transform',
                           showTimePicker && 'rotate-180'
                         )}
                       />
@@ -661,8 +661,8 @@ export function LocationEntry() {
                   </div>
                 </div>
 
-                {/* Map Preview */}
-                <div className="relative h-40 rounded-xl overflow-hidden border border-gray-200">
+                {/* Map Preview - Smaller on mobile */}
+                <div className="relative h-28 sm:h-40 rounded-xl overflow-hidden border border-gray-200">
                   <MapContainer
                     center={[MAP_CONFIG.defaultCenter.lat, MAP_CONFIG.defaultCenter.lng]}
                     zoom={MAP_CONFIG.defaultZoom}
@@ -715,7 +715,7 @@ export function LocationEntry() {
                   onClick={handleContinue}
                   disabled={!canProceed}
                   className={cn(
-                    'w-full py-4 text-white rounded-xl transition-all duration-200 font-semibold text-base flex items-center justify-center gap-2 hover:opacity-95 active:scale-[0.99]',
+                    'w-full py-3 sm:py-4 text-white rounded-xl transition-all duration-200 font-semibold text-sm sm:text-base flex items-center justify-center gap-2 hover:opacity-95 active:scale-[0.99]',
                     !canProceed && 'opacity-50 cursor-not-allowed'
                   )}
                   style={{
@@ -724,18 +724,18 @@ export function LocationEntry() {
                   }}
                 >
                   Search Cabs
-                  <ArrowRight className="w-5 h-5" />
+                  <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
 
                 {/* Saved Places & Recent Trips */}
-                <div className="flex items-center justify-center gap-8 pt-2">
-                  <button className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 transition-colors">
-                    <Bookmark className="w-4 h-4" />
-                    <span>Saved Places</span>
+                <div className="flex items-center justify-center gap-4 sm:gap-8 pt-1 sm:pt-2">
+                  <button className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-500 hover:text-gray-700 transition-colors">
+                    <Bookmark className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <span>Saved</span>
                   </button>
-                  <button className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 transition-colors">
-                    <History className="w-4 h-4" />
-                    <span>Recent Trips</span>
+                  <button className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-500 hover:text-gray-700 transition-colors">
+                    <History className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <span>Recent</span>
                   </button>
                 </div>
               </div>

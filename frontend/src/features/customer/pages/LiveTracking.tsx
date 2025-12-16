@@ -129,10 +129,10 @@ export function LiveTracking() {
   const routeCoords: [number, number][] =
     pickup && destination
       ? [
-          [pickup.lat, pickup.lng],
-          [driverPosition.lat, driverPosition.lng],
-          [destination.lat, destination.lng],
-        ]
+        [pickup.lat, pickup.lng],
+        [driverPosition.lat, driverPosition.lng],
+        [destination.lat, destination.lng],
+      ]
       : [];
 
   return (
@@ -182,71 +182,81 @@ export function LiveTracking() {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="absolute top-4 left-4 right-4 z-10"
+          className="absolute top-3 sm:top-4 left-3 sm:left-4 right-14 sm:right-20 z-10"
         >
           <Card padding="sm" className="bg-white/95 backdrop-blur shadow-lg">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
                 <div
                   className={cn(
-                    'w-3 h-3 rounded-full animate-pulse',
+                    'w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full animate-pulse flex-shrink-0',
                     tripStatus === 'pickup' && 'bg-info-500',
                     tripStatus === 'in_progress' && 'bg-success-500',
                     tripStatus === 'arriving' && 'bg-warning-500'
                   )}
                 />
-                <div>
-                  <p className="font-semibold text-gray-900">
+                <div className="min-w-0">
+                  <p className="font-semibold text-gray-900 text-xs sm:text-sm md:text-base truncate">
                     {tripStatus === 'pickup' && 'Heading to pickup'}
                     {tripStatus === 'in_progress' && 'Trip in progress'}
                     {tripStatus === 'arriving' && 'Arriving soon'}
                   </p>
-                  <p className="text-sm text-gray-500">
-                    {formatDuration(eta)} • {distance.toFixed(1)} km remaining
+                  <p className="text-[10px] sm:text-xs md:text-sm text-gray-500 truncate">
+                    {formatDuration(eta)} • {distance.toFixed(1)} km
                   </p>
                 </div>
               </div>
-              <Badge
-                variant={
-                  tripStatus === 'pickup'
-                    ? 'info'
-                    : tripStatus === 'in_progress'
-                      ? 'success'
-                      : 'warning'
-                }
-              >
-                {tripStatus === 'pickup' && 'Pickup'}
-                {tripStatus === 'in_progress' && 'En Route'}
-                {tripStatus === 'arriving' && 'Almost There'}
-              </Badge>
-              {/* WebSocket connection indicator */}
-              <div className="flex items-center gap-1">
-                {wsConnected ? (
-                  <Wifi className="w-4 h-4 text-success-500" />
-                ) : (
-                  <WifiOff className="w-4 h-4 text-gray-400" />
-                )}
-                <span
-                  className={cn(
-                    'text-xs',
-                    wsConnected ? 'text-success-600' : 'text-gray-400'
-                  )}
+              <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+                <Badge
+                  variant={
+                    tripStatus === 'pickup'
+                      ? 'info'
+                      : tripStatus === 'in_progress'
+                        ? 'success'
+                        : 'warning'
+                  }
+                  className="text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5"
                 >
-                  {wsConnected ? 'Live' : 'Demo'}
-                </span>
+                  <span className="hidden sm:inline">
+                    {tripStatus === 'pickup' && 'Pickup'}
+                    {tripStatus === 'in_progress' && 'En Route'}
+                    {tripStatus === 'arriving' && 'Almost There'}
+                  </span>
+                  <span className="sm:hidden">
+                    {tripStatus === 'pickup' && 'P'}
+                    {tripStatus === 'in_progress' && 'E'}
+                    {tripStatus === 'arriving' && 'A'}
+                  </span>
+                </Badge>
+                {/* WebSocket connection indicator */}
+                <div className="flex items-center gap-0.5 sm:gap-1">
+                  {wsConnected ? (
+                    <Wifi className="w-3 h-3 sm:w-4 sm:h-4 text-success-500" />
+                  ) : (
+                    <WifiOff className="w-3 h-3 sm:w-4 sm:h-4 text-gray-400" />
+                  )}
+                  <span
+                    className={cn(
+                      'text-[10px] sm:text-xs hidden sm:inline',
+                      wsConnected ? 'text-success-600' : 'text-gray-400'
+                    )}
+                  >
+                    {wsConnected ? 'Live' : 'Demo'}
+                  </span>
+                </div>
               </div>
             </div>
           </Card>
         </motion.div>
 
-        {/* Share trip button */}
+        {/* Share trip button - Top right corner */}
         <motion.button
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.1 }}
-          className="absolute bottom-4 right-20 z-10 w-12 h-12 rounded-full bg-white text-gray-700 shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors border border-gray-200"
+          className="absolute top-3 sm:top-4 right-3 sm:right-4 z-20 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white text-gray-700 shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors border border-gray-200"
         >
-          <Share2 className="w-5 h-5" />
+          <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
         </motion.button>
       </div>
 
@@ -254,76 +264,78 @@ export function LiveTracking() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="mt-4"
+        className="mt-3 sm:mt-4"
       >
-        <Card padding="md">
+        <Card padding="sm" className="sm:p-4">
           {/* Driver info */}
-          <div className="flex items-center gap-4 mb-4">
+          <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
             <Avatar
-              size="lg"
+              size="md"
               src={driver?.photo}
               name={driver?.name || 'Driver'}
+              className="sm:w-12 sm:h-12"
             />
-            <div className="flex-1">
-              <h3 className="font-semibold text-gray-900">
+            <div className="flex-1 min-w-0">
+              <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">
                 {driver?.name || 'Your Driver'}
               </h3>
-              <div className="flex items-center gap-2 text-sm text-gray-500">
-                <Star className="w-4 h-4 text-warning-500 fill-warning-500" />
+              <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-500">
+                <Star className="w-3 h-3 sm:w-4 sm:h-4 text-warning-500 fill-warning-500" />
                 <span>{driver?.rating || 4.8}</span>
                 <span>•</span>
-                <span>
+                <span className="truncate">
                   {driver?.cab?.registrationNumber || 'KA 01 AB 1234'}
                 </span>
               </div>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-1.5 sm:gap-2">
               <Button
                 variant="outline"
                 size="icon"
+                className="w-8 h-8 sm:w-10 sm:h-10"
                 onClick={() =>
                   window.open(`tel:${driver?.phone || '+919876543210'}`)
                 }
               >
-                <Phone className="w-5 h-5" />
+                <Phone className="w-4 h-4 sm:w-5 sm:h-5" />
               </Button>
-              <Button variant="outline" size="icon">
-                <MessageSquare className="w-5 h-5" />
+              <Button variant="outline" size="icon" className="w-8 h-8 sm:w-10 sm:h-10">
+                <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5" />
               </Button>
             </div>
           </div>
 
           {/* Trip route */}
-          <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg mb-4">
+          <div className="flex items-start gap-2 sm:gap-3 p-2 sm:p-3 bg-gray-50 rounded-lg mb-3 sm:mb-4">
             <div className="flex flex-col items-center gap-1 pt-1">
-              <div className="w-2 h-2 rounded-full bg-success-500" />
-              <div className="w-0.5 h-6 bg-gray-300" />
-              <div className="w-2 h-2 rounded-full bg-error-500" />
+              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-success-500" />
+              <div className="w-0.5 h-5 sm:h-6 bg-gray-300" />
+              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-error-500" />
             </div>
-            <div className="flex-1 space-y-3">
+            <div className="flex-1 space-y-2 sm:space-y-3 min-w-0">
               <div>
-                <p className="text-xs text-gray-500 uppercase">Pickup</p>
-                <p className="text-sm text-gray-900 truncate">
+                <p className="text-[10px] sm:text-xs text-gray-500 uppercase">Pickup</p>
+                <p className="text-xs sm:text-sm text-gray-900 truncate">
                   {pickup?.address || 'Current Location'}
                 </p>
               </div>
               <div>
-                <p className="text-xs text-gray-500 uppercase">Destination</p>
-                <p className="text-sm text-gray-900 truncate">
+                <p className="text-[10px] sm:text-xs text-gray-500 uppercase">Destination</p>
+                <p className="text-xs sm:text-sm text-gray-900 truncate">
                   {destination?.address || 'Destination'}
                 </p>
               </div>
             </div>
-            <div className="text-right">
-              <p className="font-bold text-gray-900">
+            <div className="text-right flex-shrink-0">
+              <p className="font-bold text-gray-900 text-sm sm:text-base">
                 {formatCurrency(fare?.total || 250)}
               </p>
-              <p className="text-xs text-gray-500">{formatDuration(eta)}</p>
+              <p className="text-[10px] sm:text-xs text-gray-500">{formatDuration(eta)}</p>
             </div>
           </div>
 
           {/* End trip button (for demo) */}
-          <Button fullWidth size="lg" onClick={handleEndTrip}>
+          <Button fullWidth size="md" className="sm:py-3" onClick={handleEndTrip}>
             End Trip (Demo)
           </Button>
         </Card>
