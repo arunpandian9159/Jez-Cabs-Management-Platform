@@ -109,56 +109,59 @@ export function BrowseCabs() {
           }}
         />
 
-        <div className="relative p-8">
+        <div className="relative p-4 sm:p-6 md:p-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <div className="flex items-center gap-2 mb-2">
+              <div className="flex items-center gap-2 mb-1 sm:mb-2">
                 <motion.div
                   animate={{ rotate: [0, 10, -10, 0] }}
                   transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
                 >
-                  <Sparkles className="w-5 h-5 text-cyan-200" />
+                  <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-200" />
                 </motion.div>
-                <span className="text-white/80 text-sm font-medium">
+                <span className="text-white/80 text-xs sm:text-sm font-medium">
                   Explore Our Fleet
                 </span>
               </div>
-              <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-1 sm:mb-2">
                 Rent a Cab
               </h1>
-              <p className="text-white/70 text-lg">
+              <p className="text-white/70 text-sm sm:text-base md:text-lg">
                 Choose from our wide selection of premium vehicles
               </p>
             </div>
 
             {/* Quick Stats */}
-            <div className="flex gap-4">
-              <div className="bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 border border-white/20">
-                <p className="text-white/70 text-xs uppercase tracking-wide">Available</p>
-                <p className="text-2xl font-bold text-white">
+            <div className="flex gap-2 sm:gap-4">
+              <div className="bg-white/10 backdrop-blur-md rounded-xl px-3 py-2 sm:px-4 sm:py-3 border border-white/20">
+                <p className="text-white/70 text-[10px] sm:text-xs uppercase tracking-wide">Available</p>
+                <p className="text-lg sm:text-xl md:text-2xl font-bold text-white">
                   {filteredCabs.filter(c => c.available).length}
                 </p>
               </div>
-              <div className="bg-white/10 backdrop-blur-md rounded-xl px-4 py-3 border border-white/20">
-                <p className="text-white/70 text-xs uppercase tracking-wide">Favorites</p>
-                <p className="text-2xl font-bold text-white">{favorites.length}</p>
+              <div className="bg-white/10 backdrop-blur-md rounded-xl px-3 py-2 sm:px-4 sm:py-3 border border-white/20">
+                <p className="text-white/70 text-[10px] sm:text-xs uppercase tracking-wide">Favorites</p>
+                <p className="text-lg sm:text-xl md:text-2xl font-bold text-white">{favorites.length}</p>
               </div>
             </div>
           </div>
 
           {/* Trust Badges */}
-          <div className="flex flex-wrap gap-4 mt-6">
-            <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-white/90 text-sm">
-              <Shield className="w-4 h-4 text-emerald-300" />
-              Verified Owners
+          <div className="flex flex-wrap gap-2 sm:gap-4 mt-4 sm:mt-6">
+            <div className="flex items-center gap-1.5 sm:gap-2 bg-white/10 backdrop-blur-sm rounded-full px-2.5 py-1.5 sm:px-4 sm:py-2 text-white/90 text-[10px] sm:text-sm">
+              <Shield className="w-3 h-3 sm:w-4 sm:h-4 text-emerald-300" />
+              <span className="hidden sm:inline">Verified Owners</span>
+              <span className="sm:hidden">Verified</span>
             </div>
-            <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-white/90 text-sm">
-              <Award className="w-4 h-4 text-amber-300" />
-              Quality Assured
+            <div className="flex items-center gap-1.5 sm:gap-2 bg-white/10 backdrop-blur-sm rounded-full px-2.5 py-1.5 sm:px-4 sm:py-2 text-white/90 text-[10px] sm:text-sm">
+              <Award className="w-3 h-3 sm:w-4 sm:h-4 text-amber-300" />
+              <span className="hidden sm:inline">Quality Assured</span>
+              <span className="sm:hidden">Quality</span>
             </div>
-            <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-white/90 text-sm">
-              <Zap className="w-4 h-4 text-cyan-300" />
-              Instant Booking
+            <div className="flex items-center gap-1.5 sm:gap-2 bg-white/10 backdrop-blur-sm rounded-full px-2.5 py-1.5 sm:px-4 sm:py-2 text-white/90 text-[10px] sm:text-sm">
+              <Zap className="w-3 h-3 sm:w-4 sm:h-4 text-cyan-300" />
+              <span className="hidden sm:inline">Instant Booking</span>
+              <span className="sm:hidden">Instant</span>
             </div>
           </div>
         </div>

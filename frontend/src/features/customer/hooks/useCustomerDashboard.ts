@@ -88,7 +88,7 @@ export function useCustomerDashboard() {
         (trip) => ({
           id: trip.id,
           pickup: trip.pickup_address,
-          destination: trip.destination_address,
+          destination: trip.dropoff_address,
           date: trip.created_at,
           fare: Number(trip.actual_fare) || Number(trip.estimated_fare) || 0,
           status: trip.status,

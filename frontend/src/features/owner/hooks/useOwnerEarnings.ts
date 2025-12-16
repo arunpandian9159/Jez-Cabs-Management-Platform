@@ -343,27 +343,9 @@ export function useOwnerEarnings() {
       setIsExporting(true);
       setExportError(null);
 
-      // Calculate date range based on filter
-      const now = new Date();
-      let start: Date;
-      let end = now;
 
-      switch (dateFilter) {
-        case 'week':
-          start = new Date(now.setDate(now.getDate() - 7));
-          break;
-        case 'month':
-          start = new Date(now.getFullYear(), now.getMonth(), 1);
-          break;
-        case 'quarter':
-          start = new Date(now.getFullYear(), Math.floor(now.getMonth() / 3) * 3, 1);
-          break;
-        case 'year':
-          start = new Date(now.getFullYear(), 0, 1);
-          break;
-        default:
-          start = new Date(now.getFullYear(), now.getMonth(), 1);
-      }
+      // Date range calculation can be used for filtering by date in future
+      // Currently using dateFilter string directly for filename
 
       // Generate CSV content
       if (format === 'csv') {
