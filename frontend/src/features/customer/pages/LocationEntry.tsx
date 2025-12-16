@@ -19,14 +19,14 @@ import {
   CheckCircle,
   Car,
 } from 'lucide-react';
-import { Calendar as CalendarComponent } from './QuickBookingForm/Calendar';
+import { Calendar as CalendarComponent } from '../../booking/components/QuickBookingForm/Calendar';
 import { cn } from '@/shared/utils';
 import { ROUTES, MAP_CONFIG } from '@/shared/constants';
 import {
   useQuickBooking,
   tripTypeOptions,
   timeOptions,
-} from '../hooks/useQuickBooking';
+} from '../../booking/hooks/useQuickBooking';
 import type { DateRange } from 'react-day-picker';
 
 // Fix for default marker icon in Leaflet with React
