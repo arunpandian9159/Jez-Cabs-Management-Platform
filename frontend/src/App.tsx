@@ -29,7 +29,7 @@ import {
   TripComplete,
 } from '@/features/booking/components';
 import { BrowseCabs, ActiveRentals } from '@/features/rentals/pages';
-import { PlanTrip, TripHistory } from '@/features/trips/pages';
+import { PlanTrip, TripHistory } from '@/features/customer/pages';
 import { Payments } from '@/features/payments/pages';
 import { Disputes } from '@/features/disputes/pages';
 import { EmergencyContacts, SafetyCenter } from '@/features/safety/pages';
