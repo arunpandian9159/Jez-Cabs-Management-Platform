@@ -8,6 +8,7 @@ import {
   NotificationPreference,
   NotificationPreferenceSchema,
 } from './schemas/notification-preference.schema';
+import { DeviceToken, DeviceTokenSchema } from './schemas/device-token.schema';
 import { NotificationService } from './services';
 import { NotificationController } from './controllers';
 
@@ -19,6 +20,7 @@ import { NotificationController } from './controllers';
         name: NotificationPreference.name,
         schema: NotificationPreferenceSchema,
       },
+      { name: DeviceToken.name, schema: DeviceTokenSchema },
     ]),
   ],
   controllers: [NotificationController],
