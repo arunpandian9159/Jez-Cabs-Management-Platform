@@ -29,6 +29,7 @@
 
 ## 🎯 Overview
 
+
 **Jez Cabs Management Platform** is a production-ready, full-stack ride-hailing and cab rental solution designed specifically for the Indian transportation market. It provides a complete ecosystem connecting:
 
 - **Customers** who need rides or want to rent vehicles
@@ -52,7 +53,7 @@ The platform supports real-time trip booking, vehicle rentals, community ride-sh
 
 ### 🔑 Vehicle Rentals
 
-- **Self-Drive & Chauffeur-Driven**: Flexible rental options
+- **Chauffeur-Driven**: Flexible rental options
 - **Browse Available Cabs**: Filter by type, availability, and features
 - **Active Rental Management**: Track ongoing rentals with daily rates
 
