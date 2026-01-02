@@ -35,8 +35,8 @@ export function useEnhancedMap(options: UseEnhancedMapOptions = {}) {
     pickupPoints: Geofence['pickupPoints'];
     surgeMultiplier: number;
   } | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+  const [isLoading, _setIsLoading] = useState(false);
+  const [error, _setError] = useState<Error | null>(null);
 
   // Fetch all geofences
   const fetchGeofences = useCallback(async () => {
