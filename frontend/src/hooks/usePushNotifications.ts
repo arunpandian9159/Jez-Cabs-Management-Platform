@@ -94,8 +94,6 @@ export function usePushNotifications(
         body: payload.body,
         icon: payload.icon || '/icons/notification-icon.png',
         data: payload.data,
-        badge: '/icons/badge-icon.png',
-        vibrate: [200, 100, 200],
       });
 
       notification.onclick = () => {

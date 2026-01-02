@@ -87,8 +87,9 @@ export function useSocket(options: UseSocketOptions = {}) {
     }
   }, []);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const on = useCallback(
-    (event: string, callback: (...args: unknown[]) => void) => {
+    (event: string, callback: (...args: any[]) => void) => {
       socketRef.current?.on(event, callback);
       return () => {
         socketRef.current?.off(event, callback);
@@ -97,8 +98,9 @@ export function useSocket(options: UseSocketOptions = {}) {
     []
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const off = useCallback(
-    (event: string, callback?: (...args: unknown[]) => void) => {
+    (event: string, callback?: (...args: any[]) => void) => {
       if (callback) {
         socketRef.current?.off(event, callback);
       } else {
