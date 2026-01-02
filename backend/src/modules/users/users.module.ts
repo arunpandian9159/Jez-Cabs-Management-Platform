@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { MongooseModule } from '@nestjs/mongoose';
 import {
   SavedAddress,
   RecentDestination,
@@ -8,8 +9,14 @@ import {
   Transaction,
 } from './entities';
 import { Payment } from '../payments/entities/payment.entity';
+import {
+  CustomerLoyalty,
+  CustomerLoyaltySchema,
+} from './schemas/customer-loyalty.schema';
 import { UsersService } from './users.service';
+import { LoyaltyService } from './services/loyalty.service';
 import { UsersController } from './users.controller';
+import { LoyaltyController } from './controllers/loyalty.controller';
 
 @Module({
   imports: [
@@ -21,9 +28,12 @@ import { UsersController } from './users.controller';
       Transaction,
       Payment,
     ]),
+    MongooseModule.forFeature([
+      { name: CustomerLoyalty.name, schema: CustomerLoyaltySchema },
+    ]),
   ],
-  controllers: [UsersController],
-  providers: [UsersService],
-  exports: [UsersService],
+  controllers: [UsersController, LoyaltyController],
+  providers: [UsersService, LoyaltyService],
+  exports: [UsersService, LoyaltyService],
 })
-export class UsersModule { }
+export class UsersModule {}

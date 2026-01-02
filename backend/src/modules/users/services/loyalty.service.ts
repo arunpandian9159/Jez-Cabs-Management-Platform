@@ -21,7 +21,7 @@ export class LoyaltyService {
   /**
    * Get or create loyalty profile for a user
    */
-  async getOrCreate(userId: string): Promise<CustomerLoyalty> {
+  async getOrCreate(userId: string): Promise<CustomerLoyaltyDocument> {
     let loyalty = await this.loyaltyModel.findOne({ userId });
 
     if (!loyalty) {
@@ -93,7 +93,7 @@ export class LoyaltyService {
     amount: number,
     tripId: string,
     description: string = 'Trip completed',
-  ): Promise<CustomerLoyalty> {
+  ): Promise<CustomerLoyaltyDocument> {
     const loyalty = await this.getOrCreate(userId);
     const tierConfig = TIER_CONFIG[loyalty.tier];
 
@@ -127,7 +127,7 @@ export class LoyaltyService {
     userId: string,
     points: number,
     description: string = 'Points redeemed',
-  ): Promise<CustomerLoyalty> {
+  ): Promise<CustomerLoyaltyDocument> {
     const loyalty = await this.getOrCreate(userId);
 
     if (loyalty.availablePoints < points) {
@@ -191,7 +191,7 @@ export class LoyaltyService {
   async getDiscountPercentage(userId: string): Promise<number> {
     const tierConfig = await this.getTierBenefits(userId);
     const discountBenefit = tierConfig.benefits.find(
-      (b) => b.type === 'discount',
+      (b) => String(b.type) === 'discount',
     );
     return discountBenefit?.value || 0;
   }
