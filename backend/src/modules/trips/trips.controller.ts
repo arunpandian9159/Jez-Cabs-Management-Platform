@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Patch,
+  Delete,
   Param,
   Body,
   Query,
@@ -26,6 +27,8 @@ import {
   CompleteTripDto,
   CancelTripDto,
   RateTripDto,
+  ScheduleTripDto,
+  UpdateScheduledTripDto,
 } from './dto';
 
 interface AuthenticatedRequest {
@@ -40,13 +43,17 @@ interface AuthenticatedRequest {
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth('JWT-auth')
 export class TripsController {
-  constructor(private readonly tripsService: TripsService) { }
+  constructor(private readonly tripsService: TripsService) {}
+
+  // ============ Basic Trip Endpoints ============
 
   @Post()
   @ApiOperation({ summary: 'Create a new trip booking' })
-  @ApiResponse({ status: 201, description: 'Trip created successfully with OTP' })
+  @ApiResponse({
+    status: 201,
+    description: 'Trip created successfully with OTP',
+  })
   @ApiResponse({ status: 400, description: 'Invalid trip data' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async create(
     @Body() createTripDto: CreateTripDto,
     @Request() req: AuthenticatedRequest,
@@ -54,12 +61,19 @@ export class TripsController {
     return this.tripsService.create({
       ...createTripDto,
       customer_id: req.user.id,
+      scheduled_at: createTripDto.scheduled_at
+        ? new Date(createTripDto.scheduled_at)
+        : undefined,
     });
   }
 
   @Get()
   @ApiOperation({ summary: 'Get all trips for the current user' })
-  @ApiQuery({ name: 'status', required: false, description: 'Filter by trip status' })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    description: 'Filter by trip status',
+  })
   @ApiResponse({ status: 200, description: 'List of trips returned' })
   async findAll(
     @Request() req: AuthenticatedRequest,
@@ -81,8 +95,6 @@ export class TripsController {
   @ApiOperation({ summary: 'Accept a pending trip (Driver only)' })
   @ApiParam({ name: 'id', description: 'Trip UUID' })
   @ApiResponse({ status: 200, description: 'Trip accepted successfully' })
-  @ApiResponse({ status: 400, description: 'Trip cannot be accepted' })
-  @ApiResponse({ status: 404, description: 'Trip not found' })
   async accept(
     @Param('id') id: string,
     @Body() acceptTripDto: AcceptTripDto,
@@ -95,12 +107,7 @@ export class TripsController {
   @ApiOperation({ summary: 'Start a trip with OTP verification' })
   @ApiParam({ name: 'id', description: 'Trip UUID' })
   @ApiResponse({ status: 200, description: 'Trip started successfully' })
-  @ApiResponse({ status: 400, description: 'Invalid OTP or trip cannot be started' })
-  @ApiResponse({ status: 404, description: 'Trip not found' })
-  async start(
-    @Param('id') id: string,
-    @Body() startTripDto: StartTripDto,
-  ) {
+  async start(@Param('id') id: string, @Body() startTripDto: StartTripDto) {
     return this.tripsService.startTrip(id, startTripDto.otp);
   }
 
@@ -108,8 +115,6 @@ export class TripsController {
   @ApiOperation({ summary: 'Complete a trip and calculate final fare' })
   @ApiParam({ name: 'id', description: 'Trip UUID' })
   @ApiResponse({ status: 200, description: 'Trip completed successfully' })
-  @ApiResponse({ status: 400, description: 'Trip cannot be completed' })
-  @ApiResponse({ status: 404, description: 'Trip not found' })
   async complete(
     @Param('id') id: string,
     @Body() completeTripDto: CompleteTripDto,
@@ -121,8 +126,6 @@ export class TripsController {
   @ApiOperation({ summary: 'Cancel a trip' })
   @ApiParam({ name: 'id', description: 'Trip UUID' })
   @ApiResponse({ status: 200, description: 'Trip cancelled successfully' })
-  @ApiResponse({ status: 400, description: 'Trip cannot be cancelled' })
-  @ApiResponse({ status: 404, description: 'Trip not found' })
   async cancel(
     @Param('id') id: string,
     @Body() cancelTripDto: CancelTripDto,
@@ -135,8 +138,6 @@ export class TripsController {
   @ApiOperation({ summary: 'Rate a completed trip' })
   @ApiParam({ name: 'id', description: 'Trip UUID' })
   @ApiResponse({ status: 200, description: 'Rating submitted successfully' })
-  @ApiResponse({ status: 400, description: 'Trip cannot be rated' })
-  @ApiResponse({ status: 404, description: 'Trip not found' })
   async rate(
     @Param('id') id: string,
     @Body() rateTripDto: RateTripDto,
@@ -149,5 +150,90 @@ export class TripsController {
       rateTripDto.feedback ?? '',
       isCustomer,
     );
+  }
+
+  // ============ Scheduled Rides Endpoints ============
+
+  @Post('schedule')
+  @ApiOperation({ summary: 'Schedule a future trip (up to 7 days in advance)' })
+  @ApiResponse({ status: 201, description: 'Trip scheduled successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid scheduling data' })
+  async scheduleTrip(
+    @Body() scheduleTripDto: ScheduleTripDto,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    return this.tripsService.scheduleTrip(req.user.id, scheduleTripDto);
+  }
+
+  @Get('scheduled/list')
+  @ApiOperation({ summary: 'Get all scheduled trips for the current user' })
+  @ApiResponse({ status: 200, description: 'List of scheduled trips returned' })
+  async getScheduledTrips(@Request() req: AuthenticatedRequest) {
+    return this.tripsService.getScheduledTrips(req.user.id);
+  }
+
+  @Patch('scheduled/:id')
+  @ApiOperation({ summary: 'Update a scheduled trip' })
+  @ApiParam({ name: 'id', description: 'Trip UUID' })
+  @ApiResponse({ status: 200, description: 'Scheduled trip updated' })
+  async updateScheduledTrip(
+    @Param('id') id: string,
+    @Body() updateDto: UpdateScheduledTripDto,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    return this.tripsService.updateScheduledTrip(id, req.user.id, updateDto);
+  }
+
+  @Delete('scheduled/:id')
+  @ApiOperation({ summary: 'Cancel a scheduled trip' })
+  @ApiParam({ name: 'id', description: 'Trip UUID' })
+  @ApiResponse({ status: 200, description: 'Scheduled trip cancelled' })
+  async cancelScheduledTrip(
+    @Param('id') id: string,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    return this.tripsService.cancelScheduledTrip(id, req.user.id);
+  }
+
+  // ============ Recurring Rides Endpoints ============
+
+  @Get('recurring/list')
+  @ApiOperation({ summary: 'Get all recurring rides for the current user' })
+  @ApiResponse({ status: 200, description: 'List of recurring rides returned' })
+  async getRecurringRides(@Request() req: AuthenticatedRequest) {
+    return this.tripsService.getRecurringRides(req.user.id);
+  }
+
+  @Patch('recurring/:id/pause')
+  @ApiOperation({ summary: 'Pause a recurring ride' })
+  @ApiParam({ name: 'id', description: 'Recurring ride UUID' })
+  @ApiResponse({ status: 200, description: 'Recurring ride paused' })
+  async pauseRecurringRide(
+    @Param('id') id: string,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    return this.tripsService.pauseRecurringRide(id, req.user.id);
+  }
+
+  @Patch('recurring/:id/resume')
+  @ApiOperation({ summary: 'Resume a paused recurring ride' })
+  @ApiParam({ name: 'id', description: 'Recurring ride UUID' })
+  @ApiResponse({ status: 200, description: 'Recurring ride resumed' })
+  async resumeRecurringRide(
+    @Param('id') id: string,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    return this.tripsService.resumeRecurringRide(id, req.user.id);
+  }
+
+  @Delete('recurring/:id')
+  @ApiOperation({ summary: 'Cancel a recurring ride' })
+  @ApiParam({ name: 'id', description: 'Recurring ride UUID' })
+  @ApiResponse({ status: 200, description: 'Recurring ride cancelled' })
+  async cancelRecurringRide(
+    @Param('id') id: string,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    return this.tripsService.cancelRecurringRide(id, req.user.id);
   }
 }
