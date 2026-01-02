@@ -22,7 +22,10 @@ import { SafetyModule } from './modules/safety/safety.module';
 import { CommunityModule } from './modules/community/community.module';
 import { NotificationModule } from './modules/notification/notification.module';
 import { AdminModule } from './modules/admin/admin.module';
+import { PaymentsModule } from './modules/payments/payments.module';
+import { WebsocketModule } from './modules/websocket/websocket.module';
 import { SupabaseModule } from './common/supabase.module';
+import { FirebaseModule } from './common/firebase.module';
 import { HealthModule } from './health/health.module';
 
 @Module({
@@ -64,10 +67,12 @@ import { HealthModule } from './health/health.module';
     }),
 
     // Rate Limiting (Throttler)
-    ThrottlerModule.forRoot([{
-      ttl: 60000,  // 60 seconds
-      limit: 10,   // 10 requests per minute default
-    }]),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000, // 60 seconds
+        limit: 10, // 10 requests per minute default
+      },
+    ]),
 
     // Feature Modules
     IamModule,
@@ -81,9 +86,12 @@ import { HealthModule } from './health/health.module';
     CommunityModule,
     NotificationModule,
     AdminModule,
+    PaymentsModule,
+    WebsocketModule,
+    FirebaseModule,
     HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

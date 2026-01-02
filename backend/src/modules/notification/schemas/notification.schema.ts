@@ -8,6 +8,7 @@ export enum NotificationType {
   SMS = 'SMS',
   PUSH = 'PUSH',
   IN_APP = 'IN_APP',
+  ALL = 'ALL',
 }
 
 export enum NotificationStatus {
@@ -26,8 +27,8 @@ export enum NotificationPriority {
 
 @Schema({ timestamps: true, collection: 'notifications' })
 export class Notification {
-  @Prop({ required: true, index: true })
-  companyId: string;
+  @Prop({ index: true })
+  companyId?: string;
 
   @Prop({ index: true })
   userId: string;
