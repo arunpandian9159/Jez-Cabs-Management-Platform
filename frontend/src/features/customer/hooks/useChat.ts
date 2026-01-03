@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/features/auth/contexts/AuthContext';
 
 export interface ChatMessage {
   id?: string;
@@ -51,7 +51,7 @@ export function useChat({ tripId, receiverId, onNewMessage }: UseChatOptions) {
   const [otherUserTyping, setOtherUserTyping] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const socketRef = useRef<Socket | null>(null);
-  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Initialize WebSocket connection
   useEffect(() => {

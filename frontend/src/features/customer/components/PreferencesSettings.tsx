@@ -12,7 +12,7 @@ import {
   Save,
   Loader2,
 } from 'lucide-react';
-import { cn } from '@/shared/utils/cn';
+import { cn } from '@/shared/utils/utils';
 
 interface AccessibilityNeeds {
   wheelchairAccessible: boolean;

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Send, MapPin, MessageCircle, X, Loader2 } from 'lucide-react';
 import { useChat, ChatMessage, QuickReply } from '../hooks/useChat';
-import { cn } from '@/shared/utils/cn';
+import { cn } from '@/shared/utils/utils';
 
 interface ChatWindowProps {
   tripId: string;

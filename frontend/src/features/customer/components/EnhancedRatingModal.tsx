@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Star,
   ThumbsUp,
@@ -10,7 +10,7 @@ import {
   Map,
   Sparkles,
 } from 'lucide-react';
-import { cn } from '@/shared/utils/cn';
+import { cn } from '@/shared/utils/utils';
 
 interface CategoryRatings {
   drivingSkills: number;
@@ -120,7 +120,7 @@ function StarRating({
 }
 
 export function EnhancedRatingModal({
-  tripId,
+  tripId: _tripId,
   driverName,
   driverAvatar,
   onClose,

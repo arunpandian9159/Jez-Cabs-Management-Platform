@@ -2,14 +2,13 @@ import { useState, useEffect } from 'react';
 import {
   Home,
   Briefcase,
-  Clock,
   MapPin,
   TrendingDown,
   TrendingUp,
   Sparkles,
   ChevronRight,
 } from 'lucide-react';
-import { cn } from '@/shared/utils/cn';
+import { cn } from '@/shared/utils/utils';
 
 interface LocationSuggestion {
   type: 'home' | 'work' | 'frequent' | 'recent' | 'predicted';
