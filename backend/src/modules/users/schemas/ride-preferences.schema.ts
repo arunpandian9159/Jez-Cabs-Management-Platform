@@ -74,7 +74,7 @@ export class RidePreferences {
   @Prop({ default: false })
   childSeat: boolean;
 
-  @Prop({ default: true })
+  @Prop({ type: Boolean, default: null })
   preferFemaleDriver: boolean | null; // null = no preference
 
   @Prop({ default: false })
