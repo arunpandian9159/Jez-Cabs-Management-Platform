@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, MoreThan, Between } from 'typeorm';
-import { Trip, TripStatus } from '../../trips/entities/trip.entity';
+import { Repository, MoreThan } from 'typeorm';
+import { Trip } from '../../trips/entities/trip.entity';
+import { TripStatus } from '../../../common/enums';
 import { SavedAddress, RecentDestination } from '../entities';
 
-interface LocationSuggestion {
+export interface LocationSuggestion {
   type: 'home' | 'work' | 'frequent' | 'recent' | 'predicted';
   label: string;
   address: string;
@@ -14,13 +15,13 @@ interface LocationSuggestion {
   reason: string;
 }
 
-interface TimeSuggestion {
+export interface TimeSuggestion {
   type: 'optimal' | 'pattern' | 'reminder';
   message: string;
   data?: Record<string, unknown>;
 }
 
-interface SmartSuggestions {
+export interface SmartSuggestions {
   locations: LocationSuggestion[];
   timings: TimeSuggestion[];
   fareInsight?: {
@@ -88,7 +89,7 @@ export class SuggestionsService {
   ): Promise<RecentDestination[]> {
     return this.recentDestRepository.find({
       where: { user_id: userId },
-      order: { visited_at: 'DESC' },
+      order: { used_at: 'DESC' },
       take: 10,
     });
   }
@@ -119,7 +120,7 @@ export class SuggestionsService {
 
     trips.forEach((trip) => {
       // Count destination frequency
-      const dest = trip.drop_address;
+      const dest = trip.dropoff_address;
       frequentDestinations.set(dest, (frequentDestinations.get(dest) || 0) + 1);
 
       // Track time patterns

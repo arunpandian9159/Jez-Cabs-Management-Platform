@@ -118,7 +118,7 @@ export class ChatService {
 
     // Create message
     const message = await this.chatMessageModel.create({
-      conversationId: conversation._id.toString(),
+      conversationId: String(conversation._id),
       tripId: dto.tripId,
       senderId,
       receiverId: dto.receiverId,
@@ -191,7 +191,7 @@ export class ChatService {
     if (!conversation) {
       return [];
     }
-    return this.getMessages(conversation._id.toString(), userId, options);
+    return this.getMessages(String(conversation._id), userId, options);
   }
 
   /**

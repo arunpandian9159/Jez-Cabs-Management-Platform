@@ -7,7 +7,8 @@ import {
   JoinColumn,
   Index,
 } from 'typeorm';
-import { Trip, TripStatus } from './trip.entity';
+import { Trip } from './trip.entity';
+import { TripStatus } from '../../../common/enums';
 import { User } from '../../iam/entities/user.entity';
 import { Cab } from '../../cab/entities/cab.entity';
 
@@ -132,7 +133,7 @@ export class OutstationBooking {
   @Column({
     type: 'enum',
     enum: TripStatus,
-    default: TripStatus.REQUESTED,
+    default: TripStatus.PENDING,
   })
   @Index()
   status: TripStatus;
