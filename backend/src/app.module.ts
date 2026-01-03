@@ -25,6 +25,9 @@ import { AdminModule } from './modules/admin/admin.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { WebsocketModule } from './modules/websocket/websocket.module';
 import { ChatModule } from './modules/chat/chat.module';
+import { CorporateModule } from './modules/corporate/corporate.module';
+import { SubscriptionModule } from './modules/subscription/subscription.module';
+import { PromotionsModule } from './modules/promotions/promotions.module';
 import { SupabaseModule } from './common/supabase.module';
 import { FirebaseModule } from './common/firebase.module';
 import { HealthModule } from './health/health.module';
@@ -90,6 +93,9 @@ import { HealthModule } from './health/health.module';
     PaymentsModule,
     WebsocketModule,
     ChatModule,
+    CorporateModule,
+    SubscriptionModule,
+    PromotionsModule,
     FirebaseModule,
     HealthModule,
   ],

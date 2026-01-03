@@ -13,10 +13,16 @@ import {
   CustomerLoyalty,
   CustomerLoyaltySchema,
 } from './schemas/customer-loyalty.schema';
+import {
+  RidePreferences,
+  RidePreferencesSchema,
+} from './schemas/ride-preferences.schema';
 import { UsersService } from './users.service';
 import { LoyaltyService } from './services/loyalty.service';
+import { PreferencesService } from './services/preferences.service';
 import { UsersController } from './users.controller';
 import { LoyaltyController } from './controllers/loyalty.controller';
+import { PreferencesController } from './controllers/preferences.controller';
 
 @Module({
   imports: [
@@ -30,10 +36,11 @@ import { LoyaltyController } from './controllers/loyalty.controller';
     ]),
     MongooseModule.forFeature([
       { name: CustomerLoyalty.name, schema: CustomerLoyaltySchema },
+      { name: RidePreferences.name, schema: RidePreferencesSchema },
     ]),
   ],
-  controllers: [UsersController, LoyaltyController],
-  providers: [UsersService, LoyaltyService],
-  exports: [UsersService, LoyaltyService],
+  controllers: [UsersController, LoyaltyController, PreferencesController],
+  providers: [UsersService, LoyaltyService, PreferencesService],
+  exports: [UsersService, LoyaltyService, PreferencesService],
 })
 export class UsersModule {}
