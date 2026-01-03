@@ -268,4 +268,109 @@ export class WebsocketGateway
     }
     return onlineDrivers;
   }
+
+  // ============ Chat-related handlers ============
+
+  /**
+   * Send a chat message via WebSocket
+   */
+  @SubscribeMessage('chat:send')
+  handleChatSend(
+    @ConnectedSocket() client: AuthenticatedSocket,
+    @MessageBody()
+    data: {
+      tripId: string;
+      receiverId: string;
+      message: string;
+      messageType?: string;
+      location?: { lat: number; lng: number };
+      quickReplyId?: string;
+    },
+  ) {
+    // Emit to trip room and receiver
+    const messagePayload = {
+      senderId: client.userId,
+      ...data,
+      timestamp: new Date().toISOString(),
+    };
+
+    // Send to trip room
+    this.server.to(`trip:${data.tripId}`).emit('chat:message', messagePayload);
+
+    // Also send directly to receiver if not in trip room
+    this.emitToUser(data.receiverId, 'chat:message', messagePayload);
+
+    this.logger.log(
+      `Chat message from ${client.userId} to ${data.receiverId} in trip ${data.tripId}`,
+    );
+
+    return { success: true };
+  }
+
+  /**
+   * Typing indicator
+   */
+  @SubscribeMessage('chat:typing')
+  handleChatTyping(
+    @ConnectedSocket() client: AuthenticatedSocket,
+    @MessageBody()
+    data: { tripId: string; receiverId: string; isTyping: boolean },
+  ) {
+    // Send typing indicator to the other participant
+    this.emitToUser(data.receiverId, 'chat:typing', {
+      senderId: client.userId,
+      tripId: data.tripId,
+      isTyping: data.isTyping,
+    });
+
+    return { success: true };
+  }
+
+  /**
+   * Mark messages as read
+   */
+  @SubscribeMessage('chat:read')
+  handleChatRead(
+    @ConnectedSocket() client: AuthenticatedSocket,
+    @MessageBody()
+    data: { conversationId: string; tripId: string; senderId: string },
+  ) {
+    // Notify the sender that their messages have been read
+    this.emitToUser(data.senderId, 'chat:read:receipt', {
+      conversationId: data.conversationId,
+      tripId: data.tripId,
+      readBy: client.userId,
+      timestamp: new Date().toISOString(),
+    });
+
+    return { success: true };
+  }
+
+  /**
+   * Emit new chat message notification
+   */
+  emitChatMessage(
+    tripId: string,
+    receiverId: string,
+    message: {
+      id: string;
+      senderId: string;
+      message: string;
+      messageType: string;
+      timestamp: string;
+    },
+  ) {
+    this.server.to(`trip:${tripId}`).emit('chat:message', message);
+    this.emitToUser(receiverId, 'chat:message', message);
+
+    // Also send as notification
+    this.emitToUser(receiverId, 'notification', {
+      type: 'chat_message',
+      title: 'New Message',
+      message:
+        message.message.substring(0, 50) +
+        (message.message.length > 50 ? '...' : ''),
+      data: { tripId, messageId: message.id },
+    });
+  }
 }

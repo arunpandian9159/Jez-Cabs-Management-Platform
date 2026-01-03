@@ -24,6 +24,7 @@ import { NotificationModule } from './modules/notification/notification.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { WebsocketModule } from './modules/websocket/websocket.module';
+import { ChatModule } from './modules/chat/chat.module';
 import { SupabaseModule } from './common/supabase.module';
 import { FirebaseModule } from './common/firebase.module';
 import { HealthModule } from './health/health.module';
@@ -88,6 +89,7 @@ import { HealthModule } from './health/health.module';
     AdminModule,
     PaymentsModule,
     WebsocketModule,
+    ChatModule,
     FirebaseModule,
     HealthModule,
   ],
