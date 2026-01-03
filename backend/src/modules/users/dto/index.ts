@@ -74,3 +74,5 @@ export class CreatePaymentMethodDto {
   @IsBoolean()
   is_default?: boolean;
 }
+
+export * from './preferences.dto';
